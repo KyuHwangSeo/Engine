@@ -1,0 +1,50 @@
+
+■ HLSL ■
+
+<< Shader Resource >>
+	- Register Keyword
+		1) t (SRV : ShaderResourceView)		// Max Slot : 128
+		2) s (Sampler : SamplerState)		// Max Slot : 16
+		3) u (UAV : UnorderedAccessView)	// Max Slot : 8
+		4) b (CBV : Constant Buffer)		// Max Slot : 15
+	- 선언 뒤에 바인드될 레지스터의 번호를 임의로 설정. Resource 마다 바인딩 할 수 있는 최대 개수가 다르다.
+	- 설정하지 않을 경우, 0번부터 순차적으로 부여된다.
+
+	* 주의점 *
+	 - Resource를 Shader 내부에서 선언해두었다고 전부 Register Slot에 올라가는 것이 아니다.
+	   실제로 Shader 내부에서 사용되지 않는 Resource는 Binding되지 않으므로 이 점을 생각해야 한다.
+
+<< UpdateSubresource >>
+	- 버퍼의 내용을 Update 하는 함수.
+	- VSSetConstantBuffers, PSSetConstantBuffers 을 통해 레지스터에 바인드.
+	- Update 사이즈와 호출 회수를 최대한으로 줄여야한다. (성능 저하 방지)
+	- Shader로 전달할 데이터 크기 이상의 Constant Buffer Update 방식은 잘못된 방식. (성능 저하)
+	- 필요한 부분만 Update 할 수 있도록 Constant Buffer 를 나누어 설계하는 방향으로 가야만 한다.
+	- 한번 Update 한 Constant Buffer는 최대한 돌려쓰거나 모아서 Rendering 하는것이 최적의 방법.
+
+<< Map / UnMap >>
+	- UpdateSubresource와는 다른 방식으로 버퍼의 내용을 Update 하는 함수.
+	- 매 프레임 한번 이상 자주 업데이트 되는 Dynamic Buffer에 사용하기 적합하다. ex) Vertex & Index Buffer 같은 경우
+	- Map / UnMap을 사용하려면 Buffer를 생성시 Usage 옵션을 Dynamic으로 변경해주어야 한다
+
+■ Shader Class ■
+
+<< Shader Reflection >>
+	- D3DCompiler에서 지원하는 Shader Reflection을 이용하면 InputLayout과 Constant Buffer를 쉐이더마다 클래스로 나눌 필요가 없어진다.
+	- Resource 또한 같은 방식으로 적용 완료
+	- 현재는 key(cbuffer 이름) value(register slot number, ID3D11Buffer) 형태로 리스트로 관리중.
+	
+	- 장점
+		1) InputLayout & Constant Buffer & Resource(Texture) & Sampler 등등 Resource 자원들을 일일히 생성해줄 필요가 없다
+		   Shader Load와 동시에 생성 및 적용 하는 방식.
+		2) Shader 한개의 클래스를 통해 모든 Shader를 적용 할 수 있다. (핵심)
+	- 단점
+		1) Shader 내부에 있는 Constant Buffer와 이름, 크기가 동일한 struct를 만들어줘야 한다. (추후에 Reflection이 된다면 해결될 부분)
+
+<< Shader Class >>
+	< 수정해야 할 사항들 >
+	- 현재 Shader Class는 Vertex, Pixel, Compute Shader의 정보를 모두 들고있는 결국 Effect로 따지자면 Tech가 되는 셈인데
+	  한개의 Shader에 대응하는 Class를 만들어 Shader Effect Class로 현재 Tech에서 적용된 Shader를 관리하는 식으로 바꾸자..
+	  지금은 밀려있는게 많으니 추후에.. 수정하도록..
+	- 현재 Shader를 세분화 시켜서 프레임이 떨어지는건지 Resource Update가 자주 일어나서 프레임이 떨어지는지 확인해볼 필요가 있다.
+	  문제가 있다면 추후에 수정할 예정..

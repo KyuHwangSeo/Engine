@@ -1,0 +1,30 @@
+
+бс Resource бс
+
+<< GameObject Resource >>
+	- Shader List
+	  [ Member ]
+	  > ID3D11VS
+	  > ID3D11PS
+	  > ID3D11InputLayout
+	  > Resource Register Slot Number
+	  > Vertex Shader Constant Buffer List (Binding Resource)
+	  > Pixel Shader Constant Buffer List (Binding Resource)
+	- Parser List
+	- Texture List
+	- Vertex Buffer List
+	- Mesh List
+	- Animation List
+	- Material List
+
+<< Device Resource >>
+	- RenderTarget Class List
+	  [ Member ]
+	  > ID3D11ShaderResourceView
+	  > ID3D11UnorderedAccessView
+	  > ID3D11RenderTargetView
+	  > D3D11_VIEWPORT
+	- ID3D11DepthStencilView List
+	- ID3D11DepthStencilState List
+	- ID3D11SamplerState List
+	- ID3D11RasterizerState List

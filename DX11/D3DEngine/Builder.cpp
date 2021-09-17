@@ -1,0 +1,8 @@
+#include "D3DDefine.h"
+#include "D3DEngine.h"
+#include "Component.h"
+#include "Transform.h"
+#include "GameObject.h"
+#include "Shader.h"
+#include "ResourceManager.h"
+#include "Builder.h"

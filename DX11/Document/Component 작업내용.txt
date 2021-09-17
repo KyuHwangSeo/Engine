@@ -1,0 +1,80 @@
+
+■ Component ■
+
+<< Object Class >>
+	- 최상위 클래스 (Interface)
+
+<< Component >>
+	- GameObject
+	- Tag
+	- Enable (해당 컴포넌트 활성화 여부)
+
+<< GameObject >>
+	- Transform : Component
+	- Component List 
+		-> unordered_multimap, Key 값을 통해 Component 찾기
+	- Update, Render, Picking
+
+<< Renderer : Component >>
+	- Material List
+		-> unordered_multimap, Key 값을 통해 Material 찾기
+	- Material : Object
+		-> Shader : Object (HLSL)
+			[ Member ]
+			> ID3D11VS
+			> ID3D11PS
+			> ID3D11InputLayout
+			> Resource Register Slot Number
+			> Vertex Shader Constant Buffer List (Binding Resource)
+			> Pixel Shader Constant Buffer List (Binding Resource)
+	- Mesh
+		-> Resource Mananager을 통해 데이터 적용
+
+<< Mesh Renderer : Renderer >>
+	- Shadow PreRender
+	- Render 
+
+<< Skinned Mesh Renderer : Renderer >>
+	- Shadow PreRender
+	- Render 
+	- Transform List (Bone Offset)
+
+<< Animator : Component >>
+	- Animation List
+		- unordered_multimap, Key(GameObject) 값을 통해 Animation 찾기
+		- GameObject <-> Animation Data (Pair)
+	- Animation
+		- Key Frame Data, Animation TM 등등
+
+	* Animation 교체 방식 *
+		- 기존 원본 데이터를 따로 보관하여 교체시 원본데이터 TM으로 교체 및 Animation List 변경
+		- Animation Data 자체가 전 프레임 기준으로 움직이기 때문에 원본 위치로 옮긴후 적용할 Animation Data를 교체해주면 된다.
+
+<< Collider : Component >>
+	- 내부에서 자체로 Collider Component만 따로 렌더링 (Debug)
+	- ColBox (Object Buffer Max Size Default)
+	- 충돌 체크는 Layer을 통해 구분지어서 할 예정
+
+<< Rigidbody : Component >>
+	- Collider List
+	- Collider : Component
+	- 중력, 마찰력, 충돌체크 등등 필요할듯
+
+<< Material >>
+	- Shader 
+		-> 한개의 Material은 한개의 Shader를 적용한다.
+	- DiffuseMap, NormalMap, CubeMap Data ...
+
+<< Camera : Component >>
+	- Type을 통한 Camera 종류 구분 (일반, 3인칭, 1인칭)
+	- Main Camera (Global)
+
+<< Light : Component >>
+	- Type을 통한 Light 종류 구분
+	- 생성과 동시에 기본데이터(Directional, Point, Spot)를 갖고 생성 (변경 가능)
+
+<< Transform : Componet >>
+	- LocalTM, ConvertTM 계층 구조 연결
+	- 부모 자식간의 Transform 보유
+	- 애니메이션 뿐만 아니라 움직임이나 추가적인 변환시 연결된 부모의 변환행렬 반영하여 계산
+	- Animation 변경 혹은 별도의 변환행렬 적용시에만 자신기준 하위 객체들의 Transform을 업데이트

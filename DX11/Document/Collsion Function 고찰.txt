@@ -1,0 +1,22 @@
+<< Collision Check>>
+
+- 충돌 체크가 필요한 모델의 각 노드(파츠)마다 Collider를 생성하여 엔진 내부에서 모델(One Pair)기준으로 각 노드들을 충돌체크한다.
+- 현재 엔진 내부 CollsionManager에서 각 모델의 Collider List를 생성하여 Layer 비교를 통해 같은 Layer에 있는 노드들끼리 충돌 체크를 실행.
+- Unity의 CallBack Function 처럼 사용하려고 생각하였으나, 한 컴포넌트에서만 사용된다는 보장이 없어 해당 Function을 호출하는 
+  모든 컴포넌트의 Funcition을 충돌 즉시 호출해주는 방식으로 변경.
+- Unity는 Update 방식 자체가 현재 구현한 방식과 많이 다르다. 현재 구현한 방식 자체는 오브젝트 기준 Update가 실행되지만
+  Unity는 엔진 어느곳인가에 Update List가 있을것이고 해당 List는 Update 관련 함수 포인터를 받아서 실행하는 형식인 것 같다.
+- 현재 구현 방식은 사용하고있는 Start / Update 와 같이 오브젝트가 해당 함수가 있는 컴포넌트의 컴포넌트 함수를 오버라이딩 하는 방식이지만 추후에 변경할 예정.
+
+* 변경해야 할 사항 *
+- Update 방식을 모든 Update 함수를 Reflection을 사용하여 함수 이름을 통해 함수포인터를 받아서 실행시키는 구조로 바꿔보자 (Render Queue 만들때 같이 해보면 좋을듯)
+- 현재 오버라이딩을 통한 함수 호출을 하고있는데 이 부분은 조금 더 공부를 해서 효율적인 방법으로 변경해야 할 것 같다.
+- Function List를 통한 Update 호출 방식을 변경하게되면 함수 호출간의 선/후 관계를 지정할 수 있지 않을까..?
+- 현재 Update 구조는 Update -> Transform Update -> Late Update -> Final Update 방식으로 되어있는데 이 부분도 고민할 필요가 있을 것 같다.
+  현재 Late Update에서 사용되는 함수는 결국 중간 업데이트 된 Transform 을 기준으로 Final Update를 통해 물리처리를 하기 위함인데
+  결국은 Transform Update가 마지막에 되는 구조가 맞을 것 같으니 변경하도록 하자..
+- Unity 함수 호출 방식은 교수님이 주신 사이트를 참고해서 변경하도록 하자
+- 충돌 체크 방식에서 Octree 구조도 생각해보자..
+
+// Unity Update 호출 방식
+https://blog.unity.com/kr/technology/1k-update-calls

@@ -1,0 +1,38 @@
+<< Animation >>
+	- Animation 변경시 마지막 프레임 기준 변경 프레임으로 보간 필요
+
+<< 2D Texture >>
+	- UI / Effect 를 위한 2D Rendering 필요
+	- Direct 2D 추가
+
+<< DLL >>
+	- Interface 및 Singleton Class 정리
+
+<< Renderer >>
+	- Renderer 분리
+	- Deferred Alpha Render 수정
+	- PostProcessing 정리 및 변경
+	- Render Queue 방식으로 수정
+
+<< Shader >>
+	- Constant Buffer 동적 배열 적용
+	- 자주 변경되는 Buffer Update는 Map / Unmap으로 변경
+	- Shader 관리 개선 (한곳에서 리소스 복제하는 방식으로 변경)
+
+<< Factory / Builder >>
+	- Builder 추가 (필요하면 Mesh Filter 추가할듯)
+	- Factory 목적에 따른 세분화
+
+<< Hardware Instancing >>
+	- Object Hardware Instancing
+
+<< Shadow >>
+	- 경계면 Blur 처리
+	- Cascade Shadow
+
+<< Blur >>
+	- Motion Blur / Camera Move Blur 필요
+
+<< PBR >>
+
+<< IBL >>
