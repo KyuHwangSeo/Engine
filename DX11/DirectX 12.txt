@@ -1,0 +1,19 @@
+# DirectX 12 Device 작동원리
+ DirectX 11 Device 내부에서는 자체적으로 멀티스레드 렌더링이 적용되어 있지만
+ DirectX 12 Device 에서는 이런 기능들이 빠져있어 수동으로 멀티스레드 렌더링을 적용시켜줘야한다.
+ 멀티 스레드 렌더링을 한다고 더 빨라지는 것이 아닌 이전 DirectX 11의 속도와 같거나 비슷해 지도록 하기 위해선 필수.
+
+# 멀티 스레드 방식
+ - Non-Blocking 
+	Draw 즉시 스레드 균등 분할 및 활성화
+ - Rendering Queue에 쌓인 Rendering을 분할 하여 멀티 스레드 작업
+ - SpinLock 영천님 블로그 참조
+
+# DirectX 12를 사용해야 하는 이유
+ - RayTracing..
+ - Mesh Shader
+ - DirectX 11 에서는 Texture 한장당 한개의 ShaderResourceView의 포인터를 통해 사용하는데 
+   DirectX 12에서는 GPU Address 단위이므로 세세한 컨트롤이 가능하다.. 하지만 유용한지는 모르겠다
+ - 그래픽스 공부가 많이된다..?
+
+# CUDA Programming
