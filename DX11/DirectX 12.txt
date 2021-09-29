@@ -1,11 +1,10 @@
 # DirectX 12 Device 작동원리
- DirectX 11 Device 내부에서는 자체적으로 멀티스레드 렌더링이 적용되어 있지만
- DirectX 12 Device 에서는 이런 기능들이 빠져있어 수동으로 멀티스레드 렌더링을 적용시켜줘야한다.
- 멀티 스레드 렌더링을 한다고 더 빨라지는 것이 아닌 이전 DirectX 11의 속도와 같거나 비슷해 지도록 하기 위해선 필수.
+ - DirectX 11 Device 내부에서는 자체적으로 멀티스레드 렌더링이 적용되어 있지만
+   DirectX 12 Device 에서는 이런 기능들이 빠져있어 수동으로 멀티스레드 렌더링을 적용시켜줘야한다.
+   멀티 스레드 렌더링을 한다고 더 빨라지는 것이 아닌 이전 DirectX 11의 속도와 같거나 비슷해 지도록 하기 위해선 필수.
 
 # 멀티 스레드 방식
- - Non-Blocking 
-	Draw 즉시 스레드 균등 분할 및 활성화
+ - Non-Blocking -> Draw 즉시 스레드 균등 분할 및 활성화
  - Rendering Queue에 쌓인 Rendering을 분할 하여 멀티 스레드 작업
  - SpinLock 영천님 블로그 참조
 
@@ -15,5 +14,84 @@
  - DirectX 11 에서는 Texture 한장당 한개의 ShaderResourceView의 포인터를 통해 사용하는데 
    DirectX 12에서는 GPU Address 단위이므로 세세한 컨트롤이 가능하다.. 하지만 유용한지는 모르겠다
  - 그래픽스 공부가 많이된다..?
+
+# DirectX 11 기준 DirectX 12 변화
+ - Resource Binding -> Root Signature / Descriiptor Table
+ - Immediate Context -> Command List & Command Queue
+ - State 변경 함수 -> ID3D12PipelineState 함수로 통일 (ex : OMSet, RSSet, PSSet, VSSet ...)
+ - 비동기 렌더링
+ - CPU -> Draw Call -> GPU 처리의 과정을 줄임
+ - DirectX runtime과 드라이버에서 해주던 일들을 Application 레이어로 빼냄
+ - Shader 코드는 그대로
+ - Mesh Shader 추가
+ - RayTracing
+ - DirectX 11에서 자동으로 이루어졌던 Resource Transition은 ResourceBarrier를 사용해서 직접 처리해야함
+ - D3DX 라이브러리 사용 불가 즉, Texture 로딩 함수도 직접 만들어야 하지만 현재는 DirectXTex로 사용할 수 있음
+ - Dynamic Resource Renaming (동적 버퍼) 없음 즉, 직접적으로 Draw가 끝났는지 체크한 후에 해당 버퍼에 쓸수 있도록 해야함
+
+# DirectX Resource
+ - Vertex Buffer
+ - Index Buffer
+ - Texture
+ - Constant Buffer
+ - Unordered Access Buffer (Compute Shader)
+ - Sampler
+
+# Resource Barrier
+ - RTV로 사용된 리소스는 SRV로 사용하기 전에 Transition 되어야 함
+ - SRV로 지정된 리소스는 RTV로 사용하기 전에 Transition 되어야 함
+ - DirectX 11 에선 자동 + implicit 이었으나 DirectX 12 에선 수동 + explicit 해야 함
+ - ResourceBarrier시 리소스의 Transition시 이전상태와 현재상태를 알아야하는 불편함이 있으므로 디버깅 필수
+
+# Descriptor
+ - Resource의 정보를 기술한 메모리 블록
+ - CBV, SRV, UAV를 생성하면 그 결과로 이 Descriptor를 얻음
+ - 32-64 bytes 사이즈 (GPU 마다 다름)
+ - 내부적으로 GPU Memory, CPU Memory pair로 구성
+ - D3D12_GPU_DESCRIPTOR_HANDLE, D3D12_CPU_DESCRIPTOR_HANDLE로 표현되며 사실상 포인터임
+
+# Descriptor Heap
+ - Descriptor로 사용할 선형 Memory 배열
+ - ID3D12DescriptorHeap(Com 객체)로 구현되어 있음
+ - 내부적으로 GPU Memory, CPU Memory pair로 구성
+ - CBV, SRV, UAV는 이 Descriptor Heap의 CPU, GPU 메모리에 생성(write) 됨
+ - Descriptor Heap의 CPU측 메모리에 write Shader에선 GPU 메모리에서 read 함
+
+# Root Signature
+ - ID3D12RootSignature로 구현되어 있음
+ - 어떤 Resource(Texture, Constant Buffer, Sampler 등)가 어떻게 Pipeline에 bind 될 지를 정의
+ - Resource binding 설정을 기술한 일종의 템플릿
+
+# Command List / Command Queue
+ - 비동기 렌더링을 위한 디자인
+ - DirectX 11의 Immediate Context는 존재하지 않음
+ - Graphics Command를 Command List에 Recording해서 Command Queue에 전송 (GPU Queue로 전송)
+ - 1개의 Command List 만으로도 처리는 가능하나 성능이 안나옴
+ - 멀티스레드로 여러 개의 Command List를 동시에 Recording하고 각가의 스레드가 독립적으로 Execute 해야 함
+
+# Command Queue
+ - 작업 완료 전까지 리소스 유지
+   1) Command Queue에 전송했다고 하는 것이 렌더링 작업의 완료를 뜻하는 것이 아님
+   2) Command Queue에 제출한 작업이 완료되기 전에 해당 작업에서 참조하는 리소스들이 해제되어서는 안됨
+ - 완료 체크
+   1) ID3D12Fence 객체를 사용해서 작업이 완료되었는지를 표시
+   2) ID3D12CommandQueue::Signal(fence, completed value)를 호출, 전송한 작업이 완료되면 ID3D12Fence객체의 Completed value가 업데이트
+   3) ID3D12Fence::GetCompletedValue()로 작업이 완료되었는지를 체크
+
+# DirectX 12 주의점
+ - DirectX 11의 Immediate Context에선 한번 설정한 State가 변경하기 전까지 계속 유지
+ - DirectX 12에선 Command Queue에 기본 설정된 RTV, DSV, Viewport가 없음
+ - DirectX 12에선 Command List를 사용할 때마다 RTV, DSV, Viewport를 설정해야 함
+ - OMSetRenderTarget(), RSSetViewport 등은 커맨드 초반에 먼저 호출해줘야 함
+ - Fence -> Wait -> Complete 될 때까지 리소스 상태를 유지해야함
+ - Direct2D를 사용하고 싶으면 D3D11On12를 사용해야 함 (DirectX 11의 모든 API 함수는 Thread Safe하지 않기 때문에 12에 맞게 사용해야함 물론, DirectX 12의 모든 API 함수는 Thread Safe)
+
+# DirectX 12 최적화
+ - CPU -> Draw Call -> GPU 까지의 과정이 짧아짐
+ - Command List 작성과 Execute의 적절한 배분 (여러 개의 Command List를 사용해서 Command기록과 Execute를 동시에 처리해야 할 필요가 있음)
+ - Command List 작성과 Execute의 비동기 처리를 극대화하기 위해 Multi-Thread Rendering이 필요
+ - 최소한의 Wait
+ - 서로 대기할 필요가 없는 작업들은 여러 개의 Command Queue로 나눠서 Execute 해야 함 (ex : 머리카락 흔들림, 구름처리 등은 Compute Shader로 비동기적으로 처리)
+ - Resource는 Bulk Memory로 할당하고 그 안에서 쪼개서 사용해야 메모리를 적게 사용할 수 있음
 
 # CUDA Programming

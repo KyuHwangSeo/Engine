@@ -1,11 +1,6 @@
 #pragma once
 /// <summary>
 /// DXTK를 이용한 텍스트 출력
-/// 
-/// 완성형밖에 안된다는데..
-/// DirectWrite버전도 제공해야겠다.
-/// 
-/// 2021.03.04 LeHideOffice
 /// </summary>
 #include "SpriteFont.h"
 #include "SpriteBatch.h"
