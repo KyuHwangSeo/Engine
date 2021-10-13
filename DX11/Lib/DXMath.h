@@ -11,7 +11,7 @@
 struct DXVector4;
 struct DXMatrix4X4;
 
-struct KH_API DXVector2
+struct DLL_DECLSPEC DXVector2
 {
 	float x, y;
 
@@ -48,7 +48,7 @@ struct KH_API DXVector2
 	static DXVector2 Zero();
 };
 
-struct KH_API DXVector3
+struct DLL_DECLSPEC DXVector3
 {
 	float x, y, z;
 
@@ -101,7 +101,7 @@ struct KH_API DXVector3
 	static DXVector3 One();
 };
 
-struct KH_API DXVector4
+struct DLL_DECLSPEC DXVector4
 {
 	float x, y, z, w;
 
@@ -149,7 +149,7 @@ struct KH_API DXVector4
 	static DXVector4 One();
 };
 
-struct KH_API DXMatrix4X4
+struct DLL_DECLSPEC DXMatrix4X4
 {
 	union 
 	{
@@ -212,37 +212,37 @@ struct KH_API DXMatrix4X4
 
 namespace KH_MATH
 {
-	KH_API DirectX::XMVECTOR XMStoreFloat3(DirectX::XMFLOAT3 _xmf);
-	KH_API DirectX::XMFLOAT3 XMLoadFloat3(DirectX::XMVECTOR _xmv);
-	KH_API DXVector3 BezierCurveThree(DXVector3 _p1, DXVector3 _p2, DXVector3 _p3, float t);
-	KH_API DXVector3 BezierCurveFour(DXVector3 _p1, DXVector3 _p2, DXVector3 _p3, DXVector3 _p4, float t);
-	KH_API DXVector3 GetMiddlePoint(DXVector3 _p1, DXVector3 _p2);
-	KH_API DXMatrix4X4 RotationAxis(DXVector3 _axis, float _angle);
-	KH_API float GetDistance(DXVector3 _p1, DXVector3 _p2);
-	KH_API float GetDistance(DXVector2 _p1, DXVector2 _p2);
-	KH_API bool CompareXMFLOAT3(DirectX::XMFLOAT3 _xmf1, DirectX::XMFLOAT3 _xmf2);
-
-	KH_API DXMatrix4X4 CreateScale(DXVector3 _v3);
-	KH_API DXMatrix4X4 CreateScale(float _x, float _y, float _z);
-	KH_API DXMatrix4X4 CreateRotationEuler(DXVector3 _v3);
-	KH_API DXMatrix4X4 CreateRotationEuler(float _x, float _y, float _z);
-	KH_API DXMatrix4X4 CreateTranslation(DXVector3 _v3);
-	KH_API DXMatrix4X4 CreateTranslation(float _x, float _y, float _z);
-
-	KH_API DXVector3 DXVector3Dot(DXVector3 _v1, DXVector3 _v2);
-	KH_API DXVector3 DXVector3Abs(DXVector3 _v3);
-	KH_API DXVector3 DXVector3Sqrt(DXVector3 _v3);
-	KH_API DXVector3 DXVector3Length(DXVector3 _v3);
-	KH_API DXVector3 DXVector3SplatOne(DXVector3 _v3);
-	KH_API DXVector3 DXVector3Replicate(float _value);
-	KH_API bool DXVector3Less(DXVector3 _v1, DXVector3 _v2);
-
-	KH_API DXVector4 DXVector4Abs(DXVector4 _v4);
-	KH_API DXVector4 DXVector4Sqrt(DXVector4 _v4);
-	KH_API DXVector4 DXVector4SplatOne(DXVector4 _v4);
-	KH_API DXVector4 DXVector4Replicate(float _value);
-	KH_API bool DXVector4Less(DXVector4 _v1, DXVector4 _v2);
-
+	DLL_DECLSPEC DirectX::XMVECTOR XMStoreFloat3(DirectX::XMFLOAT3 _xmf);
+	DLL_DECLSPEC DirectX::XMFLOAT3 XMLoadFloat3(DirectX::XMVECTOR _xmv);
+	DLL_DECLSPEC DXVector3 BezierCurveThree(DXVector3 _p1, DXVector3 _p2, DXVector3 _p3, float t);
+	DLL_DECLSPEC DXVector3 BezierCurveFour(DXVector3 _p1, DXVector3 _p2, DXVector3 _p3, DXVector3 _p4, float t);
+	DLL_DECLSPEC DXVector3 GetMiddlePoint(DXVector3 _p1, DXVector3 _p2);
+	DLL_DECLSPEC DXMatrix4X4 RotationAxis(DXVector3 _axis, float _angle);
+	DLL_DECLSPEC float GetDistance(DXVector3 _p1, DXVector3 _p2);
+	DLL_DECLSPEC float GetDistance(DXVector2 _p1, DXVector2 _p2);
+	DLL_DECLSPEC bool CompareXMFLOAT3(DirectX::XMFLOAT3 _xmf1, DirectX::XMFLOAT3 _xmf2);
+	
+	DLL_DECLSPEC DXMatrix4X4 CreateScale(DXVector3 _v3);
+	DLL_DECLSPEC DXMatrix4X4 CreateScale(float _x, float _y, float _z);
+	DLL_DECLSPEC DXMatrix4X4 CreateRotationEuler(DXVector3 _v3);
+	DLL_DECLSPEC DXMatrix4X4 CreateRotationEuler(float _x, float _y, float _z);
+	DLL_DECLSPEC DXMatrix4X4 CreateTranslation(DXVector3 _v3);
+	DLL_DECLSPEC DXMatrix4X4 CreateTranslation(float _x, float _y, float _z);
+	
+	DLL_DECLSPEC DXVector3 DXVector3Dot(DXVector3 _v1, DXVector3 _v2);
+	DLL_DECLSPEC DXVector3 DXVector3Abs(DXVector3 _v3);
+	DLL_DECLSPEC DXVector3 DXVector3Sqrt(DXVector3 _v3);
+	DLL_DECLSPEC DXVector3 DXVector3Length(DXVector3 _v3);
+	DLL_DECLSPEC DXVector3 DXVector3SplatOne(DXVector3 _v3);
+	DLL_DECLSPEC DXVector3 DXVector3Replicate(float _value);
+	DLL_DECLSPEC bool DXVector3Less(DXVector3 _v1, DXVector3 _v2);
+	
+	DLL_DECLSPEC DXVector4 DXVector4Abs(DXVector4 _v4);
+	DLL_DECLSPEC DXVector4 DXVector4Sqrt(DXVector4 _v4);
+	DLL_DECLSPEC DXVector4 DXVector4SplatOne(DXVector4 _v4);
+	DLL_DECLSPEC DXVector4 DXVector4Replicate(float _value);
+	DLL_DECLSPEC bool DXVector4Less(DXVector4 _v1, DXVector4 _v2);
+	
 	const float Infinity = FLT_MAX;
 	const float Pi = 3.1415926535f;
 }

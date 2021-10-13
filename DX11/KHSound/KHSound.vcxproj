@@ -72,25 +72,25 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\D3DEngine;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
     <TargetName>$(ProjectName)_x86d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)\D3DEngine;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
     <TargetName>$(ProjectName)_x86</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\D3DEngine;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(WindowsSDK_LibraryPath_x64)</LibraryPath>
     <TargetName>$(ProjectName)_x64d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)\D3DEngine;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(WindowsSDK_LibraryPath_x64)</LibraryPath>
     <TargetName>$(ProjectName)_x64</TargetName>
   </PropertyGroup>
@@ -112,13 +112,12 @@
       <AdditionalLibraryDirectories>$(ProjectDir)lib;</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)$(TargetName).lib"      "..\\lib"
-copy "$(ProjectDir)*.h"   "..\\lib"
+      <Command>copy/Y "$(OutDir)$(TargetName).lib"      "..\\lib"
+copy/Y "$(ProjectDir)*.h"   "..\\lib"
 copy/Y "$(ProjectDir)inc"   "..\\lib"
 copy/Y "$(ProjectDir)lib"   "..\\lib"
 copy ".\\lib\\fmodex.dll"   "..\\bin"
-copy ".\\lib\\fmodex.dll"   "$(SolutionDir)\D3DSample"
-copy ".\\lib\\fmodex.dll"   "$(SolutionDir)\D3DEngine"</Command>
+copy ".\\lib\\fmodex.dll"   "..\\lib"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -143,13 +142,12 @@ copy ".\\lib\\fmodex.dll"   "$(SolutionDir)\D3DEngine"</Command>
       <AdditionalLibraryDirectories>$(ProjectDir)lib;</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)$(TargetName).lib"      "..\\lib"
-copy "$(ProjectDir)*.h"   "..\\lib"
+      <Command>copy/Y "$(OutDir)$(TargetName).lib"      "..\\lib"
+copy/Y "$(ProjectDir)*.h"   "..\\lib"
 copy/Y "$(ProjectDir)inc"   "..\\lib"
 copy/Y "$(ProjectDir)lib"   "..\\lib"
 copy ".\\lib\\fmodex.dll"   "..\\bin"
-copy ".\\lib\\fmodex.dll"   "$(SolutionDir)\D3DSample"
-copy ".\\lib\\fmodex.dll"   "$(SolutionDir)\D3DEngine"</Command>
+copy ".\\lib\\fmodex.dll"   "..\\lib"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -170,13 +168,12 @@ copy ".\\lib\\fmodex.dll"   "$(SolutionDir)\D3DEngine"</Command>
       <AdditionalLibraryDirectories>$(ProjectDir)lib;</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)$(TargetName).lib"      "..\\lib"
-copy "$(ProjectDir)*.h"   "..\\lib"
+      <Command>copy/Y "$(OutDir)$(TargetName).lib"      "..\\lib"
+copy/Y "$(ProjectDir)*.h"   "..\\lib"
 copy/Y "$(ProjectDir)inc"   "..\\lib"
 copy/Y "$(ProjectDir)lib"   "..\\lib"
 copy ".\\lib\\fmodex.dll"   "..\\bin"
-copy ".\\lib\\fmodex.dll"   "$(SolutionDir)\D3DSample"
-copy ".\\lib\\fmodex.dll"   "$(SolutionDir)\D3DEngine"</Command>
+copy ".\\lib\\fmodex.dll"   "..\\lib"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -201,13 +198,12 @@ copy ".\\lib\\fmodex.dll"   "$(SolutionDir)\D3DEngine"</Command>
       <AdditionalLibraryDirectories>$(ProjectDir)lib;</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)$(TargetName).lib"      "..\\lib"
-copy "$(ProjectDir)*.h"   "..\\lib"
+      <Command>copy/Y "$(OutDir)$(TargetName).lib"      "..\\lib"
+copy/Y "$(ProjectDir)*.h"   "..\\lib"
 copy/Y "$(ProjectDir)inc"   "..\\lib"
 copy/Y "$(ProjectDir)lib"   "..\\lib"
 copy ".\\lib\\fmodex.dll"   "..\\bin"
-copy ".\\lib\\fmodex.dll"   "$(SolutionDir)\D3DSample"
-copy ".\\lib\\fmodex.dll"   "$(SolutionDir)\D3DEngine"</Command>
+copy ".\\lib\\fmodex.dll"   "..\\lib"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

@@ -11,8 +11,8 @@ public:
 	void Render(DXMatrix4X4 view, DXMatrix4X4 proj);
 	void Release();
 	
-	KH_API void SetLightType(eLightType lightType);
-	KH_API void SetLightColor(DXVector4 lightColor);
+	DLL_DECLSPEC void SetLightType(eLightType lightType);
+	DLL_DECLSPEC void SetLightColor(DXVector4 lightColor);
 	void DirLightRotate(DXVector3 axis, float angle);
 	void SetPointLight(PointLight pointLight);
 	void SetSpotLight(SpotLight spotLight);
@@ -22,7 +22,7 @@ public:
 
 	template<typename T>
 	void SetPosition(T& lightData);
-	KH_API void SetTarget(GameObject* obj);
+	DLL_DECLSPEC void SetTarget(GameObject* obj);
 
 	void SetLightViewProj();
 

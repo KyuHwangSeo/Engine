@@ -2,8 +2,8 @@
 class Scene
 {
 public:
-	KH_API Scene();
-	KH_API virtual ~Scene() = default;
+	DLL_DECLSPEC Scene();
+	DLL_DECLSPEC virtual ~Scene() = default;
 
 public:
 	void Start();

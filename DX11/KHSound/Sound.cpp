@@ -39,7 +39,7 @@ void KHSound::Initialize()
 
 	m_Master->addGroup(m_SFXGroup);
 	m_Master->addGroup(m_BGMGroup);
-
+	
 	m_BGMChannel->setChannelGroup(m_BGMGroup);
 
 	for (int i = 0; i < 6; i++)

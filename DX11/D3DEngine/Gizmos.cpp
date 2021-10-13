@@ -101,6 +101,8 @@ void Gizmos::SetVertexBuffer(VertexBuffer* vBuffer)
 	m_Stride = vBuffer->Stride;
 	m_Offset = vBuffer->Offset;
 
+	void* buf = vBuffer->VB.Get();
+
 	m_IndexCount = vBuffer->IndexCount;
 }
 

@@ -1,17 +1,12 @@
 #pragma once
 
+#define KH_STDCALL		__stdcall
+#define KH_CCALL		__cdecl
+
 #ifdef KH_DLL
-// DLL 제작 프로젝트
-// DLL 을 만들기 위해  함수/클래스등을 "export" 로 선언.
-#define KH_API  __declspec(dllexport)					//C++
-#define KH_TEMPLATE
+	#define DLL_DECLSPEC  __declspec(dllexport)					//C++
 #else
-
-// DLL 사용 프로젝트
-// DLL 을 사용하기 위한 헤더파일. "import" 로 선언.
-#define KH_API  __declspec(dllimport)					//C++
-#define KH_TEMPLATE extern
-
+	#define DLL_DECLSPEC  __declspec(dllimport)					//C++
 		#ifdef _WIN64
 			#ifdef _DEBUG
 				#pragma comment(lib, "D3DEngine_x64d.lib")		//64bit + debug

@@ -5,18 +5,18 @@ typedef std::pair<std::string, ParserData::Bone*> BonePair;
 struct FBXModel
 {
 	/// Material Data
-	int	m_materialcount;					// Material이 총 몇개인가?
-	std::vector<ParserData::CMaterial*> m_list_materialdata;	// Material들의 리스트
+	int	m_materialcount;										// Material 개수
+	std::vector<ParserData::CMaterial*> m_list_materialdata;	// Material List
 
 	/// Mesh Data
-	std::vector<ParserData::Mesh*> m_MeshList;	 		// 메시들
+	std::vector<ParserData::Mesh*> m_MeshList;	 				// Mesh List
 
 	/// Bone Data
-	std::vector<BonePair> m_AllBoneList;
+	std::vector<BonePair> m_AllBoneList;						// Skinning Object Bone List
 
 	/// Animation Data
 	bool m_isAnimation;
-	AnimationData* m_OneAnimation;					// 한 오브젝트의 애니메이션 데이터(파싱용)
+	AnimationData* m_OneAnimation;								// Object One Animation Data
 };
 
 class FBXParser
@@ -39,13 +39,14 @@ private:
 public:
 	FBXModel* m_Model;
 
-	ParserData::CMaterial* m_materialdata;			// Material의 데이터가 들어갈 구조체
-	ParserData::Mesh* m_OneMesh;						// 메시 하나의 데이터가 들어갈 구조체
-	ParserData::Bone* m_OneBone;
-	AnimationData* m_OneAnimation;					// 한 오브젝트의 애니메이션 데이터(파싱용)
+	ParserData::CMaterial* m_materialdata;			// Material Data Struct
+	ParserData::Mesh* m_OneMesh;					// Mesh Data Struct
+	ParserData::Bone* m_OneBone;					// Bone Data Struct
+	AnimationData* m_OneAnimation;					// Animation Data Struct
 
 	bool m_Scaling = true;
 	bool m_OnlyAni = false;
+
 public:
 	void Initalize();
 	void SceneSetting();

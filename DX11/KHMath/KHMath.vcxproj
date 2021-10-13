@@ -72,22 +72,22 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\D3DEngine;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <TargetName>$(ProjectName)_x86d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)\D3DEngine;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <TargetName>$(ProjectName)_x86</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\D3DEngine;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <TargetName>$(ProjectName)_x64d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)\D3DEngine;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <TargetName>$(ProjectName)_x64</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -106,9 +106,9 @@
     <PostBuildEvent>
       <Command>md  "..\\lib"
 md  "..\\bin" 
-copy "$(TargetPath)"      "..\\lib" 
-copy "$(OutDir)$(TargetName).lib"      "../lib"
-copy "$(ProjectDir)*.h"   "..\\lib"</Command>
+copy/Y "$(TargetPath)"      "..\\lib" 
+copy/Y "$(OutDir)$(TargetName).lib"      "../lib"
+copy/Y "$(ProjectDir)*.h"   "..\\lib"</Command>
     </PostBuildEvent>
     <Lib>
       <AdditionalLibraryDirectories>..\DXTK\Lib</AdditionalLibraryDirectories>
@@ -134,9 +134,9 @@ copy "$(ProjectDir)*.h"   "..\\lib"</Command>
     <PostBuildEvent>
       <Command>md  "..\\lib"
 md  "..\\bin" 
-copy "$(TargetPath)"      "..\\lib" 
-copy "$(OutDir)$(TargetName).lib"      "../lib"
-copy "$(ProjectDir)*.h"   "..\\lib"</Command>
+copy/Y "$(TargetPath)"      "..\\lib" 
+copy/Y "$(OutDir)$(TargetName).lib"      "../lib"
+copy/Y "$(ProjectDir)*.h"   "..\\lib"</Command>
     </PostBuildEvent>
     <Lib>
       <AdditionalLibraryDirectories>..\DXTK\Lib</AdditionalLibraryDirectories>
@@ -158,9 +158,9 @@ copy "$(ProjectDir)*.h"   "..\\lib"</Command>
     <PostBuildEvent>
       <Command>md  "..\\lib"
 md  "..\\bin" 
-copy "$(TargetPath)"      "..\\lib" 
-copy "$(OutDir)$(TargetName).lib"      "../lib"
-copy "$(ProjectDir)*.h"   "..\\lib"</Command>
+copy/Y "$(TargetPath)"      "..\\lib" 
+copy/Y "$(OutDir)$(TargetName).lib"      "../lib"
+copy/Y "$(ProjectDir)*.h"   "..\\lib"</Command>
     </PostBuildEvent>
     <Lib>
       <AdditionalLibraryDirectories>..\DXTK\Lib</AdditionalLibraryDirectories>
@@ -186,9 +186,9 @@ copy "$(ProjectDir)*.h"   "..\\lib"</Command>
     <PostBuildEvent>
       <Command>md  "..\\lib"
 md  "..\\bin" 
-copy "$(TargetPath)"      "..\\lib" 
-copy "$(OutDir)$(TargetName).lib"      "../lib"
-copy "$(ProjectDir)*.h"   "..\\lib"</Command>
+copy/Y "$(TargetPath)"      "..\\lib" 
+copy/Y "$(OutDir)$(TargetName).lib"      "../lib"
+copy/Y "$(ProjectDir)*.h"   "..\\lib"</Command>
     </PostBuildEvent>
     <Lib>
       <AdditionalLibraryDirectories>..\DXTK\Lib</AdditionalLibraryDirectories>

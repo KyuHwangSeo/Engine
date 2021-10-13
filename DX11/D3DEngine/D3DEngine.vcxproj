@@ -107,10 +107,10 @@
     <PostBuildEvent>
       <Command>md  "..\\lib"
 md  "..\\bin" 
-copy "$(TargetPath)"      "..\\lib" 
-copy "$(OutDir)$(TargetName).lib"      "..\\lib"
-copy "$(ProjectDir)*.h"   "..\\lib"
-copy "$(TargetPath)"  "..\\bin" </Command>
+copy/Y "$(TargetPath)"      "..\\lib" 
+copy/Y "$(OutDir)$(TargetName).lib"      "..\\lib"
+copy/Y "$(ProjectDir)*.h"   "..\\lib"
+copy/Y "$(TargetPath)"  "..\\bin" </Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>
@@ -141,10 +141,10 @@ copy "$(TargetPath)"  "..\\bin" </Command>
     <PostBuildEvent>
       <Command>md  "..\\lib"
 md  "..\\bin" 
-copy "$(TargetPath)"      "..\\lib" 
-copy "$(OutDir)$(TargetName).lib"      "..\\lib"
-copy "$(ProjectDir)*.h"   "..\\lib"
-copy "$(TargetPath)"  "..\\bin" </Command>
+copy/Y "$(TargetPath)"      "..\\lib" 
+copy/Y "$(OutDir)$(TargetName).lib"      "..\\lib"
+copy/Y "$(ProjectDir)*.h"   "..\\lib"
+copy/Y "$(TargetPath)"  "..\\bin" </Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>
@@ -170,10 +170,10 @@ copy "$(TargetPath)"  "..\\bin" </Command>
     <PostBuildEvent>
       <Command>md  "..\\lib"
 md  "..\\bin" 
-copy "$(TargetPath)"      "..\\lib" 
-copy "$(OutDir)$(TargetName).lib"      "../lib"
-copy "$(ProjectDir)*.h"   "..\\lib"
-copy "$(TargetPath)"  "..\\bin" </Command>
+copy/Y "$(TargetPath)"      "..\\lib" 
+copy/Y "$(OutDir)$(TargetName).lib"      "..\\lib"
+copy/Y "$(ProjectDir)*.h"   "..\\lib"
+copy/Y "$(TargetPath)"  "..\\bin" </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -198,10 +198,10 @@ copy "$(TargetPath)"  "..\\bin" </Command>
     <PostBuildEvent>
       <Command>md  "..\\lib"
 md  "..\\bin" 
-copy "$(TargetPath)"      "..\\lib" 
-copy "$(OutDir)$(TargetName).lib"      "../lib"
-copy "$(ProjectDir)*.h"   "..\\lib"
-copy "$(TargetPath)"  "..\\bin" </Command>
+copy/Y "$(TargetPath)"      "..\\lib" 
+copy/Y "$(OutDir)$(TargetName).lib"      "..\\lib"
+copy/Y "$(ProjectDir)*.h"   "..\\lib"
+copy/Y "$(TargetPath)"  "..\\bin" </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -259,6 +259,7 @@ copy "$(TargetPath)"  "..\\bin" </Command>
     <ClInclude Include="MathHelper.h" />
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="PostProcessing.h" />
+    <ClInclude Include="RenderData.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RendererDefine.h" />
     <ClInclude Include="RenderTarget.h" />

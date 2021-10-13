@@ -18,14 +18,14 @@ public:
 
 	void SetBoundBox(VertexBuffer* vBuffer);
 	void SetBoundBox(DXVector3 center, DXVector3 size);
-	KH_API void SetPosition(DXVector3 pos);
-	KH_API void SetPositionX(float x);
-	KH_API void SetPositionY(float y);
-	KH_API void SetPositionZ(float z);
-	KH_API void SetRange(DXVector3 range);
-	KH_API void SetRangeX(float range);
-	KH_API void SetRangeY(float range);
-	KH_API void SetRangeZ(float range);
+	DLL_DECLSPEC void SetPosition(DXVector3 pos);
+	DLL_DECLSPEC void SetPositionX(float x);
+	DLL_DECLSPEC void SetPositionY(float y);
+	DLL_DECLSPEC void SetPositionZ(float z);
+	DLL_DECLSPEC void SetRange(DXVector3 range);
+	DLL_DECLSPEC void SetRangeX(float range);
+	DLL_DECLSPEC void SetRangeY(float range);
+	DLL_DECLSPEC void SetRangeZ(float range);
 
 	void BuildGeometryBuffers(DirectX::BoundingBox bounds);
 

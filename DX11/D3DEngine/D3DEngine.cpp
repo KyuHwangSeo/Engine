@@ -175,8 +175,6 @@ void D3DEngine::CreateDevice()
 	/// MSDN에선 SwapChain 과 Device 를 한번에 생성해주는 함수를 지향함..
 	HR(D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, &m_FeatureLevel, 1,
 		D3D11_SDK_VERSION, &swapChainDesc, &m_SwapChain, &m_Device, NULL, &m_DeviceContext));
-
-
 }
 
 void D3DEngine::CreateHelper()
@@ -271,10 +269,10 @@ void D3DEngine::Draw_Text()
 {
 	//if (D3DEngine::GetInstance()->GetDebug() == false) return;
 
-	SimpleMath::Vector4 _white(1.0f, 1.0f, 1.0f, 1.0f);	// white
-	SimpleMath::Vector4 _orange(0.9f, 0.5f, 0.2f, 1.0f);
-	SimpleMath::Vector4 _red(0.9f, 0.3f, 0.3f, 1.0f);
-	SimpleMath::Vector4 _yellow(0.9f, 0.9f, 0.3f, 1.0f);
+	DXVector4 _white(1.0f, 1.0f, 1.0f, 1.0f);	// white
+	DXVector4 _orange(0.9f, 0.5f, 0.2f, 1.0f);
+	DXVector4 _red(0.9f, 0.3f, 0.3f, 1.0f);
+	DXVector4 _yellow(0.9f, 0.9f, 0.3f, 1.0f);
 
 	// 갱신주기
 	static float _addedTime = 0;
@@ -426,7 +424,7 @@ ComPtr<ID3D11DeviceContext> D3DEngine::GetDeviceContext()
 	return m_DeviceContext;
 }
 
-void D3DEngine::DrawTextColor(int x, int y, float scale, XMFLOAT4 color, TCHAR* text, ...)
+void D3DEngine::DrawTextColor(int x, int y, float scale, DXVector4 color, TCHAR* text, ...)
 {
 	m_Font->DrawTextColorD(x, y, scale, color, text);
 }

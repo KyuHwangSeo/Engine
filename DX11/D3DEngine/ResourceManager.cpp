@@ -323,7 +323,7 @@ void ResourceManager::LoadData_FBX_Animation(std::string objectName, std::string
 	m_FBXParserList.insert(make_pair(objectName, newFBX));
 }
 
-KH_API void ResourceManager::LoadData(eLoadType loadType, std::string objectName, std::string fileName, bool fbxScaling)
+DLL_DECLSPEC void ResourceManager::LoadData(eLoadType loadType, std::string objectName, std::string fileName, bool fbxScaling)
 {
 	switch (loadType)
 	{
@@ -1455,7 +1455,7 @@ void ResourceManager::LoadData_Animation(std::string objectName, std::string key
 	m_AnimationList.insert(make_pair(key, meshData->m_animation));
 }
 
-KH_API void ResourceManager::CreateBoneCollider(std::string objectName, eColliderType colType, float range)
+DLL_DECLSPEC void ResourceManager::CreateBoneCollider(std::string objectName, eColliderType colType, float range)
 {
 	FBXModel* fbxParser = m_FBXParserList.find(objectName)->second;
 
@@ -1579,7 +1579,7 @@ void ResourceManager::ResetFBX()
 	RELEASE_COM(m_FBXParser);
 }
 
-KH_API ID3D11ShaderResourceView* ResourceManager::GetTexture(std::string meshName, eTextureType textureType)
+DLL_DECLSPEC ID3D11ShaderResourceView* ResourceManager::GetTexture(std::string meshName, eTextureType textureType)
 {
 	std::string fileName;
 
@@ -1627,7 +1627,7 @@ KH_API ID3D11ShaderResourceView* ResourceManager::GetTexture(std::string meshNam
 	return m_TexList[fileName].Get();
 }
 
-KH_API ID3D11ShaderResourceView* ResourceManager::GetTexture(std::string texName)
+DLL_DECLSPEC ID3D11ShaderResourceView* ResourceManager::GetTexture(std::string texName)
 {
 	// 일반 텍스쳐 이름을 통한 로딩방식..
 	return m_TexList[texName].Get();

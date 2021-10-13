@@ -72,22 +72,22 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\D3DEngine;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <TargetName>$(ProjectName)_x86d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)\D3DEngine;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <TargetName>$(ProjectName)_x86</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\D3DEngine;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <TargetName>$(ProjectName)_x64d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)\D3DEngine;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <TargetName>$(ProjectName)_x64</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -106,12 +106,11 @@
     <PostBuildEvent>
       <Command>md  "..\\lib"
 md  "..\\bin" 
-copy "$(TargetPath)"      "..\\lib" 
-copy "$(OutDir)$(TargetName).lib"      "../lib"
-copy "$(ProjectDir)*.h"   "..\\lib"
-copy "..\FBX\lib\86\d\libfbxsdk.dll"   "..\\bin"
-copy "..\FBX\lib\86\d\libfbxsdk.dll"   "$(SolutionDir)\D3DEngine"
-copy "..\FBX\lib\86\d\libfbxsdk.dll"   "$(SolutionDir)\D3DSample"</Command>
+copy/Y "$(TargetPath)"      "..\\lib" 
+copy/Y "$(OutDir)$(TargetName).lib"      "../lib"
+copy/Y "$(ProjectDir)*.h"   "..\\lib"
+copy/Y "..\FBX\lib\86\d\libfbxsdk.dll"   "..\\bin"
+copy/Y "..\FBX\lib\86\d\libfbxsdk.dll"   "..\\lib"</Command>
     </PostBuildEvent>
     <Lib>
       <AdditionalLibraryDirectories>..\Lib;..\DXTK\Lib;..\FBX\lib\86\d;</AdditionalLibraryDirectories>
@@ -139,12 +138,12 @@ copy "..\FBX\lib\86\d\libfbxsdk.dll"   "$(SolutionDir)\D3DSample"</Command>
     <PostBuildEvent>
       <Command>md  "..\\lib"
 md  "..\\bin" 
-copy "$(TargetPath)"      "..\\lib" 
-copy "$(OutDir)$(TargetName).lib"      "../lib"
-copy "$(ProjectDir)*.h"   "..\\lib"
-copy "..\FBX\lib\86\r\libfbxsdk.dll"   "..\\bin"
-copy "..\FBX\lib\86\r\libfbxsdk.dll"   "$(SolutionDir)\D3DEngine"
-copy "..\FBX\lib\86\r\libfbxsdk.dll"   "$(SolutionDir)\D3DSample"</Command>
+copy/Y "$(TargetPath)"      "..\\lib" 
+copy/Y "$(OutDir)$(TargetName).lib"      "../lib"
+copy/Y "$(ProjectDir)*.h"   "..\\lib"
+copy/Y "..\FBX\lib\86\r\libfbxsdk.dll"   "..\\bin"
+copy/Y "..\FBX\lib\86\r\libfbxsdk.dll"   "..\\lib"
+</Command>
     </PostBuildEvent>
     <Lib>
       <AdditionalLibraryDirectories>..\Lib;..\DXTK\Lib;..\FBX\lib\86\r;</AdditionalLibraryDirectories>
@@ -168,12 +167,11 @@ copy "..\FBX\lib\86\r\libfbxsdk.dll"   "$(SolutionDir)\D3DSample"</Command>
     <PostBuildEvent>
       <Command>md  "..\\lib"
 md  "..\\bin" 
-copy "$(TargetPath)"      "..\\lib" 
-copy "$(OutDir)$(TargetName).lib"      "../lib"
-copy "$(ProjectDir)*.h"   "..\\lib"
-copy "..\FBX\lib\64\d\libfbxsdk.dll"   "..\\bin"
-copy "..\FBX\lib\64\d\libfbxsdk.dll"   "$(SolutionDir)\D3DEngine"
-copy "..\FBX\lib\64\d\libfbxsdk.dll"   "$(SolutionDir)\D3DSample"</Command>
+copy/Y "$(TargetPath)"      "..\\lib" 
+copy/Y "$(OutDir)$(TargetName).lib"      "../lib"
+copy/Y "$(ProjectDir)*.h"   "..\\lib"
+copy/Y "..\FBX\lib\64\d\libfbxsdk.dll"   "..\\bin"
+copy/Y "..\FBX\lib\64\d\libfbxsdk.dll"   "..\\lib"</Command>
     </PostBuildEvent>
     <Lib>
       <AdditionalLibraryDirectories>..\Lib;..\DXTK\Lib;..\FBX\lib\64\d;</AdditionalLibraryDirectories>
@@ -201,12 +199,11 @@ copy "..\FBX\lib\64\d\libfbxsdk.dll"   "$(SolutionDir)\D3DSample"</Command>
     <PostBuildEvent>
       <Command>md  "..\\lib"
 md  "..\\bin" 
-copy "$(TargetPath)"      "..\\lib" 
-copy "$(OutDir)$(TargetName).lib"      "../lib"
-copy "$(ProjectDir)*.h"   "..\\lib"
-copy "..\FBX\lib\64\r\libfbxsdk.dll"   "..\\bin"
-copy "..\FBX\lib\64\r\libfbxsdk.dll"   "$(SolutionDir)\D3DEngine"
-copy "..\FBX\lib\64\r\libfbxsdk.dll"   "$(SolutionDir)\D3DSample"</Command>
+copy/Y "$(TargetPath)"      "..\\lib" 
+copy/Y "$(OutDir)$(TargetName).lib"      "../lib"
+copy/Y "$(ProjectDir)*.h"   "..\\lib"
+copy/Y "..\FBX\lib\64\r\libfbxsdk.dll"   "..\\bin"
+copy/Y "..\FBX\lib\64\r\libfbxsdk.dll"   "..\\lib"</Command>
     </PostBuildEvent>
     <Lib>
       <AdditionalLibraryDirectories>..\Lib;..\DXTK\Lib;..\FBX\lib\64\r;</AdditionalLibraryDirectories>

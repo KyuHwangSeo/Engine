@@ -70,7 +70,7 @@ public:
 	void Update(float dTime);
 	void Render(DXMatrix4X4 view, DXMatrix4X4 proj);
 
-	KH_API void SetCameraTarget(Transform* target);
+	DLL_DECLSPEC void SetCameraTarget(Transform* target);
 	void SetMove(bool state);
 
 	void Release();
@@ -111,7 +111,7 @@ public:
 	float m_Speed = 0;
 	float m_Angle = 0;
 
-	KH_API static Camera* g_MainCamera;
-	KH_API static Transform* m_Target;
+	DLL_DECLSPEC static Camera* g_MainCamera;
+	DLL_DECLSPEC static Transform* m_Target;
 };
 

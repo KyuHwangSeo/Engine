@@ -18,7 +18,7 @@ Transform::~Transform()
 
 }
 
-KH_API void Transform::SetScale(DXVector3 _scale)
+DLL_DECLSPEC void Transform::SetScale(DXVector3 _scale)
 {
 	m_LocalRot._11 *= _scale.x;
 	m_LocalRot._22 *= _scale.y;
@@ -29,7 +29,7 @@ KH_API void Transform::SetScale(DXVector3 _scale)
 	m_UpdateConvert = true;
 }
 
-KH_API void Transform::SetScale(float x, float y, float z)
+DLL_DECLSPEC void Transform::SetScale(float x, float y, float z)
 {
 	m_LocalRot._11 *= x;
 	m_LocalRot._22 *= y;
@@ -40,7 +40,7 @@ KH_API void Transform::SetScale(float x, float y, float z)
 	m_UpdateConvert = true;
 }
 
-KH_API void Transform::SetScaleX(float x)
+DLL_DECLSPEC void Transform::SetScaleX(float x)
 {
 	m_LocalRot._11 = x;
 
@@ -49,7 +49,7 @@ KH_API void Transform::SetScaleX(float x)
 	m_UpdateConvert = true;
 }
 
-KH_API void Transform::SetScaleY(float y)
+DLL_DECLSPEC void Transform::SetScaleY(float y)
 {
 	m_LocalRot._22 = y;
 
@@ -58,7 +58,7 @@ KH_API void Transform::SetScaleY(float y)
 	m_UpdateConvert = true;
 }
 
-KH_API void Transform::ChangeScale(DXVector3 _scale)
+DLL_DECLSPEC void Transform::ChangeScale(DXVector3 _scale)
 {
 	m_LocalRot._11 = _scale.x;
 	m_LocalRot._22 = _scale.y;
@@ -69,7 +69,7 @@ KH_API void Transform::ChangeScale(DXVector3 _scale)
 	m_UpdateConvert = true;
 }
 
-KH_API void Transform::ChangeScale(float x, float y, float z)
+DLL_DECLSPEC void Transform::ChangeScale(float x, float y, float z)
 {
 	m_LocalRot._11 = x;
 	m_LocalRot._22 = y;
@@ -80,7 +80,7 @@ KH_API void Transform::ChangeScale(float x, float y, float z)
 	m_UpdateConvert = true;
 }
 
-KH_API void Transform::SetPosition(DXVector3 pos)
+DLL_DECLSPEC void Transform::SetPosition(DXVector3 pos)
 {
 	m_Pos = pos;
 
@@ -90,7 +90,7 @@ KH_API void Transform::SetPosition(DXVector3 pos)
 	m_UpdateConvert = true;
 }
 
-KH_API void Transform::SetPosition(float x, float y, float z)
+DLL_DECLSPEC void Transform::SetPosition(float x, float y, float z)
 {
 	m_Pos = DXVector3(x,y,z);
 
@@ -100,7 +100,7 @@ KH_API void Transform::SetPosition(float x, float y, float z)
 	m_UpdateConvert = true;
 }
 
-KH_API void Transform::SetPositionX(float x)
+DLL_DECLSPEC void Transform::SetPositionX(float x)
 {
 	m_Pos.x = x;
 
@@ -108,7 +108,7 @@ KH_API void Transform::SetPositionX(float x)
 	m_UpdateConvert = true;
 }
 
-KH_API void Transform::SetPositionY(float y)
+DLL_DECLSPEC void Transform::SetPositionY(float y)
 {
 	m_Pos.y = y;
 
@@ -116,7 +116,7 @@ KH_API void Transform::SetPositionY(float y)
 	m_UpdateConvert = true;
 }
 
-KH_API void Transform::SetPositionZ(float z)
+DLL_DECLSPEC void Transform::SetPositionZ(float z)
 {
 	m_Pos.z = z;
 
@@ -124,7 +124,7 @@ KH_API void Transform::SetPositionZ(float z)
 	m_UpdateConvert = true;
 }
 
-KH_API void Transform::SetRotate(DXVector3 _rot)
+DLL_DECLSPEC void Transform::SetRotate(DXVector3 _rot)
 {
 	const auto yaw = _rot.y * KH_MATH::Pi / 180.0f;
 	const auto pitch = _rot.x * KH_MATH::Pi / 180.0f;
@@ -137,7 +137,7 @@ KH_API void Transform::SetRotate(DXVector3 _rot)
 	m_OffsetTM = XMMatrixRotationQuaternion(q);
 }
 
-KH_API void Transform::SetRotate(float x, float y, float z)
+DLL_DECLSPEC void Transform::SetRotate(float x, float y, float z)
 {
 	const auto yaw = y * KH_MATH::Pi / 180.0f;
 	const auto pitch = x * KH_MATH::Pi / 180.0f;
@@ -150,7 +150,7 @@ KH_API void Transform::SetRotate(float x, float y, float z)
 	m_OffsetTM = XMMatrixRotationQuaternion(q);
 }
 
-KH_API void Transform::RotateLocal(DXVector3 ypr)
+DLL_DECLSPEC void Transform::RotateLocal(DXVector3 ypr)
 {
 	m_Rot += ypr;
 
@@ -165,7 +165,7 @@ KH_API void Transform::RotateLocal(DXVector3 ypr)
 	m_LocalRot = XMMatrixRotationQuaternion(q) * m_LocalRot;
 }
 
-KH_API void Transform::RotateLocal(float x, float y, float z)
+DLL_DECLSPEC void Transform::RotateLocal(float x, float y, float z)
 {
 	m_Rot += DXVector3(x, y, z);
 
@@ -180,7 +180,7 @@ KH_API void Transform::RotateLocal(float x, float y, float z)
 	m_LocalRot = XMMatrixRotationQuaternion(q) * m_LocalRot;
 }
 
-KH_API void Transform::MoveLocal(float _x, float _y, float _z)
+DLL_DECLSPEC void Transform::MoveLocal(float _x, float _y, float _z)
 {
 	DXVector3 localMove;
 
@@ -195,7 +195,7 @@ KH_API void Transform::MoveLocal(float _x, float _y, float _z)
 	m_UpdateConvert = true;
 }
 
-KH_API void Transform::MoveLocal(DXVector3 _move)
+DLL_DECLSPEC void Transform::MoveLocal(DXVector3 _move)
 {
 	DXVector3 localMove;
 
@@ -210,7 +210,7 @@ KH_API void Transform::MoveLocal(DXVector3 _move)
 	m_UpdateConvert = true;
 }
 
-KH_API void Transform::MoveOffset(DXVector3 _move)
+DLL_DECLSPEC void Transform::MoveOffset(DXVector3 _move)
 {
 	DXVector3 offsetMove;
 
@@ -225,7 +225,7 @@ KH_API void Transform::MoveOffset(DXVector3 _move)
 	m_UpdateConvert = true;
 }
 
-KH_API void Transform::MoveOffset(float x, float y, float z)
+DLL_DECLSPEC void Transform::MoveOffset(float x, float y, float z)
 {
 	DXVector3 offsetMove;
 
@@ -240,7 +240,7 @@ KH_API void Transform::MoveOffset(float x, float y, float z)
 	m_UpdateConvert = true;
 }
 
-KH_API void Transform::MoveWorld(float _x, float _y, float _z)
+DLL_DECLSPEC void Transform::MoveWorld(float _x, float _y, float _z)
 {
 	m_LocalRot._41 += _x;
 	m_LocalRot._42 += _y;
@@ -248,7 +248,7 @@ KH_API void Transform::MoveWorld(float _x, float _y, float _z)
 	m_UpdateConvert = true;
 }
 
-KH_API void Transform::MoveWorld(DXVector3 _move)
+DLL_DECLSPEC void Transform::MoveWorld(DXVector3 _move)
 {
 	m_LocalRot._41 += _move.x;
 	m_LocalRot._42 += _move.y;
@@ -256,7 +256,7 @@ KH_API void Transform::MoveWorld(DXVector3 _move)
 	m_UpdateConvert = true;
 }
 
-KH_API void Transform::ResetTM(DXVector3 targetPos)
+DLL_DECLSPEC void Transform::ResetTM(DXVector3 targetPos)
 {
 	// 현재 위치와 이전 프레임 위치..
 	DXVector3 nowPos = m_WorldTM.GetRow(3);
@@ -404,7 +404,7 @@ void Transform::SetNodeTM(DXMatrix4X4 _tm)
 	m_NodeTM = _tm;
 }
 
-KH_API DXMatrix4X4 Transform::GetWorldTM()
+DLL_DECLSPEC DXMatrix4X4 Transform::GetWorldTM()
 {
 	return m_WorldTM;
 }
@@ -419,17 +419,17 @@ DXMatrix4X4 Transform::GetLocalTM()
 	return m_LocalTM;
 }
 
-KH_API DXVector3 Transform::GetScale()
+DLL_DECLSPEC DXVector3 Transform::GetScale()
 {
 	return DXVector3(m_WorldTM._11, m_WorldTM._22, m_WorldTM._33);
 }
 
-KH_API DXVector3 Transform::GetPosition()
+DLL_DECLSPEC DXVector3 Transform::GetPosition()
 {
 	return DXVector3(m_WorldTM._41, m_WorldTM._42, m_WorldTM._43);
 }
 
-KH_API DXVector3 Transform::GetRotation()
+DLL_DECLSPEC DXVector3 Transform::GetRotation()
 {
 	return DXVector3(m_WorldTM._31, m_WorldTM._32, m_WorldTM._33);
 }

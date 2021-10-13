@@ -31,7 +31,7 @@ void DXTKFont::Create(ID3D11Device* pDevice)
 	RELEASE_COM(pDC);
 }
 
-void DXTKFont::DrawTextColorE(int x, int y, float scale, XMFLOAT4 color, TCHAR* text, ...)
+void DXTKFont::DrawTextColorE(int x, int y, float scale, DXVector4 color, TCHAR* text, ...)
 {
 	TCHAR _buffer[1024] = L"";
 	va_list vl;
@@ -40,11 +40,11 @@ void DXTKFont::DrawTextColorE(int x, int y, float scale, XMFLOAT4 color, TCHAR* 
 	va_end(vl);
 
 	m_pSpriteBatch->Begin();
-	m_pSpriteFont->DrawString(m_pSpriteBatch, _buffer, XMFLOAT2((float)x, (float)y), SimpleMath::Vector4(color), 0.0f, XMFLOAT2(), scale);
+	m_pSpriteFont->DrawString(m_pSpriteBatch, _buffer, DXVector2((float)x, (float)y), color, 0.0f, DXVector2(), scale);
 	m_pSpriteBatch->End();
 }
 
-void DXTKFont::DrawTextColorD(int x, int y, float scale, XMFLOAT4 color, TCHAR* text)
+void DXTKFont::DrawTextColorD(int x, int y, float scale, DXVector4 color, TCHAR* text)
 {
 	// SpriteBatch에 여러 렌더 스테이트를 지정할 수 있다.
 	// 문제는, 그냥 Begin만 하면 뎁스스탠실버퍼 옵션이 D3D11_DEPTH_WRITE_MASK_ZERO가 되는 듯. DSS를 다루지 않는 포반에는 문제가 될 수 있다.
@@ -52,6 +52,6 @@ void DXTKFont::DrawTextColorD(int x, int y, float scale, XMFLOAT4 color, TCHAR* 
 	// DX12에서 렌더스테이트등을 그렇게 가져가는 것도 이해는 간다. 별로 맘에 안들었겠지..
 	///m_pSpriteBatch->Begin(DirectX::SpriteSortMode::SpriteSortMode_Deferred, nullptr, nullptr, m_DepthStencilState/*, m_RasterizerState*/);
 	m_pSpriteBatch->Begin();
-	m_pSpriteFont->DrawString(m_pSpriteBatch, text, XMFLOAT2((float)x, (float)y), SimpleMath::Vector4(color), 0.0f, XMFLOAT2(), scale);
+	m_pSpriteFont->DrawString(m_pSpriteBatch, text, DXVector2((float)x, (float)y), color, 0.0f, DXVector2(), scale);
 	m_pSpriteBatch->End();
 }

@@ -10,8 +10,6 @@ using namespace fbxsdk;
 #include <cassert>
 #include <string>
 #include <vector>
-#include <unordered_map>
-using namespace std;
 
 #include "DLLDefine.h"
 #include "KHMath.h"
@@ -292,11 +290,11 @@ void FBXParser::ProcessSkeleton(fbxsdk::FbxNode* node)
 
 	if (m_OneMesh->m_parent != nullptr)
 	{
-		string nodeName = parentNode->GetName();
+		std::string nodeName = parentNode->GetName();
 		parentBoneIndex = FindBoneIndex(nodeName);
 	}
 
-	string boneName = node->GetName();
+	std::string boneName = node->GetName();
 	m_OneBone->m_bone_name = boneName;
 	m_OneBone->m_parent_bone_number = parentBoneIndex;
 	m_OneBone->m_bone_number = m_Model->m_AllBoneList.size();
@@ -320,7 +318,7 @@ void FBXParser::ProcessMesh(fbxsdk::FbxNode* node)
 	if (m_OnlyAni) return;
 
 	// 현 Node Parent 찾기..
-	string parentName = node->GetParent()->GetName();
+	std::string parentName = node->GetParent()->GetName();
 	Mesh* parentMesh = FindMesh(parentName);
 	m_OneMesh->m_nodeparent = parentName;
 	m_OneMesh->m_parent = parentMesh;
@@ -340,7 +338,7 @@ void FBXParser::ProcessMesh(fbxsdk::FbxNode* node)
 
 	// Vertex 개수만큼 BoneWeight 생성..
 	// 해당 Vertex Index와 동일한 Index에 가중치 값, Bone Index Data 설정..
-	vector<BoneWeights> boneWeights(vertexTotalCount);
+	std::vector<BoneWeights> boneWeights(vertexTotalCount);
 	bool isSkin = ProcessBoneWeights(node, boneWeights);
 
 	// Bone Data 설정 결과에 따른 Skinning Object 판별..
@@ -385,7 +383,7 @@ void FBXParser::ProcessMesh(fbxsdk::FbxNode* node)
 }
 
 
-bool FBXParser::ProcessBoneWeights(fbxsdk::FbxNode* node, vector<BoneWeights>& meshBoneWeights)
+bool FBXParser::ProcessBoneWeights(fbxsdk::FbxNode* node, std::vector<BoneWeights>& meshBoneWeights)
 {
 	FbxMesh* mesh = node->GetMesh();
 
@@ -412,7 +410,7 @@ bool FBXParser::ProcessBoneWeights(fbxsdk::FbxNode* node, vector<BoneWeights>& m
 
 			// Skin Mesh 체크..
 			Mesh* skinMesh = FindMesh(node->GetName());
-			vector<BoneWeights> skinBoneWeights(meshBoneWeights.size());
+			std::vector<BoneWeights> skinBoneWeights(meshBoneWeights.size());
 			for (int clusterIndex = 0; clusterIndex < clusterCount; clusterIndex++)
 			{
 				FbxCluster* cluster = skin->GetCluster(clusterIndex);
@@ -423,7 +421,7 @@ bool FBXParser::ProcessBoneWeights(fbxsdk::FbxNode* node, vector<BoneWeights>& m
 
 				if (pLinkNode == nullptr) continue;
 
-				string lineNodeName = pLinkNode->GetName();
+				std::string lineNodeName = pLinkNode->GetName();
 
 				int BoneIndex = FindBoneIndex(lineNodeName);
 
@@ -521,7 +519,7 @@ void FBXParser::ProcessAnimation(fbxsdk::FbxNode* node)
 
 	if (nodeAttribute != nullptr)
 	{
-		string nodeName = node->GetName();
+		std::string nodeName = node->GetName();
 		Mesh* mesh = FindMesh(nodeName);
 
 		if (mesh != nullptr)
@@ -1099,7 +1097,7 @@ void FBXParser::SetTexture(fbxsdk::FbxSurfaceMaterial* material, const char* mat
 					{
 						// 변환된 파일 경로..
 						std::string fileRoute = ConvertFileRoute(fileTexture->GetFileName());
-						std::string count = to_string(m_Model->m_materialcount);
+						std::string count = std::to_string(m_Model->m_materialcount);
 						if (textureType == "DiffuseColor")
 						{
 							m_materialdata->m_DiffuseMap = new MaterialMap();

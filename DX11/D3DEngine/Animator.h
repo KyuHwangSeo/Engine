@@ -13,13 +13,13 @@ public:
 	void Update(float dTime);
 	void Release();
 	
-	KH_API void PlayAnimation(string aniKey, bool loop = true, bool overlap = false);
-	KH_API void ResumeAnimation();
-	KH_API void StopAnimation();
-	KH_API void AddAnimation(string aniKey, Animation* newAni);
-	KH_API void SetAnimationSpeed(float speed);
-	KH_API void AddAnimationSpeed(float speed);
-	KH_API void NextAnimation(bool loop = true);
+	DLL_DECLSPEC void PlayAnimation(string aniKey, bool loop = true, bool overlap = false);
+	DLL_DECLSPEC void ResumeAnimation();
+	DLL_DECLSPEC void StopAnimation();
+	DLL_DECLSPEC void AddAnimation(string aniKey, Animation* newAni);
+	DLL_DECLSPEC void SetAnimationSpeed(float speed);
+	DLL_DECLSPEC void AddAnimationSpeed(float speed);
+	DLL_DECLSPEC void NextAnimation(bool loop = true);
 	void AddMeshObject(GameObject* obj);
 
 	float GetAnimationSpeed();

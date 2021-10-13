@@ -116,7 +116,6 @@ LRESULT CALLBACK GameManager::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam
 			if (width > 0 && height > 0)
 			{
 				KH_ENGINE::OnResize(width, height);
-				KH_ENGINE::CameraSetLens(width, height);
 			}
 		}
 		return 0;

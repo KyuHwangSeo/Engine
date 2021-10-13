@@ -45,7 +45,7 @@ void Animator::Release()
 	m_Animations.clear();
 }
 
-KH_API void Animator::PlayAnimation(string aniKey, bool loop, bool overlap)
+DLL_DECLSPEC void Animator::PlayAnimation(string aniKey, bool loop, bool overlap)
 {
 	// 이미 재생중인 애니메이션..
 	if (overlap == false)
@@ -66,17 +66,17 @@ KH_API void Animator::PlayAnimation(string aniKey, bool loop, bool overlap)
 	m_Play = true;
 }
 
-KH_API void Animator::ResumeAnimation()
+DLL_DECLSPEC void Animator::ResumeAnimation()
 {
 	m_Play = true;
 }
 
-KH_API void Animator::StopAnimation()
+DLL_DECLSPEC void Animator::StopAnimation()
 {
 	m_Play = false;
 }
 
-KH_API void Animator::AddAnimation(string aniKey, Animation* newAni)
+DLL_DECLSPEC void Animator::AddAnimation(string aniKey, Animation* newAni)
 {
 	// 키값과 애니메이션 이름을 맞춰주자..
 	newAni->SetName(aniKey);
@@ -84,17 +84,17 @@ KH_API void Animator::AddAnimation(string aniKey, Animation* newAni)
 	m_Animations.insert(make_pair(aniKey, newAni));
 }
 
-KH_API void Animator::SetAnimationSpeed(float speed)
+DLL_DECLSPEC void Animator::SetAnimationSpeed(float speed)
 {
 	m_Animations[m_NowAni]->SetAnimationSpeed(speed);
 }
 
-KH_API void Animator::AddAnimationSpeed(float speed)
+DLL_DECLSPEC void Animator::AddAnimationSpeed(float speed)
 {
 	m_Animations[m_NowAni]->AddAnimationSpeed(speed);
 }
 
-KH_API void Animator::NextAnimation(bool loop)
+DLL_DECLSPEC void Animator::NextAnimation(bool loop)
 {
 	auto ani = m_Animations.find(m_NowAni)++;
 

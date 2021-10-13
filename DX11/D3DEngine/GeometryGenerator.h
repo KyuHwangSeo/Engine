@@ -1,6 +1,6 @@
 #pragma once
 
-class KH_API GeometryGenerator
+class DLL_DECLSPEC GeometryGenerator
 {
 public:
 	struct Vertex

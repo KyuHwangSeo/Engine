@@ -22,7 +22,7 @@ public:
 	void LoadData_ASE_Animation(std::string objectName, std::string fileName = "");
 	void LoadData_FBX(std::string objectName, std::string fileName = "", bool fbxScaling = true);
 	void LoadData_FBX_Animation(std::string objectName, std::string fileName = "", bool fbxScaling = true);
-	KH_API void LoadData(eLoadType loadType, std::string objectName, std::string fileName, bool fbxScaling = true);
+	DLL_DECLSPEC void LoadData(eLoadType loadType, std::string objectName, std::string fileName, bool fbxScaling = true);
 	void LoadData_MaterialList(std::string objectName);
 
 	void LoadData_Text(std::string objectName, std::string fileName);
@@ -42,17 +42,17 @@ public:
 	void LoadData_SkinMesh(std::string objectName, std::string key, ParserData::Mesh* meshData);
 	void LoadData_Mesh(std::string objectName, std::string key, ParserData::Mesh* meshData);
 	void LoadData_Animation(std::string objectName, std::string key, ParserData::Mesh* meshData);
-	KH_API void CreateBoneCollider(std::string objectName, eColliderType colType, float range);
+	DLL_DECLSPEC void CreateBoneCollider(std::string objectName, eColliderType colType, float range);
 	void SetBoxCollider(std::string objectName, std::string key, ParserData::Mesh* meshData, DXVector3 range);
 	void SetSphereCollider(std::string objectName, std::string key, ParserData::Mesh* meshData, float range);
 
 	void LoadData_Material(ParserData::CMaterial* materialData);
 	void LoadData_Texture(std::string objectName, std::string fileName, ParserData::MaterialMap* materialmap = nullptr);
-	KH_API void ResetFBX();
+	DLL_DECLSPEC void ResetFBX();
 
 public:
-	KH_API ID3D11ShaderResourceView* GetTexture(std::string meshName, eTextureType textureType);
-	KH_API ID3D11ShaderResourceView* GetTexture(std::string texName);
+	DLL_DECLSPEC ID3D11ShaderResourceView* GetTexture(std::string meshName, eTextureType textureType);
+	DLL_DECLSPEC ID3D11ShaderResourceView* GetTexture(std::string texName);
 	CASEParser* GetASEParser(std::string objectName);
 	FBXModel* GetFBXParser(std::string objectName);
 	VertexBuffer* GetVertexBuffer(std::string key);

@@ -892,7 +892,7 @@ XMMATRIX DXMatrix4X4::ConvertXMMATRIX()
 // Math Expansion Function
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-KH_API XMVECTOR KH_MATH::XMStoreFloat3(XMFLOAT3 _xmf)
+DLL_DECLSPEC XMVECTOR KH_MATH::XMStoreFloat3(XMFLOAT3 _xmf)
 {
 	XMVECTOR resultV;
 	resultV.m128_f32[0] = _xmf.x;
@@ -902,7 +902,7 @@ KH_API XMVECTOR KH_MATH::XMStoreFloat3(XMFLOAT3 _xmf)
 	return resultV;
 }
 
-KH_API XMFLOAT3 KH_MATH::XMLoadFloat3(XMVECTOR _xmv)
+DLL_DECLSPEC XMFLOAT3 KH_MATH::XMLoadFloat3(XMVECTOR _xmv)
 {
 	XMFLOAT3 resultF;
 	resultF.x = _xmv.m128_f32[0];
@@ -912,7 +912,7 @@ KH_API XMFLOAT3 KH_MATH::XMLoadFloat3(XMVECTOR _xmv)
 	return resultF;
 }
 
-KH_API DXVector3 KH_MATH::BezierCurveThree(DXVector3 _p1, DXVector3 _p2, DXVector3 _p3, float t)
+DLL_DECLSPEC DXVector3 KH_MATH::BezierCurveThree(DXVector3 _p1, DXVector3 _p2, DXVector3 _p3, float t)
 {
 	XMVECTOR t1 = XMVectorReplicate((1 - t) * (1 - t));
 	XMVECTOR t2 = XMVectorReplicate(2 * t * (1 - t));
@@ -925,7 +925,7 @@ KH_API DXVector3 KH_MATH::BezierCurveThree(DXVector3 _p1, DXVector3 _p2, DXVecto
 	return result;
 }
 
-KH_API DXVector3 KH_MATH::BezierCurveFour(DXVector3 _p1, DXVector3 _p2, DXVector3 _p3, DXVector3 _p4, float t)
+DLL_DECLSPEC DXVector3 KH_MATH::BezierCurveFour(DXVector3 _p1, DXVector3 _p2, DXVector3 _p3, DXVector3 _p4, float t)
 {
 	XMVECTOR t1 = XMVectorReplicate((1 - t) * (1 - t) * (1 - t));
 	XMVECTOR t2 = XMVectorReplicate(3 * t * (1 - t) * (1 - t));
@@ -940,7 +940,7 @@ KH_API DXVector3 KH_MATH::BezierCurveFour(DXVector3 _p1, DXVector3 _p2, DXVector
 	return result;
 }
 
-KH_API DXVector3 KH_MATH::GetMiddlePoint(DXVector3 _p1, DXVector3 _p2)
+DLL_DECLSPEC DXVector3 KH_MATH::GetMiddlePoint(DXVector3 _p1, DXVector3 _p2)
 {
 	DXVector3 resultF = { _p1.x * 2 - _p2.x,
 						 _p1.y * 2 - _p2.y,
@@ -948,7 +948,7 @@ KH_API DXVector3 KH_MATH::GetMiddlePoint(DXVector3 _p1, DXVector3 _p2)
 	return resultF;
 }
 
-KH_API DXMatrix4X4 KH_MATH::RotationAxis(DXVector3 _axis, float _angle)
+DLL_DECLSPEC DXMatrix4X4 KH_MATH::RotationAxis(DXVector3 _axis, float _angle)
 {
 	DXMatrix4X4 _result;
 
@@ -981,20 +981,20 @@ KH_API DXMatrix4X4 KH_MATH::RotationAxis(DXVector3 _axis, float _angle)
 	return _result;
 }
 
-KH_API float KH_MATH::GetDistance(DXVector3 _p1, DXVector3 _p2)
+DLL_DECLSPEC float KH_MATH::GetDistance(DXVector3 _p1, DXVector3 _p2)
 {
 	return sqrtf(powf(_p1.x - _p2.x, 2) +
 		powf(_p1.y - _p2.y, 2) +
 		powf(_p1.z - _p2.z, 2));
 }
 
-KH_API float KH_MATH::GetDistance(DXVector2 _p1, DXVector2 _p2)
+DLL_DECLSPEC float KH_MATH::GetDistance(DXVector2 _p1, DXVector2 _p2)
 {
 	return sqrtf(powf(_p1.x - _p2.x, 2) +
 		powf(_p1.y - _p2.y, 2));
 }
 
-KH_API bool KH_MATH::CompareXMFLOAT3(XMFLOAT3 _xmf1, XMFLOAT3 _xmf2)
+DLL_DECLSPEC bool KH_MATH::CompareXMFLOAT3(XMFLOAT3 _xmf1, XMFLOAT3 _xmf2)
 {
 	if (_xmf1.x == _xmf2.x && _xmf1.y == _xmf2.y && _xmf1.z == _xmf2.z)
 	{
@@ -1004,7 +1004,7 @@ KH_API bool KH_MATH::CompareXMFLOAT3(XMFLOAT3 _xmf1, XMFLOAT3 _xmf2)
 	return false;
 }
 
-KH_API DXMatrix4X4 KH_MATH::CreateScale(DXVector3 _v3)
+DLL_DECLSPEC DXMatrix4X4 KH_MATH::CreateScale(DXVector3 _v3)
 {
 	DXMatrix4X4 M;
 
@@ -1015,7 +1015,7 @@ KH_API DXMatrix4X4 KH_MATH::CreateScale(DXVector3 _v3)
 	return M;
 }
 
-KH_API DXMatrix4X4 KH_MATH::CreateScale(float _x, float _y, float _z)
+DLL_DECLSPEC DXMatrix4X4 KH_MATH::CreateScale(float _x, float _y, float _z)
 {
 	DXMatrix4X4 M;
 
@@ -1026,7 +1026,7 @@ KH_API DXMatrix4X4 KH_MATH::CreateScale(float _x, float _y, float _z)
 	return M;
 }
 
-KH_API DXMatrix4X4 KH_MATH::CreateRotationEuler(DXVector3 _v3)
+DLL_DECLSPEC DXMatrix4X4 KH_MATH::CreateRotationEuler(DXVector3 _v3)
 {
 	const auto yaw = _v3.y * KH_MATH::Pi / 180.0f;
 	const auto pitch = _v3.x * KH_MATH::Pi / 180.0f;
@@ -1037,7 +1037,7 @@ KH_API DXMatrix4X4 KH_MATH::CreateRotationEuler(DXVector3 _v3)
 	return XMMatrixRotationQuaternion(q);
 }
 
-KH_API DXMatrix4X4 KH_MATH::CreateRotationEuler(float _x, float _y, float _z)
+DLL_DECLSPEC DXMatrix4X4 KH_MATH::CreateRotationEuler(float _x, float _y, float _z)
 {
 	const auto yaw = _y * KH_MATH::Pi / 180.0f;
 	const auto pitch = _x * KH_MATH::Pi / 180.0f;
@@ -1048,7 +1048,7 @@ KH_API DXMatrix4X4 KH_MATH::CreateRotationEuler(float _x, float _y, float _z)
 	return XMMatrixRotationQuaternion(q);
 }
 
-KH_API DXMatrix4X4 KH_MATH::CreateTranslation(DXVector3 _v3)
+DLL_DECLSPEC DXMatrix4X4 KH_MATH::CreateTranslation(DXVector3 _v3)
 {
 	DXMatrix4X4 M;
 
@@ -1059,7 +1059,7 @@ KH_API DXMatrix4X4 KH_MATH::CreateTranslation(DXVector3 _v3)
 	return M;
 }
 
-KH_API DXMatrix4X4 KH_MATH::CreateTranslation(float _x, float _y, float _z)
+DLL_DECLSPEC DXMatrix4X4 KH_MATH::CreateTranslation(float _x, float _y, float _z)
 {
 	DXMatrix4X4 M;
 
@@ -1070,65 +1070,65 @@ KH_API DXMatrix4X4 KH_MATH::CreateTranslation(float _x, float _y, float _z)
 	return M;
 }
 
-KH_API DXVector3 KH_MATH::DXVector3Dot(DXVector3 _v1, DXVector3 _v2)
+DLL_DECLSPEC DXVector3 KH_MATH::DXVector3Dot(DXVector3 _v1, DXVector3 _v2)
 {
 	float fValue = (_v1.x * _v2.x) + (_v1.y * _v2.y) + (_v1.z * _v2.z);
 	return DXVector3(fValue, fValue, fValue);
 }
 
-KH_API DXVector3 KH_MATH::DXVector3Abs(DXVector3 _v3)
+DLL_DECLSPEC DXVector3 KH_MATH::DXVector3Abs(DXVector3 _v3)
 {
 	return DXVector3(fabsf(_v3.x), fabsf(_v3.y), fabsf(_v3.z));
 }
 
-KH_API DXVector3 KH_MATH::DXVector3Sqrt(DXVector3 _v3)
+DLL_DECLSPEC DXVector3 KH_MATH::DXVector3Sqrt(DXVector3 _v3)
 {
 	return DXVector3(sqrtf(_v3.x), sqrtf(_v3.y), sqrtf(_v3.z));
 }
 
-KH_API DXVector3 KH_MATH::DXVector3Length(DXVector3 _v3)
+DLL_DECLSPEC DXVector3 KH_MATH::DXVector3Length(DXVector3 _v3)
 {
 	DXVector3 Vdot = DXVector3Dot(_v3, _v3);
 
 	return DXVector3Sqrt(Vdot);
 }
 
-KH_API DXVector3 KH_MATH::DXVector3SplatOne(DXVector3 _v3)
+DLL_DECLSPEC DXVector3 KH_MATH::DXVector3SplatOne(DXVector3 _v3)
 {
 	return DXVector3(1.0f, 1.0f, 1.0f);
 }
 
-KH_API DXVector3 KH_MATH::DXVector3Replicate(float _value)
+DLL_DECLSPEC DXVector3 KH_MATH::DXVector3Replicate(float _value)
 {
 	return DXVector3(_value, _value, _value);
 }
 
-KH_API bool KH_MATH::DXVector3Less(DXVector3 _v1, DXVector3 _v2)
+DLL_DECLSPEC bool KH_MATH::DXVector3Less(DXVector3 _v1, DXVector3 _v2)
 {
 	return (((_v1.x < _v2.x) && (_v1.y < _v2.y) && (_v1.z < _v1.z)) != 0);
 }
 
-KH_API DXVector4 KH_MATH::DXVector4Abs(DXVector4 _v4)
+DLL_DECLSPEC DXVector4 KH_MATH::DXVector4Abs(DXVector4 _v4)
 {
 	return DXVector4(fabsf(_v4.x), fabsf(_v4.y), fabsf(_v4.z), fabsf(_v4.w));
 }
 
-KH_API DXVector4 KH_MATH::DXVector4Sqrt(DXVector4 _v4)
+DLL_DECLSPEC DXVector4 KH_MATH::DXVector4Sqrt(DXVector4 _v4)
 {
 	return DXVector4(sqrtf(_v4.x), sqrtf(_v4.y), sqrtf(_v4.z), sqrtf(_v4.w));
 }
 
-KH_API DXVector4 KH_MATH::DXVector4SplatOne(DXVector4 _v4)
+DLL_DECLSPEC DXVector4 KH_MATH::DXVector4SplatOne(DXVector4 _v4)
 {
 	return DXVector4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
-KH_API DXVector4 KH_MATH::DXVector4Replicate(float _value)
+DLL_DECLSPEC DXVector4 KH_MATH::DXVector4Replicate(float _value)
 {
 	return DXVector4(_value, _value, _value, _value);
 }
 
-KH_API bool KH_MATH::DXVector4Less(DXVector4 _v1, DXVector4 _v2)
+DLL_DECLSPEC bool KH_MATH::DXVector4Less(DXVector4 _v1, DXVector4 _v2)
 {
 	return (((_v1.x < _v2.x) && (_v1.y < _v2.y) && (_v1.z < _v1.z) && (_v1.w < _v1.w)) != 0);
 }

@@ -18,7 +18,7 @@ using namespace DirectX;
 //   Elements are packed into 4D vectors with the restriction that an element
 //   cannot straddle a 4D vector boundary.
 
-struct KH_API DirectionalLight
+struct DLL_DECLSPEC DirectionalLight
 {
 	DirectionalLight() = default;
 
@@ -29,7 +29,7 @@ struct KH_API DirectionalLight
 	float Pad; // Pad the last float so we can set an array of lights if we wanted.
 };
 
-struct KH_API PointLight
+struct DLL_DECLSPEC PointLight
 {
 	PointLight() = default;
 	
@@ -46,7 +46,7 @@ struct KH_API PointLight
 	float Pad; // Pad the last float so we can set an array of lights if we wanted.
 };
 
-struct KH_API SpotLight
+struct DLL_DECLSPEC SpotLight
 {
 	SpotLight() = default;
 	
@@ -67,7 +67,7 @@ struct KH_API SpotLight
 	float Pad; // Pad the last float so we can set an array of lights if we wanted.
 };
 
-struct KH_API MaterialData
+struct DLL_DECLSPEC MaterialData
 {
 	MaterialData() = default;
 
@@ -77,7 +77,7 @@ struct KH_API MaterialData
 	DXVector4 Reflect;
 };
 
-struct KH_API LightData
+struct DLL_DECLSPEC LightData
 {
 	DirectionalLight DirLights[3];
 	PointLight PointLights[4];

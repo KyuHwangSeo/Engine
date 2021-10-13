@@ -13,8 +13,8 @@ public:
 
 	void Create(ID3D11Device* pDevice);
 
-	void DrawTextColorE(int x, int y, float scale, XMFLOAT4 color, TCHAR* text, ...);
-	void DrawTextColorD(int x, int y, float scale, XMFLOAT4 color, TCHAR* text);
+	void DrawTextColorE(int x, int y, float scale, DXVector4 color, TCHAR* text, ...);
+	void DrawTextColorD(int x, int y, float scale, DXVector4 color, TCHAR* text);
 
 private:
 	SpriteBatch* m_pSpriteBatch;

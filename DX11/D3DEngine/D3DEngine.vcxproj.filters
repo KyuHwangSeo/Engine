@@ -465,6 +465,9 @@
     <ClInclude Include="UI_Button.h">
       <Filter>소스 파일\Component\UI\Button</Filter>
     </ClInclude>
+    <ClInclude Include="RenderData.h">
+      <Filter>소스 파일\D3DRenderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="D3DEngine.rc">

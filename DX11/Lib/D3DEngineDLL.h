@@ -96,105 +96,102 @@
 /// - Template Export -
 /// 직접적으로 템플릿을 내보낼 수는 없다.. (예외적으로 vector는 가능)
 /// 어쩔수 없이 템플릿을 써야하는 상황이라면 템플릿을 재구축 해야한다.. (템플릿 함수를 DLL 내부에서 실행한 후 반환하는 형식..)
-//KH_TEMPLATE template class KH_API std::vector<int>;
+//KH_TEMPLATE template class DLL_DECLSPEC std::vector<int>;
 
 namespace KH_ENGINE
 {
 	/// D3DEngine export 함수..
-	KH_API bool Initialize(INT_PTR, INT_PTR, int, int);
-	extern "C" KH_API void SetSolid();
-	extern "C" KH_API void SetWireFrame();
-	extern "C" KH_API void CameraSetLens(int, int);
-	extern "C" KH_API void DrawTextColor(int, int, float, XMFLOAT4, TCHAR*, ...);
-	extern "C" KH_API bool CheckDevice();
-	extern "C" KH_API void Picking(int, int);
-	extern "C" KH_API void Render();
-	extern "C" KH_API void EndRender();
-	extern "C" KH_API void Update();
-	extern "C" KH_API void OnResize(int, int);
-	extern "C" KH_API void Release();
+	extern "C" DLL_DECLSPEC bool KH_STDCALL Initialize(INT_PTR, INT_PTR, int, int);
+	extern "C" DLL_DECLSPEC void KH_CCALL DrawTextColor(int, int, float, DXVector4, TCHAR*, ...);
+	extern "C" DLL_DECLSPEC bool KH_STDCALL CheckDevice();
+	extern "C" DLL_DECLSPEC void KH_STDCALL Picking(int, int);
+	extern "C" DLL_DECLSPEC void KH_STDCALL Render();
+	extern "C" DLL_DECLSPEC void KH_STDCALL EndRender();
+	extern "C" DLL_DECLSPEC void KH_STDCALL Update();
+	extern "C" DLL_DECLSPEC void KH_STDCALL OnResize(int, int);
+	extern "C" DLL_DECLSPEC void KH_STDCALL Release();
 	
-	extern "C" KH_API POINT* GetScreenSize();
-	extern "C" KH_API void CreateSkyBox();
-	extern "C" KH_API void SetSkyBox(const char*);
+	extern "C" DLL_DECLSPEC POINT* KH_STDCALL GetScreenSize();
+	extern "C" DLL_DECLSPEC void KH_STDCALL CreateSkyBox();
+	extern "C" DLL_DECLSPEC void KH_STDCALL SetSkyBox(const char*);
 
-	extern "C" KH_API void AddScene(const char*, Scene*);
-	extern "C" KH_API Scene* FindScene(const char*);
-	extern "C" KH_API void SelectScene(const char*);
-	extern "C" KH_API void RemoveScene(const char*);
+	extern "C" DLL_DECLSPEC void KH_STDCALL AddScene(const char*, Scene*);
+	extern "C" DLL_DECLSPEC Scene* KH_STDCALL FindScene(const char*);
+	extern "C" DLL_DECLSPEC void KH_STDCALL SelectScene(const char*);
+	extern "C" DLL_DECLSPEC void KH_STDCALL RemoveScene(const char*);
 
-	KH_API GameObject* FindObject(const char*);
-	KH_API GameObject* FindObject(const char*, eObjectType);
+	DLL_DECLSPEC GameObject* KH_STDCALL FindObject(const char*);
+	DLL_DECLSPEC GameObject* KH_STDCALL FindObject(const char*, eObjectType);
 }
 
 namespace KH_UTILITY
 {
 	/// Utility export 함수..
-	KH_API ResourceManager* Get();
-	KH_API void Initialize();
-	KH_API void LoadData(eLoadType, const char*, const char*);
-	KH_API void LoadData(eLoadType, const char*, const char*, bool);
-	KH_API void ResetFBX();
-	KH_API void CreateBoneCollider(const char*, eColliderType, float);
-	KH_API GameObject * CreateObject(const char*, eModelType, DXVector3, bool, eModelCollider);
-	KH_API GameObject * CreateObject(const char*, eModelType, DXVector3, bool);
-	KH_API GameObject * CreateObject(const char*, eModelType, DXVector3);
-	KH_API GameObject * CreateObject(const char*, eModelType);
-	KH_API GameObject* CreateUI(const char*, eUIType, const char*, DXVector2, DXVector2, bool);
-	KH_API GameObject* CreateUI(const char*, eUIType, const char*, DXVector2, DXVector2);
-	KH_API Animation * CreateAnimation(const char*, const char*, GameObject*, bool);
-	KH_API Animation * CreateAnimation(const char*, const char*, GameObject*);
-	KH_API Animation * CreateAnimation(const char*, const char*, const char*, bool);
-	KH_API Animation * CreateAnimation(const char*, const char*, const char*);
-	KH_API void CreateBoxCollider(GameObject*, DXVector3);
-	KH_API void CreateSphereCollider(GameObject*, float);
-	extern "C" KH_API ID3D11ShaderResourceView* GetTexture(const char*);
+	DLL_DECLSPEC void KH_STDCALL LoadData(eLoadType, const char*, const char*);
+	DLL_DECLSPEC void KH_STDCALL LoadData(eLoadType, const char*, const char*, bool);
+	DLL_DECLSPEC void KH_STDCALL ResetFBX();
+
+	DLL_DECLSPEC GameObject * KH_STDCALL CreateObject(const char*, eModelType, DXVector3, bool, eModelCollider);
+	DLL_DECLSPEC GameObject * KH_STDCALL CreateObject(const char*, eModelType, DXVector3, bool);
+	DLL_DECLSPEC GameObject * KH_STDCALL CreateObject(const char*, eModelType, DXVector3);
+	DLL_DECLSPEC GameObject * KH_STDCALL CreateObject(const char*, eModelType);
+	DLL_DECLSPEC GameObject * KH_STDCALL CreateUI(const char*, eUIType, const char*, DXVector2, DXVector2, bool);
+	DLL_DECLSPEC GameObject * KH_STDCALL CreateUI(const char*, eUIType, const char*, DXVector2, DXVector2);
+	DLL_DECLSPEC Animation * KH_STDCALL CreateAnimation(const char*, const char*, GameObject*, bool);
+	DLL_DECLSPEC Animation * KH_STDCALL CreateAnimation(const char*, const char*, GameObject*);
+	DLL_DECLSPEC Animation * KH_STDCALL CreateAnimation(const char*, const char*, const char*, bool);
+	DLL_DECLSPEC Animation * KH_STDCALL CreateAnimation(const char*, const char*, const char*);
+
+	DLL_DECLSPEC void KH_STDCALL CreateBoxCollider(GameObject*, DXVector3);
+	DLL_DECLSPEC void KH_STDCALL CreateSphereCollider(GameObject*, float);
+
+	extern "C" DLL_DECLSPEC ID3D11ShaderResourceView* KH_STDCALL GetTexture(const char*);
 }
 
 namespace KH_SOUND
 {
-	KH_API void LoadSoundBGM(const char*, const char*);
-	KH_API void LoadSoundBGM(const char*, const char*, bool);
-	KH_API void LoadSoundSFX(const char*, const char*);
-	KH_API void LoadSoundSFX(const char*, const char*, bool);
-	extern "C" KH_API void PlaySoundBGM(const char*);
-	extern "C" KH_API void PlaySoundSFX(const char*);
-	extern "C" KH_API void VolumeChangeBGM(float);
-	extern "C" KH_API void VolumeUpBGM();
-	extern "C" KH_API void VolumeDownBGM();
-	extern "C" KH_API void VolumeChangeSFX(float);
-	extern "C" KH_API void VolumeUpSFX();
-	extern "C" KH_API void VolumeDownSFX();
-	extern "C" KH_API void VolumeChangeMaster(float);
-	extern "C" KH_API void VolumeUpMaster();
-	extern "C" KH_API void VolumeDownMaster();
-	extern "C" KH_API void StopBGM();
-	extern "C" KH_API void PausedBGM(bool);
-	extern "C" KH_API void StopSFX();
-	extern "C" KH_API void PausedSFX(bool);
-	extern "C" KH_API void StopAll();
+	DLL_DECLSPEC void KH_STDCALL LoadSoundBGM(const char*, const char*);
+	DLL_DECLSPEC void KH_STDCALL LoadSoundBGM(const char*, const char*, bool);
+	DLL_DECLSPEC void KH_STDCALL LoadSoundSFX(const char*, const char*);
+	DLL_DECLSPEC void KH_STDCALL LoadSoundSFX(const char*, const char*, bool);
+	extern "C" DLL_DECLSPEC void KH_STDCALL PlaySoundBGM(const char*);
+	extern "C" DLL_DECLSPEC void KH_STDCALL PlaySoundSFX(const char*);
+	extern "C" DLL_DECLSPEC void KH_STDCALL VolumeChangeBGM(float);
+	extern "C" DLL_DECLSPEC void KH_STDCALL VolumeUpBGM();
+	extern "C" DLL_DECLSPEC void KH_STDCALL VolumeDownBGM();
+	extern "C" DLL_DECLSPEC void KH_STDCALL VolumeChangeSFX(float);
+	extern "C" DLL_DECLSPEC void KH_STDCALL VolumeUpSFX();
+	extern "C" DLL_DECLSPEC void KH_STDCALL VolumeDownSFX();
+	extern "C" DLL_DECLSPEC void KH_STDCALL VolumeChangeMaster(float);
+	extern "C" DLL_DECLSPEC void KH_STDCALL VolumeUpMaster();
+	extern "C" DLL_DECLSPEC void KH_STDCALL VolumeDownMaster();
+	extern "C" DLL_DECLSPEC void KH_STDCALL StopBGM();
+	extern "C" DLL_DECLSPEC void KH_STDCALL PausedBGM(bool);
+	extern "C" DLL_DECLSPEC void KH_STDCALL StopSFX();
+	extern "C" DLL_DECLSPEC void KH_STDCALL PausedSFX(bool);
+	extern "C" DLL_DECLSPEC void KH_STDCALL StopAll();
 }
 
 namespace KH_KEYINPUT
 {
 	/// KeyInput export 함수..
-	extern "C" KH_API bool IsKeyDoubleDown(BYTE);
-	extern "C" KH_API bool IsKeyUP(BYTE);
-	extern "C" KH_API bool IsKeyDown(BYTE);
-	extern "C" KH_API bool IsKeyKeep(BYTE);
-	extern "C" KH_API bool IsKeyDownKeep(BYTE);
-	extern "C" KH_API bool IsKeyInput(BYTE);
-	extern "C" KH_API void OnMouseMove(int, int);
-	extern "C" KH_API POINT * GetMousePos();
+	extern "C" DLL_DECLSPEC bool KH_STDCALL IsKeyDoubleDown(BYTE);
+	extern "C" DLL_DECLSPEC bool KH_STDCALL IsKeyUP(BYTE);
+	extern "C" DLL_DECLSPEC bool KH_STDCALL IsKeyDown(BYTE);
+	extern "C" DLL_DECLSPEC bool KH_STDCALL IsKeyKeep(BYTE);
+	extern "C" DLL_DECLSPEC bool KH_STDCALL IsKeyDownKeep(BYTE);
+	extern "C" DLL_DECLSPEC bool KH_STDCALL IsKeyInput(BYTE);
+	extern "C" DLL_DECLSPEC void KH_STDCALL OnMouseMove(int, int);
+	extern "C" DLL_DECLSPEC POINT * KH_STDCALL GetMousePos();
 }
 
 namespace KH_TIME
 {
 	/// GameTimer export 함수..
-	extern "C" KH_API float TotalTime();
-	extern "C" KH_API float DeltaTime();
-	extern "C" KH_API void Reset();
-	extern "C" KH_API void TimerStart();
-	extern "C" KH_API void TimerStop();
-	extern "C" KH_API void Tick();
+	extern "C" DLL_DECLSPEC float KH_STDCALL TotalTime();
+	extern "C" DLL_DECLSPEC float KH_STDCALL DeltaTime();
+	extern "C" DLL_DECLSPEC void KH_STDCALL Reset();
+	extern "C" DLL_DECLSPEC void KH_STDCALL TimerStart();
+	extern "C" DLL_DECLSPEC void KH_STDCALL TimerStop();
+	extern "C" DLL_DECLSPEC void KH_STDCALL Tick();
 }

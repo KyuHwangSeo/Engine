@@ -13,8 +13,8 @@ class GameObject;
 class Component : public Object
 {
 public:
-	KH_API Component() = default;
-	KH_API virtual ~Component() = default;
+	Component() = default;
+	virtual ~Component() = default;
 
 protected:
 	GameObject* m_GameObject = nullptr;

@@ -36,7 +36,7 @@ public:
 	ComPtr<ID3D11Device> GetDevice();
 	ComPtr<ID3D11DeviceContext> GetDeviceContext();
 
-	void DrawTextColor(int x, int y, float scale, XMFLOAT4 color, TCHAR* text, ...);
+	void DrawTextColor(int x, int y, float scale, DXVector4 color, TCHAR* text, ...);
 
 	// 외부 프로젝트에 필요한 함수들..
 	void AddScene(const char* name, Scene* scene);

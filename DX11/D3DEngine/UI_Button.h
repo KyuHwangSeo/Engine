@@ -17,11 +17,11 @@ public:
 	void Start();
 	void Update(float dTime);
 
-	KH_API void SetOnMouseTexture(ComPtr<ID3D11ShaderResourceView> tex) { m_OnMouseTex = tex; };
-	KH_API void SetOnClickTexture(ComPtr<ID3D11ShaderResourceView> tex) { m_OnClickTex = tex; }
+	DLL_DECLSPEC void SetOnMouseTexture(ComPtr<ID3D11ShaderResourceView> tex) { m_OnMouseTex = tex; };
+	DLL_DECLSPEC void SetOnClickTexture(ComPtr<ID3D11ShaderResourceView> tex) { m_OnClickTex = tex; }
 
-	KH_API bool GetIsOnClick() { return m_IsOnClick; }
-	KH_API bool GetIsOnMouse() { return m_IsOnMouse; }
+	DLL_DECLSPEC bool GetIsOnClick() { return m_IsOnClick; }
+	DLL_DECLSPEC bool GetIsOnMouse() { return m_IsOnMouse; }
 
 public:
 	Material* m_Material;

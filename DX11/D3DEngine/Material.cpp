@@ -81,25 +81,25 @@ void Material::SetMaterialData(MaterialData materialData)
 	m_MaterialData.Reflect = DXVector4(0.4f, 0.4f, 0.4f, 1.0f);
 }
 
-KH_API void Material::SetDiffuseMap(ID3D11ShaderResourceView* diffuseMap)
+DLL_DECLSPEC void Material::SetDiffuseMap(ID3D11ShaderResourceView* diffuseMap)
 {
 	Is_DiffuseMap = true;
 	m_DiffuseMapSRV = diffuseMap;
 }
 
-KH_API void Material::SetNormalMap(ID3D11ShaderResourceView* normalMap)
+DLL_DECLSPEC void Material::SetNormalMap(ID3D11ShaderResourceView* normalMap)
 {
 	Is_NormalMap = true;
 	m_NormalMapSRV = normalMap;
 }
 
-KH_API void Material::SetCubeMap(ID3D11ShaderResourceView* cubeMap)
+DLL_DECLSPEC void Material::SetCubeMap(ID3D11ShaderResourceView* cubeMap)
 {
 	Is_CubeMap = true;
 	m_CubeMapSRV = cubeMap;
 }
 
-KH_API void Material::SetTexTransform(DXMatrix4X4 texTransform)
+DLL_DECLSPEC void Material::SetTexTransform(DXMatrix4X4 texTransform)
 {
 	m_TexTranspose = texTransform;
 }
@@ -139,7 +139,7 @@ DXMatrix4X4 Material::GetTexTransform()
 	return m_TexTranspose;
 }
 
-KH_API ID3D11ShaderResourceView* Material::GetDiffuseMap()
+DLL_DECLSPEC ID3D11ShaderResourceView* Material::GetDiffuseMap()
 {
 	if (Is_DiffuseMap)
 		return m_DiffuseMapSRV;
@@ -147,7 +147,7 @@ KH_API ID3D11ShaderResourceView* Material::GetDiffuseMap()
 		return nullptr;
 }
 
-KH_API ID3D11ShaderResourceView* Material::GetNormalMap()
+DLL_DECLSPEC ID3D11ShaderResourceView* Material::GetNormalMap()
 {
 	if (Is_NormalMap)
 		return m_NormalMapSRV;
@@ -155,7 +155,7 @@ KH_API ID3D11ShaderResourceView* Material::GetNormalMap()
 		return nullptr;
 }
 
-KH_API ID3D11ShaderResourceView* Material::GetCubeMap()
+DLL_DECLSPEC ID3D11ShaderResourceView* Material::GetCubeMap()
 {
 	if (Is_CubeMap)
 		return m_CubeMapSRV;

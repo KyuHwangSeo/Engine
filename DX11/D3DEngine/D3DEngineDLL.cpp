@@ -9,7 +9,7 @@ KHSound*			gSound = nullptr;
 
 namespace KH_ENGINE
 {
-	KH_API bool Initialize(INT_PTR hinstance, INT_PTR hwnd, int screenWidth, int screenHeight)
+	DLL_DECLSPEC bool KH_STDCALL Initialize(INT_PTR hinstance, INT_PTR hwnd, int screenWidth, int screenHeight)
 	{
 		bool result = gEngine->Initialize(hinstance, hwnd, screenWidth, screenHeight);
 
@@ -21,21 +21,7 @@ namespace KH_ENGINE
 
 		return result;
 	}
-	extern "C" KH_API void SetSolid()
-	{
-		gEngine->SetSolid();
-	}
-	extern "C" KH_API void SetWireFrame()
-	{
-		gEngine->SetWireFrame();
-	}
-
-	extern "C" KH_API void CameraSetLens(int screenWidth, int screenHeight)
-	{
-		gEngine->GetScene()->SetCameraLens(screenWidth, screenHeight);
-	}
-
-	extern "C" KH_API void DrawTextColor(int x, int y, float scale, XMFLOAT4 color, TCHAR * text, ...)
+	extern "C" DLL_DECLSPEC void KH_CCALL DrawTextColor(int x, int y, float scale, DXVector4 color, TCHAR * text, ...)
 	{
 		TCHAR _buffer[1024] = L"";
 		va_list vl;
@@ -45,7 +31,7 @@ namespace KH_ENGINE
 
 		return gEngine->DrawTextColor(x, y, scale, color, _buffer);
 	}
-	extern "C" KH_API bool CheckDevice()
+	extern "C" DLL_DECLSPEC bool KH_STDCALL CheckDevice()
 	{
 		if (gEngine->GetDevice() == nullptr)
 		{
@@ -53,66 +39,67 @@ namespace KH_ENGINE
 		}
 		return true;
 	}
-	extern "C" KH_API void Picking(int x, int y)
+	extern "C" DLL_DECLSPEC void KH_STDCALL Picking(int x, int y)
 	{
 		gEngine->Picking(x, y);
 	}
-	extern "C" KH_API void Render()
+	extern "C" DLL_DECLSPEC void KH_STDCALL Render()
 	{
 		gEngine->Render();
 	}
-	extern "C" KH_API void EndRender()
+	extern "C" DLL_DECLSPEC void KH_STDCALL EndRender()
 	{
 		gEngine->EndRender();
 	}
-	extern "C" KH_API void Update()
+	extern "C" DLL_DECLSPEC void KH_STDCALL Update()
 	{
 		gEngine->Update();
 	}
-	extern "C" KH_API void OnResize(int width, int height)
+	extern "C" DLL_DECLSPEC void KH_STDCALL OnResize(int screenWidth, int screenHeight)
 	{
-		gEngine->OnResize(width, height);
+		gEngine->OnResize(screenWidth, screenHeight);
+		gEngine->GetScene()->SetCameraLens(screenWidth, screenHeight);
 	}
-	extern "C" KH_API void Release()
+	extern "C" DLL_DECLSPEC void KH_STDCALL Release()
 	{
 		gEngine->Release();
 	}
-	extern "C" KH_API POINT* GetScreenSize()
+	extern "C" DLL_DECLSPEC POINT* KH_STDCALL GetScreenSize()
 	{
 		return gEngine->GetClinetSize();
 	}
-	extern "C" KH_API void CreateSkyBox()
+	extern "C" DLL_DECLSPEC void KH_STDCALL CreateSkyBox()
 	{
 		gEngine->GetScene()->CreateSkyBox();
 	}
-	extern "C" KH_API void SetSkyBox(const char* mapName)
+	extern "C" DLL_DECLSPEC void KH_STDCALL SetSkyBox(const char* mapName)
 	{
 		gEngine->GetScene()->SetSkyBox(mapName);
 	}
 
-	extern "C" KH_API void AddScene(const char* name, Scene * scene)
+	extern "C" DLL_DECLSPEC void KH_STDCALL AddScene(const char* name, Scene * scene)
 	{
 		gEngine->AddScene(name, scene);
 	}
 
-	extern "C" KH_API Scene* FindScene(const char* name)
+	extern "C" DLL_DECLSPEC Scene* KH_STDCALL FindScene(const char* name)
 	{
 		return gEngine->FindScene(name);
 	}
 
-	extern "C" KH_API void SelectScene(const char* name)
+	extern "C" DLL_DECLSPEC void KH_STDCALL SelectScene(const char* name)
 	{
 		gEngine->SelectScene(name);
 	}
-	extern "C" KH_API void RemoveScene(const char* name)
+	extern "C" DLL_DECLSPEC void KH_STDCALL RemoveScene(const char* name)
 	{
 		gEngine->RemoveScene(name);
 	}
-	KH_API GameObject* FindObject(const char* objName)
+	DLL_DECLSPEC GameObject* KH_STDCALL FindObject(const char* objName)
 	{
 		return gEngine->GetScene()->FindObject(objName, eObjectType::Model);
 	}
-	KH_API GameObject * FindObject(const char* objName, eObjectType objType)
+	DLL_DECLSPEC GameObject * KH_STDCALL FindObject(const char* objName, eObjectType objType)
 	{
 		return gEngine->GetScene()->FindObject(objName, objType);
 	}
@@ -120,123 +107,108 @@ namespace KH_ENGINE
 
 namespace KH_UTILITY
 {
-	KH_API ResourceManager* Get()
-	{
-		return ResourceManager::GetInstance();
-	}
-
-	KH_API void Initialize()
-	{
-		gResource->Initialize();
-	}
-
-	KH_API void LoadData(eLoadType loadType, const char* objName, const char* fileName)
+	DLL_DECLSPEC void KH_STDCALL LoadData(eLoadType loadType, const char* objName, const char* fileName)
 	{
 		gResource->LoadData(loadType, objName, fileName);
 	}
 
-	KH_API void LoadData(eLoadType loadType, const char* objName, const char* fileName, bool fbxScaling)
+	DLL_DECLSPEC void KH_STDCALL LoadData(eLoadType loadType, const char* objName, const char* fileName, bool fbxScaling)
 	{
 		gResource->LoadData(loadType, objName, fileName, fbxScaling);
 	}
 
-	KH_API void ResetFBX()
+	DLL_DECLSPEC void KH_STDCALL ResetFBX()
 	{
 		gResource->ResetFBX();
 	}
 
-	KH_API void CreateBoneCollider(const char* objName, eColliderType colType, float range)
-	{
-		gResource->CreateBoneCollider(objName, colType, range);
-	}
-
-	KH_API GameObject* CreateObject(const char* objName, eModelType modelType, DXVector3 scale, bool isCol, eModelCollider colType)
+	DLL_DECLSPEC GameObject* KH_STDCALL CreateObject(const char* objName, eModelType modelType, DXVector3 scale, bool isCol, eModelCollider colType)
 	{
 		return gFactory->CreateObject(objName, modelType, scale, isCol, colType);
 	}
 
-	KH_API GameObject * CreateObject(const char* objName, eModelType modelType, DXVector3 scale, bool isCol)
+	DLL_DECLSPEC GameObject * KH_STDCALL CreateObject(const char* objName, eModelType modelType, DXVector3 scale, bool isCol)
 	{
 		return gFactory->CreateObject(objName, modelType, scale, isCol);
 	}
 
-	KH_API GameObject* CreateObject(const char* objName, eModelType modelType, DXVector3 scale)
+	DLL_DECLSPEC GameObject* KH_STDCALL CreateObject(const char* objName, eModelType modelType, DXVector3 scale)
 	{
 		return gFactory->CreateObject(objName, modelType, scale);
 	}
 
-	KH_API GameObject* CreateObject(const char* objName, eModelType modelType)
+	DLL_DECLSPEC GameObject* KH_STDCALL CreateObject(const char* objName, eModelType modelType)
 	{
 		return gFactory->CreateObject(objName, modelType, DXVector3::One());
 	}
-	KH_API GameObject* CreateUI(const char* objName, eUIType uiType, const char* texKey, DXVector2 scale, DXVector2 pos, bool isCol)
+	DLL_DECLSPEC GameObject* KH_STDCALL CreateUI(const char* objName, eUIType uiType, const char* texKey, DXVector2 scale, DXVector2 pos, bool isCol)
 	{
 		return gFactory->CreateUI(objName, uiType, texKey, scale, pos, isCol);
 	}
-	KH_API GameObject* CreateUI(const char* objName, eUIType uiType, const char* texKey, DXVector2 scale, DXVector2 pos)
+	DLL_DECLSPEC GameObject* KH_STDCALL CreateUI(const char* objName, eUIType uiType, const char* texKey, DXVector2 scale, DXVector2 pos)
 	{
 		return gFactory->CreateUI(objName, uiType, texKey, scale, pos, false);
 	}
-	KH_API Animation* CreateAnimation(const char* objName, const char* aniName, GameObject* topNode, bool play)
+	DLL_DECLSPEC Animation* KH_STDCALL CreateAnimation(const char* objName, const char* aniName, GameObject* topNode, bool play)
 	{
 		return gFactory->CreateAnimation(objName, aniName, topNode, play);
 	}
-	KH_API Animation* CreateAnimation(const char* objName, const char* aniName, GameObject* topNode)
+	DLL_DECLSPEC Animation* KH_STDCALL CreateAnimation(const char* objName, const char* aniName, GameObject* topNode)
 	{
 		return gFactory->CreateAnimation(objName, aniName, topNode, false);
 	}
-	KH_API Animation * CreateAnimation(const char* objName, const char* aniName, const char* nodeName, bool play)
+	DLL_DECLSPEC Animation * KH_STDCALL CreateAnimation(const char* objName, const char* aniName, const char* nodeName, bool play)
 	{
 		return gFactory->CreateAnimation(objName, aniName, nodeName, play);
 	}
-	KH_API Animation* CreateAnimation(const char* objName, const char* aniName, const char* nodeName)
+	DLL_DECLSPEC Animation* KH_STDCALL CreateAnimation(const char* objName, const char* aniName, const char* nodeName)
 	{
 		return gFactory->CreateAnimation(objName, aniName, nodeName, false);
 	}
 
-	KH_API void CreateBoxCollider(GameObject* obj, DXVector3 size)
+	DLL_DECLSPEC void KH_STDCALL CreateBoxCollider(GameObject* obj, DXVector3 size)
 	{
 		gFactory->CreateBoxCollider(obj, size);
 	}
 
-	KH_API void CreateSphereCollider(GameObject* obj, float radius)
+	DLL_DECLSPEC void KH_STDCALL CreateSphereCollider(GameObject* obj, float radius)
 	{
 		gFactory->CreateSphereCollider(obj, radius);
 	}
 
-	extern "C" KH_API ID3D11ShaderResourceView * GetTexture(const char* name)
+	extern "C" DLL_DECLSPEC ID3D11ShaderResourceView * KH_STDCALL GetTexture(const char* name)
 	{
-		return ResourceManager::GetInstance()->GetTexture(name);
+		return gResource->GetTexture(name);
 	}
 }
 
 namespace KH_KEYINPUT
 {
-	extern "C" KH_API bool IsKeyDoubleDown(BYTE Key_Input)
+	extern "C" DLL_DECLSPEC bool KH_STDCALL IsKeyDoubleDown(BYTE Key_Input)
 	{
 		return gInput->IsKeyDoubleDown(Key_Input);
 	}
-	extern "C" KH_API bool IsKeyUP(BYTE Key_Input)
+	extern "C" DLL_DECLSPEC bool KH_STDCALL IsKeyUP(BYTE Key_Input)
 	{
 		return gInput->IsKeyUP(Key_Input);
 	}
-	extern "C" KH_API bool IsKeyDown(BYTE Key_Input)
+	extern "C" DLL_DECLSPEC bool KH_STDCALL IsKeyDown(BYTE Key_Input)
 	{
 		return gInput->IsKeyDown(Key_Input);
 	}
-	extern "C" KH_API bool IsKeyKeep(BYTE Key_Input)
+	extern "C" DLL_DECLSPEC bool KH_STDCALL IsKeyKeep(BYTE Key_Input)
 	{
 		return gInput->IsKeyKeep(Key_Input);
 	}
-	extern "C" KH_API bool IsKeyDownKeep(BYTE Key_Input)
+	extern "C" DLL_DECLSPEC bool KH_STDCALL IsKeyDownKeep(BYTE Key_Input)
 	{
 		return gInput->IsKeyDownKeep(Key_Input);
 	}
-	extern "C" KH_API void OnMouseMove(int x, int y)
+	extern "C" DLL_DECLSPEC void KH_STDCALL OnMouseMove(int x, int y)
 	{
 		gInput->OnMouseMove(x, y);
 	}
-	extern "C" KH_API POINT * GetMousePos()
+	extern "C" DLL_DECLSPEC POINT * KH_STDCALL GetMousePos()
 	{
 		return gInput->GetMousePos();
 	}
@@ -244,111 +216,111 @@ namespace KH_KEYINPUT
 
 namespace KH_TIME
 {
-	extern "C" KH_API float TotalTime()
+	extern "C" DLL_DECLSPEC float KH_STDCALL TotalTime()
 	{
 		return gTimer->TotalTime();
 	}
-	extern "C" KH_API float DeltaTime()
+	extern "C" DLL_DECLSPEC float KH_STDCALL DeltaTime()
 	{
 		return gTimer->DeltaTime();
 	}
-	extern "C" KH_API void Reset()
+	extern "C" DLL_DECLSPEC void KH_STDCALL Reset()
 	{
 		return gTimer->Reset();
 	}
-	extern "C" KH_API void TimerStart()
+	extern "C" DLL_DECLSPEC void KH_STDCALL TimerStart()
 	{
 		return gTimer->Start();
 	}
-	extern "C" KH_API void TimerStop()
+	extern "C" DLL_DECLSPEC void KH_STDCALL TimerStop()
 	{
 		return gTimer->Stop();
 	}
-	extern "C" KH_API void Tick()
+	extern "C" DLL_DECLSPEC void KH_STDCALL Tick()
 	{
 		return gTimer->Tick();
 	}
 }
 namespace KH_SOUND
 {
-	KH_API void LoadSoundBGM(const char* fileName, const char* key)
+	DLL_DECLSPEC void KH_STDCALL LoadSoundBGM(const char* fileName, const char* key)
 	{
 		gSound->LoadSoundBGM(fileName, key);
 	}
-	KH_API void LoadSoundBGM(const char* fileName, const char* key, bool loop)
+	DLL_DECLSPEC void KH_STDCALL LoadSoundBGM(const char* fileName, const char* key, bool loop)
 	{
 		gSound->LoadSoundBGM(fileName, key, loop);
 	}
-	KH_API void LoadSoundSFX(const char* fileName, const char* key)
+	DLL_DECLSPEC void KH_STDCALL LoadSoundSFX(const char* fileName, const char* key)
 	{
 		gSound->LoadSoundSFX(fileName, key);
 	}
-	KH_API void LoadSoundSFX(const char* fileName, const char* key, bool loop)
+	DLL_DECLSPEC void KH_STDCALL LoadSoundSFX(const char* fileName, const char* key, bool loop)
 	{
 		gSound->LoadSoundSFX(fileName, key, loop);
 	}
-	extern "C" KH_API void PlaySoundBGM(const char* key)
+	extern "C" DLL_DECLSPEC void KH_STDCALL PlaySoundBGM(const char* key)
 	{
 		gSound->PlaySoundBGM(key);
 
 	}
-	extern "C" KH_API void PlaySoundSFX(const char* key)
+	extern "C" DLL_DECLSPEC void KH_STDCALL PlaySoundSFX(const char* key)
 	{
 		gSound->PlaySoundSFX(key);
 	}
-	extern "C" KH_API void VolumeChangeBGM(float volume)
+	extern "C" DLL_DECLSPEC void KH_STDCALL VolumeChangeBGM(float volume)
 	{
 		gSound->VolumeChangeBGM(volume);
 	}
-	extern "C" KH_API void VolumeUpBGM()
+	extern "C" DLL_DECLSPEC void KH_STDCALL VolumeUpBGM()
 	{
 		gSound->VolumeUpBGM();
 	}
-	extern "C" KH_API void VolumeDownBGM()
+	extern "C" DLL_DECLSPEC void KH_STDCALL VolumeDownBGM()
 	{
 		gSound->VolumeDownBGM();
 	}
-	extern "C" KH_API void VolumeChangeSFX(float volume)
+	extern "C" DLL_DECLSPEC void KH_STDCALL VolumeChangeSFX(float volume)
 	{
 		gSound->VolumeChangeSFX(volume);
 	}
-	extern "C" KH_API void VolumeUpSFX()
+	extern "C" DLL_DECLSPEC void KH_STDCALL VolumeUpSFX()
 	{
 		gSound->VolumeUpSFX();
 	}
-	extern "C" KH_API void VolumeDownSFX()
+	extern "C" DLL_DECLSPEC void KH_STDCALL VolumeDownSFX()
 	{
 		gSound->VolumeDownSFX();
 	}
-	extern "C" KH_API void VolumeChangeMaster(float volume)
+	extern "C" DLL_DECLSPEC void KH_STDCALL VolumeChangeMaster(float volume)
 	{
 		gSound->VolumeChangeMaster(volume);
 	}
-	extern "C" KH_API void VolumeUpMaster()
+	extern "C" DLL_DECLSPEC void KH_STDCALL VolumeUpMaster()
 	{
 		gSound->VolumeUpMaster();
 	}
-	extern "C" KH_API void VolumeDownMaster()
+	extern "C" DLL_DECLSPEC void KH_STDCALL VolumeDownMaster()
 	{
 		gSound->VolumeDownMaster();
 	}
-	extern "C" KH_API void StopBGM()
+	extern "C" DLL_DECLSPEC void KH_STDCALL StopBGM()
 	{
 		gSound->StopBGM();
 	}
-	extern "C" KH_API void PausedBGM(bool play)
+	extern "C" DLL_DECLSPEC void KH_STDCALL PausedBGM(bool play)
 	{
 		gSound->PausedBGM(play);
 	}
-	extern "C" KH_API void StopSFX()
+	extern "C" DLL_DECLSPEC void KH_STDCALL StopSFX()
 	{
 		gSound->StopSFX();
 	}
-	extern "C" KH_API void PausedSFX(bool play)
+	extern "C" DLL_DECLSPEC void KH_STDCALL PausedSFX(bool play)
 	{
 		gSound->PausedSFX(play);
 	}
-	extern "C" KH_API void StopAll()
+	extern "C" DLL_DECLSPEC void KH_STDCALL StopAll()
 	{
 		gSound->StopAll();
 	}

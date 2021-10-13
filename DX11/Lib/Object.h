@@ -4,7 +4,6 @@
 #include <typeindex>
 #include <unordered_map>
 #include <algorithm>
-#include <string>
 
 using namespace std;
 
@@ -21,14 +20,14 @@ public:
 	virtual ~Object() = default;
 
 protected:
-	string m_Name;
+	std::string m_Name;
 
 public:
 	template <typename T>
 	void SetName()					{ m_Name = typeid(T).name(); }
 	void SetName(string name)		{ m_Name = name; }
 
-	string GetName()				{ return m_Name; }
+	std::string GetName()				{ return m_Name; }
 	bool CompareName(string name)	{ return m_Name == name; }
 };
 

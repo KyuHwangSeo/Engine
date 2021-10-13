@@ -39,10 +39,10 @@ public:
 	void Update(DXMatrix4X4 world, DXMatrix4X4 view, DXMatrix4X4 proj);
 
 	void SetMaterialData(MaterialData materialData);
-	KH_API void SetDiffuseMap(ID3D11ShaderResourceView* diffuseMap);
-	KH_API void SetNormalMap(ID3D11ShaderResourceView* normalMap);
-	KH_API void SetCubeMap(ID3D11ShaderResourceView* cubeMap);
-	KH_API void SetTexTransform(DXMatrix4X4 texTransform);
+	DLL_DECLSPEC void SetDiffuseMap(ID3D11ShaderResourceView* diffuseMap);
+	DLL_DECLSPEC void SetNormalMap(ID3D11ShaderResourceView* normalMap);
+	DLL_DECLSPEC void SetCubeMap(ID3D11ShaderResourceView* cubeMap);
+	DLL_DECLSPEC void SetTexTransform(DXMatrix4X4 texTransform);
 	void SetShader(string shaderName);
 	void SetMaterialID(UINT matID);	
 
@@ -60,19 +60,19 @@ public:
 	Shader* GetShader();
 	DXMatrix4X4 GetTexTransform();
 
-	KH_API ID3D11ShaderResourceView* GetDiffuseMap();
-	KH_API ID3D11ShaderResourceView* GetNormalMap();
-	KH_API ID3D11ShaderResourceView* GetCubeMap();
+	DLL_DECLSPEC ID3D11ShaderResourceView* GetDiffuseMap();
+	DLL_DECLSPEC ID3D11ShaderResourceView* GetNormalMap();
+	DLL_DECLSPEC ID3D11ShaderResourceView* GetCubeMap();
 };
 
 template <typename T>
-void Material::SetVertexConstantBuffer(T data)
+inline void Material::SetVertexConstantBuffer(T data)
 {
 	m_Shader->SetVertexConstantBuffer(data);
 }
 
 template <typename T>
-void Material::SetPixelConstantBuffer(T data)
+inline void Material::SetPixelConstantBuffer(T data)
 {
 	m_Shader->SetPixelConstantBuffer(data);
 }

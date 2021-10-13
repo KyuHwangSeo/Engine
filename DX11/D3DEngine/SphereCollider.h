@@ -19,9 +19,9 @@ public:
 	bool CollisionCheck(Collider* col);
 
 	void SetBoundSphere(VertexBuffer* vBuffer);
-	KH_API void SetBoundSphere(DXVector3 center, float radius);
-	KH_API void MovePosition(DXVector3 pos);
-	KH_API void SetRange(float range);
+	DLL_DECLSPEC void SetBoundSphere(DXVector3 center, float radius);
+	DLL_DECLSPEC void MovePosition(DXVector3 pos);
+	DLL_DECLSPEC void SetRange(float range);
 
 	void BuildGeometryBuffers(DirectX::BoundingSphere bounds);
 

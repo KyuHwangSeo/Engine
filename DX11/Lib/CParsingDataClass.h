@@ -35,8 +35,8 @@ namespace ParserData
 		bool m_istextureset;
 
 		/// Skinned Mesh 에서 추가
-		vector<float> m_boneWeights;
-		vector<UINT> m_boneIndices;
+		std::vector<float> m_boneWeights;
+		std::vector<UINT> m_boneIndices;
 
 		// 인덱스
 		int m_indices;
@@ -109,7 +109,7 @@ namespace ParserData
 		int	m_line_number;		// 몇번째 라인인가?
 		bool m_shape_closed;		// 닫힌 Shape인가?
 		int	m_shape_vertexcount;// 몇 개의 Vertex가 있는가?
-		vector<ShapeVertex*> m_shapevertex;	// 버텍스들의 vector
+		std::vector<ShapeVertex*> m_shapevertex;	// 버텍스들의 vector
 
 		// 초기화를 위한 생성자
 		ShapeLine();
@@ -123,7 +123,7 @@ namespace ParserData
 	struct Scenedata
 	{
 	public:
-		string				m_filename;					// 파일 이름
+		std::string			m_filename;					// 파일 이름
 		int					m_firstframe;
 		int					m_lastframe;
 		int					m_framespeed;
@@ -144,12 +144,12 @@ namespace ParserData
 	///--------------------------------------------------
 	struct MaterialMap
 	{
-		string		m_map_name;
-		string		m_map_class;
+		std::string	m_map_name;
+		std::string	m_map_class;
 		int			m_subno;
 		float		m_map_amount;
-		string		m_bitmap;
-		string		m_map_type;
+		std::string	m_bitmap;
+		std::string	m_map_type;
 		float		m_uvw_u_offset;
 		float		m_uvw_v_offset;
 		float		m_uvw_u_tiling;
@@ -161,7 +161,7 @@ namespace ParserData
 		float		m_uvw_noise_size;
 		float		m_uvw_noise_level;
 		float		m_uvw_noise_phase;
-		string		m_bitmap_filter;
+		std::string	m_bitmap_filter;
 
 		//
 		MaterialMap();
@@ -179,9 +179,9 @@ namespace ParserData
 	public:
 		// 지금은 *MATERIAL_COUNT 0 하나밖에 없더라
 		int						m_materialnumber;			// Material의 번호. 이것을 기준으로 오브젝트에서 참조한다.
-		string					m_material_name;
-		wstring					m_material_key;
-		string					m_material_class;
+		std::string				m_material_name;
+		std::wstring			m_material_key;
+		std::string				m_material_class;
 		DXVector3				m_material_ambient;
 		DXVector3				m_material_diffuse;
 		DXVector3				m_material_specular;
@@ -191,17 +191,17 @@ namespace ParserData
 		float					m_material_transparency;
 		float					m_material_reflectivity;
 		float					m_material_wiresize;
-		string					m_material_shading;
+		std::string				m_material_shading;
 		float					m_material_xp_falloff;
 		float					m_material_selfillum;
-		string					m_material_falloff;
-		string					m_material_xp_type;
+		std::string				m_material_falloff;
+		std::string				m_material_xp_type;
 
 		int					m_numsubmtls;
 		CMaterial*			m_submaterial;				// 서브매트리얼은 포인터만 가지고 있자
 
 		/// 추후에 여러가지 Map을 받으려면 List로 관리해야 할듯..
-		vector<MaterialMap*> m_MapList;				// Mesh에 들어있는 모든 Map 정보들
+		std::vector<MaterialMap*> m_MapList;				// Mesh에 들어있는 모든 Map 정보들
 
 		MaterialMap*		m_DiffuseMap;			// DiffuseMap Data
 		MaterialMap*		m_BumpMap;				// BumpMap Data
@@ -252,7 +252,7 @@ namespace ParserData
 	{
 		int			m_bone_number;		// 어차피 벡터로 잡을거지만 나중에 참조시 필요, 검색시 필요?
 		int			m_parent_bone_number;
-		string		m_bone_name;
+		std::string	m_bone_name;
 		
 		bool m_isCol;
 
@@ -280,7 +280,7 @@ namespace ParserData
 		// 마찬가지로 아래 리스트의 임시 공간
 		Weight* m_temp_bone_blend_weight;
 		// 버텍스 하나는 여러 개의 Bone-Weight를 가질 수 있다.
-		vector<Weight*>	m_bone_blending_weight;	// bone하나와 연결된 가중치
+		std::vector<Weight*>	m_bone_blending_weight;	// bone하나와 연결된 가중치
 	};
 
 
@@ -302,8 +302,8 @@ namespace ParserData
 		///----------------------------------
 		/// *NODE_NAME
 		///----------------------------------
-		string	m_nodename;		// 어떤 식인지는 모르지만 아래의 m_meshname과 같은 이름이 한번 더 들어간다. 아마도 메쉬의 이름 리스트라던지... 뭐 그런게 아닐까 여튼 지금은 버전 1이므로 이정도로 만족을 하자.
-		string	m_nodeparent;	// 부모 노드의 이름. 이것이 있다면 부모가 있는 것이다.
+		std::string	m_nodename;		// 어떤 식인지는 모르지만 아래의 m_meshname과 같은 이름이 한번 더 들어간다. 아마도 메쉬의 이름 리스트라던지... 뭐 그런게 아닐까 여튼 지금은 버전 1이므로 이정도로 만족을 하자.
+		std::string	m_nodeparent;	// 부모 노드의 이름. 이것이 있다면 부모가 있는 것이다.
 		bool m_isparentexist;		// 그래도 확실히 bool형으로 가지고 있자.
 
 		///----------------------------------
@@ -330,7 +330,7 @@ namespace ParserData
 		DXMatrix4X4 m_localTM;				// Mesh 의 LocalTM
 
 		Mesh* m_parent;						// 부모의 포인터
-		vector<Mesh*> m_childlist;			// 자식의 리스트
+		std::vector<Mesh*> m_childlist;			// 자식의 리스트
 
 		///----------------------------------
 		/// *Material
@@ -349,28 +349,28 @@ namespace ParserData
 
 		// 메시 안의 vertex 배열을 선언하기 위한 포인터
 		/// *MESH_VERTEX_LIST
-		vector<Vertex*>	m_meshvertex;		// 버텍스
+		std::vector<Vertex*>	m_meshvertex;		// 버텍스
 		/// *MESH_FACE_LIST
-		vector<Face*> m_meshface;			// 인덱스
+		std::vector<Face*> m_meshface;			// 인덱스
 
 		// 텍스쳐용 데이터들
 		/// *MESH_NUMTVERTEX
 		int	m_mesh_numtvertex;						// 텍스쳐용 버텍스 갯수
 		int	m_mesh_sumtvertex;						// 텍스쳐용 버텍스 총 갯수
-		vector<COneTVertex*> m_mesh_tvertex;		// 텍스쳐용 버텍스
+		std::vector<COneTVertex*> m_mesh_tvertex;		// 텍스쳐용 버텍스
 
 		/// *MESH_RVERTLIST
 		int	m_mesh_tvfaces;			// 텍스쳐용 페이스 갯수 - (갯수는 위의 Face와 같고 이미 위에서 만들었으므로 내용만 넣어주면 된다)
 		int	m_mesh_numcvertex;		// ※ 이건 어디에 쓰는것?
 
-		vector<Vertex*> m_opt_vertex;	/// 최적화 후의 버텍스들
+		std::vector<Vertex*> m_opt_vertex;	/// 최적화 후의 버텍스들
 		IndexList* m_opt_index;			/// 최적화 후의 인덱스들
 
 		///----------------------------------
 		/// Shape Object
 		///----------------------------------
 		int				m_shape_linecount;			// 라인의 수
-		vector<ShapeLine*>	m_vector_shape_line;	// 쉐이프 라인의 데이터
+		std::vector<ShapeLine*>	m_vector_shape_line;	// 쉐이프 라인의 데이터
 
 
 		/// 나머지 정보들
@@ -389,8 +389,7 @@ namespace ParserData
 		///----------------------------------
 		/// Camera
 		///----------------------------------
-		string				m_camera_type;
-		//float				m_timevalue;		// mesh에 이미 있다.
+		std::string			m_camera_type;
 		float				m_camera_near;
 		float				m_camera_far;
 		float				m_camera_fov;
@@ -401,20 +400,19 @@ namespace ParserData
 		///----------------------------------
 		/// Light
 		///----------------------------------
-		string				m_light_type;
-		// Omni인가 SpotLight인가의 처리를 해 줘야 한다.
+		std::string			m_light_type;
 
 		// Light Property
-		string				m_light_shadows;
+		std::string			m_light_shadows;
 		bool				m_light_uselight;
-		string				m_light_spotshape;
+		std::string			m_light_spotshape;
 		bool				m_light_useglobal;
 		bool				m_light_absmapbias;
 		bool				m_light_overshoot;
 
 		// Light Setting & Animation
 		Light_AnimationData* m_lightanimation;		// Light Setting
-		vector<Light_AnimationData*>	m_list_lightanimation;	// 그것의 Animation
+		std::vector<Light_AnimationData*>	m_list_lightanimation;	// 그것의 Animation
 
 		bool				m_light_isloadTarget;	// 빛도 NodeTM이 두 개 있고, 카메라와 같은 이유로 이 변수가 있다.
 													/// ※(아무래도 좋지 않은 구조다. 바꾸자.)
@@ -430,9 +428,9 @@ namespace ParserData
 		bool					m_IsBone;
 
 		Bone* m_bone;									// Bone 한개의 포인터 (파서 내부에서 임시 공간으로 쓰임)
-		vector<Bone*>			m_vector_bone_list;		// 이건 그냥 번호와 이름 관계이다. 이 안에 포인터를 넣어놓아도 괜찮겠구나(참조하기 편하게 - 그렇지 않으면 매번 이름으로 검색을 해야될지도. 아니면 인덱스가 있으니 상수 시간대로 접근을 할수도?)
-		vector<DXMatrix4X4>		m_boneTMList;
-		vector<Mesh*>			m_boneList;
+		std::vector<Bone*>			m_vector_bone_list;		// 이건 그냥 번호와 이름 관계이다. 이 안에 포인터를 넣어놓아도 괜찮겠구나(참조하기 편하게 - 그렇지 않으면 매번 이름으로 검색을 해야될지도. 아니면 인덱스가 있으니 상수 시간대로 접근을 할수도?)
+		std::vector<DXMatrix4X4>	m_boneTMList;
+		std::vector<Mesh*>			m_boneList;
 
 	public:
 		Mesh();

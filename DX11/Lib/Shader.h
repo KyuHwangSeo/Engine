@@ -63,7 +63,7 @@ struct Sampler
 /// - Texture Resource 또한 Constant Buffer와 같이 Binding된 Resource는 리스트에 Register Slot Number와 함께 보관
 /// - Sampler 또한 위와 같은 방식으로 로드하지만 Name에 따른 설정값은 내부에서 지정해주어야 할 것 같다.
 ///   현재로썬 같은 설정값의 Sampler는 이름을 맞추고 ResourceManager에서 생성 후 이름값을 비교하여 넣어주는 방식.
-class D3DEngine;
+
 class Shader : public Object
 {
 public:
@@ -81,12 +81,12 @@ private:
 	ComPtr<ID3D11InputLayout> m_InputLayout;
 
 	// Shader Sampler
-	unordered_map<string, Sampler> m_Samplers;
+	unordered_map<std::string, Sampler> m_Samplers;
 
 	// Shader와 연결된 상수 버퍼 리스트..
-	unordered_map<string, ConstantBuffer> m_VSConstantBuffers;
-	unordered_map<string, ConstantBuffer> m_PSConstantBuffers;
-	unordered_map<string, ConstantBuffer> m_CSConstantBuffers;
+	unordered_map<std::string, ConstantBuffer> m_VSConstantBuffers;
+	unordered_map<std::string, ConstantBuffer> m_PSConstantBuffers;
+	unordered_map<std::string, ConstantBuffer> m_CSConstantBuffers;
 
 	// 한번에 설정하기 위한 연속된 메모리공간에 있는 버퍼들..
 	vector<ComPtr<ID3D11Buffer>> m_VSBuffers;
@@ -94,18 +94,18 @@ private:
 	vector<ComPtr<ID3D11Buffer>> m_CSBuffers;
 
 	// Pixel Shader와 연결된 리소스 리스트..
-	unordered_map<string, register_slot> m_SRVList;
+	unordered_map<std::string, register_slot> m_SRVList;
 
 	// Compute Shader와 연결된 리소스 리스트..
-	unordered_map<string, register_slot> m_SRVComputeList;
-	unordered_map<string, register_slot> m_UAVComputeList;
+	unordered_map<std::string, register_slot> m_SRVComputeList;
+	unordered_map<std::string, register_slot> m_UAVComputeList;
 
 public:
 	void CreateShader(const wchar_t* vertexFilename, const wchar_t* pixelFilename, const wchar_t* computeFilename);
 	void ReflectVS(wstring vertexFilename);
 	void ReflectPS(wstring pixelFilename);
 	void ReflectCS(wstring computeFilename);
-	void SetSamplerState(string samplerName, ComPtr<ID3D11SamplerState> sam);
+	void SetSamplerState(std::string samplerName, ComPtr<ID3D11SamplerState> sam);
 
 	/// 주로 사용하는 함수들은 만들어 놓고 쓰자..
 	///////////////////////////////////////////////////////////////////////////////////////////
@@ -126,7 +126,7 @@ public:
 
 	// Vertex & Pixel Shader 전용 Resource Set 함수
 	static void SetShareSRV(UINT registerSlot, ID3D11ShaderResourceView* srv);
-	void SetSRV(string resourceName, ID3D11ShaderResourceView* srv);
+	void SetSRV(std::string resourceName, ID3D11ShaderResourceView* srv);
 	void SetSRV(UINT registerSlot, ID3D11ShaderResourceView* srv);
 
 	// Compute 전용 ConstantBuffer Update 함수
@@ -134,10 +134,10 @@ public:
 	void SetComputeConstantBuffer(T cBuffer);
 
 	// Compute Shader 전용 Resource Set 함수
-	void SetComputeSRV(string resourceName, ID3D11ShaderResourceView* srv);
+	void SetComputeSRV(std::string resourceName, ID3D11ShaderResourceView* srv);
 	void SetComputeSRV(UINT registerSlot, ID3D11ShaderResourceView* srv);
 
-	void SetComputeUAV(string resourceName, ID3D11UnorderedAccessView* uav);
+	void SetComputeUAV(std::string resourceName, ID3D11UnorderedAccessView* uav);
 	void SetComputeUAV(UINT registerSlot, ID3D11UnorderedAccessView* uav);
 
 	static void ResetVSResources();
@@ -162,7 +162,7 @@ template <typename T>
 inline void Shader::SetVertexConstantBuffer(T cBuffer)
 {
 	// 해당 Value 찾기..
-	unordered_map<string, ConstantBuffer>::iterator it = m_VSConstantBuffers.find(cBuffer.GetName());
+	unordered_map<std::string, ConstantBuffer>::iterator it = m_VSConstantBuffers.find(cBuffer.GetName());
 
 	// 해당 Key에 대한 Value가 없다면..
 	if (it == m_VSConstantBuffers.end()) return;
@@ -175,7 +175,7 @@ template <typename T>
 inline void Shader::SetPixelConstantBuffer(T cBuffer)
 {
 	// 해당 Value 찾기..
-	unordered_map<string, ConstantBuffer>::iterator it = m_PSConstantBuffers.find(cBuffer.GetName());
+	unordered_map<std::string, ConstantBuffer>::iterator it = m_PSConstantBuffers.find(cBuffer.GetName());
 
 	// 해당 Key에 대한 Value가 없다면..
 	if (it == m_PSConstantBuffers.end()) return;
@@ -188,7 +188,7 @@ template <typename T>
 inline void Shader::SetComputeConstantBuffer(T cBuffer)
 {
 	// 해당 Value 찾기..
-	unordered_map<string, ConstantBuffer>::iterator it = m_CSConstantBuffers.find(cBuffer.GetName());
+	unordered_map<std::string, ConstantBuffer>::iterator it = m_CSConstantBuffers.find(cBuffer.GetName());
 
 	// 해당 Key에 대한 Value가 없다면..
 	if (it == m_CSConstantBuffers.end()) return;
