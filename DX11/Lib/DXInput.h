@@ -38,7 +38,7 @@ struct KeyPlag
 	int Key_Timer = 0;
 };
 
-class DXInput : public Singleton<DXInput>
+class DXInput
 {
 public:
 	DXInput();

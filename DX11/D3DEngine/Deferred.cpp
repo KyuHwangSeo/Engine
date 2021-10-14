@@ -25,9 +25,9 @@ Deferred::Deferred(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> cont
 	m_DeferredRTV.resize(7);
 	m_DeferredSRV.resize(7);
 
-	m_QuadBuffer = ResourceManager::GetInstance()->GetVertexBuffer("Quad");
+	m_QuadBuffer = D3DEngine::GetInstance()->GetResourceManager()->GetVertexBuffer("Quad");
 
-	m_LightShader = ResourceManager::GetInstance()->GetShader("LightShader");
+	m_LightShader = D3DEngine::GetInstance()->GetResourceManager()->GetShader("LightShader");
 }
 
 Deferred::~Deferred()

@@ -1,11 +1,15 @@
 ﻿#pragma once
 
 class DXTKFont;
+class DXInput;
+class KHSound;
+class GameTimer;
 class GameObject;
-class D3DRenderer;
-class Factory;
 class Scene;
 class SceneManager;
+class ResourceManager;
+class Factory;
+class D3DRenderer;
 
 class D3DEngine : public Singleton<D3DEngine>
 {
@@ -16,7 +20,6 @@ public:
 	bool Initialize(INT_PTR hinstance, INT_PTR hwnd, int screenWidth, int screenHeight);
 	void CreateDevice();
 
-	void CreateHelper();
 	void Release();
 
 	void SceneStart();
@@ -46,8 +49,13 @@ public:
 
 	void Picking(int x, int y);
 
-	Factory* GetFactory();
+	GameTimer* GetTimer();
+	DXInput* GetInput();
+	KHSound* GetSound();
+	ResourceManager* GetResourceManager();
 	Scene* GetScene();
+	Factory* GetFactory();
+
 	GameObject* FindObject(const char* objName, eObjectType objType);
 
 	bool GetDebug() { return m_DebugMode; }
@@ -76,13 +84,15 @@ private:
 
 private:
 	DXTKFont* m_Font = nullptr;
-
-	SceneManager* m_SceneManager;
-	Factory* m_Factory;
-
-	Scene* m_Scene;
+	DXInput* m_Input = nullptr;
+	GameTimer* m_Timer = nullptr;
+	KHSound* m_Sound = nullptr;
 
 	D3DRenderer* m_Renderer;
+	ResourceManager* m_ResourceManager;
+	SceneManager* m_SceneManager;
+
+	Scene* m_Scene;
 
 	float dTime;
 	bool m_DebugMode = false;

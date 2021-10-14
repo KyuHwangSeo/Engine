@@ -1,11 +1,11 @@
 #include "D3DEngineDLL.h"
 
-D3DEngine*			gEngine = D3DEngine::GetInstance();
-Factory*			gFactory = nullptr;
-ResourceManager*	gResource = nullptr;
-DXInput*			gInput = nullptr;
-GameTimer*			gTimer = nullptr;
-KHSound*			gSound = nullptr;
+D3DEngine* gEngine = D3DEngine::GetInstance();
+ResourceManager* gResource = nullptr;
+Factory* gFactory = nullptr;
+DXInput* gInput = nullptr;
+GameTimer* gTimer = nullptr;
+KHSound* gSound = nullptr;
 
 namespace KH_ENGINE
 {
@@ -13,11 +13,11 @@ namespace KH_ENGINE
 	{
 		bool result = gEngine->Initialize(hinstance, hwnd, screenWidth, screenHeight);
 
+		gResource = gEngine->GetResourceManager();
 		gFactory = gEngine->GetFactory();
-		gResource = ResourceManager::GetInstance();
-		gInput = DXInput::GetInstance();
-		gTimer = GameTimer::GetInstance();
-		gSound = KHSound::GetInstance();
+		gInput = gEngine->GetInput();
+		gTimer = gEngine->GetTimer();
+		gSound = gEngine->GetSound();
 
 		return result;
 	}
@@ -77,7 +77,7 @@ namespace KH_ENGINE
 		gEngine->GetScene()->SetSkyBox(mapName);
 	}
 
-	extern "C" DLL_DECLSPEC void KH_STDCALL AddScene(const char* name, Scene * scene)
+	extern "C" DLL_DECLSPEC void AddNewScene(const char* name, Scene* scene)
 	{
 		gEngine->AddScene(name, scene);
 	}

@@ -1,4 +1,5 @@
 #include "D3DDefine.h"
+#include "D3DEngine.h"
 #include "IRenderer.h"
 #include "RenderTarget.h"
 #include "Object.h"
@@ -16,10 +17,10 @@ MotionBlur::MotionBlur(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> 
 	m_MotionBlurRT = new RenderTarget(device);
 	m_VelocityRT = new RenderTarget(device);
 
-	m_QuadBuffer = ResourceManager::GetInstance()->GetVertexBuffer("Quad");
+	m_QuadBuffer = D3DEngine::GetInstance()->GetResourceManager()->GetVertexBuffer("Quad");
 
-	m_VelocityShader = ResourceManager::GetInstance()->GetShader("VelocityShader");
-	m_MotionBlurShader = ResourceManager::GetInstance()->GetShader("MotionBlurShader");
+	m_VelocityShader = D3DEngine::GetInstance()->GetResourceManager()->GetShader("VelocityShader");
+	m_MotionBlurShader = D3DEngine::GetInstance()->GetResourceManager()->GetShader("MotionBlurShader");
 }
 
 MotionBlur::~MotionBlur()
@@ -48,7 +49,7 @@ void MotionBlur::VelocityRender(ID3D11ShaderResourceView* depthSRV)
 
 	m_ScreenData.gNowViewProj = nowView * proj;
 	m_ScreenData.gPrevViewProj = prevView * proj;
-	m_ScreenData.gDeltaTime = GameTimer::GetInstance()->DeltaTime();
+	m_ScreenData.gDeltaTime = D3DEngine::GetInstance()->GetTimer()->DeltaTime();
 	m_VelocityShader->SetPixelConstantBuffer(m_ScreenData);
 
 	m_VelocityShader->SetSRV("gDepthMap", depthSRV);

@@ -36,8 +36,8 @@ D3DRenderer::D3DRenderer(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext
 
 	m_DebugViewPort = new DebugViewPort(device, context);
 
-	m_MotionBlurShader = ResourceManager::GetInstance()->GetShader("MotionBlurShader");
-	m_QuadBuffer = ResourceManager::GetInstance()->GetVertexBuffer("Quad");
+	m_MotionBlurShader = D3DEngine::GetInstance()->GetResourceManager()->GetShader("MotionBlurShader");
+	m_QuadBuffer = D3DEngine::GetInstance()->GetResourceManager()->GetVertexBuffer("Quad");
 
 	m_RendererList.emplace_back(m_Forward);
 	m_RendererList.emplace_back(m_PostProcessing);

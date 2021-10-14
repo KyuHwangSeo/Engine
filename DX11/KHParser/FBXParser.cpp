@@ -57,6 +57,9 @@ void FBXParser::Initalize()
 	// Convert °´Ã¼ »ý¼º
 	pConverter = new FbxGeometryConverter(pManager);
 
+	FbxPropertyT<std::string> pro;
+	pro.Get();
+
 	if (!pScene)
 		throw std::exception("error: unable to create FBX scene\n");
 }

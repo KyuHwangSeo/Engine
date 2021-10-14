@@ -5,16 +5,7 @@
 
 Scene::Scene()
 {
-	// Manager 생성 및 초기화..
-	m_RsMG = ResourceManager::GetInstance();
-	m_CamMG = new CameraManager();
-	m_LightMG = new LightManager();
-	m_HelpMG = new HelperManager();
-	m_ObjMG = new ObjectManager();
-	m_MatMG = new MaterialManager();
-	m_ColMG = new CollisionManager();
-	m_UiMG = new UIManager();
-
+	m_RsMG = D3DEngine::GetInstance()->GetResourceManager();
 	m_ClientSize = D3DEngine::GetInstance()->GetClinetSize();
 }
 

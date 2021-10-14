@@ -14,10 +14,10 @@ SkyBox::SkyBox()
 	SetName<SkyBox>();
 
 	m_DeviceContext = D3DEngine::GetInstance()->GetDeviceContext();
-	m_Shader = ResourceManager::GetInstance()->GetShader("SkyCubeShader");
+	m_Shader = D3DEngine::GetInstance()->GetResourceManager()->GetShader("SkyCubeShader");
 	m_Camera = &Camera::g_MainCamera;
 
-	SetVertexBuffer(ResourceManager::GetInstance()->GetVertexBuffer("Sky"));
+	SetVertexBuffer(D3DEngine::GetInstance()->GetResourceManager()->GetVertexBuffer("Sky"));
 
 	D3D11_DEPTH_STENCIL_DESC skycubeDesc;
 	skycubeDesc.DepthEnable = true;

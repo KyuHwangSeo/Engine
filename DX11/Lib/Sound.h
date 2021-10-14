@@ -5,9 +5,6 @@ public:
 	KHSound();
 	~KHSound();
 
-	static KHSound* gSound;
-	static KHSound* GetInstance();
-	
 public:
 	void Initialize();
 

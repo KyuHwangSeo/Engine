@@ -111,7 +111,7 @@ void Material::SetShadowTransform(DXMatrix4X4 shadowTransform)
 
 void Material::SetShader(string shaderName)
 {
-	m_Shader = ResourceManager::GetInstance()->GetShader(shaderName);
+	m_Shader = D3DEngine::GetInstance()->GetResourceManager()->GetShader(shaderName);
 }
 
 void Material::SetMaterialID(UINT matID)

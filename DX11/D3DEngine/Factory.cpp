@@ -34,25 +34,15 @@
 #include "UIManager.h"
 #include "Factory.h"
 
-Factory::Factory()
+Factory::Factory(CameraManager* camM, LightManager* lightM, HelperManager* helperM, ObjectManager* objM, MaterialManager* matM, CollisionManager* colM, UIManager* uiM)
+	:m_CamMG(camM), m_LightMG(lightM), m_HelpMG(helperM), m_ObjMG(objM), m_MatMG(matM), m_ColMG(colM), m_UiMG(uiM)
 {
-	m_RsMG = ResourceManager::GetInstance();
+	m_RsMG = D3DEngine::GetInstance()->GetResourceManager();
 }
 
 Factory::~Factory()
 {
 
-}
-
-void Factory::SetManager(CameraManager* camM, LightManager* lightM, HelperManager* helperM, ObjectManager* objM, MaterialManager* matM, CollisionManager* colM, UIManager* uiM)
-{
-	m_CamMG = camM;
-	m_LightMG = lightM;
-	m_HelpMG = helperM;
-	m_ObjMG = objM;
-	m_MatMG = matM;
-	m_ColMG = colM;
-	m_UiMG = uiM;
 }
 
 GameObject* Factory::CreateObject(string objName, eModelType modelType, DXVector3 scale, bool isCol, eModelCollider modelColType)
@@ -560,7 +550,7 @@ GameObject* Factory::CreateUI(string objName, eUIType uiType, string texKey, DXV
 
 		m_UiMG->AddObject(newObj);
 	}
-		break;
+	break;
 	default:
 		break;
 	}

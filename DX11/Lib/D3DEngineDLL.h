@@ -115,7 +115,9 @@ namespace KH_ENGINE
 	extern "C" DLL_DECLSPEC void KH_STDCALL CreateSkyBox();
 	extern "C" DLL_DECLSPEC void KH_STDCALL SetSkyBox(const char*);
 
-	extern "C" DLL_DECLSPEC void KH_STDCALL AddScene(const char*, Scene*);
+	template <typename T>
+	T* KH_STDCALL AddScene(const char* name) { T* scene = new T; AddNewScene(name, scene); return scene; }
+	extern "C" DLL_DECLSPEC void AddNewScene(const char*, Scene*);
 	extern "C" DLL_DECLSPEC Scene* KH_STDCALL FindScene(const char*);
 	extern "C" DLL_DECLSPEC void KH_STDCALL SelectScene(const char*);
 	extern "C" DLL_DECLSPEC void KH_STDCALL RemoveScene(const char*);

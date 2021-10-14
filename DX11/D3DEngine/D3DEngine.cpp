@@ -1,15 +1,15 @@
 #include "framework.h"
 #include "DLLDefine.h"
 #include "D3DDefine.h"
+#include "GameTimer.h"
+#include "KHSound.h"
 #include "DXTKFont.h"
 #include "Component.h"
 #include "Transform.h"
 #include "GameObject.h"
+#include "D3DEngine.h"
 #include "Shader.h"
-#include "GameTimer.h"
-#include "D3DEngine.h" 
 #include "ResourceManager.h"
-#include "KHSound.h"
 
 /// Component Header
 #include "Gizmos.h"
@@ -59,7 +59,6 @@
 
 D3DEngine::D3DEngine()
 {
-	m_Font = new DXTKFont();
 }
 
 D3DEngine::~D3DEngine()
@@ -90,29 +89,34 @@ bool D3DEngine::Initialize(INT_PTR hinstance, INT_PTR hwnd, int screenWidth, int
 	CreateRenderStates();
 
 	// ResourceManager 초기화..
-	ResourceManager::GetInstance()->Initialize();
+	m_ResourceManager = new ResourceManager();
+	m_ResourceManager->Initialize();
 
 	// Renderer 생성 및 초기화..
 	m_Renderer = new D3DRenderer(m_Device, m_DeviceContext, m_SwapChain.Get());
 	m_Renderer->Initialize();
 
-	// 폰트 생성
+	// Font 생성 및 초기화..
+	m_Font = new DXTKFont();
 	m_Font->Create(m_Device.Get());
 
-	// GameTimer 초기화..
-	GameTimer::GetInstance()->Reset();
+	// Input 생성 및 초기화..
+	m_Input = new DXInput();
 
-	// Sound 초기화..
-	KHSound::GetInstance()->Initialize();
+	// GameTimer 생성 및 초기화..
+	m_Timer = new GameTimer();
+	m_Timer->Reset();
+
+	// Sound 생성 및 초기화..
+	m_Sound = new KHSound();
+	m_Sound->Initialize();
 
 	// Layer List 생성..
 	LayerList::Initialize();
 
-	// Factroy 생성 및 초기화..
-	m_Factory = new Factory();
-
 	// SceneManager 생성 및 초기화..
 	m_SceneManager = new SceneManager();
+	m_SceneManager->Initialize();
 
 	return true;
 }
@@ -177,35 +181,6 @@ void D3DEngine::CreateDevice()
 		D3D11_SDK_VERSION, &swapChainDesc, &m_SwapChain, &m_Device, NULL, &m_DeviceContext));
 }
 
-void D3DEngine::CreateHelper()
-{
-	// Camera 생성 및 초기화..
-	GameObject* cam1 = m_Factory->CreateObject("Camera1", eModelType::Camera);
-	cam1->GetTransform()->SetScale(DXVector3(0.5f, 0.5f, 0.5f));
-	cam1->GetComponent<Camera>()->SetType(eCameraType::NormalCam);
-
-	GameObject* cam2 = m_Factory->CreateObject("Camera2", eModelType::Camera);
-	cam2->GetTransform()->SetScale(DXVector3(0.5f, 0.5f, 0.5f));
-	cam2->GetComponent<Camera>()->SetType(eCameraType::FollowCam_3);
-
-	// Main Camera 설정..
-	Camera::g_MainCamera = cam2->GetComponent<Camera>();
-
-	// HerlperObject 생성 및 초기화..
-#ifdef _DEBUG
-	m_Factory->CreateObject("Grid", eModelType::Grid);
-	m_Factory->CreateObject("Axis", eModelType::Axis);
-#endif
-
-	// 기본 Directional Light 생성..
-	GameObject* light1 = m_Factory->CreateObject("Direction Light", eModelType::DirLight);
-	light1->GetTransform()->SetScale(DXVector3(10.0f, 10.0f, 10.0f));
-	light1->GetTransform()->MoveLocal(DXVector3(0.0f, 15.0f, 0.0f));
-
-	// Direction Light 설정..
-	Light::g_DirLight = light1->GetComponent<Light>();
-}
-
 void D3DEngine::EndRender()
 {
 	m_Renderer->EndRender();
@@ -217,7 +192,7 @@ void D3DEngine::EndRender()
 void D3DEngine::SceneStart()
 {
 	// 기본 오브젝트 생성..
-	CreateHelper();
+	m_SceneManager->CreateHelper();
 
 	// 창 사이즈에 대한 재설정..
 	OnResize(m_ClientSize->x, m_ClientSize->y);
@@ -228,15 +203,15 @@ void D3DEngine::SceneStart()
 	// Scene 내에 존재하는 GameObject 설정..
 	m_Scene->Start();
 
-	GameTimer::GetInstance()->Tick();
+	m_Timer->Tick();
 }
 
 void D3DEngine::Update()
 {
-	GameTimer::GetInstance()->Tick();
-	dTime = GameTimer::GetInstance()->DeltaTime();
+	m_Timer->Tick();
+	dTime = m_Timer->DeltaTime();
 
-	KHSound::GetInstance()->Update();
+	m_Sound->Update();
 
 	CheckKeyInput();
 
@@ -279,7 +254,7 @@ void D3DEngine::Draw_Text()
 	static float _FPS = 0;
 	static float _deltaTimeMS = 0;
 
-	float deltaTime = GameTimer::GetInstance()->DeltaTime();
+	float deltaTime = m_Timer->DeltaTime();
 
 	// 갱신주기는 0.2초
 	if (0.2f < _addedTime)
@@ -314,17 +289,17 @@ void D3DEngine::Draw_Text()
 
 void D3DEngine::CheckKeyInput()
 {
-	if (DXInput::GetInstance()->IsKeyUP(VK_ESCAPE))
+	if (m_Input->IsKeyUP(VK_ESCAPE))
 	{
 		PostQuitMessage(0);
 	}
 
-	if (DXInput::GetInstance()->IsKeyUP(VK_F4))
+	if (m_Input->IsKeyUP(VK_F4))
 	{
 		m_Renderer->ResetSSAO();
 		m_Renderer->Is_SSAO = !m_Renderer->Is_SSAO;
 	}
-	if (DXInput::GetInstance()->IsKeyUP(VK_F5))
+	if (m_Input->IsKeyUP(VK_F5))
 	{
 		m_DebugMode = !m_DebugMode;
 		m_Renderer->Is_Debug = !m_Renderer->Is_Debug;
@@ -341,10 +316,7 @@ void D3DEngine::AddScene(const char* name, Scene* scene)
 
 	// Scene 최초 설정..
 	if (m_Scene == nullptr)
-	{
 		m_Scene = scene;
-		m_Scene->SetFactory(m_Factory);
-	}
 }
 
 void D3DEngine::SelectScene(const char* name)
@@ -354,7 +326,6 @@ void D3DEngine::SelectScene(const char* name)
 	if (scene == nullptr) return;
 
 	m_Scene = scene;
-	m_Scene->SetFactory(m_Factory);
 
 	// Scene 적용후 초기 설정..
 	SceneStart();
@@ -379,14 +350,34 @@ void D3DEngine::Picking(int x, int y)
 	m_Scene->Picking(x, y, m_ClientSize->x, m_ClientSize->y);
 }
 
-Factory* D3DEngine::GetFactory()
+GameTimer* D3DEngine::GetTimer()
 {
-	return m_Factory;
+	return m_Timer;
+}
+
+DXInput* D3DEngine::GetInput()
+{
+	return m_Input;
+}
+
+KHSound* D3DEngine::GetSound()
+{
+	return m_Sound;
+}
+
+ResourceManager* D3DEngine::GetResourceManager()
+{
+	return m_ResourceManager;
 }
 
 Scene* D3DEngine::GetScene()
 {
 	return m_Scene;
+}
+
+Factory* D3DEngine::GetFactory()
+{
+	return m_SceneManager->GetFactory();
 }
 
 GameObject* D3DEngine::FindObject(const char* objName, eObjectType objType)
@@ -509,7 +500,7 @@ void D3DEngine::Release()
 	SAFE_DELETE(m_Font);
 
 	// 오브젝트들을 전부 해제한 후에 Utility 를 해제해주자..
-	ResourceManager::GetInstance()->Release();
+	m_ResourceManager->Release();
 
 	RESET_COM(m_DeviceContext);
 	RESET_COM(m_SwapChain);

@@ -14,7 +14,7 @@
 UI_Button::UI_Button()
 	:UI_Image(), m_IsOnClick(false)
 {
-	m_Input = DXInput::GetInstance();
+	m_Input = D3DEngine::GetInstance()->GetInput();
 	m_MousePos = m_Input->GetMousePos();
 }
 

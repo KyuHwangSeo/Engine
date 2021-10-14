@@ -13,13 +13,13 @@
 
 #ifdef _WIN64
 	#ifdef _DEBUG
-		#pragma comment( lib, "DirectXTKd_x64.lib" )
+		#pragma comment( lib, "DirectXTK_x64d.lib" )
 	#else
 		#pragma comment( lib, "DirectXTK_x64.lib" )
 	#endif
 #else
 	#ifdef _DEBUG
-		#pragma comment( lib, "DirectXTKd_x86.lib" )
+		#pragma comment( lib, "DirectXTK_x86d.lib" )
 	#else
 		#pragma comment( lib, "DirectXTK_x86.lib" )
 	#endif

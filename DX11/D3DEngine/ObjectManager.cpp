@@ -119,11 +119,9 @@ void ObjectManager::AddTopObject(GameObject* obj)
 	m_TopObjectList.insert(pair<string, GameObject*>(obj->GetName(), obj));
 }
 
-void ObjectManager::ObjectUpdate()
+void ObjectManager::ObjectUpdate(float dTime)
 {
-	float deltaTime = GameTimer::GetInstance()->DeltaTime();
-
-	if (DXInput::GetInstance()->IsKeyUP(DIK_TAB))
+	if (D3DEngine::GetInstance()->GetInput()->IsKeyUP(DIK_TAB))
 	{
 		for (Model model : m_ModelList)
 		{
@@ -162,21 +160,21 @@ void ObjectManager::ObjectUpdate()
 	if (m_PickObject == nullptr) return;
 
 	// 선택중인 오브젝트 움직이기..
-	if (DXInput::GetInstance()->IsKeyDownKeep(DIK_A))
+	if (D3DEngine::GetInstance()->GetInput()->IsKeyDownKeep(DIK_A))
 	{
-		m_PickObject->GetTransform()->MoveLocal(DXVector3(10.0f * deltaTime, 0, 0));
+		m_PickObject->GetTransform()->MoveLocal(DXVector3(10.0f * dTime, 0, 0));
 	}
-	if (DXInput::GetInstance()->IsKeyDownKeep(DIK_D))
+	if (D3DEngine::GetInstance()->GetInput()->IsKeyDownKeep(DIK_D))
 	{
-		m_PickObject->GetTransform()->MoveLocal(DXVector3(-10.0f * deltaTime, 0, 0));
+		m_PickObject->GetTransform()->MoveLocal(DXVector3(-10.0f * dTime, 0, 0));
 	}
-	if (DXInput::GetInstance()->IsKeyDownKeep(DIK_W))
+	if (D3DEngine::GetInstance()->GetInput()->IsKeyDownKeep(DIK_W))
 	{
-		m_PickObject->GetTransform()->MoveLocal(DXVector3(0, 0, -10.0f * deltaTime));
+		m_PickObject->GetTransform()->MoveLocal(DXVector3(0, 0, -10.0f * dTime));
 	}
-	if (DXInput::GetInstance()->IsKeyDownKeep(DIK_S))
+	if (D3DEngine::GetInstance()->GetInput()->IsKeyDownKeep(DIK_S))
 	{
-		m_PickObject->GetTransform()->MoveLocal(DXVector3(0, 0, 10.0f * deltaTime));
+		m_PickObject->GetTransform()->MoveLocal(DXVector3(0, 0, 10.0f * dTime));
 	}
 }
 

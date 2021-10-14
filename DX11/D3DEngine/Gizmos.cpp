@@ -15,20 +15,20 @@ Gizmos::Gizmos(eGizmoType gizmoType, DXVector3 scale, DXVector3 rot, DXVector3 p
 	m_OffsetTM = KH_MATH::CreateScale(scale) * KH_MATH::CreateRotationEuler(rot) * KH_MATH::CreateTranslation(pos);
 
 	m_DeviceContext = D3DEngine::GetInstance()->GetDeviceContext();
-	m_Shader = ResourceManager::GetInstance()->GetShader("ColorShader");
+	m_Shader = D3DEngine::GetInstance()->GetResourceManager()->GetShader("ColorShader");
 
 	switch (m_GizmoType)
 	{
 	case eGizmoType::Axis:
-		SetVertexBuffer(ResourceManager::GetInstance()->GetVertexBuffer("AxisGizmo"));
+		SetVertexBuffer(D3DEngine::GetInstance()->GetResourceManager()->GetVertexBuffer("AxisGizmo"));
 		m_TopologyType = eTopologyType::Line;
 		break;
 	case eGizmoType::Camera:
-		SetVertexBuffer(ResourceManager::GetInstance()->GetVertexBuffer("CameraGizmo"));
+		SetVertexBuffer(D3DEngine::GetInstance()->GetResourceManager()->GetVertexBuffer("CameraGizmo"));
 		m_TopologyType = eTopologyType::Triangle;
 		break;
 	case eGizmoType::Light:
-		SetVertexBuffer(ResourceManager::GetInstance()->GetVertexBuffer("LightGizmo"));
+		SetVertexBuffer(D3DEngine::GetInstance()->GetResourceManager()->GetVertexBuffer("LightGizmo"));
 		m_TopologyType = eTopologyType::Triangle;
 		break;
 	default:

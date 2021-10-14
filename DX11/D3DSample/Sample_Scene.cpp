@@ -1,5 +1,6 @@
 #include "D3DEngineDLL.h"
 #include "Sample_Scene.h"
+#include "Player.h"
 
 Sample_Scene::Sample_Scene()
 {
@@ -19,6 +20,11 @@ void Sample_Scene::Create()
 	player->SetTag(eTag::Player);
 	player->GetTransform()->MoveWorld(DXVector3(0.0f, 0.0f, 0.0f));
 	player->GetTransform()->RotateLocal(DXVector3(0.0f, 180.0f, 0.0f));
+
+	Player* playerCom = new Player;
+	player->AddComponent(playerCom);
+
+	player->AddComponent<Player>();
 }
 
 void Sample_Scene::SceneUpdate(float dTime)

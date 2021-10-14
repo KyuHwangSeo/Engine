@@ -10,8 +10,8 @@
 PostProcessing::PostProcessing(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> context)
 	:IRenderer(device, context)
 {
-	HorzBlurShader = ResourceManager::GetInstance()->GetShader("HorizonBlurShader");
-	VertBlurShader = ResourceManager::GetInstance()->GetShader("VerticalBlurShader");
+	HorzBlurShader = D3DEngine::GetInstance()->GetResourceManager()->GetShader("HorizonBlurShader");
+	VertBlurShader = D3DEngine::GetInstance()->GetResourceManager()->GetShader("VerticalBlurShader");
 }
 
 PostProcessing::~PostProcessing()

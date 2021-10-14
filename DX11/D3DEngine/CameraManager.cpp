@@ -14,7 +14,7 @@
 CameraManager::CameraManager()
 	:Camera_Index(0)
 {
-	m_Input = DXInput::GetInstance();
+	m_Input = D3DEngine::GetInstance()->GetInput();
 	m_NowMousePos = m_Input->GetMousePos();
 }
 
@@ -38,7 +38,7 @@ void CameraManager::Update(float dTime)
 {
 	for (GameObject* cam : m_CameraList)
 	{
-		CameraUpdate(cam);
+		CameraUpdate(cam, dTime);
 
 		cam->Update(dTime);
 	}
@@ -57,14 +57,12 @@ void CameraManager::AddObject(GameObject* obj)
 	m_CameraList.push_back(obj);
 }
 
-void CameraManager::CameraUpdate(GameObject* cam)
+void CameraManager::CameraUpdate(GameObject* cam, float dTime)
 {
 	CameraMove();
 
 	// 카메라 시점 변경..
 	/// 일단은 상수값으로 위치를 조정하는데 좀더 좋은 방법이 있을거같다..
-	float deltaTime = GameTimer::GetInstance()->DeltaTime();
-
 	Camera* camera = cam->GetComponent<Camera>();
 
 	switch (camera->m_CameraType)
@@ -72,43 +70,43 @@ void CameraManager::CameraUpdate(GameObject* cam)
 	case eCameraType::NormalCam:
 	{
 		if (m_Input->IsKeyDownKeep(VK_RSHIFT))
-			camera->m_Speed += deltaTime;
+			camera->m_Speed += dTime;
 		else
 			camera->m_Speed = 1;
 
 		if (m_Input->IsKeyDownKeep(VK_R))
 		{
-			camera->RotateZ(10.0f * deltaTime);
+			camera->RotateZ(10.0f * dTime);
 		}
 
 		if (m_Input->IsKeyDownKeep(VK_UP))
 		{
-			camera->Walk(10.0f * deltaTime * Camera::g_MainCamera->m_Speed);
+			camera->Walk(10.0f * dTime * Camera::g_MainCamera->m_Speed);
 		}
 
 		if (m_Input->IsKeyDownKeep(VK_DOWN))
 		{
-			camera->Walk(-10.0f * deltaTime * Camera::g_MainCamera->m_Speed);
+			camera->Walk(-10.0f * dTime * Camera::g_MainCamera->m_Speed);
 		}
 
 		if (m_Input->IsKeyDownKeep(VK_LEFT))
 		{
-			camera->Strafe(-10.0f * deltaTime * Camera::g_MainCamera->m_Speed);
+			camera->Strafe(-10.0f * dTime * Camera::g_MainCamera->m_Speed);
 		}
 
 		if (m_Input->IsKeyDownKeep(VK_RIGHT))
 		{
-			camera->Strafe(10.0f * deltaTime * Camera::g_MainCamera->m_Speed);
+			camera->Strafe(10.0f * dTime * Camera::g_MainCamera->m_Speed);
 		}
 
 		if (m_Input->IsKeyDownKeep(VK_Q))
 		{
-			camera->WorldUpDown(-10.0f * deltaTime * Camera::g_MainCamera->m_Speed);
+			camera->WorldUpDown(-10.0f * dTime * Camera::g_MainCamera->m_Speed);
 		}
 
 		if (m_Input->IsKeyDownKeep(VK_E))
 		{
-			camera->WorldUpDown(10.0f * deltaTime * Camera::g_MainCamera->m_Speed);
+			camera->WorldUpDown(10.0f * dTime * Camera::g_MainCamera->m_Speed);
 		}
 		break;
 	}
@@ -117,7 +115,7 @@ void CameraManager::CameraUpdate(GameObject* cam)
 		//XMFLOAT3 offsetPos = XMFLOAT3(0.0f, 3.0f, 0.0f);
 		XMFLOAT3 offsetPos2 = XMFLOAT3(0.0f, 15.0f, -30.0f);
 
-		//if (DXInput::GetInstance()->IsKeyDownKeep(DIK_LALT))
+		//if (D3DEngine::GetInstance()->GetInput()->IsKeyDownKeep(DIK_LALT))
 		//{
 		//	camera->LookAt_3_Person_FreeView(offsetPos, 11.25f);
 		//}
@@ -136,7 +134,7 @@ void CameraManager::CameraUpdate(GameObject* cam)
 	}
 	}
 
-	if (DXInput::GetInstance()->IsKeyUP(VK_C))
+	if (m_Input->IsKeyUP(VK_C))
 	{
 		//if (Camera::m_Target == nullptr) return;
 	

@@ -12,7 +12,7 @@
 
 LightManager::LightManager()
 {
-	m_LightShader = ResourceManager::GetInstance()->GetShader("LightShader");
+	m_LightShader = D3DEngine::GetInstance()->GetResourceManager()->GetShader("LightShader");
 
 	m_ObjectData.gWorldViewProj = XMMatrixIdentity();
 
@@ -51,7 +51,7 @@ void LightManager::Update(float dTime)
 	//SetLightData_Forward();
 
 	/// Forward Shader Update
-	//for (pair<string, Shader*> shader : ResourceManager::GetInstance()->GetShaderList())
+	//for (pair<string, Shader*> shader : D3DEngine::GetInstance()->GetResourceManager()->GetShaderList())
 	//{
 	//	shader.second->SetVertexConstantBuffer(m_CameraData);
 	//	shader.second->SetVertexConstantBuffer(m_LightData);

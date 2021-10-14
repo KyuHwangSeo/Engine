@@ -10,7 +10,7 @@ public:
 	void Update(float dTime);
 	void Render(DXMatrix4X4 view, DXMatrix4X4 proj);
 	void AddObject(GameObject* obj);
-	void CameraUpdate(GameObject* cam);
+	void CameraUpdate(GameObject* cam, float dTime);
 	void CameraSetLens(int screenWidth, int screenHeight);
 	void CameraMove();
 

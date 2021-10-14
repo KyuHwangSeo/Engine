@@ -18,7 +18,7 @@ public:
 	void AddModel(std::vector<GameObject*>& model);
 	void AddTopObject(GameObject* obj);
 
-	void ObjectUpdate();
+	void ObjectUpdate(float dTime);
 	void SetHierarchy(std::vector<GameObject*>& objList);
 	void SetBone(std::vector<GameObject*>& objList, GameObject* obj);
 	void Picking(int x, int y, int width, int height);

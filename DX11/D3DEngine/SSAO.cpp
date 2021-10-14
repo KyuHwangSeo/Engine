@@ -29,11 +29,11 @@ SSAO::SSAO(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> context)
 		0.0f, 0.0f, 1.0f, 0.0f,
 		0.5f, 0.5f, 0.0f, 1.0f);
 
-	m_QuadBuffer = ResourceManager::GetInstance()->GetVertexBuffer("SsaoQuad");
+	m_QuadBuffer = D3DEngine::GetInstance()->GetResourceManager()->GetVertexBuffer("SsaoQuad");
 
-	m_SSAOShader = ResourceManager::GetInstance()->GetShader("SSAOShader");
-	m_HorzBlurShader = ResourceManager::GetInstance()->GetShader("SSAOHorizonBlurShader");
-	m_VertBlurShader = ResourceManager::GetInstance()->GetShader("SSAOVerticalBlurShader");
+	m_SSAOShader = D3DEngine::GetInstance()->GetResourceManager()->GetShader("SSAOShader");
+	m_HorzBlurShader = D3DEngine::GetInstance()->GetResourceManager()->GetShader("SSAOHorizonBlurShader");
+	m_VertBlurShader = D3DEngine::GetInstance()->GetResourceManager()->GetShader("SSAOVerticalBlurShader");
 }
 
 SSAO::~SSAO()

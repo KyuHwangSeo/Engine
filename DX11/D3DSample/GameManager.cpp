@@ -59,8 +59,7 @@ void GameManager::LoadData()
 
 void GameManager::LoadScene()
 {
-	Sample_Scene* Sample = new Sample_Scene();
-	KH_ENGINE::AddScene("Sample", Sample);
+	KH_ENGINE::AddScene<Sample_Scene>("Sample");
 
 	// First Scene Select..
 	KH_ENGINE::SelectScene("Sample");

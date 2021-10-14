@@ -14,7 +14,7 @@ MeshRenderer::MeshRenderer(eRasterizerType renderType, eTopologyType topolType)
 {
 	SetName<MeshRenderer>();
 
-	m_ShadowShader = ResourceManager::GetInstance()->GetShader("NormalShadowShader");
+	m_ShadowShader = D3DEngine::GetInstance()->GetResourceManager()->GetShader("NormalShadowShader");
 }
 
 MeshRenderer::~MeshRenderer()

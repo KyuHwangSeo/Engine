@@ -22,7 +22,6 @@ public:
 	void SetSkyBox(const char* mapName);
 
 	void SetRenderer(D3DRenderer* renderer) { m_Renderer = renderer; }
-	void SetFactory(Factory* gFactory) { gFactory->SetManager(m_CamMG, m_LightMG, m_HelpMG, m_ObjMG, m_MatMG, m_ColMG, m_UiMG); }
 
 	GameObject* FindObject(const char* objName, eObjectType objType);
 
@@ -32,6 +31,9 @@ private:
 	void ShadowRender();
 	void MainRender();
 	void LateRender();
+
+private:
+	friend class SceneManager;
 
 protected:
 	D3DRenderer* m_Renderer;

@@ -27,12 +27,12 @@ void Collider::Start()
 	{
 	case eColliderType::Box2D:
 	case eColliderType::Circle2D:
-		m_Shader = ResourceManager::GetInstance()->GetShader("UIColliderShader");
+		m_Shader = D3DEngine::GetInstance()->GetResourceManager()->GetShader("UIColliderShader");
 		break;
 	case eColliderType::Box:
 	case eColliderType::Sphere:
 	case eColliderType::Mesh:
-		m_Shader = ResourceManager::GetInstance()->GetShader("ColorShader");
+		m_Shader = D3DEngine::GetInstance()->GetResourceManager()->GetShader("ColorShader");
 		break;
 	default:
 		break;

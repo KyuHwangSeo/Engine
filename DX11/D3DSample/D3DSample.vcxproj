@@ -208,6 +208,7 @@ copy/Y ..\lib\*.dll      ..\bin</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Player.h" />
     <ClInclude Include="ProjectDefine.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="framework.h" />
@@ -218,6 +219,7 @@ copy/Y ..\lib\*.dll      ..\bin</Command>
   <ItemGroup>
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="D3DSample.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Sample_Scene.cpp" />
   </ItemGroup>
   <ItemGroup>

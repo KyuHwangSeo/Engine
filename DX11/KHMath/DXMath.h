@@ -243,6 +243,6 @@ namespace KH_MATH
 	DLL_DECLSPEC DXVector4 DXVector4Replicate(float _value);
 	DLL_DECLSPEC bool DXVector4Less(DXVector4 _v1, DXVector4 _v2);
 	
-	DLL_DECLSPEC const float Infinity = FLT_MAX;
-	DLL_DECLSPEC const float Pi = 3.1415926535f;
+	const float Infinity = FLT_MAX;
+	const float Pi = 3.1415926535f;
 }

@@ -5,8 +5,11 @@
 
 #ifdef KH_DLL
 	#define DLL_DECLSPEC  __declspec(dllexport)					//C++
+	#define DLL_TEMPLATE
 #else
 	#define DLL_DECLSPEC  __declspec(dllimport)					//C++
+	#define DLL_TEMPLATE  extern
+
 		#ifdef _WIN64
 			#ifdef _DEBUG
 				#pragma comment(lib, "D3DEngine_x64d.lib")		//64bit + debug

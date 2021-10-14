@@ -9,7 +9,7 @@
 MaterialManager::MaterialManager()
 	:m_CountID(0)
 {
-	m_Shader = ResourceManager::GetInstance()->GetShader("LightShader");
+	m_Shader = D3DEngine::GetInstance()->GetResourceManager()->GetShader("LightShader");
 }
 
 MaterialManager::~MaterialManager()

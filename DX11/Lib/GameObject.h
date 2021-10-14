@@ -58,6 +58,9 @@ public:
 	template <typename T, typename std::enable_if<std::is_base_of<Component, T>::value, bool>::type = std::is_base_of<Component, T>::value>
 	void AddComponent(T* newCo);
 
+	template <typename T, typename std::enable_if<std::is_base_of<Component, T>::value, bool>::type = std::is_base_of<Component, T>::value>
+	void AddComponent();
+
 	// 컴포넌트 제거
 	template <typename T, typename std::enable_if<std::is_base_of<Component, T>::value, bool>::type = std::is_base_of<Component, T>::value>
 	void RemoveComponent();
@@ -125,6 +128,33 @@ public:
 template <typename T, typename std::enable_if<std::is_base_of<Component, T>::value, bool>::type>
 inline void GameObject::AddComponent(T* newCo)
 {
+	Component* _newCo = dynamic_cast<Component*>(newCo);
+	_newCo->SetGameObject(this);
+	_newCo->SetName<T>();
+
+	m_Components.insert(make_pair(type_index(typeid(T)), _newCo));
+
+	// 추가된 컴포넌트가 렌더러인지 체크 및 설정..
+	if (std::is_base_of<MeshRenderer, T>::value == true)
+	{
+		m_MeshType = eMeshType::NormalMesh;
+	}
+	if (std::is_base_of<SkinMeshRenderer, T>::value == true)
+	{
+		m_MeshType = eMeshType::SkinMesh;
+	}
+	if (std::is_base_of<CanvasRenderer, T>::value == true)
+	{
+		m_MeshType = eMeshType::Canvas;
+	}
+}
+
+template <typename T, typename std::enable_if<std::is_base_of<Component, T>::value, bool>::type>
+inline void GameObject::AddComponent()
+{
+	// 해당 컴포넌트 생성..
+	T* newCo = new T;
+
 	Component* _newCo = dynamic_cast<Component*>(newCo);
 	_newCo->SetGameObject(this);
 	_newCo->SetName<T>();

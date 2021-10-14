@@ -14,7 +14,7 @@ SkinMeshRenderer::SkinMeshRenderer(eRasterizerType renderType, eTopologyType top
 {
 	SetName<SkinMeshRenderer>();
 
-	m_ShadowShader = ResourceManager::GetInstance()->GetShader("SkinShadowShader");
+	m_ShadowShader = D3DEngine::GetInstance()->GetResourceManager()->GetShader("SkinShadowShader");
 }
 
 SkinMeshRenderer::~SkinMeshRenderer()

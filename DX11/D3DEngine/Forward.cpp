@@ -1,4 +1,5 @@
 #include "D3DDefine.h"
+#include "D3DEngine.h"
 #include "IRenderer.h"
 #include "RenderTarget.h"
 #include "Object.h"
@@ -13,9 +14,9 @@ Forward::Forward(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> contex
 	m_AllHorzBlurRT = new RenderTarget(device);
 	m_AllVertBlurRT = new RenderTarget(device);
 
-	m_QuadBuffer = ResourceManager::GetInstance()->GetVertexBuffer("Quad");
+	m_QuadBuffer = D3DEngine::GetInstance()->GetResourceManager()->GetVertexBuffer("Quad");
 
-	m_FinalShader = ResourceManager::GetInstance()->GetShader("FinalShader");
+	m_FinalShader = D3DEngine::GetInstance()->GetResourceManager()->GetShader("FinalShader");
 }
 
 Forward::~Forward()
