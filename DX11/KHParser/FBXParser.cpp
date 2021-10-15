@@ -11,8 +11,8 @@ using namespace fbxsdk;
 #include <string>
 #include <vector>
 
-#include "DLLDefine.h"
 #include "KHMath.h"
+#include "ParserDLL.h"
 
 #include "AnimationData.h"
 #include "CParsingDataClass.h"
@@ -22,12 +22,12 @@ using namespace ParserData;
 #include "FBXParser.h"
 
 
-FBXParser::FBXParser()
+PARSER_DLL FBXParser::FBXParser()
 {
 	Initalize();
 }
 
-FBXParser::~FBXParser()
+PARSER_DLL FBXParser::~FBXParser()
 {
 	pManager->Destroy();
 }
@@ -98,7 +98,7 @@ void FBXParser::SceneSetting()
 }
 
 
-void FBXParser::Release()
+PARSER_DLL void FBXParser::Release()
 {
 	pImporter->Destroy();
 	SAFE_DELETE(pConverter);

@@ -2,39 +2,39 @@
 class KHSound
 {
 public:
-	KHSound();
-	~KHSound();
+	SOUND_DLL KHSound();
+	SOUND_DLL ~KHSound();
 
 public:
-	void Initialize();
+	SOUND_DLL void Initialize();
 
-	void LoadSoundBGM(std::string fileName, std::string key, bool loop = true);
-	void LoadSoundSFX(std::string fileName, std::string key, bool loop = false);
+	SOUND_DLL void LoadSoundBGM(std::string fileName, std::string key, bool loop = true);
+	SOUND_DLL void LoadSoundSFX(std::string fileName, std::string key, bool loop = false);
 
-	void PlaySoundBGM(std::string key);
-	void PlaySoundSFX(std::string key);
+	SOUND_DLL void PlaySoundBGM(std::string key);
+	SOUND_DLL void PlaySoundSFX(std::string key);
 
-	void VolumeChangeBGM(float volume);
-	void VolumeUpBGM();
-	void VolumeDownBGM();
+	SOUND_DLL void VolumeChangeBGM(float volume);
+	SOUND_DLL void VolumeUpBGM();
+	SOUND_DLL void VolumeDownBGM();
 
-	void VolumeChangeSFX(float volume);
-	void VolumeUpSFX();
-	void VolumeDownSFX();
+	SOUND_DLL void VolumeChangeSFX(float volume);
+	SOUND_DLL void VolumeUpSFX();
+	SOUND_DLL void VolumeDownSFX();
 
-	void VolumeChangeMaster(float volume);
-	void VolumeUpMaster();
-	void VolumeDownMaster();
+	SOUND_DLL void VolumeChangeMaster(float volume);
+	SOUND_DLL void VolumeUpMaster();
+	SOUND_DLL void VolumeDownMaster();
 
-	void StopBGM();
-	void PausedBGM(bool play);
+	SOUND_DLL void StopBGM();
+	SOUND_DLL void PausedBGM(bool play);
 
-	void StopSFX();
-	void PausedSFX(bool play);
+	SOUND_DLL void StopSFX();
+	SOUND_DLL void PausedSFX(bool play);
 
-	void StopAll();
+	SOUND_DLL void StopAll();
 
-	void Update();
+	SOUND_DLL void Update();
 
 	Channel* FindChannel();
 

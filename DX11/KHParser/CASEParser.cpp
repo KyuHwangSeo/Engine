@@ -1,5 +1,5 @@
-#include "DLLDefine.h"
 #include "KHMath.h"
+#include "ParserDLL.h"
 
 #include <vector>
 #include <string>
@@ -24,23 +24,7 @@ CASEParser::~CASEParser()
 	delete m_lexer;
 }
 
-bool CASEParser::Init()
-{
-
-	return TRUE;
-}
-//---------------------------------------------------------------------------------------------------
-// 로딩한다.
-// 이것이 끝났다면 정해진 데이터형에 모든 데이터를 읽어서 들어가 있어야 한다.
-//
-// Parsing에 대해:
-// 항상 느끼는 것이지만 parsing이라는 것은 데이터가 일정 규격에 맞게 들어가 있다는 것을 전제로 한다.
-// 하지만, 파일 내부에 순서가 바뀌어 들어가 있는것이 가능하다던지 하는 규칙이 생기면
-// 검색하는 루틴이 복잡해지기 마련. 일단은 순서대로 일정 규약으로 들어가 있다는것을 가정하자.
-// -> 그래서, 재귀 호출을 하는 하나의 큰 함수로 해결봤다.
-// -> depth를 기준으로 오동작에 대한 안전 코드를 넣어야겠다
-//---------------------------------------------------------------------------------------------------
-bool CASEParser::Load(LPSTR p_File)
+PARSER_DLL bool CASEParser::Load(LPSTR p_File)
 {
 	/// 파일을 로드한다.
 	if (!m_lexer->Open(p_File))
@@ -351,7 +335,7 @@ void CASEParser::OptimizeData()
 	}
 }
 
-void CASEParser::SetBoneTM(ParserData::Mesh* pMesh)
+PARSER_DLL void CASEParser::SetBoneTM(ParserData::Mesh* pMesh)
 {
 	for (size_t i = 0; i < pMesh->m_vector_bone_list.size(); i++)
 	{

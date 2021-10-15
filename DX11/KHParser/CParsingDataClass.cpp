@@ -1,5 +1,5 @@
-#include "DLLDefine.h"
 #include "KHMath.h"
+#include "ParserDLL.h"
 
 #include <vector>
 #include <string>

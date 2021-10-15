@@ -1,6 +1,6 @@
 #pragma once
 
-class DLL_DECLSPEC GeometryGenerator
+class ENGINE_DLL GeometryGenerator
 {
 public:
 	struct Vertex

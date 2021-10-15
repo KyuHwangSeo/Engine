@@ -21,8 +21,8 @@ public:
 
 	bool CircleToCircle(Circle& circle);
 	void SetBoundCircle2D(DXVector2 center, float radius);
-	DLL_DECLSPEC void SetRange(float radius);
-	DLL_DECLSPEC void SetCenter(DXVector2 center);
+	ENGINE_DLL void SetRange(float radius);
+	ENGINE_DLL void SetCenter(DXVector2 center);
 
 	void BuildGeometryBuffers();
 

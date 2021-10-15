@@ -1,23 +1,14 @@
-#include "DLLDefine.h"
+#include "MathDLL.h"
 #include <math.h>
 #include "SimpleMath.h"
-using namespace DirectX;
-using namespace SimpleMath;
-
 #include "DXMath.h"
 
-//////////////////////////////////////////////////////////////////////////
-// DXVector2
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////
+// Vector2 Struct
+////////////////////////////////////////////////////////////////////////////////////////////
 
 DXVector2::DXVector2()
 	: x(0), y(0)
-{
-
-}
-
-DXVector2::DXVector2(const DXVector2& v2)
-	: x(v2.x), y(v2.y)
 {
 
 }
@@ -40,7 +31,7 @@ DXVector2::DXVector2(float _x, float _y)
 
 }
 
-bool DXVector2::operator==(const DXVector2& v2)
+bool DXVector2::operator==(const DXVector2& v2) const noexcept
 {
 	if (x == v2.x && y == v2.y)
 		return true;
@@ -48,7 +39,7 @@ bool DXVector2::operator==(const DXVector2& v2)
 		return false;
 }
 
-bool DXVector2::operator!=(const DXVector2& v2)
+bool DXVector2::operator!=(const DXVector2& v2) const noexcept
 {
 	if (x == v2.x && y == v2.y)
 		return false;
@@ -56,7 +47,7 @@ bool DXVector2::operator!=(const DXVector2& v2)
 		return true;
 }
 
-DXVector2& DXVector2::operator*=(const DXVector2& v2)
+DXVector2& DXVector2::operator*=(const DXVector2& v2) noexcept
 {
 	x *= v2.x;
 	y *= v2.y;
@@ -64,7 +55,7 @@ DXVector2& DXVector2::operator*=(const DXVector2& v2)
 	return *this;
 }
 
-DXVector2& DXVector2::operator*=(const float f)
+DXVector2& DXVector2::operator*=(const float f) noexcept
 {
 	x *= f;
 	y *= f;
@@ -72,7 +63,7 @@ DXVector2& DXVector2::operator*=(const float f)
 	return *this;
 }
 
-DXVector2& DXVector2::operator+=(const DXVector2& v2)
+DXVector2& DXVector2::operator+=(const DXVector2& v2) noexcept
 {
 	x += v2.x;
 	y += v2.y;
@@ -80,7 +71,7 @@ DXVector2& DXVector2::operator+=(const DXVector2& v2)
 	return *this;
 }
 
-DXVector2& DXVector2::operator=(const DirectX::SimpleMath::Vector2& v2)
+DXVector2& DXVector2::operator=(const DirectX::SimpleMath::Vector2& v2) noexcept
 {
 	x = v2.x;
 	y = v2.y;
@@ -88,7 +79,7 @@ DXVector2& DXVector2::operator=(const DirectX::SimpleMath::Vector2& v2)
 	return *this;
 }
 
-DXVector2& DXVector2::operator=(const DirectX::XMFLOAT2& xmf2)
+DXVector2& DXVector2::operator=(const DirectX::XMFLOAT2& xmf2) noexcept
 {
 	x = xmf2.x;
 	y = xmf2.y;
@@ -96,46 +87,37 @@ DXVector2& DXVector2::operator=(const DirectX::XMFLOAT2& xmf2)
 	return *this;
 }
 
-DXVector2& DXVector2::operator=(const DXVector2& v2)
-{
-	x = v2.x;
-	y = v2.y;
-
-	return *this;
-}
-
-DXVector2 DXVector2::operator*(const DXVector2& v2)
+DXVector2 DXVector2::operator*(const DXVector2& v2) noexcept
 {
 	return DXVector2(x * v2.x, y * v2.y);
 }
 
-DXVector2 DXVector2::operator*(const float f)
+DXVector2 DXVector2::operator*(const float f) noexcept
 {
 	return DXVector2(x * f, y * f);
 }
 
-DXVector2 DXVector2::operator+(const DXVector2& v2)
+DXVector2 DXVector2::operator+(const DXVector2& v2) noexcept
 {
 	return DXVector2(x + v2.x, y + v2.y);
 }
 
-DXVector2 DXVector2::operator-(const DXVector2& v2)
+DXVector2 DXVector2::operator-(const DXVector2& v2) noexcept
 {
 	return DXVector2(x - v2.x, y - v2.y);
 }
 
 DirectX::XMFLOAT2 DXVector2::ConvertXMFLOAT2()
 {
-	return Vector2(x, y);
+	return DirectX::SimpleMath::Vector2(x, y);
 }
 
 DirectX::SimpleMath::Vector2 DXVector2::ConvertVector2()
 {
-	return XMVECTOR{ x, y };
-
+	return DirectX::XMVECTOR{ x, y };
 }
 
-void DXVector2::Rotate(float angle)
+void DXVector2::Rotate(float angle) noexcept
 {
 	DXVector2 temp;
 	temp.x = x * cosf(angle) - y * sinf(angle);
@@ -150,9 +132,9 @@ DXVector2 DXVector2::Zero()
 	return DXVector2(0.0f, 0.0f);
 }
 
-//////////////////////////////////////////////////////////////////////////
-// DXVector3
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////
+// Vector3 Struct
+////////////////////////////////////////////////////////////////////////////////////////////
 
 DXVector3::DXVector3()
 {
@@ -207,12 +189,7 @@ DXVector3::DXVector3(float _x, float _y)
 
 }
 
-DXVector3::~DXVector3()
-{
-
-}
-
-bool DXVector3::operator!=(const DXVector3& v3)
+bool DXVector3::operator!=(const DXVector3& v3) const noexcept
 {
 	if (x == v3.x && y == v3.y && z == v3.z)
 	{
@@ -222,7 +199,7 @@ bool DXVector3::operator!=(const DXVector3& v3)
 	return true;
 }
 
-bool DXVector3::operator==(const DXVector3& v3)
+bool DXVector3::operator==(const DXVector3& v3) const noexcept
 {
 	if (x == v3.x && y == v3.y && z == v3.z)
 	{
@@ -232,7 +209,7 @@ bool DXVector3::operator==(const DXVector3& v3)
 	return false;
 }
 
-DXVector3& DXVector3::operator=(const DirectX::XMVECTOR& xmv)
+DXVector3& DXVector3::operator=(const DirectX::XMVECTOR& xmv) noexcept
 {
 	x = xmv.m128_f32[0];
 	y = xmv.m128_f32[1];
@@ -241,7 +218,7 @@ DXVector3& DXVector3::operator=(const DirectX::XMVECTOR& xmv)
 	return *this;
 }
 
-DXVector3& DXVector3::operator=(const DirectX::XMFLOAT3& xmf3)
+DXVector3& DXVector3::operator=(const DirectX::XMFLOAT3& xmf3) noexcept
 {
 	x = xmf3.x;
 	y = xmf3.y;
@@ -250,7 +227,7 @@ DXVector3& DXVector3::operator=(const DirectX::XMFLOAT3& xmf3)
 	return *this;
 }
 
-DXVector3& DXVector3::operator=(const DXVector3& v3)
+DXVector3& DXVector3::operator=(const DirectX::SimpleMath::Vector3& v3) noexcept
 {
 	x = v3.x;
 	y = v3.y;
@@ -259,16 +236,7 @@ DXVector3& DXVector3::operator=(const DXVector3& v3)
 	return *this;
 }
 
-DXVector3& DXVector3::operator=(const DirectX::SimpleMath::Vector3& v3)
-{
-	x = v3.x;
-	y = v3.y;
-	z = v3.z;
-
-	return *this;
-}
-
-DXVector3& DXVector3::operator=(const SimpleMath::Vector4& v4)
+DXVector3& DXVector3::operator=(const DirectX::SimpleMath::Vector4& v4) noexcept
 {
 	x = v4.x;
 	y = v4.y;
@@ -277,7 +245,7 @@ DXVector3& DXVector3::operator=(const SimpleMath::Vector4& v4)
 	return *this;
 }
 
-DXVector3& DXVector3::operator+=(const DXVector3& v3)
+DXVector3& DXVector3::operator+=(const DXVector3& v3) noexcept
 {
 	x += v3.x;
 	y += v3.y;
@@ -286,7 +254,7 @@ DXVector3& DXVector3::operator+=(const DXVector3& v3)
 	return *this;
 }
 
-DXVector3& DXVector3::operator*=(const DXVector3& v3)
+DXVector3& DXVector3::operator*=(const DXVector3& v3) noexcept
 {
 	x *= v3.x;
 	y *= v3.y;
@@ -295,7 +263,7 @@ DXVector3& DXVector3::operator*=(const DXVector3& v3)
 	return *this;
 }
 
-DXVector3& DXVector3::operator*=(const float f)
+DXVector3& DXVector3::operator*=(const float f) noexcept
 {
 	x *= f;
 	y *= f;
@@ -304,28 +272,28 @@ DXVector3& DXVector3::operator*=(const float f)
 	return *this;
 }
 
-DXVector3 DXVector3::operator+(const DXVector3& v3)
+DXVector3 DXVector3::operator+(const DXVector3& v3) noexcept
 {
 	return DXVector3(x + v3.x, y + v3.y, z + v3.z);
 }
 
-DXVector3 DXVector3::operator-(const DXVector3& v3)
+DXVector3 DXVector3::operator-(const DXVector3& v3) noexcept
 {
 	return DXVector3(x - v3.x, y - v3.y, z - v3.z);
 }
 
-DXVector3 DXVector3::operator*(const DXVector3& v3)
+DXVector3 DXVector3::operator*(const DXVector3& v3) noexcept
 {
 	return DXVector3(x * v3.x, y * v3.y, z * v3.z);
 }
 
 
-DXVector3 DXVector3::operator*(const float f)
+DXVector3 DXVector3::operator*(const float f) noexcept
 {
 	return DXVector3(x * f, y * f, z * f);
 }
 
-DXVector3 DXVector3::Normalize()
+DXVector3 DXVector3::Normalize() noexcept
 {
 	float length = sqrtf(powf(x, 2) + powf(y, 2) + powf(z, 2));
 
@@ -336,44 +304,41 @@ DXVector3 DXVector3::Normalize()
 	return *this;
 }
 
-DXVector3 DXVector3::Cross(const DXVector3& v3)
+DXVector3 DXVector3::Clamp(const DXVector3& v3min, const DXVector3& v3max) noexcept
+{
+	*this = KH_MATH::DXVector3Clamp(*this, v3min, v3max);
+
+	return *this;
+}
+
+DXVector3 DXVector3::Cross(const DXVector3& v3) noexcept
 {
 	return DXVector3(y * v3.z - z * v3.y, z * v3.x - x * v3.z, x * v3.y - y * v3.x);
 }
 
-float DXVector3::Dot(const DXVector3& v3)
+float DXVector3::Dot(const DXVector3& v3) noexcept
 {
 	return (x * v3.x) + (y * v3.y) + (z * v3.z);
 }
 
-bool DXVector3::Equal(const DXVector3& v3)
-{
-	if (*this == v3)
-	{
-		return true;
-	}
-
-	return false;
-}
-
 DirectX::SimpleMath::Vector4 DXVector3::ConvertVector4()
 {
-	return Vector4(x, y, z, 0.0f);
+	return DirectX::SimpleMath::Vector4(x, y, z, 0.0f);
 }
 
 DirectX::XMVECTOR DXVector3::ConvertXMVECTOR()
 {
-	return XMVECTOR{ x, y, z, 0.0f };
+	return DirectX::XMVECTOR{ x, y, z, 0.0f };
 }
 
 DirectX::XMFLOAT4 DXVector3::ConvertXMFLOAT4()
 {
-	return XMFLOAT4(x, y, z, 0.0f);
+	return DirectX::XMFLOAT4(x, y, z, 0.0f);
 }
 
 DirectX::XMFLOAT3 DXVector3::ConvertXMFLOAT3()
 {
-	return XMFLOAT3(x, y, z);
+	return DirectX::XMFLOAT3(x, y, z);
 }
 
 DXVector3 DXVector3::Zero()
@@ -386,9 +351,9 @@ DXVector3 DXVector3::One()
 	return DXVector3(1.0f, 1.0f, 1.0f);
 }
 
-//////////////////////////////////////////////////////////////////////////
-// DXVector4
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////
+// Vector4 Struct
+////////////////////////////////////////////////////////////////////////////////////////////
 
 DXVector4::DXVector4()
 {
@@ -437,12 +402,7 @@ DXVector4::DXVector4(const DirectX::SimpleMath::Vector4& v4)
 
 }
 
-DXVector4::~DXVector4()
-{
-
-}
-
-bool DXVector4::operator!=(const DXVector4& v4)
+bool DXVector4::operator!=(const DXVector4& v4) const 
 {
 	if (x == v4.x && y == v4.y && z == v4.z && w == v4.w)
 	{
@@ -452,7 +412,7 @@ bool DXVector4::operator!=(const DXVector4& v4)
 	return true;
 }
 
-bool DXVector4::operator==(const DXVector4& v4)
+bool DXVector4::operator==(const DXVector4& v4) const 
 {
 	if (x == v4.x && y == v4.y && z == v4.z && w == v4.w)
 	{
@@ -462,21 +422,11 @@ bool DXVector4::operator==(const DXVector4& v4)
 	return false;
 }
 
-DXVector4& DXVector4::operator=(const DXVector3& v3)
+DXVector4& DXVector4::operator=(const DXVector3& v3) 
 {
 	x = v3.x;
 	y = v3.y;
 	z = v3.z;
-
-	return *this;
-}
-
-DXVector4& DXVector4::operator=(const DXVector4& v4)
-{
-	x = v4.x;
-	y = v4.y;
-	z = v4.z;
-	w = v4.w;
 
 	return *this;
 }
@@ -536,7 +486,7 @@ DXVector4 DXVector4::operator*(const DXVector4& v4)
 	return DXVector4(x * v4.x, y * v4.y, z * v4.z, w * v4.w);
 }
 
-DXVector4 DXVector4::Normalize3()
+DXVector4 DXVector4::Normalize3() noexcept
 {
 	float length = sqrtf(powf(x, 2) + powf(y, 2) + powf(z, 2));
 
@@ -548,7 +498,7 @@ DXVector4 DXVector4::Normalize3()
 	return *this;
 }
 
-DXVector4 DXVector4::Normalize()
+DXVector4 DXVector4::Normalize() noexcept
 {
 	float length = sqrtf(powf(x, 2) + powf(y, 2) + powf(z, 2) + powf(w, 2));
 
@@ -560,39 +510,36 @@ DXVector4 DXVector4::Normalize()
 	return *this;
 }
 
-DXVector4 DXVector4::Cross(const DXVector4& v4)
+DXVector4 DXVector4::Clamp(const DXVector4& v4min, const DXVector4& v4max) noexcept
+{
+	*this = KH_MATH::DXVector4Clamp(*this, v4min, v4max);
+
+	return *this;
+}
+
+DXVector4 DXVector4::Cross(const DXVector4& v4) noexcept
 {
 	return DXVector4(y * v4.z - z * v4.y, z * v4.x - x * v4.z, x * v4.y - y * v4.x, 0.0f);
 }
 
-float DXVector4::Dot(const DXVector4& v4)
+float DXVector4::Dot(const DXVector4& v4) noexcept
 {
 	return (x * v4.x) + (y * v4.y) + (z * v4.z);
 }
 
-bool DXVector4::Equal(const DXVector4& v4)
-{
-	if (*this == v4)
-	{
-		return true;
-	}
-
-	return false;
-}
-
 DirectX::XMVECTOR DXVector4::ConvertXMVECTOR()
 {
-	return XMVECTOR{ x, y, z, w };
+	return DirectX::XMVECTOR{ x, y, z, w };
 }
 
 DirectX::XMFLOAT4 DXVector4::ConvertXMFLOAT4()
 {
-	return XMFLOAT4(x, y, z, w);
+	return DirectX::XMFLOAT4(x, y, z, w);
 }
 
 DirectX::XMFLOAT3 DXVector4::ConvertXMFLOAT3()
 {
-	return XMFLOAT3(x, y, z);
+	return DirectX::XMFLOAT3(x, y, z);
 }
 
 DXVector4 DXVector4::Zero()
@@ -605,9 +552,9 @@ DXVector4 DXVector4::One()
 	return DXVector4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
-//////////////////////////////////////////////////////////////////////////
-// DXMatrix4X4
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////
+// Matrix4X4 Struct
+////////////////////////////////////////////////////////////////////////////////////////////
 
 DXMatrix4X4::DXMatrix4X4()
 	:_11(1.0f), _12(0.0f), _13(0.0f), _14(0.0f),
@@ -682,12 +629,7 @@ DXMatrix4X4::DXMatrix4X4(const DirectX::SimpleMath::Matrix& mx)
 
 }
 
-DXMatrix4X4::~DXMatrix4X4()
-{
-
-}
-
-bool DXMatrix4X4::operator==(const DXMatrix4X4& dxm)
+bool DXMatrix4X4::operator==(const DXMatrix4X4& dxm) const 
 {
 	for (int i = 0; i < 4; i++)
 	{
@@ -726,16 +668,6 @@ DXMatrix4X4& DXMatrix4X4::operator=(const DirectX::SimpleMath::Matrix& mx)
 	_21 = mx._21;	_22 = mx._22;	_23 = mx._23;	_24 = mx._24;
 	_31 = mx._31;	_32 = mx._32;	_33 = mx._33;	_34 = mx._34;
 	_41 = mx._41;	_42 = mx._42;	_43 = mx._43;	_44 = mx._44;
-
-	return *this;
-}
-
-DXMatrix4X4& DXMatrix4X4::operator=(const DXMatrix4X4& dxm)
-{
-	_11 = dxm._11;	_12 = dxm._12;	_13 = dxm._13;	_14 = dxm._14;
-	_21 = dxm._21;	_22 = dxm._22;	_23 = dxm._23;	_24 = dxm._24;
-	_31 = dxm._31;	_32 = dxm._32;	_33 = dxm._33;	_34 = dxm._34;
-	_41 = dxm._41;	_42 = dxm._42;	_43 = dxm._43;	_44 = dxm._44;
 
 	return *this;
 }
@@ -852,8 +784,8 @@ DXMatrix4X4 DXMatrix4X4::operator*(const DirectX::SimpleMath::Matrix& mx)
 
 DXMatrix4X4 DXMatrix4X4::Inverse()
 {
-	XMMATRIX M = *this;
-	XMVECTOR det;
+	DirectX::XMMATRIX M = *this;
+	DirectX::XMVECTOR det;
 	DXMatrix4X4 result = XMMatrixInverse(&det, M);
 
 	return result;
@@ -866,81 +798,379 @@ DXVector4 DXMatrix4X4::GetRow(int row)
 
 DirectX::SimpleMath::Matrix DXMatrix4X4::ConvertMatrix()
 {
-	return Matrix(_11, _12, _13, _14,
+	return DirectX::SimpleMath::Matrix(_11, _12, _13, _14,
 		_21, _22, _23, _24,
 		_31, _32, _33, _34,
 		_41, _42, _43, _44);
 }
 
-XMFLOAT4X4 DXMatrix4X4::ConvertXMFLOAT4X4()
+DirectX::XMFLOAT4X4 DXMatrix4X4::ConvertXMFLOAT4X4()
 {
-	return XMFLOAT4X4(_11, _12, _13, _14,
+	return DirectX::XMFLOAT4X4(_11, _12, _13, _14,
 		_21, _22, _23, _24,
 		_31, _32, _33, _34,
 		_41, _42, _43, _44);
 }
 
-XMMATRIX DXMatrix4X4::ConvertXMMATRIX()
+DirectX::XMMATRIX DXMatrix4X4::ConvertXMMATRIX()
 {
-	return XMMATRIX(_11, _12, _13, _14,
+	return DirectX::XMMATRIX(_11, _12, _13, _14,
 		_21, _22, _23, _24,
 		_31, _32, _33, _34,
 		_41, _42, _43, _44);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Quaternion Struct
+////////////////////////////////////////////////////////////////////////////////////////////
+
+DXQuaternion::DXQuaternion()
+	: DXVector4(0.0f, 0.0f, 0.0f, 1.0f)
+{
+
+}
+
+DXQuaternion::DXQuaternion(const DXVector4& v4)
+{
+	x = v4.x;
+	y = v4.y;
+	z = v4.z;
+	w = v4.w;
+}
+
+bool DXQuaternion::operator!=(const DXQuaternion& q) const
+{
+	DirectX::XMVECTOR q1 = KH_MATH::XMStoreFloat4(*this);
+	DirectX::XMVECTOR q2 = KH_MATH::XMStoreFloat4(q);
+
+	return DirectX::XMQuaternionEqual(q1, q2);
+}
+
+bool DXQuaternion::operator==(const DXQuaternion& q) const
+{
+	DirectX::XMVECTOR q1 = KH_MATH::XMStoreFloat4(*this);
+	DirectX::XMVECTOR q2 = KH_MATH::XMStoreFloat4(q);
+
+	return DirectX::XMQuaternionNotEqual(q1, q2);
+}
+
+DXQuaternion& DXQuaternion::operator=(const DirectX::XMVECTORF32& vf) noexcept
+{
+	x = vf.f[0];
+	y = vf.f[1];
+	z = vf.f[2];
+	w = vf.f[3];
+
+	return *this;
+}
+
+DXQuaternion& DXQuaternion::operator=(const DirectX::XMVECTOR& v) noexcept
+{
+	x = v.m128_f32[0];
+	y = v.m128_f32[1];
+	z = v.m128_f32[2];
+	w = v.m128_f32[3];
+
+	return *this;
+}
+
+DXQuaternion& DXQuaternion::operator+=(const DXQuaternion& q) noexcept
+{
+	DirectX::XMVECTOR q1 = KH_MATH::XMStoreFloat4(*this);
+	DirectX::XMVECTOR q2 = KH_MATH::XMStoreFloat4(q);
+	*this = DirectX::XMVectorAdd(q1, q2);
+
+	return *this;
+}
+
+DXQuaternion& DXQuaternion::operator-=(const DXQuaternion& q) noexcept
+{
+	DirectX::XMVECTOR q1 = KH_MATH::XMStoreFloat4(*this);
+	DirectX::XMVECTOR q2 = KH_MATH::XMStoreFloat4(q);
+	*this = DirectX::XMVectorSubtract(q1, q2);
+
+	return *this;
+}
+
+DXQuaternion& DXQuaternion::operator*=(const DXQuaternion& q) noexcept
+{
+	DirectX::XMVECTOR q1 = KH_MATH::XMStoreFloat4(*this);
+	DirectX::XMVECTOR q2 = KH_MATH::XMStoreFloat4(q);
+	*this = DirectX::XMQuaternionMultiply(q1, q2);
+
+	return *this;
+}
+
+DXQuaternion& DXQuaternion::operator*=(float S) noexcept
+{
+	DirectX::XMVECTOR q1 = KH_MATH::XMStoreFloat4(*this);
+	*this = DirectX::XMVectorScale(q1, S);
+
+	return *this;
+}
+
+DXQuaternion& DXQuaternion::operator/=(const DXQuaternion& q) noexcept
+{
+	DirectX::XMVECTOR q1 = KH_MATH::XMStoreFloat4(*this);
+	DirectX::XMVECTOR q2 = KH_MATH::XMStoreFloat4(q);
+	q2 = DirectX::XMQuaternionInverse(q2);
+	*this = DirectX::XMQuaternionMultiply(q1, q2);
+
+	return *this;
+}
+
+DXQuaternion DXQuaternion::operator-() const noexcept
+{
+	DirectX::XMVECTOR q = KH_MATH::XMStoreFloat4(*this);
+
+	return DirectX::XMVectorNegate(q);
+}
+
+float DXQuaternion::Length() const noexcept
+{
+	DirectX::XMVECTOR q = KH_MATH::XMStoreFloat4(*this);
+
+	return DirectX::XMVectorGetX(DirectX::XMQuaternionLength(q));
+}
+
+float DXQuaternion::LengthSquared() const noexcept
+{
+	DirectX::XMVECTOR q = KH_MATH::XMStoreFloat4(*this);
+
+	return DirectX::XMVectorGetX(DirectX::XMQuaternionLengthSq(q));
+}
+
+void DXQuaternion::Normalize() noexcept
+{
+	DirectX::XMVECTOR q = KH_MATH::XMStoreFloat4(*this);
+
+	*this = DirectX::XMQuaternionNormalize(q);
+}
+
+void DXQuaternion::Normalize(DXQuaternion& q) const noexcept
+{
+	DirectX::XMVECTOR result = KH_MATH::XMStoreFloat4(*this);
+
+	result = DirectX::XMQuaternionNormalize(q);
+}
+
+void DXQuaternion::Conjugate() noexcept
+{
+	DirectX::XMVECTOR q = KH_MATH::XMStoreFloat4(*this);
+
+	*this = DirectX::XMQuaternionConjugate(q);
+}
+
+void DXQuaternion::Conjugate(DXQuaternion& q) const noexcept
+{
+	DirectX::XMVECTOR result = KH_MATH::XMStoreFloat4(*this);
+
+	q = DirectX::XMQuaternionConjugate(result);
+}
+
+void DXQuaternion::Inverse(DXQuaternion& q) const noexcept
+{
+	DirectX::XMVECTOR result = KH_MATH::XMStoreFloat4(*this);
+
+	q = DirectX::XMQuaternionInverse(result);
+}
+
+float DXQuaternion::Dot(const DXQuaternion& q) const noexcept
+{
+	DirectX::XMVECTOR q1 = KH_MATH::XMStoreFloat4(*this);
+	DirectX::XMVECTOR q2 = KH_MATH::XMStoreFloat4(q);
+
+	return DirectX::XMVectorGetX(DirectX::XMQuaternionDot(q1, q2));
+}
+
+DXQuaternion DXQuaternion::CreateFromAxisAngle(const DXVector3& axis, float angle) noexcept
+{
+	DirectX::XMVECTOR v3 = KH_MATH::XMStoreFloat3(axis);
+
+	return DirectX::XMQuaternionRotationAxis(v3, angle);
+}
+
+DXQuaternion DXQuaternion::CreateFromYawPitchRoll(float yaw, float pitch, float roll) noexcept
+{
+	return DirectX::XMQuaternionRotationRollPitchYaw(pitch, yaw, roll);
+}
+
+DXQuaternion DXQuaternion::CreateFromRotationMatrix(const DXMatrix4X4& M) noexcept
+{
+	DirectX::XMMATRIX xm = KH_MATH::XMStoreFloat4X4(M);
+
+	return DirectX::XMQuaternionRotationMatrix(xm);
+}
+
+void DXQuaternion::Lerp(const DXQuaternion& q1, const DXQuaternion& q2, float t, DXQuaternion& result) noexcept
+{
+	DirectX::XMVECTOR Q0 = KH_MATH::XMStoreFloat4(q1);
+	DirectX::XMVECTOR Q1 = KH_MATH::XMStoreFloat4(q2);
+
+	DirectX::XMVECTOR dot = DirectX::XMVector4Dot(Q0, Q1);
+
+	DirectX::XMVECTOR R;
+	if (DirectX::XMVector4GreaterOrEqual(dot, DirectX::XMVectorZero()))
+	{
+		R = DirectX::XMVectorLerp(Q0, Q1, t);
+	}
+	else
+	{
+		DirectX::XMVECTOR tv = DirectX::XMVectorReplicate(t);
+		DirectX::XMVECTOR t1v = DirectX::XMVectorReplicate(1.f - t);
+		DirectX::XMVECTOR X0 = DirectX::XMVectorMultiply(Q0, t1v);
+		DirectX::XMVECTOR X1 = DirectX::XMVectorMultiply(Q1, tv);
+		R = DirectX::XMVectorSubtract(X0, X1);
+	}
+
+	result = DirectX::XMQuaternionNormalize(R);
+}
+
+DXQuaternion DXQuaternion::Lerp(const DXQuaternion& q1, const DXQuaternion& q2, float t) noexcept
+{
+	DirectX::XMVECTOR Q0 = KH_MATH::XMStoreFloat4(q1);
+	DirectX::XMVECTOR Q1 = KH_MATH::XMStoreFloat4(q2);
+
+	DirectX::XMVECTOR dot = DirectX::XMVector4Dot(Q0, Q1);
+
+	DirectX::XMVECTOR R;
+	if (DirectX::XMVector4GreaterOrEqual(dot, DirectX::XMVectorZero()))
+	{
+		R = DirectX::XMVectorLerp(Q0, Q1, t);
+	}
+	else
+	{
+		DirectX::XMVECTOR tv = DirectX::XMVectorReplicate(t);
+		DirectX::XMVECTOR t1v = DirectX::XMVectorReplicate(1.f - t);
+		DirectX::XMVECTOR X0 = DirectX::XMVectorMultiply(Q0, t1v);
+		DirectX::XMVECTOR X1 = DirectX::XMVectorMultiply(Q1, tv);
+		R = DirectX::XMVectorSubtract(X0, X1);
+	}
+
+	return DirectX::XMQuaternionNormalize(R);
+}
+
+void DXQuaternion::Slerp(const DXQuaternion& q1, const DXQuaternion& q2, float t, DXQuaternion& result) noexcept
+{
+	DirectX::XMVECTOR Q0 = KH_MATH::XMStoreFloat4(q1);
+	DirectX::XMVECTOR Q1 = KH_MATH::XMStoreFloat4(q2);
+
+	result = DirectX::XMQuaternionSlerp(Q0, Q1, t);
+}
+
+DXQuaternion DXQuaternion::Slerp(const DXQuaternion& q1, const DXQuaternion& q2, float t) noexcept
+{
+	DirectX::XMVECTOR Q0 = KH_MATH::XMStoreFloat4(q1);
+	DirectX::XMVECTOR Q1 = KH_MATH::XMStoreFloat4(q2);
+
+	return DirectX::XMQuaternionSlerp(Q0, Q1, t);
+}
+
+void DXQuaternion::Concatenate(const DXQuaternion& q1, const DXQuaternion& q2, DXQuaternion& result) noexcept
+{
+	DirectX::XMVECTOR Q0 = KH_MATH::XMStoreFloat4(q1);
+	DirectX::XMVECTOR Q1 = KH_MATH::XMStoreFloat4(q2);
+
+	result = DirectX::XMQuaternionMultiply(Q0, Q1);
+}
+
+DXQuaternion DXQuaternion::Concatenate(const DXQuaternion& q1, const DXQuaternion& q2) noexcept
+{
+	DirectX::XMVECTOR Q0 = KH_MATH::XMStoreFloat4(q1);
+	DirectX::XMVECTOR Q1 = KH_MATH::XMStoreFloat4(q2);
+
+	return DirectX::XMQuaternionMultiply(Q0, Q1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Math Expansion Function
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-DLL_DECLSPEC XMVECTOR KH_MATH::XMStoreFloat3(XMFLOAT3 _xmf)
+MATH_DLL DirectX::XMVECTOR KH_MATH::XMStoreFloat3(const DXVector3& _v3)
 {
-	XMVECTOR resultV;
-	resultV.m128_f32[0] = _xmf.x;
-	resultV.m128_f32[1] = _xmf.y;
-	resultV.m128_f32[2] = _xmf.z;
+	DirectX::XMVECTOR resultV;
+	resultV.m128_f32[0] = _v3.x;
+	resultV.m128_f32[1] = _v3.y;
+	resultV.m128_f32[2] = _v3.z;
 
 	return resultV;
 }
 
-DLL_DECLSPEC XMFLOAT3 KH_MATH::XMLoadFloat3(XMVECTOR _xmv)
+MATH_DLL DirectX::XMFLOAT3 KH_MATH::XMLoadFloat3(const DXVector3& _v3)
 {
-	XMFLOAT3 resultF;
-	resultF.x = _xmv.m128_f32[0];
-	resultF.y = _xmv.m128_f32[1];
-	resultF.z = _xmv.m128_f32[2];
+	DirectX::XMFLOAT3 resultF;
+	resultF.x = _v3.x;
+	resultF.y = _v3.y;
+	resultF.z = _v3.z;
 
 	return resultF;
 }
 
-DLL_DECLSPEC DXVector3 KH_MATH::BezierCurveThree(DXVector3 _p1, DXVector3 _p2, DXVector3 _p3, float t)
+MATH_DLL DirectX::XMVECTOR KH_MATH::XMStoreFloat4(const DXVector4& _v4)
 {
-	XMVECTOR t1 = XMVectorReplicate((1 - t) * (1 - t));
-	XMVECTOR t2 = XMVectorReplicate(2 * t * (1 - t));
-	XMVECTOR t3 = XMVectorReplicate(t * t);
+	DirectX::XMVECTOR resultV;
 
-	XMVECTOR result = XMVectorMultiply(_p1, t1);
-	result = XMVectorMultiplyAdd(_p2, t2, result);
-	result = XMVectorMultiplyAdd(_p3, t3, result);
+	resultV.m128_f32[0] = _v4.x;
+	resultV.m128_f32[1] = _v4.y;
+	resultV.m128_f32[2] = _v4.z;
+	resultV.m128_f32[3] = _v4.w;
+
+	return resultV;
+}
+
+MATH_DLL DirectX::XMFLOAT4 KH_MATH::XMLoadFloat4(const DXVector4& _v4)
+{
+	DirectX::XMFLOAT4 resultF;
+
+	resultF.x = _v4.x;
+	resultF.y = _v4.y;
+	resultF.z = _v4.z;
+	resultF.w = _v4.w;
+
+	return resultF;
+}
+
+MATH_DLL DirectX::XMMATRIX KH_MATH::XMStoreFloat4X4(const DXMatrix4X4& _dxm)
+{
+	DirectX::XMMATRIX resultM;
+
+	resultM.r[0] = _dxm(0);
+	resultM.r[1] = _dxm(1);
+	resultM.r[2] = _dxm(2);
+	resultM.r[3] = _dxm(3);
+
+	return resultM;
+}
+
+MATH_DLL DXVector3 KH_MATH::BezierCurveThree(DXVector3& _p1, DXVector3& _p2, DXVector3& _p3, float t)
+{
+	DirectX::XMVECTOR t1 = DirectX::XMVectorReplicate((1 - t) * (1 - t));
+	DirectX::XMVECTOR t2 = DirectX::XMVectorReplicate(2 * t * (1 - t));
+	DirectX::XMVECTOR t3 = DirectX::XMVectorReplicate(t * t);
+
+	DirectX::XMVECTOR result = DirectX::XMVectorMultiply(_p1, t1);
+	result = DirectX::XMVectorMultiplyAdd(_p2, t2, result);
+	result = DirectX::XMVectorMultiplyAdd(_p3, t3, result);
 
 	return result;
 }
 
-DLL_DECLSPEC DXVector3 KH_MATH::BezierCurveFour(DXVector3 _p1, DXVector3 _p2, DXVector3 _p3, DXVector3 _p4, float t)
+MATH_DLL DXVector3 KH_MATH::BezierCurveFour(DXVector3& _p1, DXVector3& _p2, DXVector3& _p3, DXVector3& _p4, float t)
 {
-	XMVECTOR t1 = XMVectorReplicate((1 - t) * (1 - t) * (1 - t));
-	XMVECTOR t2 = XMVectorReplicate(3 * t * (1 - t) * (1 - t));
-	XMVECTOR t3 = XMVectorReplicate(3 * t * t * (1 - t));
-	XMVECTOR t4 = XMVectorReplicate(t * t * t);
+	DirectX::XMVECTOR t1 = DirectX::XMVectorReplicate((1 - t) * (1 - t) * (1 - t));
+	DirectX::XMVECTOR t2 = DirectX::XMVectorReplicate(3 * t * (1 - t) * (1 - t));
+	DirectX::XMVECTOR t3 = DirectX::XMVectorReplicate(3 * t * t * (1 - t));
+	DirectX::XMVECTOR t4 = DirectX::XMVectorReplicate(t * t * t);
 
-	DXVector3 result = XMVectorMultiply(_p1, t1);
-	result = XMVectorMultiplyAdd(_p2, t2, result);
-	result = XMVectorMultiplyAdd(_p3, t3, result);
-	result = XMVectorMultiplyAdd(_p4, t4, result);
+	DirectX::XMVECTOR result = DirectX::XMVectorMultiply(_p1, t1);
+	result = DirectX::XMVectorMultiplyAdd(_p2, t2, result);
+	result = DirectX::XMVectorMultiplyAdd(_p3, t3, result);
+	result = DirectX::XMVectorMultiplyAdd(_p4, t4, result);
 
 	return result;
 }
 
-DLL_DECLSPEC DXVector3 KH_MATH::GetMiddlePoint(DXVector3 _p1, DXVector3 _p2)
+MATH_DLL DXVector3 KH_MATH::GetMiddlePoint(DXVector3& _p1, DXVector3& _p2)
 {
 	DXVector3 resultF = { _p1.x * 2 - _p2.x,
 						 _p1.y * 2 - _p2.y,
@@ -948,7 +1178,7 @@ DLL_DECLSPEC DXVector3 KH_MATH::GetMiddlePoint(DXVector3 _p1, DXVector3 _p2)
 	return resultF;
 }
 
-DLL_DECLSPEC DXMatrix4X4 KH_MATH::RotationAxis(DXVector3 _axis, float _angle)
+MATH_DLL DXMatrix4X4 KH_MATH::RotationAxis(DXVector3& _axis, float _angle)
 {
 	DXMatrix4X4 _result;
 
@@ -981,20 +1211,20 @@ DLL_DECLSPEC DXMatrix4X4 KH_MATH::RotationAxis(DXVector3 _axis, float _angle)
 	return _result;
 }
 
-DLL_DECLSPEC float KH_MATH::GetDistance(DXVector3 _p1, DXVector3 _p2)
+MATH_DLL float KH_MATH::GetDistance(DXVector3& _p1, DXVector3& _p2)
 {
 	return sqrtf(powf(_p1.x - _p2.x, 2) +
 		powf(_p1.y - _p2.y, 2) +
 		powf(_p1.z - _p2.z, 2));
 }
 
-DLL_DECLSPEC float KH_MATH::GetDistance(DXVector2 _p1, DXVector2 _p2)
+MATH_DLL float KH_MATH::GetDistance(DXVector2& _p1, DXVector2& _p2)
 {
 	return sqrtf(powf(_p1.x - _p2.x, 2) +
 		powf(_p1.y - _p2.y, 2));
 }
 
-DLL_DECLSPEC bool KH_MATH::CompareXMFLOAT3(XMFLOAT3 _xmf1, XMFLOAT3 _xmf2)
+MATH_DLL bool KH_MATH::CompareXMFLOAT3(DirectX::XMFLOAT3& _xmf1, DirectX::XMFLOAT3& _xmf2)
 {
 	if (_xmf1.x == _xmf2.x && _xmf1.y == _xmf2.y && _xmf1.z == _xmf2.z)
 	{
@@ -1004,7 +1234,7 @@ DLL_DECLSPEC bool KH_MATH::CompareXMFLOAT3(XMFLOAT3 _xmf1, XMFLOAT3 _xmf2)
 	return false;
 }
 
-DLL_DECLSPEC DXMatrix4X4 KH_MATH::CreateScale(DXVector3 _v3)
+MATH_DLL DXMatrix4X4 KH_MATH::CreateScale(DXVector3 _v3)
 {
 	DXMatrix4X4 M;
 
@@ -1015,7 +1245,7 @@ DLL_DECLSPEC DXMatrix4X4 KH_MATH::CreateScale(DXVector3 _v3)
 	return M;
 }
 
-DLL_DECLSPEC DXMatrix4X4 KH_MATH::CreateScale(float _x, float _y, float _z)
+MATH_DLL DXMatrix4X4 KH_MATH::CreateScale(float _x, float _y, float _z)
 {
 	DXMatrix4X4 M;
 
@@ -1026,29 +1256,29 @@ DLL_DECLSPEC DXMatrix4X4 KH_MATH::CreateScale(float _x, float _y, float _z)
 	return M;
 }
 
-DLL_DECLSPEC DXMatrix4X4 KH_MATH::CreateRotationEuler(DXVector3 _v3)
+MATH_DLL DXMatrix4X4 KH_MATH::CreateRotationEuler(DXVector3 _v3)
 {
 	const auto yaw = _v3.y * KH_MATH::Pi / 180.0f;
 	const auto pitch = _v3.x * KH_MATH::Pi / 180.0f;
 	const auto roll = _v3.z * KH_MATH::Pi / 180.0f;
 
-	Quaternion q = XMQuaternionRotationRollPitchYaw(pitch, yaw, roll);
+	DirectX::SimpleMath::Quaternion q = DirectX::XMQuaternionRotationRollPitchYaw(pitch, yaw, roll);
 
-	return XMMatrixRotationQuaternion(q);
+	return DirectX::XMMatrixRotationQuaternion(q);
 }
 
-DLL_DECLSPEC DXMatrix4X4 KH_MATH::CreateRotationEuler(float _x, float _y, float _z)
+MATH_DLL DXMatrix4X4 KH_MATH::CreateRotationEuler(float _x, float _y, float _z)
 {
 	const auto yaw = _y * KH_MATH::Pi / 180.0f;
 	const auto pitch = _x * KH_MATH::Pi / 180.0f;
 	const auto roll = _z * KH_MATH::Pi / 180.0f;
 
-	Quaternion q = XMQuaternionRotationRollPitchYaw(pitch, yaw, roll);
+	DirectX::SimpleMath::Quaternion q = DirectX::XMQuaternionRotationRollPitchYaw(pitch, yaw, roll);
 
-	return XMMatrixRotationQuaternion(q);
+	return DirectX::XMMatrixRotationQuaternion(q);
 }
 
-DLL_DECLSPEC DXMatrix4X4 KH_MATH::CreateTranslation(DXVector3 _v3)
+MATH_DLL DXMatrix4X4 KH_MATH::CreateTranslation(DXVector3 _v3)
 {
 	DXMatrix4X4 M;
 
@@ -1059,7 +1289,31 @@ DLL_DECLSPEC DXMatrix4X4 KH_MATH::CreateTranslation(DXVector3 _v3)
 	return M;
 }
 
-DLL_DECLSPEC DXMatrix4X4 KH_MATH::CreateTranslation(float _x, float _y, float _z)
+MATH_DLL DXVector3 KH_MATH::DXVector3Max(const DXVector3& _v1, const DXVector3& _v2)
+{
+	return DXVector3((_v1.x > _v2.x) ? _v1.x : _v2.x,
+					 (_v1.y > _v2.y) ? _v1.y : _v2.y,
+					 (_v1.z > _v2.z) ? _v1.z : _v2.z);
+}
+
+MATH_DLL DXVector3 KH_MATH::DXVector3Min(const DXVector3& _v1, const DXVector3& _v2)
+{
+	return DXVector3((_v1.x < _v2.x) ? _v1.x : _v2.x,
+					 (_v1.y < _v2.y) ? _v1.y : _v2.y,
+					 (_v1.z < _v2.z) ? _v1.z : _v2.z);
+}
+
+MATH_DLL DXVector3 KH_MATH::DXVector3Clamp(const DXVector3& _v3, const DXVector3& _v3min, const DXVector3& _v3max)
+{
+	DXVector3 Result;
+
+	Result = KH_MATH::DXVector3Max(_v3min, _v3);
+	Result = KH_MATH::DXVector3Min(_v3max, Result);
+
+	return Result;
+}
+
+MATH_DLL DXMatrix4X4 KH_MATH::CreateTranslation(float _x, float _y, float _z)
 {
 	DXMatrix4X4 M;
 
@@ -1070,65 +1324,91 @@ DLL_DECLSPEC DXMatrix4X4 KH_MATH::CreateTranslation(float _x, float _y, float _z
 	return M;
 }
 
-DLL_DECLSPEC DXVector3 KH_MATH::DXVector3Dot(DXVector3 _v1, DXVector3 _v2)
+MATH_DLL DXVector3 KH_MATH::DXVector3Dot(DXVector3& _v1, DXVector3& _v2)
 {
 	float fValue = (_v1.x * _v2.x) + (_v1.y * _v2.y) + (_v1.z * _v2.z);
 	return DXVector3(fValue, fValue, fValue);
 }
 
-DLL_DECLSPEC DXVector3 KH_MATH::DXVector3Abs(DXVector3 _v3)
+MATH_DLL DXVector3 KH_MATH::DXVector3Abs(DXVector3& _v3)
 {
 	return DXVector3(fabsf(_v3.x), fabsf(_v3.y), fabsf(_v3.z));
 }
 
-DLL_DECLSPEC DXVector3 KH_MATH::DXVector3Sqrt(DXVector3 _v3)
+MATH_DLL DXVector3 KH_MATH::DXVector3Sqrt(DXVector3& _v3)
 {
 	return DXVector3(sqrtf(_v3.x), sqrtf(_v3.y), sqrtf(_v3.z));
 }
 
-DLL_DECLSPEC DXVector3 KH_MATH::DXVector3Length(DXVector3 _v3)
+MATH_DLL DXVector3 KH_MATH::DXVector3Length(DXVector3& _v3)
 {
 	DXVector3 Vdot = DXVector3Dot(_v3, _v3);
 
 	return DXVector3Sqrt(Vdot);
 }
 
-DLL_DECLSPEC DXVector3 KH_MATH::DXVector3SplatOne(DXVector3 _v3)
+MATH_DLL DXVector3 KH_MATH::DXVector3SplatOne(DXVector3& _v3)
 {
 	return DXVector3(1.0f, 1.0f, 1.0f);
 }
 
-DLL_DECLSPEC DXVector3 KH_MATH::DXVector3Replicate(float _value)
+MATH_DLL DXVector3 KH_MATH::DXVector3Replicate(float _value)
 {
 	return DXVector3(_value, _value, _value);
 }
 
-DLL_DECLSPEC bool KH_MATH::DXVector3Less(DXVector3 _v1, DXVector3 _v2)
+MATH_DLL bool KH_MATH::DXVector3Less(DXVector3& _v1, DXVector3& _v2)
 {
 	return (((_v1.x < _v2.x) && (_v1.y < _v2.y) && (_v1.z < _v1.z)) != 0);
 }
 
-DLL_DECLSPEC DXVector4 KH_MATH::DXVector4Abs(DXVector4 _v4)
+MATH_DLL DXVector4 KH_MATH::DXVector4Max(const DXVector4& _v1, const DXVector4& _v2)
+{
+	return DXVector4((_v1.x > _v2.x) ? _v1.x : _v2.x,
+		(_v1.y > _v2.y) ? _v1.y : _v2.y,
+		(_v1.z > _v2.z) ? _v1.z : _v2.z,
+		(_v1.w > _v2.w) ? _v1.w : _v2.w);
+}
+
+MATH_DLL DXVector4 KH_MATH::DXVector4Min(const DXVector4& _v1, const DXVector4& _v2)
+{
+	return DXVector4((_v1.x < _v2.x) ? _v1.x : _v2.x,
+		(_v1.y < _v2.y) ? _v1.y : _v2.y,
+		(_v1.z < _v2.z) ? _v1.z : _v2.z,
+		(_v1.w < _v2.w) ? _v1.w : _v2.w);
+}
+
+MATH_DLL DXVector4 KH_MATH::DXVector4Clamp(const DXVector4& _v4, const DXVector4& _v4min, const DXVector4& _v4max)
+{
+	DXVector4 Result;
+
+	Result = KH_MATH::DXVector4Max(_v4min, _v4);
+	Result = KH_MATH::DXVector4Min(_v4max, Result);
+
+	return Result;
+}
+
+MATH_DLL DXVector4 KH_MATH::DXVector4Abs(DXVector4& _v4)
 {
 	return DXVector4(fabsf(_v4.x), fabsf(_v4.y), fabsf(_v4.z), fabsf(_v4.w));
 }
 
-DLL_DECLSPEC DXVector4 KH_MATH::DXVector4Sqrt(DXVector4 _v4)
+MATH_DLL DXVector4 KH_MATH::DXVector4Sqrt(DXVector4& _v4)
 {
 	return DXVector4(sqrtf(_v4.x), sqrtf(_v4.y), sqrtf(_v4.z), sqrtf(_v4.w));
 }
 
-DLL_DECLSPEC DXVector4 KH_MATH::DXVector4SplatOne(DXVector4 _v4)
+MATH_DLL DXVector4 KH_MATH::DXVector4SplatOne(DXVector4& _v4)
 {
 	return DXVector4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
-DLL_DECLSPEC DXVector4 KH_MATH::DXVector4Replicate(float _value)
+MATH_DLL DXVector4 KH_MATH::DXVector4Replicate(float _value)
 {
 	return DXVector4(_value, _value, _value, _value);
 }
 
-DLL_DECLSPEC bool KH_MATH::DXVector4Less(DXVector4 _v1, DXVector4 _v2)
+MATH_DLL bool KH_MATH::DXVector4Less(DXVector4& _v1, DXVector4& _v2)
 {
 	return (((_v1.x < _v2.x) && (_v1.y < _v2.y) && (_v1.z < _v1.z) && (_v1.w < _v1.w)) != 0);
 }

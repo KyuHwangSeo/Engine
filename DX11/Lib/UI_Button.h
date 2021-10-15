@@ -17,11 +17,11 @@ public:
 	void Start();
 	void Update(float dTime);
 
-	DLL_DECLSPEC void SetOnMouseTexture(ComPtr<ID3D11ShaderResourceView> tex) { m_OnMouseTex = tex; };
-	DLL_DECLSPEC void SetOnClickTexture(ComPtr<ID3D11ShaderResourceView> tex) { m_OnClickTex = tex; }
+	ENGINE_DLL void SetOnMouseTexture(ComPtr<ID3D11ShaderResourceView> tex) { m_OnMouseTex = tex; };
+	ENGINE_DLL void SetOnClickTexture(ComPtr<ID3D11ShaderResourceView> tex) { m_OnClickTex = tex; }
 
-	DLL_DECLSPEC bool GetIsOnClick() { return m_IsOnClick; }
-	DLL_DECLSPEC bool GetIsOnMouse() { return m_IsOnMouse; }
+	ENGINE_DLL bool GetIsOnClick() { return m_IsOnClick; }
+	ENGINE_DLL bool GetIsOnMouse() { return m_IsOnMouse; }
 
 public:
 	Material* m_Material;

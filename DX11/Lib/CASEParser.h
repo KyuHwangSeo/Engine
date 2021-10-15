@@ -26,13 +26,12 @@ enum eParsingmode
 class CASEParser
 {
 public:
-	CASEParser();
-	~CASEParser();
+	PARSER_DLL CASEParser();
+	PARSER_DLL ~CASEParser();
 
 
 	/// 초기화, 로드
-	bool Init();
-	bool Load(LPSTR p_File);		// ASE파일을 읽어서, 자체 리스트에 넣는다.
+	PARSER_DLL bool Load(LPSTR p_File);		// ASE파일을 읽어서, 자체 리스트에 넣는다.
 
 	/// 1차 변환
 	// CScenedata 변환
@@ -41,7 +40,7 @@ public:
 	void OptimizeVertex(ParserData::Mesh* pMesh);		// 버텍스(노말), 텍스쳐 값으로 최적화를 해 준다.
 	void RecombinationTM(ParserData::Mesh* pMesh);
 	void OptimizeData();
-	void SetBoneTM(ParserData::Mesh* pMesh);
+	PARSER_DLL void SetBoneTM(ParserData::Mesh* pMesh);
 
 private:
 	// 토큰을 구별해내기 위한 스트링

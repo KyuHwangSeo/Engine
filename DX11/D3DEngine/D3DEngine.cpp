@@ -1,5 +1,5 @@
 #include "framework.h"
-#include "DLLDefine.h"
+#include "EngineDLL.h"
 #include "D3DDefine.h"
 #include "GameTimer.h"
 #include "KHSound.h"

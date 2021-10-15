@@ -1,17 +1,17 @@
 #pragma once
-
+#pragma warning(disable : 4251)
 ///--------------------------------------------------
 /// Animation Data를 저장하기 위한 클래스
 ///--------------------------------------------------
 
-class CAnimation_pos
+class PARSER_DLL CAnimation_pos
 {
 public:
 	float		 m_time;
 	DXVector3	 m_pos;
 };
 
-class CAnimation_rot
+class PARSER_DLL CAnimation_rot
 {
 public:
 	float			m_time;
@@ -20,7 +20,7 @@ public:
 	DirectX::SimpleMath::Quaternion		m_rotQT_accumulation;		// 상대변량이기 때문에 이전 값들과 누적해서 가지고 있는다 (즉 지금까지의 절대량으로 변환한다)
 };
 
-class CAnimation_scl
+class PARSER_DLL CAnimation_scl
 {
 public:
 	float			m_time;
@@ -33,7 +33,7 @@ public:
 ///--------------------------------------------------
 /// 위 클래스를 조합한 Animation 클래스
 ///--------------------------------------------------
-class AnimationData
+class PARSER_DLL AnimationData
 {
 public:
 	AnimationData() {}
@@ -44,7 +44,7 @@ public:
 
 public:
 	// 애니메이션 데이터의 이름. 유일한 참조수단이다
-	std::string							m_nodename;
+	const char*								m_nodename;
 	std::vector<CAnimation_pos*>			m_position;
 	std::vector<CAnimation_rot*>			m_rotation;
 	std::vector<CAnimation_scl*>			m_scale;
@@ -68,4 +68,3 @@ public:
 	bool	m_isPosAnimation = false;
 	bool	m_isRotAnimation = false;
 };
-

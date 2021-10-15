@@ -18,7 +18,7 @@ using namespace DirectX;
 //   Elements are packed into 4D vectors with the restriction that an element
 //   cannot straddle a 4D vector boundary.
 
-struct DLL_DECLSPEC DirectionalLight
+struct ENGINE_DLL DirectionalLight
 {
 	DirectionalLight() = default;
 
@@ -29,7 +29,7 @@ struct DLL_DECLSPEC DirectionalLight
 	float Pad; // Pad the last float so we can set an array of lights if we wanted.
 };
 
-struct DLL_DECLSPEC PointLight
+struct ENGINE_DLL PointLight
 {
 	PointLight() = default;
 	
@@ -46,7 +46,7 @@ struct DLL_DECLSPEC PointLight
 	float Pad; // Pad the last float so we can set an array of lights if we wanted.
 };
 
-struct DLL_DECLSPEC SpotLight
+struct ENGINE_DLL SpotLight
 {
 	SpotLight() = default;
 	
@@ -67,7 +67,7 @@ struct DLL_DECLSPEC SpotLight
 	float Pad; // Pad the last float so we can set an array of lights if we wanted.
 };
 
-struct DLL_DECLSPEC MaterialData
+struct ENGINE_DLL MaterialData
 {
 	MaterialData() = default;
 
@@ -77,7 +77,7 @@ struct DLL_DECLSPEC MaterialData
 	DXVector4 Reflect;
 };
 
-struct DLL_DECLSPEC LightData
+struct ENGINE_DLL LightData
 {
 	DirectionalLight DirLights[3];
 	PointLight PointLights[4];

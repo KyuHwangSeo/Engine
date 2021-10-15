@@ -19,9 +19,9 @@ public:
 	bool CollisionCheck(Collider* col);
 
 	void SetBoundSphere(VertexBuffer* vBuffer);
-	DLL_DECLSPEC void SetBoundSphere(DXVector3 center, float radius);
-	DLL_DECLSPEC void MovePosition(DXVector3 pos);
-	DLL_DECLSPEC void SetRange(float range);
+	ENGINE_DLL void SetBoundSphere(DXVector3 center, float radius);
+	ENGINE_DLL void MovePosition(DXVector3 pos);
+	ENGINE_DLL void SetRange(float range);
 
 	void BuildGeometryBuffers(DirectX::BoundingSphere bounds);
 

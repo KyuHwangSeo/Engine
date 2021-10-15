@@ -1,4 +1,4 @@
-#include "DLLDefine.h"
+#include "EngineDLL.h"
 #include "SingleTon.h"
 #include "GameTimer.h"
 #include "EnumDefine.h"

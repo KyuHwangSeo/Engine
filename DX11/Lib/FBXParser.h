@@ -2,7 +2,7 @@
 
 typedef std::pair<std::string, ParserData::Bone*> BonePair;
 
-struct FBXModel
+struct PARSER_DLL FBXModel
 {
 	/// Material Data
 	int	m_materialcount;										// Material °³¼ö
@@ -22,8 +22,8 @@ struct FBXModel
 class FBXParser
 {
 public:
-	FBXParser();
-	~FBXParser();
+	PARSER_DLL FBXParser();
+	PARSER_DLL ~FBXParser();
 
 private:
 	fbxsdk::FbxManager* pManager;
@@ -50,10 +50,10 @@ public:
 public:
 	void Initalize();
 	void SceneSetting();
-	void Release();
+	PARSER_DLL void Release();
 	void ResetModel();
 
-	void LoadScene(fbxsdk::FbxString fileName, bool scaling, bool onlyAni = false);
+	PARSER_DLL void LoadScene(fbxsdk::FbxString fileName, bool scaling, bool onlyAni = false);
 	void LoadMaterial();
 	void LoadNode(fbxsdk::FbxNode* node, fbxsdk::FbxNodeAttribute::EType attribute);
 	void LoadAnimation(fbxsdk::FbxNode* node);
@@ -99,7 +99,7 @@ public:
 	ParserData::Bone* FindBone(std::string boneName);
 	ParserData::Mesh* FindMesh(std::string meshName);
 
-	FBXModel* GetModel() { return m_Model; }
+	PARSER_DLL FBXModel* GetModel() { return m_Model; }
 };
 
 inline DXVector2 FBXParser::ConvertVector2(FbxVector2 v2)

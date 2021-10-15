@@ -4,7 +4,7 @@
 
 namespace ParserData
 {
-	struct IndexList
+	struct PARSER_DLL IndexList
 	{
 		int index[3];
 	};
@@ -12,7 +12,7 @@ namespace ParserData
 	///--------------------------------------------------
 	/// Vertex
 	///--------------------------------------------------
-	struct Vertex
+	struct PARSER_DLL Vertex
 	{
 		Vertex();
 
@@ -91,7 +91,7 @@ namespace ParserData
 	///
 	/// 3DSMAX의 ASE출력을 그대로 가져오기 위한 것이다.
 	///--------------------------------------------------
-	struct ShapeVertex
+	struct PARSER_DLL ShapeVertex
 	{
 		int				m_indexnum;			// 인덱스 넘버. 그냥 일련번호다
 		bool				m_isknot;			// KNOT인가 INTERP인가?
@@ -104,7 +104,7 @@ namespace ParserData
 	///
 	/// 3DSMAX의 ASE출력을 그대로 가져오기 위한 것이다.
 	///--------------------------------------------------
-	struct ShapeLine
+	struct PARSER_DLL ShapeLine
 	{
 		int	m_line_number;		// 몇번째 라인인가?
 		bool m_shape_closed;		// 닫힌 Shape인가?
@@ -120,7 +120,7 @@ namespace ParserData
 	/// 한 개의 Scene을 저장하기 위한 구조체
 	/// ASE파일에서 헤더, 코멘트 다음 나오는 SCENE부분을 읽기 위한 구조체.
 	/// </summary>
-	struct Scenedata
+	struct PARSER_DLL Scenedata
 	{
 	public:
 		std::string			m_filename;					// 파일 이름
@@ -142,7 +142,7 @@ namespace ParserData
 	///--------------------------------------------------
 	/// 한 개의 Map을 저장하기 위한 클래스
 	///--------------------------------------------------
-	struct MaterialMap
+	struct PARSER_DLL MaterialMap
 	{
 		std::string	m_map_name;
 		std::string	m_map_class;
@@ -171,7 +171,7 @@ namespace ParserData
 	///--------------------------------------------------
 	/// 한 개의 Material을 저장하기 위한 클래스
 	///--------------------------------------------------
-	struct CMaterial
+	struct PARSER_DLL CMaterial
 	{
 		//--------------------
 		//	멤버 변수들
@@ -227,7 +227,7 @@ namespace ParserData
 
 
 	// Light의 Animation ( Setting의 변화의 Animation )
-	struct Light_AnimationData
+	struct PARSER_DLL Light_AnimationData
 	{
 		// Light Setting
 		int					m_timevalue;		// 역시 mesh에 있는데.. 이거 어떻게 하지 이런식이면.
@@ -248,7 +248,7 @@ namespace ParserData
 	};
 
 	// Bone 하나의 구조체
-	struct Bone
+	struct PARSER_DLL Bone
 	{
 		int			m_bone_number;		// 어차피 벡터로 잡을거지만 나중에 참조시 필요, 검색시 필요?
 		int			m_parent_bone_number;
@@ -290,7 +290,7 @@ namespace ParserData
 	/// 복수 개의 메시가 있을 수 있기 때문에 따로 이 부분만 구조체로 만들었다.
 	///--------------------------------------------------
 	
-	struct Mesh
+	struct PARSER_DLL Mesh
 	{
 	public:
 		///----------------------------------

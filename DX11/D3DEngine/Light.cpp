@@ -154,12 +154,12 @@ void Light::Release()
 	SAFE_DELETE(m_Gizmo);
 }
 
-DLL_DECLSPEC void Light::SetLightType(eLightType lightType)
+ENGINE_DLL void Light::SetLightType(eLightType lightType)
 {
 	m_LightType = lightType;
 }
 
-DLL_DECLSPEC void Light::SetLightColor(DXVector4 lightColor)
+ENGINE_DLL void Light::SetLightColor(DXVector4 lightColor)
 {
 	switch (m_LightType)
 	{
@@ -193,7 +193,7 @@ void Light::SetSpotLight(SpotLight spotLight)
 	m_SpotLight = spotLight;
 }
 
-DLL_DECLSPEC void Light::SetTarget(GameObject* obj)
+ENGINE_DLL void Light::SetTarget(GameObject* obj)
 {
 	m_Target = obj->GetTransform();
 }

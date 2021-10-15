@@ -1,6 +1,6 @@
 #pragma once
 #include "AlignedAllocation.h"
-#include "DLLDefine.h"
+#include "EngineDLL.h"
 #include <typeindex>
 #include <unordered_map>
 #include <algorithm>

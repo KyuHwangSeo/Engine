@@ -1,3 +1,4 @@
+
 #pragma once
 class Material : public Object
 {
@@ -39,10 +40,10 @@ public:
 	void Update(DXMatrix4X4 world, DXMatrix4X4 view, DXMatrix4X4 proj);
 
 	void SetMaterialData(MaterialData materialData);
-	DLL_DECLSPEC void SetDiffuseMap(ID3D11ShaderResourceView* diffuseMap);
-	DLL_DECLSPEC void SetNormalMap(ID3D11ShaderResourceView* normalMap);
-	DLL_DECLSPEC void SetCubeMap(ID3D11ShaderResourceView* cubeMap);
-	DLL_DECLSPEC void SetTexTransform(DXMatrix4X4 texTransform);
+	ENGINE_DLL void SetDiffuseMap(ID3D11ShaderResourceView* diffuseMap);
+	ENGINE_DLL void SetNormalMap(ID3D11ShaderResourceView* normalMap);
+	ENGINE_DLL void SetCubeMap(ID3D11ShaderResourceView* cubeMap);
+	ENGINE_DLL void SetTexTransform(DXMatrix4X4 texTransform);
 	void SetShader(string shaderName);
 	void SetMaterialID(UINT matID);	
 
@@ -60,9 +61,9 @@ public:
 	Shader* GetShader();
 	DXMatrix4X4 GetTexTransform();
 
-	DLL_DECLSPEC ID3D11ShaderResourceView* GetDiffuseMap();
-	DLL_DECLSPEC ID3D11ShaderResourceView* GetNormalMap();
-	DLL_DECLSPEC ID3D11ShaderResourceView* GetCubeMap();
+	ENGINE_DLL ID3D11ShaderResourceView* GetDiffuseMap();
+	ENGINE_DLL ID3D11ShaderResourceView* GetNormalMap();
+	ENGINE_DLL ID3D11ShaderResourceView* GetCubeMap();
 };
 
 template <typename T>

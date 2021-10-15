@@ -26,5 +26,8 @@
     <ClInclude Include="KHSound.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
+    <ClInclude Include="SoundDLL.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

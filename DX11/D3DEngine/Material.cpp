@@ -81,25 +81,25 @@ void Material::SetMaterialData(MaterialData materialData)
 	m_MaterialData.Reflect = DXVector4(0.4f, 0.4f, 0.4f, 1.0f);
 }
 
-DLL_DECLSPEC void Material::SetDiffuseMap(ID3D11ShaderResourceView* diffuseMap)
+ENGINE_DLL void Material::SetDiffuseMap(ID3D11ShaderResourceView* diffuseMap)
 {
 	Is_DiffuseMap = true;
 	m_DiffuseMapSRV = diffuseMap;
 }
 
-DLL_DECLSPEC void Material::SetNormalMap(ID3D11ShaderResourceView* normalMap)
+ENGINE_DLL void Material::SetNormalMap(ID3D11ShaderResourceView* normalMap)
 {
 	Is_NormalMap = true;
 	m_NormalMapSRV = normalMap;
 }
 
-DLL_DECLSPEC void Material::SetCubeMap(ID3D11ShaderResourceView* cubeMap)
+ENGINE_DLL void Material::SetCubeMap(ID3D11ShaderResourceView* cubeMap)
 {
 	Is_CubeMap = true;
 	m_CubeMapSRV = cubeMap;
 }
 
-DLL_DECLSPEC void Material::SetTexTransform(DXMatrix4X4 texTransform)
+ENGINE_DLL void Material::SetTexTransform(DXMatrix4X4 texTransform)
 {
 	m_TexTranspose = texTransform;
 }
@@ -139,7 +139,7 @@ DXMatrix4X4 Material::GetTexTransform()
 	return m_TexTranspose;
 }
 
-DLL_DECLSPEC ID3D11ShaderResourceView* Material::GetDiffuseMap()
+ENGINE_DLL ID3D11ShaderResourceView* Material::GetDiffuseMap()
 {
 	if (Is_DiffuseMap)
 		return m_DiffuseMapSRV;
@@ -147,7 +147,7 @@ DLL_DECLSPEC ID3D11ShaderResourceView* Material::GetDiffuseMap()
 		return nullptr;
 }
 
-DLL_DECLSPEC ID3D11ShaderResourceView* Material::GetNormalMap()
+ENGINE_DLL ID3D11ShaderResourceView* Material::GetNormalMap()
 {
 	if (Is_NormalMap)
 		return m_NormalMapSRV;
@@ -155,7 +155,7 @@ DLL_DECLSPEC ID3D11ShaderResourceView* Material::GetNormalMap()
 		return nullptr;
 }
 
-DLL_DECLSPEC ID3D11ShaderResourceView* Material::GetCubeMap()
+ENGINE_DLL ID3D11ShaderResourceView* Material::GetCubeMap()
 {
 	if (Is_CubeMap)
 		return m_CubeMapSRV;

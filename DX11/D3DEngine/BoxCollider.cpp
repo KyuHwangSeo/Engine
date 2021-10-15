@@ -78,49 +78,49 @@ void BoxCollider::SetBoundBox(DXVector3 center, DXVector3 size)
 	BuildGeometryBuffers(m_OriginalBounds);
 }
 
-DLL_DECLSPEC void BoxCollider::SetPosition(DXVector3 pos)
+ENGINE_DLL void BoxCollider::SetPosition(DXVector3 pos)
 {
 	m_OriginalBounds.Center = pos;
 	BuildGeometryBuffers(m_OriginalBounds);
 }
 
-DLL_DECLSPEC void BoxCollider::SetPositionX(float x)
+ENGINE_DLL void BoxCollider::SetPositionX(float x)
 {
 	m_OriginalBounds.Center.x = x;
 	BuildGeometryBuffers(m_OriginalBounds);
 }
 
-DLL_DECLSPEC void BoxCollider::SetPositionY(float y)
+ENGINE_DLL void BoxCollider::SetPositionY(float y)
 {
 	m_OriginalBounds.Center.x = y;
 	BuildGeometryBuffers(m_OriginalBounds);
 }
 
-DLL_DECLSPEC void BoxCollider::SetPositionZ(float z)
+ENGINE_DLL void BoxCollider::SetPositionZ(float z)
 {
 	m_OriginalBounds.Center.x = z;
 	BuildGeometryBuffers(m_OriginalBounds);
 }
 
-DLL_DECLSPEC void BoxCollider::SetRange(DXVector3 range)
+ENGINE_DLL void BoxCollider::SetRange(DXVector3 range)
 {
 	m_OriginalBounds.Extents = range;
 	BuildGeometryBuffers(m_OriginalBounds);
 }
 
-DLL_DECLSPEC void BoxCollider::SetRangeX(float range)
+ENGINE_DLL void BoxCollider::SetRangeX(float range)
 {
 	m_OriginalBounds.Extents.x = range;
 	BuildGeometryBuffers(m_OriginalBounds);
 }
 
-DLL_DECLSPEC void BoxCollider::SetRangeY(float range)
+ENGINE_DLL void BoxCollider::SetRangeY(float range)
 {
 	m_OriginalBounds.Extents.y = range;
 	BuildGeometryBuffers(m_OriginalBounds);
 }
 
-DLL_DECLSPEC void BoxCollider::SetRangeZ(float range)
+ENGINE_DLL void BoxCollider::SetRangeZ(float range)
 {
 	m_OriginalBounds.Extents.z = range;
 	BuildGeometryBuffers(m_OriginalBounds);

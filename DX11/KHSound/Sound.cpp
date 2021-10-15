@@ -6,29 +6,22 @@ using namespace FMOD;
 
 #include <iostream>
 #include <map>
+
+#include "SoundDLL.h"
 #include "Sound.h"
 
-KHSound* KHSound::gSound = nullptr;
-KHSound::KHSound()
+SOUND_DLL KHSound::KHSound()
 	:m_BGMVolume(1.0f), m_SFXVolume(1.0f), m_MasterVolume(1.0f)
 {
 
 }
 
-KHSound::~KHSound()
+SOUND_DLL KHSound::~KHSound()
 {
 
 }
 
-KHSound* KHSound::GetInstance()
-{
-	if (gSound == nullptr)
-		gSound = new KHSound();
-
-	return gSound;
-}
-
-void KHSound::Initialize()
+SOUND_DLL void KHSound::Initialize()
 {
 	System_Create(&m_System);
 
@@ -51,7 +44,7 @@ void KHSound::Initialize()
 	m_SFXRoute = "../Resource/Sound/SFX/";
 }
 
-void KHSound::LoadSoundBGM(std::string fileName, std::string key, bool loop)
+SOUND_DLL void KHSound::LoadSoundBGM(std::string fileName, std::string key, bool loop)
 {
 	Sound* newSound;
 	std::string filePath = m_BGMRoute + fileName;
@@ -65,7 +58,7 @@ void KHSound::LoadSoundBGM(std::string fileName, std::string key, bool loop)
 	m_SoundList.insert(std::pair<std::string, Sound*>(key, newSound));
 }
 
-void KHSound::LoadSoundSFX(std::string fileName, std::string key, bool loop)
+SOUND_DLL void KHSound::LoadSoundSFX(std::string fileName, std::string key, bool loop)
 {
 	Sound* newSound;
 	std::string filePath = m_SFXRoute + fileName;
@@ -79,7 +72,7 @@ void KHSound::LoadSoundSFX(std::string fileName, std::string key, bool loop)
 	m_SoundList.insert(std::pair<std::string, Sound*>(key, newSound));
 }
 
-void KHSound::PlaySoundBGM(std::string key)
+SOUND_DLL void KHSound::PlaySoundBGM(std::string key)
 {
 	bool play;
 
@@ -98,7 +91,7 @@ void KHSound::PlaySoundBGM(std::string key)
 	}
 }
 
-void KHSound::PlaySoundSFX(std::string key)
+SOUND_DLL void KHSound::PlaySoundSFX(std::string key)
 {
 	// 현재 사용하지 않는 채널을 가져온다..
 	Channel* emptyChannel = FindChannel();
@@ -113,7 +106,7 @@ void KHSound::PlaySoundSFX(std::string key)
 	}
 }
 
-void KHSound::VolumeChangeBGM(float volume)
+SOUND_DLL void KHSound::VolumeChangeBGM(float volume)
 {
 	if (volume < 0 && volume > 1)
 		return;
@@ -122,7 +115,7 @@ void KHSound::VolumeChangeBGM(float volume)
 	m_BGMGroup->setVolume(m_BGMVolume);
 }
 
-void KHSound::VolumeUpBGM()
+SOUND_DLL void KHSound::VolumeUpBGM()
 {
 	m_BGMVolume += 0.1f;
 	m_BGMGroup->setVolume(m_BGMVolume);
@@ -131,7 +124,7 @@ void KHSound::VolumeUpBGM()
 		m_BGMVolume = 1;
 }
 
-void KHSound::VolumeDownBGM()
+SOUND_DLL void KHSound::VolumeDownBGM()
 {
 	m_BGMVolume -= 0.1f;
 	m_BGMGroup->setVolume(m_BGMVolume);
@@ -140,7 +133,7 @@ void KHSound::VolumeDownBGM()
 		m_BGMVolume = 0;
 }
 
-void KHSound::VolumeChangeSFX(float volume)
+SOUND_DLL void KHSound::VolumeChangeSFX(float volume)
 {
 	if (volume < 0 && volume > 1)
 		return;
@@ -148,7 +141,7 @@ void KHSound::VolumeChangeSFX(float volume)
 	m_SFXVolume = volume;
 }
 
-void KHSound::VolumeUpSFX()
+SOUND_DLL void KHSound::VolumeUpSFX()
 {
 	m_SFXVolume += 0.1f;
 
@@ -156,7 +149,7 @@ void KHSound::VolumeUpSFX()
 		m_SFXVolume = 1;
 }
 
-void KHSound::VolumeDownSFX()
+SOUND_DLL void KHSound::VolumeDownSFX()
 {
 	m_SFXVolume -= 0.1f;
 
@@ -164,7 +157,7 @@ void KHSound::VolumeDownSFX()
 		m_SFXVolume = 0;
 }
 
-void KHSound::VolumeChangeMaster(float volume)
+SOUND_DLL void KHSound::VolumeChangeMaster(float volume)
 {
 	if (volume < 0 && volume >1)
 		return;
@@ -173,7 +166,7 @@ void KHSound::VolumeChangeMaster(float volume)
 	m_Master->setVolume(m_MasterVolume);
 }
 
-void KHSound::VolumeUpMaster()
+SOUND_DLL void KHSound::VolumeUpMaster()
 {
 	m_MasterVolume += 0.1f;
 	m_Master->setVolume(m_MasterVolume);
@@ -182,7 +175,7 @@ void KHSound::VolumeUpMaster()
 		m_MasterVolume = 1;
 }
 
-void KHSound::VolumeDownMaster()
+SOUND_DLL void KHSound::VolumeDownMaster()
 {
 	m_MasterVolume -= 0.1f;
 	m_Master->setVolume(m_MasterVolume);
@@ -191,7 +184,7 @@ void KHSound::VolumeDownMaster()
 		m_MasterVolume = 0;
 }
 
-void KHSound::StopBGM()
+SOUND_DLL void KHSound::StopBGM()
 {
 	// 모든 BGM 재생멈춤
 	if (m_BGMGroup != nullptr)
@@ -200,32 +193,32 @@ void KHSound::StopBGM()
 	m_BGMChannel->stop();
 }
 
-void KHSound::PausedBGM(bool play)
+SOUND_DLL void KHSound::PausedBGM(bool play)
 {
 	if (m_BGMGroup != nullptr)
 		m_BGMGroup->setPaused(play);
 }
 
-void KHSound::StopSFX()
+SOUND_DLL void KHSound::StopSFX()
 {
 	if (m_SFXGroup != nullptr)
 		m_SFXGroup->stop();
 }
 
-void KHSound::PausedSFX(bool play)
+SOUND_DLL void KHSound::PausedSFX(bool play)
 {
 	if (m_SFXGroup != nullptr)
 		m_SFXGroup->setPaused(play);
 }
 
-void KHSound::StopAll()
+SOUND_DLL void KHSound::StopAll()
 {
 	// 모든 사운드 멈춤
 	if (m_Master != nullptr)
 		m_Master->stop();
 }
 
-void KHSound::Update()
+SOUND_DLL void KHSound::Update()
 {
 	m_System->update();
 	m_SFXGroup->setVolume(m_SFXVolume);

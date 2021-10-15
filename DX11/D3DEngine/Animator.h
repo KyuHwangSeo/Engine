@@ -13,13 +13,13 @@ public:
 	void Update(float dTime);
 	void Release();
 	
-	DLL_DECLSPEC void PlayAnimation(string aniKey, bool loop = true, bool overlap = false);
-	DLL_DECLSPEC void ResumeAnimation();
-	DLL_DECLSPEC void StopAnimation();
-	DLL_DECLSPEC void AddAnimation(string aniKey, Animation* newAni);
-	DLL_DECLSPEC void SetAnimationSpeed(float speed);
-	DLL_DECLSPEC void AddAnimationSpeed(float speed);
-	DLL_DECLSPEC void NextAnimation(bool loop = true);
+	ENGINE_DLL void PlayAnimation(string aniKey, bool loop = true, bool overlap = false);
+	ENGINE_DLL void ResumeAnimation();
+	ENGINE_DLL void StopAnimation();
+	ENGINE_DLL void AddAnimation(string aniKey, Animation* newAni);
+	ENGINE_DLL void SetAnimationSpeed(float speed);
+	ENGINE_DLL void AddAnimationSpeed(float speed);
+	ENGINE_DLL void NextAnimation(bool loop = true);
 	void AddMeshObject(GameObject* obj);
 
 	float GetAnimationSpeed();

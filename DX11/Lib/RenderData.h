@@ -1,5 +1,5 @@
 #pragma once
-#include "DLLDefine.h"
+#include "EngineDLL.h"
 #include "KHMath.h"
 
 struct RenderData

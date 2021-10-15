@@ -70,7 +70,7 @@ void SphereCollider::SetBoundSphere(VertexBuffer* vBuffer)
 	BuildGeometryBuffers(m_OriginalBounds);
 }
 
-DLL_DECLSPEC void SphereCollider::SetBoundSphere(DXVector3 center, float radius)
+ENGINE_DLL void SphereCollider::SetBoundSphere(DXVector3 center, float radius)
 {
 	m_OriginalBounds.Center = center;
 	m_OriginalBounds.Radius = radius;
@@ -78,13 +78,13 @@ DLL_DECLSPEC void SphereCollider::SetBoundSphere(DXVector3 center, float radius)
 	BuildGeometryBuffers(m_OriginalBounds);
 }
 
-DLL_DECLSPEC void SphereCollider::MovePosition(DXVector3 pos)
+ENGINE_DLL void SphereCollider::MovePosition(DXVector3 pos)
 {
 	m_OriginalBounds.Center = pos;
 	BuildGeometryBuffers(m_OriginalBounds);
 }
 
-DLL_DECLSPEC void SphereCollider::SetRange(float range)
+ENGINE_DLL void SphereCollider::SetRange(float range)
 {
 	m_OriginalBounds.Radius = range;
 	BuildGeometryBuffers(m_OriginalBounds);

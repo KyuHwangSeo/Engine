@@ -11,8 +11,8 @@ public:
 	void Render(DXMatrix4X4 view, DXMatrix4X4 proj);
 	void Release();
 	
-	DLL_DECLSPEC void SetLightType(eLightType lightType);
-	DLL_DECLSPEC void SetLightColor(DXVector4 lightColor);
+	ENGINE_DLL void SetLightType(eLightType lightType);
+	ENGINE_DLL void SetLightColor(DXVector4 lightColor);
 	void DirLightRotate(DXVector3 axis, float angle);
 	void SetPointLight(PointLight pointLight);
 	void SetSpotLight(SpotLight spotLight);
@@ -22,7 +22,7 @@ public:
 
 	template<typename T>
 	void SetPosition(T& lightData);
-	DLL_DECLSPEC void SetTarget(GameObject* obj);
+	ENGINE_DLL void SetTarget(GameObject* obj);
 
 	void SetLightViewProj();
 

@@ -7,7 +7,7 @@
 #ifndef MATHHELPER_H
 #define MATHHELPER_H
 
-#include "DLLDefine.h"
+#include "EngineDLL.h"
 using namespace DirectX;
 
 class MathHelper

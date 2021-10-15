@@ -42,40 +42,40 @@ public:
 	~Transform();
 
 	// Scale 행렬 설정 함수..
-	DLL_DECLSPEC void SetScale(DXVector3 _scale);
-	DLL_DECLSPEC void SetScale(float x, float y, float z);
-	DLL_DECLSPEC void SetScaleX(float x);
-	DLL_DECLSPEC void SetScaleY(float y);
+	ENGINE_DLL void SetScale(DXVector3 _scale);
+	ENGINE_DLL void SetScale(float x, float y, float z);
+	ENGINE_DLL void SetScaleX(float x);
+	ENGINE_DLL void SetScaleY(float y);
 
-	DLL_DECLSPEC void ChangeScale(DXVector3 _scale);
-	DLL_DECLSPEC void ChangeScale(float x, float y, float z);
+	ENGINE_DLL void ChangeScale(DXVector3 _scale);
+	ENGINE_DLL void ChangeScale(float x, float y, float z);
 
 	// Position 행렬 설정 함수..
-	DLL_DECLSPEC void SetPosition(DXVector3 pos);
-	DLL_DECLSPEC void SetPosition(float x, float y, float z);
-	DLL_DECLSPEC void SetPositionX(float x);
-	DLL_DECLSPEC void SetPositionY(float y);
-	DLL_DECLSPEC void SetPositionZ(float z);
+	ENGINE_DLL void SetPosition(DXVector3 pos);
+	ENGINE_DLL void SetPosition(float x, float y, float z);
+	ENGINE_DLL void SetPositionX(float x);
+	ENGINE_DLL void SetPositionY(float y);
+	ENGINE_DLL void SetPositionZ(float z);
 
 	// Rotation 행렬 설정 함수..
-	DLL_DECLSPEC void SetRotate(DXVector3 _rot);
-	DLL_DECLSPEC void SetRotate(float x, float y, float z);
+	ENGINE_DLL void SetRotate(DXVector3 _rot);
+	ENGINE_DLL void SetRotate(float x, float y, float z);
 
 	// Local Rotation 함수..
-	DLL_DECLSPEC void RotateLocal(DXVector3 ypr);
-	DLL_DECLSPEC void RotateLocal(float x, float y, float z);
+	ENGINE_DLL void RotateLocal(DXVector3 ypr);
+	ENGINE_DLL void RotateLocal(float x, float y, float z);
 
 	// Local Move 함수..
-	DLL_DECLSPEC void MoveLocal(DXVector3 _move);
-	DLL_DECLSPEC void MoveLocal(float x, float y, float z);
-	DLL_DECLSPEC void MoveOffset(DXVector3 _move);
-	DLL_DECLSPEC void MoveOffset(float x, float y, float z);
+	ENGINE_DLL void MoveLocal(DXVector3 _move);
+	ENGINE_DLL void MoveLocal(float x, float y, float z);
+	ENGINE_DLL void MoveOffset(DXVector3 _move);
+	ENGINE_DLL void MoveOffset(float x, float y, float z);
 
 	// World Move 함수..
-	DLL_DECLSPEC void MoveWorld(DXVector3 _move);
-	DLL_DECLSPEC void MoveWorld(float _x, float _y, float _z);
+	ENGINE_DLL void MoveWorld(DXVector3 _move);
+	ENGINE_DLL void MoveWorld(float _x, float _y, float _z);
 
-	DLL_DECLSPEC void ResetTM(DXVector3 targetPos);
+	ENGINE_DLL void ResetTM(DXVector3 targetPos);
 
 	void Start();
 	void Render(DXMatrix4X4 view, DXMatrix4X4 proj);
@@ -96,7 +96,7 @@ public:
 	void SetNodeTM(DXMatrix4X4 _tm);
 
 	// WorldTM 반환 함수..
-	DLL_DECLSPEC DXMatrix4X4 GetWorldTM();
+	ENGINE_DLL DXMatrix4X4 GetWorldTM();
 
 	// PrevWorldTM 반환 함수..
 	DXMatrix4X4 GetPrevWorldTM();
@@ -104,11 +104,11 @@ public:
 	DXMatrix4X4 GetLocalTM();
 
 	// Position 반환 함수..
-	DLL_DECLSPEC DXVector3 GetScale();
+	ENGINE_DLL DXVector3 GetScale();
 	// Position 반환 함수..
-	DLL_DECLSPEC DXVector3 GetPosition();
+	ENGINE_DLL DXVector3 GetPosition();
 	// Rotation 반환 함수..
-	DLL_DECLSPEC DXVector3 GetRotation();
+	ENGINE_DLL DXVector3 GetRotation();
 
 	// Hierarchy Get & Set
 	Transform* GetParent() { return m_Parent; }

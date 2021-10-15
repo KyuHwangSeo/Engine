@@ -2,8 +2,8 @@
 class Scene
 {
 public:
-	DLL_DECLSPEC Scene();
-	DLL_DECLSPEC virtual ~Scene() = default;
+	ENGINE_DLL Scene();
+	ENGINE_DLL virtual ~Scene() = default;
 
 public:
 	void Start();

@@ -82,14 +82,14 @@ void CircleCollider2D::SetBoundCircle2D(DXVector2 center, float radius)
 	BuildGeometryBuffers();
 }
 
-DLL_DECLSPEC void CircleCollider2D::SetRange(float radius)
+ENGINE_DLL void CircleCollider2D::SetRange(float radius)
 {
 	m_Circle2D.radius = radius;
 	m_ColData.radius = radius;
 	BuildGeometryBuffers();
 }
 
-DLL_DECLSPEC void CircleCollider2D::SetCenter(DXVector2 center)
+ENGINE_DLL void CircleCollider2D::SetCenter(DXVector2 center)
 {
 	m_Circle2D.center = center;
 	m_ColData.center = DXVector3(center.x, center.y, 0.0f);

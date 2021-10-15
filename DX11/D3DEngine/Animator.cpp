@@ -1,4 +1,4 @@
-#include "DLLDefine.h"
+#include "EngineDLL.h"
 #include "SingleTon.h"
 #include "GameTimer.h"
 #include "EnumDefine.h"
@@ -45,7 +45,7 @@ void Animator::Release()
 	m_Animations.clear();
 }
 
-DLL_DECLSPEC void Animator::PlayAnimation(string aniKey, bool loop, bool overlap)
+ENGINE_DLL void Animator::PlayAnimation(string aniKey, bool loop, bool overlap)
 {
 	// 이미 재생중인 애니메이션..
 	if (overlap == false)
@@ -66,17 +66,17 @@ DLL_DECLSPEC void Animator::PlayAnimation(string aniKey, bool loop, bool overlap
 	m_Play = true;
 }
 
-DLL_DECLSPEC void Animator::ResumeAnimation()
+ENGINE_DLL void Animator::ResumeAnimation()
 {
 	m_Play = true;
 }
 
-DLL_DECLSPEC void Animator::StopAnimation()
+ENGINE_DLL void Animator::StopAnimation()
 {
 	m_Play = false;
 }
 
-DLL_DECLSPEC void Animator::AddAnimation(string aniKey, Animation* newAni)
+ENGINE_DLL void Animator::AddAnimation(string aniKey, Animation* newAni)
 {
 	// 키값과 애니메이션 이름을 맞춰주자..
 	newAni->SetName(aniKey);
@@ -84,17 +84,17 @@ DLL_DECLSPEC void Animator::AddAnimation(string aniKey, Animation* newAni)
 	m_Animations.insert(make_pair(aniKey, newAni));
 }
 
-DLL_DECLSPEC void Animator::SetAnimationSpeed(float speed)
+ENGINE_DLL void Animator::SetAnimationSpeed(float speed)
 {
 	m_Animations[m_NowAni]->SetAnimationSpeed(speed);
 }
 
-DLL_DECLSPEC void Animator::AddAnimationSpeed(float speed)
+ENGINE_DLL void Animator::AddAnimationSpeed(float speed)
 {
 	m_Animations[m_NowAni]->AddAnimationSpeed(speed);
 }
 
-DLL_DECLSPEC void Animator::NextAnimation(bool loop)
+ENGINE_DLL void Animator::NextAnimation(bool loop)
 {
 	auto ani = m_Animations.find(m_NowAni)++;
 
