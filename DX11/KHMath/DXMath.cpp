@@ -296,7 +296,7 @@ DXVector3 DXVector3::operator*(const float f) noexcept
 DXVector3 DXVector3::Normalize() noexcept
 {
 	float length = sqrtf(powf(x, 2) + powf(y, 2) + powf(z, 2));
-
+	
 	x /= length;
 	y /= length;
 	z /= length;
@@ -339,6 +339,38 @@ DirectX::XMFLOAT4 DXVector3::ConvertXMFLOAT4()
 DirectX::XMFLOAT3 DXVector3::ConvertXMFLOAT3()
 {
 	return DirectX::XMFLOAT3(x, y, z);
+}
+
+DXVector3 DXVector3::Reflect(const DXVector3& ivec, const DXVector3& nvec) noexcept
+{
+	DirectX::XMVECTOR i = KH_MATH::XMLoadVector3(ivec);
+	DirectX::XMVECTOR n = KH_MATH::XMLoadVector3(nvec);
+
+	return DirectX::XMVector3Reflect(i, n);
+}
+
+DXVector3 DXVector3::Transform(const DXVector3& v, const DXQuaternion& quat) noexcept
+{
+	DirectX::XMVECTOR v1 = KH_MATH::XMLoadVector3(v);
+	DirectX::XMVECTOR q = KH_MATH::XMLoadVector3(quat);
+
+	return DirectX::XMVector3Rotate(v1, q);
+}
+
+DXVector3 DXVector3::Transform(const DXVector3& v, const DXMatrix4X4& m) noexcept
+{
+	DirectX::XMVECTOR v1 = KH_MATH::XMLoadVector3(v);
+	DirectX::XMMATRIX xm = KH_MATH::XMLoadFloat4X4(m);
+
+	return DirectX::XMVector3TransformCoord(v1, xm);
+}
+
+DXVector3 DXVector3::TransformNormal(const DXVector3& v, const DXMatrix4X4& m) noexcept
+{
+	DirectX::XMVECTOR v1 = KH_MATH::XMLoadVector3(v);
+	DirectX::XMMATRIX xm = KH_MATH::XMLoadFloat4X4(m);
+
+	return DirectX::XMVector3TransformNormal(v1, xm);
 }
 
 DXVector3 DXVector3::Zero()
@@ -540,6 +572,31 @@ DirectX::XMFLOAT4 DXVector4::ConvertXMFLOAT4()
 DirectX::XMFLOAT3 DXVector4::ConvertXMFLOAT3()
 {
 	return DirectX::XMFLOAT3(x, y, z);
+}
+
+DXVector4 DXVector4::Reflect(const DXVector4& ivec, const DXVector4& nvec) noexcept
+{
+	DirectX::XMVECTOR i = KH_MATH::XMLoadVector4(ivec);
+	DirectX::XMVECTOR n = KH_MATH::XMLoadVector4(nvec);
+
+	return DirectX::XMVector4Reflect(i, n);
+}
+
+DXVector4 DXVector4::Transform(const DXVector4& v, const DXQuaternion& quat) noexcept
+{
+	DirectX::XMVECTOR v1 = KH_MATH::XMLoadVector4(v);
+	DirectX::XMVECTOR q = KH_MATH::XMLoadVector4(quat);
+	DirectX::XMVECTOR x = DirectX::XMVector3Rotate(v1,q);
+
+	return DirectX::XMVectorSelect(DirectX::g_XMIdentityR3, x, DirectX::g_XMSelect1110);
+}
+
+DXVector4 DXVector4::Transform(const DXVector4& v, const DXMatrix4X4& m) noexcept
+{
+	DirectX::XMVECTOR v1 = KH_MATH::XMLoadVector4(v);
+	DirectX::XMMATRIX xm = KH_MATH::XMLoadFloat4X4(m);
+
+	return DirectX::XMVector4Transform(v1, xm);
 }
 
 DXVector4 DXVector4::Zero()
@@ -782,18 +839,186 @@ DXMatrix4X4 DXMatrix4X4::operator*(const DirectX::SimpleMath::Matrix& mx)
 	return *this * temp;
 }
 
-DXMatrix4X4 DXMatrix4X4::Inverse()
+bool DXMatrix4X4::Decompose(DXVector3& scale, DXQuaternion& rotation, DXVector3& translation) noexcept
 {
-	DirectX::XMMATRIX M = *this;
+	DirectX::XMVECTOR s, r, t;
+
+	if (!DirectX::XMMatrixDecompose(&s, &r, &t, *this))
+		return false;
+
+	scale = s;
+	rotation = r;
+	translation = t;
+
+	return true;
+}
+
+float DXMatrix4X4::Determinant() const noexcept
+{
+	DirectX::XMMATRIX M = KH_MATH::XMLoadFloat4X4(*this);
+	return DirectX::XMVectorGetX(DirectX::XMMatrixDeterminant(M));
+}
+
+DXMatrix4X4 DXMatrix4X4::Transpose() const noexcept
+{
+	DirectX::XMMATRIX M = KH_MATH::XMLoadFloat4X4(*this);
+
+	return DirectX::XMMatrixTranspose(M);
+}
+
+DXMatrix4X4 DXMatrix4X4::Inverse() const noexcept
+{
+	DirectX::XMMATRIX M = KH_MATH::XMLoadFloat4X4(*this);
 	DirectX::XMVECTOR det;
 	DXMatrix4X4 result = XMMatrixInverse(&det, M);
 
 	return result;
 }
 
-DXVector4 DXMatrix4X4::GetRow(int row)
+DXVector4 DXMatrix4X4::GetRow(int row) const noexcept
 {
 	return DXVector4(m[row][0], m[row][1], m[row][2], m[row][3]);
+}
+
+DXMatrix4X4 DXMatrix4X4::CreateTranslation(const DXVector3& position) noexcept
+{
+	DXMatrix4X4 M;
+
+	M._41 = position.x;
+	M._42 = position.y;
+	M._43 = position.z;
+
+	return M;
+}
+
+DXMatrix4X4 DXMatrix4X4::CreateTranslation(float x, float y, float z) noexcept
+{
+	DXMatrix4X4 M;
+
+	M._41 = x;
+	M._42 = y;
+	M._43 = z;
+
+	return M;
+}
+
+DXMatrix4X4 DXMatrix4X4::CreateScale(const DXVector3& scales) noexcept
+{
+	DXMatrix4X4 M;
+
+	M._11 = scales.x;
+	M._22 = scales.y;
+	M._33 = scales.z;
+
+	return M;
+}
+
+DXMatrix4X4 DXMatrix4X4::CreateScale(float xs, float ys, float zs) noexcept
+{
+	DXMatrix4X4 M;
+
+	M._11 = xs;
+	M._22 = ys;
+	M._33 = zs;
+
+	return M;
+}
+
+DXMatrix4X4 DXMatrix4X4::CreateScale(float scale) noexcept
+{
+	DXMatrix4X4 M;
+
+	M._11 = scale;
+	M._22 = scale;
+	M._33 = scale;
+
+	return M;
+}
+
+DXMatrix4X4 DXMatrix4X4::CreateRotationX(float radians) noexcept
+{
+	return DirectX::XMMatrixRotationX(radians);
+}
+
+DXMatrix4X4 DXMatrix4X4::CreateRotationY(float radians) noexcept
+{
+	return DirectX::XMMatrixRotationY(radians);
+}
+
+DXMatrix4X4 DXMatrix4X4::CreateRotationZ(float radians) noexcept
+{
+	return DirectX::XMMatrixRotationZ(radians);
+}
+
+DXMatrix4X4 DXMatrix4X4::CreateFromAxisAngle(const DXVector3& axis, float angle) noexcept
+{
+	DirectX::XMVECTOR a = KH_MATH::XMLoadVector3(axis);
+
+	return DirectX::XMMatrixRotationAxis(a, angle);
+}
+
+DXMatrix4X4 DXMatrix4X4::CreatePerspectiveFieldOfView(float fov, float aspectRatio, float nearPlane, float farPlane) noexcept
+{
+	return DirectX::XMMatrixPerspectiveFovRH(fov, aspectRatio, nearPlane, farPlane);
+}
+
+DXMatrix4X4 DXMatrix4X4::CreatePerspective(float width, float height, float nearPlane, float farPlane) noexcept
+{
+	return DirectX::XMMatrixPerspectiveRH(width, height, nearPlane, farPlane);
+}
+
+DXMatrix4X4 DXMatrix4X4::CreatePerspectiveOffCenter(float left, float right, float bottom, float top, float nearPlane, float farPlane) noexcept
+{
+	return DirectX::XMMatrixPerspectiveOffCenterRH(left, right, bottom, top, nearPlane, farPlane);
+}
+
+DXMatrix4X4 DXMatrix4X4::CreateOrthographic(float width, float height, float zNearPlane, float zFarPlane) noexcept
+{
+	return DirectX::XMMatrixOrthographicRH(width, height, zNearPlane, zFarPlane);
+}
+
+DXMatrix4X4 DXMatrix4X4::CreateOrthographicOffCenter(float left, float right, float bottom, float top, float zNearPlane, float zFarPlane) noexcept
+{
+	return DirectX::XMMatrixOrthographicOffCenterRH(left, right, bottom, top, zNearPlane, zFarPlane);
+}
+
+DXMatrix4X4 DXMatrix4X4::CreateLookAt(const DXVector3& eye, const DXVector3& target, const DXVector3& up) noexcept
+{
+	DirectX::XMVECTOR eyev = KH_MATH::XMLoadVector3(eye);
+	DirectX::XMVECTOR targetv = KH_MATH::XMLoadVector3(target);
+	DirectX::XMVECTOR upv = KH_MATH::XMLoadVector3(up);
+
+	return DirectX::XMMatrixLookAtRH(eyev, targetv, upv);
+}
+
+DXMatrix4X4 DXMatrix4X4::CreateWorld(const DXVector3& position, const DXVector3& forward, const DXVector3& up) noexcept
+{
+	DirectX::XMVECTOR zaxis = DirectX::XMVector3Normalize(DirectX::XMVectorNegate(KH_MATH::XMLoadVector3(position)));
+	DirectX::XMVECTOR yaxis = KH_MATH::XMLoadVector3(up);
+	DirectX::XMVECTOR xaxis = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(yaxis, zaxis));
+	yaxis = DirectX::XMVector3Cross(zaxis, xaxis);
+
+	DXMatrix4X4 R;
+	R(0) = xaxis;
+	R(1) = yaxis;
+	R(2) = zaxis;
+	R._14 = R._24 = R._34 = 0.f;
+	R._41 = position.x; R._42 = position.y; R._43 = position.z;
+	R._44 = 1.f;
+
+	return R;
+}
+
+DXMatrix4X4 DXMatrix4X4::CreateFromQuaternion(const DXQuaternion& rotation) noexcept
+{
+	DirectX::XMVECTOR quatv = KH_MATH::XMLoadVector4(rotation);
+
+	return DirectX::XMMatrixRotationQuaternion(quatv);
+}
+
+DXMatrix4X4 DXMatrix4X4::CreateFromYawPitchRoll(float yaw, float pitch, float roll) noexcept
+{
+	return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
 }
 
 DirectX::SimpleMath::Matrix DXMatrix4X4::ConvertMatrix()
@@ -840,16 +1065,16 @@ DXQuaternion::DXQuaternion(const DXVector4& v4)
 
 bool DXQuaternion::operator!=(const DXQuaternion& q) const
 {
-	DirectX::XMVECTOR q1 = KH_MATH::XMStoreFloat4(*this);
-	DirectX::XMVECTOR q2 = KH_MATH::XMStoreFloat4(q);
+	DirectX::XMVECTOR q1 = KH_MATH::XMLoadVector4(*this);
+	DirectX::XMVECTOR q2 = KH_MATH::XMLoadVector4(q);
 
 	return DirectX::XMQuaternionEqual(q1, q2);
 }
 
 bool DXQuaternion::operator==(const DXQuaternion& q) const
 {
-	DirectX::XMVECTOR q1 = KH_MATH::XMStoreFloat4(*this);
-	DirectX::XMVECTOR q2 = KH_MATH::XMStoreFloat4(q);
+	DirectX::XMVECTOR q1 = KH_MATH::XMLoadVector4(*this);
+	DirectX::XMVECTOR q2 = KH_MATH::XMLoadVector4(q);
 
 	return DirectX::XMQuaternionNotEqual(q1, q2);
 }
@@ -876,8 +1101,8 @@ DXQuaternion& DXQuaternion::operator=(const DirectX::XMVECTOR& v) noexcept
 
 DXQuaternion& DXQuaternion::operator+=(const DXQuaternion& q) noexcept
 {
-	DirectX::XMVECTOR q1 = KH_MATH::XMStoreFloat4(*this);
-	DirectX::XMVECTOR q2 = KH_MATH::XMStoreFloat4(q);
+	DirectX::XMVECTOR q1 = KH_MATH::XMLoadVector4(*this);
+	DirectX::XMVECTOR q2 = KH_MATH::XMLoadVector4(q);
 	*this = DirectX::XMVectorAdd(q1, q2);
 
 	return *this;
@@ -885,8 +1110,8 @@ DXQuaternion& DXQuaternion::operator+=(const DXQuaternion& q) noexcept
 
 DXQuaternion& DXQuaternion::operator-=(const DXQuaternion& q) noexcept
 {
-	DirectX::XMVECTOR q1 = KH_MATH::XMStoreFloat4(*this);
-	DirectX::XMVECTOR q2 = KH_MATH::XMStoreFloat4(q);
+	DirectX::XMVECTOR q1 = KH_MATH::XMLoadVector4(*this);
+	DirectX::XMVECTOR q2 = KH_MATH::XMLoadVector4(q);
 	*this = DirectX::XMVectorSubtract(q1, q2);
 
 	return *this;
@@ -894,8 +1119,8 @@ DXQuaternion& DXQuaternion::operator-=(const DXQuaternion& q) noexcept
 
 DXQuaternion& DXQuaternion::operator*=(const DXQuaternion& q) noexcept
 {
-	DirectX::XMVECTOR q1 = KH_MATH::XMStoreFloat4(*this);
-	DirectX::XMVECTOR q2 = KH_MATH::XMStoreFloat4(q);
+	DirectX::XMVECTOR q1 = KH_MATH::XMLoadVector4(*this);
+	DirectX::XMVECTOR q2 = KH_MATH::XMLoadVector4(q);
 	*this = DirectX::XMQuaternionMultiply(q1, q2);
 
 	return *this;
@@ -903,7 +1128,7 @@ DXQuaternion& DXQuaternion::operator*=(const DXQuaternion& q) noexcept
 
 DXQuaternion& DXQuaternion::operator*=(float S) noexcept
 {
-	DirectX::XMVECTOR q1 = KH_MATH::XMStoreFloat4(*this);
+	DirectX::XMVECTOR q1 = KH_MATH::XMLoadVector4(*this);
 	*this = DirectX::XMVectorScale(q1, S);
 
 	return *this;
@@ -911,8 +1136,8 @@ DXQuaternion& DXQuaternion::operator*=(float S) noexcept
 
 DXQuaternion& DXQuaternion::operator/=(const DXQuaternion& q) noexcept
 {
-	DirectX::XMVECTOR q1 = KH_MATH::XMStoreFloat4(*this);
-	DirectX::XMVECTOR q2 = KH_MATH::XMStoreFloat4(q);
+	DirectX::XMVECTOR q1 = KH_MATH::XMLoadVector4(*this);
+	DirectX::XMVECTOR q2 = KH_MATH::XMLoadVector4(q);
 	q2 = DirectX::XMQuaternionInverse(q2);
 	*this = DirectX::XMQuaternionMultiply(q1, q2);
 
@@ -921,71 +1146,71 @@ DXQuaternion& DXQuaternion::operator/=(const DXQuaternion& q) noexcept
 
 DXQuaternion DXQuaternion::operator-() const noexcept
 {
-	DirectX::XMVECTOR q = KH_MATH::XMStoreFloat4(*this);
+	DirectX::XMVECTOR q = KH_MATH::XMLoadVector4(*this);
 
 	return DirectX::XMVectorNegate(q);
 }
 
 float DXQuaternion::Length() const noexcept
 {
-	DirectX::XMVECTOR q = KH_MATH::XMStoreFloat4(*this);
+	DirectX::XMVECTOR q = KH_MATH::XMLoadVector4(*this);
 
 	return DirectX::XMVectorGetX(DirectX::XMQuaternionLength(q));
 }
 
 float DXQuaternion::LengthSquared() const noexcept
 {
-	DirectX::XMVECTOR q = KH_MATH::XMStoreFloat4(*this);
+	DirectX::XMVECTOR q = KH_MATH::XMLoadVector4(*this);
 
 	return DirectX::XMVectorGetX(DirectX::XMQuaternionLengthSq(q));
 }
 
 void DXQuaternion::Normalize() noexcept
 {
-	DirectX::XMVECTOR q = KH_MATH::XMStoreFloat4(*this);
+	DirectX::XMVECTOR q = KH_MATH::XMLoadVector4(*this);
 
 	*this = DirectX::XMQuaternionNormalize(q);
 }
 
 void DXQuaternion::Normalize(DXQuaternion& q) const noexcept
 {
-	DirectX::XMVECTOR result = KH_MATH::XMStoreFloat4(*this);
+	DirectX::XMVECTOR result = KH_MATH::XMLoadVector4(*this);
 
 	result = DirectX::XMQuaternionNormalize(q);
 }
 
 void DXQuaternion::Conjugate() noexcept
 {
-	DirectX::XMVECTOR q = KH_MATH::XMStoreFloat4(*this);
+	DirectX::XMVECTOR q = KH_MATH::XMLoadVector4(*this);
 
 	*this = DirectX::XMQuaternionConjugate(q);
 }
 
 void DXQuaternion::Conjugate(DXQuaternion& q) const noexcept
 {
-	DirectX::XMVECTOR result = KH_MATH::XMStoreFloat4(*this);
+	DirectX::XMVECTOR result = KH_MATH::XMLoadVector4(*this);
 
 	q = DirectX::XMQuaternionConjugate(result);
 }
 
 void DXQuaternion::Inverse(DXQuaternion& q) const noexcept
 {
-	DirectX::XMVECTOR result = KH_MATH::XMStoreFloat4(*this);
+	DirectX::XMVECTOR result = KH_MATH::XMLoadVector4(*this);
 
 	q = DirectX::XMQuaternionInverse(result);
 }
 
 float DXQuaternion::Dot(const DXQuaternion& q) const noexcept
 {
-	DirectX::XMVECTOR q1 = KH_MATH::XMStoreFloat4(*this);
-	DirectX::XMVECTOR q2 = KH_MATH::XMStoreFloat4(q);
+	DirectX::XMVECTOR q1 = KH_MATH::XMLoadVector4(*this);
+	DirectX::XMVECTOR q2 = KH_MATH::XMLoadVector4(q);
 
 	return DirectX::XMVectorGetX(DirectX::XMQuaternionDot(q1, q2));
 }
 
 DXQuaternion DXQuaternion::CreateFromAxisAngle(const DXVector3& axis, float angle) noexcept
 {
-	DirectX::XMVECTOR v3 = KH_MATH::XMStoreFloat3(axis);
+	DirectX::XMVECTOR v3 = KH_MATH::XMLoadVector3(axis);
 
 	return DirectX::XMQuaternionRotationAxis(v3, angle);
 }
@@ -997,15 +1222,15 @@ DXQuaternion DXQuaternion::CreateFromYawPitchRoll(float yaw, float pitch, float 
 
 DXQuaternion DXQuaternion::CreateFromRotationMatrix(const DXMatrix4X4& M) noexcept
 {
-	DirectX::XMMATRIX xm = KH_MATH::XMStoreFloat4X4(M);
+	DirectX::XMMATRIX xm = KH_MATH::XMLoadFloat4X4(M);
 
 	return DirectX::XMQuaternionRotationMatrix(xm);
 }
 
 void DXQuaternion::Lerp(const DXQuaternion& q1, const DXQuaternion& q2, float t, DXQuaternion& result) noexcept
 {
-	DirectX::XMVECTOR Q0 = KH_MATH::XMStoreFloat4(q1);
-	DirectX::XMVECTOR Q1 = KH_MATH::XMStoreFloat4(q2);
+	DirectX::XMVECTOR Q0 = KH_MATH::XMLoadVector4(q1);
+	DirectX::XMVECTOR Q1 = KH_MATH::XMLoadVector4(q2);
 
 	DirectX::XMVECTOR dot = DirectX::XMVector4Dot(Q0, Q1);
 
@@ -1028,8 +1253,8 @@ void DXQuaternion::Lerp(const DXQuaternion& q1, const DXQuaternion& q2, float t,
 
 DXQuaternion DXQuaternion::Lerp(const DXQuaternion& q1, const DXQuaternion& q2, float t) noexcept
 {
-	DirectX::XMVECTOR Q0 = KH_MATH::XMStoreFloat4(q1);
-	DirectX::XMVECTOR Q1 = KH_MATH::XMStoreFloat4(q2);
+	DirectX::XMVECTOR Q0 = KH_MATH::XMLoadVector4(q1);
+	DirectX::XMVECTOR Q1 = KH_MATH::XMLoadVector4(q2);
 
 	DirectX::XMVECTOR dot = DirectX::XMVector4Dot(Q0, Q1);
 
@@ -1052,32 +1277,32 @@ DXQuaternion DXQuaternion::Lerp(const DXQuaternion& q1, const DXQuaternion& q2, 
 
 void DXQuaternion::Slerp(const DXQuaternion& q1, const DXQuaternion& q2, float t, DXQuaternion& result) noexcept
 {
-	DirectX::XMVECTOR Q0 = KH_MATH::XMStoreFloat4(q1);
-	DirectX::XMVECTOR Q1 = KH_MATH::XMStoreFloat4(q2);
+	DirectX::XMVECTOR Q0 = KH_MATH::XMLoadVector4(q1);
+	DirectX::XMVECTOR Q1 = KH_MATH::XMLoadVector4(q2);
 
 	result = DirectX::XMQuaternionSlerp(Q0, Q1, t);
 }
 
 DXQuaternion DXQuaternion::Slerp(const DXQuaternion& q1, const DXQuaternion& q2, float t) noexcept
 {
-	DirectX::XMVECTOR Q0 = KH_MATH::XMStoreFloat4(q1);
-	DirectX::XMVECTOR Q1 = KH_MATH::XMStoreFloat4(q2);
+	DirectX::XMVECTOR Q0 = KH_MATH::XMLoadVector4(q1);
+	DirectX::XMVECTOR Q1 = KH_MATH::XMLoadVector4(q2);
 
 	return DirectX::XMQuaternionSlerp(Q0, Q1, t);
 }
 
 void DXQuaternion::Concatenate(const DXQuaternion& q1, const DXQuaternion& q2, DXQuaternion& result) noexcept
 {
-	DirectX::XMVECTOR Q0 = KH_MATH::XMStoreFloat4(q1);
-	DirectX::XMVECTOR Q1 = KH_MATH::XMStoreFloat4(q2);
+	DirectX::XMVECTOR Q0 = KH_MATH::XMLoadVector4(q1);
+	DirectX::XMVECTOR Q1 = KH_MATH::XMLoadVector4(q2);
 
 	result = DirectX::XMQuaternionMultiply(Q0, Q1);
 }
 
 DXQuaternion DXQuaternion::Concatenate(const DXQuaternion& q1, const DXQuaternion& q2) noexcept
 {
-	DirectX::XMVECTOR Q0 = KH_MATH::XMStoreFloat4(q1);
-	DirectX::XMVECTOR Q1 = KH_MATH::XMStoreFloat4(q2);
+	DirectX::XMVECTOR Q0 = KH_MATH::XMLoadVector4(q1);
+	DirectX::XMVECTOR Q1 = KH_MATH::XMLoadVector4(q2);
 
 	return DirectX::XMQuaternionMultiply(Q0, Q1);
 }
@@ -1086,7 +1311,7 @@ DXQuaternion DXQuaternion::Concatenate(const DXQuaternion& q1, const DXQuaternio
 // Math Expansion Function
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-MATH_DLL DirectX::XMVECTOR KH_MATH::XMStoreFloat3(const DXVector3& _v3)
+MATH_DLL DirectX::XMVECTOR KH_MATH::XMLoadVector3(const DXVector3& _v3)
 {
 	DirectX::XMVECTOR resultV;
 	resultV.m128_f32[0] = _v3.x;
@@ -1106,7 +1331,7 @@ MATH_DLL DirectX::XMFLOAT3 KH_MATH::XMLoadFloat3(const DXVector3& _v3)
 	return resultF;
 }
 
-MATH_DLL DirectX::XMVECTOR KH_MATH::XMStoreFloat4(const DXVector4& _v4)
+MATH_DLL DirectX::XMVECTOR KH_MATH::XMLoadVector4(const DXVector4& _v4)
 {
 	DirectX::XMVECTOR resultV;
 
@@ -1130,7 +1355,7 @@ MATH_DLL DirectX::XMFLOAT4 KH_MATH::XMLoadFloat4(const DXVector4& _v4)
 	return resultF;
 }
 
-MATH_DLL DirectX::XMMATRIX KH_MATH::XMStoreFloat4X4(const DXMatrix4X4& _dxm)
+MATH_DLL DirectX::XMMATRIX KH_MATH::XMLoadFloat4X4(const DXMatrix4X4& _dxm)
 {
 	DirectX::XMMATRIX resultM;
 

@@ -17,7 +17,7 @@ public:
 	float			m_time;
 	DXVector3		m_rot;
 	float			m_angle;
-	DirectX::SimpleMath::Quaternion		m_rotQT_accumulation;		// 상대변량이기 때문에 이전 값들과 누적해서 가지고 있는다 (즉 지금까지의 절대량으로 변환한다)
+	DXQuaternion		m_rotQT_accumulation;		// 상대변량이기 때문에 이전 값들과 누적해서 가지고 있는다 (즉 지금까지의 절대량으로 변환한다)
 };
 
 class PARSER_DLL CAnimation_scl
@@ -27,7 +27,7 @@ public:
 	DXVector3		m_scale;
 	DXVector3		m_scaleaxis;
 	float			m_scaleaxisang;
-	DirectX::SimpleMath::Quaternion		m_scalerotQT_accumulation;
+	DXQuaternion		m_scalerotQT_accumulation;
 };
 
 ///--------------------------------------------------

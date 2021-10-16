@@ -43,12 +43,11 @@ struct MATH_DLL DXVector2
 	operator DirectX::SimpleMath::Vector2() { return ConvertVector2(); }
 	operator DirectX::XMFLOAT2() { return ConvertXMFLOAT2(); }
 
-	// 변환 함수
+	// 변환 함수 (Conversion Function)
 	DirectX::SimpleMath::Vector2 ConvertVector2();
 	DirectX::XMFLOAT2 ConvertXMFLOAT2();
 
 	void Rotate(float angle) noexcept;
-
 
 	static DXVector2 Zero();
 };
@@ -93,17 +92,16 @@ struct MATH_DLL DXVector3
 	operator DirectX::XMFLOAT4()			{ return ConvertXMFLOAT4(); }
 	operator DirectX::XMFLOAT3()			{ return ConvertXMFLOAT3(); }
 
+	// 변환 함수 (Conversion Function)
+	DirectX::SimpleMath::Vector4 ConvertVector4();
+	DirectX::XMVECTOR ConvertXMVECTOR();
+	DirectX::XMFLOAT4 ConvertXMFLOAT4();
+	DirectX::XMFLOAT3 ConvertXMFLOAT3();
 	
 	DXVector3	Normalize() noexcept;
 	DXVector3	Clamp(const DXVector3& v3min, const DXVector3& v3max) noexcept;
 	DXVector3	Cross(const DXVector3& v3) noexcept;
 	float		Dot(const DXVector3& v3) noexcept;
-
-	// 변환 함수
-	DirectX::SimpleMath::Vector4 ConvertVector4();
-	DirectX::XMVECTOR ConvertXMVECTOR();
-	DirectX::XMFLOAT4 ConvertXMFLOAT4();
-	DirectX::XMFLOAT3 ConvertXMFLOAT3();
 
 	static DXVector3 Reflect(const DXVector3& ivec, const DXVector3& nvec) noexcept;
 	static DXVector3 Transform(const DXVector3& v, const DXQuaternion& quat) noexcept;
@@ -149,21 +147,20 @@ struct MATH_DLL DXVector4
 	operator DirectX::XMFLOAT4() { return ConvertXMFLOAT4(); }
 	operator DirectX::XMFLOAT3() { return ConvertXMFLOAT3(); }
 
+	// 변환 함수 (Conversion Function)
+	DirectX::XMVECTOR ConvertXMVECTOR();
+	DirectX::XMFLOAT4 ConvertXMFLOAT4();
+	DirectX::XMFLOAT3 ConvertXMFLOAT3();
+
 	DXVector4	Normalize3() noexcept;
 	DXVector4	Normalize() noexcept;
 	DXVector4	Clamp(const DXVector4& v4min, const DXVector4& v4max) noexcept;
 	DXVector4	Cross(const DXVector4& v4) noexcept;
 	float		Dot(const DXVector4& v4) noexcept;
 
-	// 변환 함수
-	DirectX::XMVECTOR ConvertXMVECTOR();
-	DirectX::XMFLOAT4 ConvertXMFLOAT4();
-	DirectX::XMFLOAT3 ConvertXMFLOAT3();
-
 	static DXVector4 Reflect(const DXVector4& ivec, const DXVector4& nvec) noexcept;
 	static DXVector4 Transform(const DXVector4& v, const DXQuaternion& quat) noexcept;
 	static DXVector4 Transform(const DXVector4& v, const DXMatrix4X4& m) noexcept;
-	static DXVector4 TransformNormal(const DXVector4& v, const DXMatrix4X4& m) noexcept;
 	static DXVector4 Zero();
 	static DXVector4 One();
 };
@@ -226,13 +223,65 @@ struct MATH_DLL DXMatrix4X4
 	operator DirectX::XMFLOAT4X4()			{ return ConvertXMFLOAT4X4(); }
 	operator DirectX::XMMATRIX()			{ return ConvertXMMATRIX(); }
 
-	DXMatrix4X4 Inverse();
-	DXVector4 GetRow(int row);
-
-	// 변환 함수
+	// 변환 함수 (Conversion Function)
 	DirectX::SimpleMath::Matrix ConvertMatrix();
 	DirectX::XMFLOAT4X4 ConvertXMFLOAT4X4();
 	DirectX::XMMATRIX ConvertXMMATRIX();
+
+	// Matrix Properties
+	DXVector3 Up() const noexcept { return DXVector3(_21, _22, _23); }
+	void Up(const DXVector3& v) noexcept { _21 = v.x; _22 = v.y; _23 = v.z; }
+
+	DXVector3 Down() const  noexcept { return DXVector3(-_21, -_22, -_23); }
+	void Down(const DXVector3& v) noexcept { _21 = -v.x; _22 = -v.y; _23 = -v.z; }
+
+	DXVector3 Right() const noexcept { return DXVector3(_11, _12, _13); }
+	void Right(const DXVector3& v) noexcept { _11 = v.x; _12 = v.y; _13 = v.z; }
+
+	DXVector3 Left() const noexcept { return DXVector3(-_11, -_12, -_13); }
+	void Left(const DXVector3& v) noexcept { _11 = -v.x; _12 = -v.y; _13 = -v.z; }
+
+	DXVector3 Forward() const noexcept { return DXVector3(-_31, -_32, -_33); }
+	void Forward(const DXVector3& v) noexcept { _31 = -v.x; _32 = -v.y; _33 = -v.z; }
+
+	DXVector3 Backward() const noexcept { return DXVector3(_31, _32, _33); }
+	void Backward(const DXVector3& v) noexcept { _31 = v.x; _32 = v.y; _33 = v.z; }
+	
+	DXVector3 Translation() const  noexcept { return DXVector3(_41, _42, _43); }
+	void Translation(const DXVector3& v) noexcept { _41 = v.x; _42 = v.y; _43 = v.z; }
+	
+	// Matrix Function
+	bool Decompose(DXVector3& scale, DXQuaternion& rotation, DXVector3& translation) noexcept;
+	float Determinant() const noexcept;
+	DXMatrix4X4 Transpose() const noexcept;
+	DXMatrix4X4 Inverse() const noexcept;
+	DXVector4 GetRow(int row) const noexcept;
+
+	// Static Function
+	static DXMatrix4X4 CreateTranslation(const DXVector3& position) noexcept;
+	static DXMatrix4X4 CreateTranslation(float x, float y, float z) noexcept;
+
+	static DXMatrix4X4 CreateScale(const DXVector3& scales) noexcept;
+	static DXMatrix4X4 CreateScale(float xs, float ys, float zs) noexcept;
+	static DXMatrix4X4 CreateScale(float scale) noexcept;
+
+	static DXMatrix4X4 CreateRotationX(float radians) noexcept;
+	static DXMatrix4X4 CreateRotationY(float radians) noexcept;
+	static DXMatrix4X4 CreateRotationZ(float radians) noexcept;
+
+	static DXMatrix4X4 CreateFromAxisAngle(const DXVector3& axis, float angle) noexcept;
+
+	static DXMatrix4X4 CreatePerspectiveFieldOfView(float fov, float aspectRatio, float nearPlane, float farPlane) noexcept;
+	static DXMatrix4X4 CreatePerspective(float width, float height, float nearPlane, float farPlane) noexcept;
+	static DXMatrix4X4 CreatePerspectiveOffCenter(float left, float right, float bottom, float top, float nearPlane, float farPlane) noexcept;
+	static DXMatrix4X4 CreateOrthographic(float width, float height, float zNearPlane, float zFarPlane) noexcept;
+	static DXMatrix4X4 CreateOrthographicOffCenter(float left, float right, float bottom, float top, float zNearPlane, float zFarPlane) noexcept;
+
+	static DXMatrix4X4 CreateLookAt(const DXVector3& eye, const DXVector3& target, const DXVector3& up) noexcept;
+	static DXMatrix4X4 CreateWorld(const DXVector3& position, const DXVector3& forward, const DXVector3& up) noexcept;
+
+	static DXMatrix4X4 CreateFromQuaternion(const DXQuaternion& rotation) noexcept;
+	static DXMatrix4X4 CreateFromYawPitchRoll(float yaw, float pitch, float roll) noexcept;
 };
 
 struct MATH_DLL DXQuaternion : public DXVector4
@@ -289,11 +338,11 @@ struct MATH_DLL DXQuaternion : public DXVector4
 
 namespace KH_MATH
 {
-	MATH_DLL DirectX::XMVECTOR XMStoreFloat3(const DXVector3& _v3);
+	MATH_DLL DirectX::XMVECTOR XMLoadVector3(const DXVector3& _v3);
 	MATH_DLL DirectX::XMFLOAT3 XMLoadFloat3(const DXVector3& _v3);
-	MATH_DLL DirectX::XMVECTOR XMStoreFloat4(const DXVector4& _v4);
+	MATH_DLL DirectX::XMVECTOR XMLoadVector4(const DXVector4& _v4);
 	MATH_DLL DirectX::XMFLOAT4 XMLoadFloat4(const DXVector4& _v4);
-	MATH_DLL DirectX::XMMATRIX XMStoreFloat4X4(const DXMatrix4X4& _v4);
+	MATH_DLL DirectX::XMMATRIX XMLoadFloat4X4(const DXMatrix4X4& _v4);
 
 	MATH_DLL DXVector3 BezierCurveThree(DXVector3& _p1, DXVector3& _p2, DXVector3& _p3, float t);
 	MATH_DLL DXVector3 BezierCurveFour(DXVector3& _p1, DXVector3& _p2, DXVector3& _p3, DXVector3& _p4, float t);
