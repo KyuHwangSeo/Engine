@@ -33,14 +33,14 @@
     <ClCompile Include="CASEParser.cpp">
       <Filter>소스 파일\ASE</Filter>
     </ClCompile>
-    <ClCompile Include="CParsingDataClass.cpp">
-      <Filter>소스 파일\ASE</Filter>
-    </ClCompile>
     <ClCompile Include="FBXParser.cpp">
       <Filter>소스 파일\FBX</Filter>
     </ClCompile>
     <ClCompile Include="BoneWeights.cpp">
       <Filter>소스 파일\FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="CParsingDataClass.cpp">
+      <Filter>소스 파일\ExportData</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -51,9 +51,6 @@
       <Filter>소스 파일\ASE</Filter>
     </ClInclude>
     <ClInclude Include="CASEParser.h">
-      <Filter>소스 파일\ASE</Filter>
-    </ClInclude>
-    <ClInclude Include="CParsingDataClass.h">
       <Filter>소스 파일\ASE</Filter>
     </ClInclude>
     <ClInclude Include="KHParser.h">
@@ -70,6 +67,9 @@
     </ClInclude>
     <ClInclude Include="ParserDLL.h">
       <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CParsingDataClass.h">
+      <Filter>소스 파일\ExportData</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

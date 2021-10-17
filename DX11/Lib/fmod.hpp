@@ -87,7 +87,7 @@ namespace FMOD
         FMOD_RESULT F_API loadPlugin             (const char *filename, unsigned int *handle, unsigned int priority = 0);
         FMOD_RESULT F_API unloadPlugin           (unsigned int handle);
         FMOD_RESULT F_API getNumPlugins          (FMOD_PLUGINTYPE plugintype, int *numplugins);
-        FMOD_RESULT F_API getPluginHandle        (FMOD_PLUGINTYPE plugintype, int index, unsigned int *handle);
+        FMOD_RESULT F_API getPluginHandle        (FMOD_PLUGINTYPE plugintype, int m_Index, unsigned int *handle);
         FMOD_RESULT F_API getPluginInfo          (unsigned int handle, FMOD_PLUGINTYPE *plugintype, char *name, int namelen, unsigned int *version);
         FMOD_RESULT F_API setOutputByPlugin      (unsigned int handle);
         FMOD_RESULT F_API getOutputByPlugin      (unsigned int *handle);
@@ -213,15 +213,15 @@ namespace FMOD
         FMOD_RESULT F_API get3DConeSettings      (float *insideconeangle, float *outsideconeangle, float *outsidevolume);
         FMOD_RESULT F_API set3DCustomRolloff     (FMOD_VECTOR *points, int numpoints);
         FMOD_RESULT F_API get3DCustomRolloff     (FMOD_VECTOR **points, int *numpoints);
-        FMOD_RESULT F_API setSubSound            (int index, Sound *subsound);
-        FMOD_RESULT F_API getSubSound            (int index, Sound **subsound);
+        FMOD_RESULT F_API setSubSound            (int m_Index, Sound *subsound);
+        FMOD_RESULT F_API getSubSound            (int m_Index, Sound **subsound);
         FMOD_RESULT F_API setSubSoundSentence    (int *subsoundlist, int numsubsounds);
         FMOD_RESULT F_API getName                (char *name, int namelen);
         FMOD_RESULT F_API getLength              (unsigned int *length, FMOD_TIMEUNIT lengthtype);
         FMOD_RESULT F_API getFormat              (FMOD_SOUND_TYPE *type, FMOD_SOUND_FORMAT *format, int *channels, int *bits);
         FMOD_RESULT F_API getNumSubSounds        (int *numsubsounds);
         FMOD_RESULT F_API getNumTags             (int *numtags, int *numtagsupdated);
-        FMOD_RESULT F_API getTag                 (const char *name, int index, FMOD_TAG *tag);
+        FMOD_RESULT F_API getTag                 (const char *name, int m_Index, FMOD_TAG *tag);
         FMOD_RESULT F_API getOpenState           (FMOD_OPENSTATE *openstate, unsigned int *percentbuffered, bool *starving, bool *diskbusy);
         FMOD_RESULT F_API readData               (void *buffer, unsigned int lenbytes, unsigned int *read);
         FMOD_RESULT F_API seekData               (unsigned int pcm);
@@ -231,7 +231,7 @@ namespace FMOD
 
         // Synchronization point API.  These points can come from markers embedded in wav files, and can also generate channel callbacks.        
         FMOD_RESULT F_API getNumSyncPoints       (int *numsyncpoints);
-        FMOD_RESULT F_API getSyncPoint           (int index, FMOD_SYNCPOINT **point);
+        FMOD_RESULT F_API getSyncPoint           (int m_Index, FMOD_SYNCPOINT **point);
         FMOD_RESULT F_API getSyncPointInfo       (FMOD_SYNCPOINT *point, char *name, int namelen, unsigned int *offset, FMOD_TIMEUNIT offsettype);
         FMOD_RESULT F_API addSyncPoint           (unsigned int offset, FMOD_TIMEUNIT offsettype, const char *name, FMOD_SYNCPOINT **point);
         FMOD_RESULT F_API deleteSyncPoint        (FMOD_SYNCPOINT *point);
@@ -336,7 +336,7 @@ namespace FMOD
         FMOD_RESULT F_API getCurrentSound        (Sound **gSound);
         FMOD_RESULT F_API getSpectrum            (float *spectrumarray, int numvalues, int channeloffset, FMOD_DSP_FFT_WINDOW windowtype);
         FMOD_RESULT F_API getWaveData            (float *wavearray, int numvalues, int channeloffset);
-        FMOD_RESULT F_API getIndex               (int *index);
+        FMOD_RESULT F_API getIndex               (int *m_Index);
                                                 
         // Functions also found in Sound class but here they can be set per channel.
         FMOD_RESULT F_API setMode                (FMOD_MODE mode);
@@ -391,7 +391,7 @@ namespace FMOD
         // Nested channel groups.
         FMOD_RESULT F_API addGroup                (ChannelGroup *group);
         FMOD_RESULT F_API getNumGroups            (int *numgroups);
-        FMOD_RESULT F_API getGroup                (int index, ChannelGroup **group);
+        FMOD_RESULT F_API getGroup                (int m_Index, ChannelGroup **group);
         FMOD_RESULT F_API getParentGroup          (ChannelGroup **group);
 
         // DSP functionality only for channel groups playing sounds created with FMOD_SOFTWARE.
@@ -401,7 +401,7 @@ namespace FMOD
         // Information only functions.
         FMOD_RESULT F_API getName                 (char *name, int namelen);
         FMOD_RESULT F_API getNumChannels          (int *numchannels);
-        FMOD_RESULT F_API getChannel              (int index, Channel **channel);
+        FMOD_RESULT F_API getChannel              (int m_Index, Channel **channel);
         FMOD_RESULT F_API getSpectrum             (float *spectrumarray, int numvalues, int channeloffset, FMOD_DSP_FFT_WINDOW windowtype);
         FMOD_RESULT F_API getWaveData             (float *wavearray, int numvalues, int channeloffset);
 
@@ -440,7 +440,7 @@ namespace FMOD
         // Information only functions.
         FMOD_RESULT F_API getName                (char *name, int namelen);
         FMOD_RESULT F_API getNumSounds           (int *numsounds);
-        FMOD_RESULT F_API getSound               (int index, Sound **gSound);
+        FMOD_RESULT F_API getSound               (int m_Index, Sound **gSound);
         FMOD_RESULT F_API getNumPlaying          (int *numplaying);
 
         // Userdata set/get.
@@ -471,8 +471,8 @@ namespace FMOD
         FMOD_RESULT F_API remove                 ();
         FMOD_RESULT F_API getNumInputs           (int *numinputs);
         FMOD_RESULT F_API getNumOutputs          (int *numoutputs);
-        FMOD_RESULT F_API getInput               (int index, DSP **gInput, DSPConnection **inputconnection);
-        FMOD_RESULT F_API getOutput              (int index, DSP **output, DSPConnection **outputconnection);
+        FMOD_RESULT F_API getInput               (int m_Index, DSP **gInput, DSPConnection **inputconnection);
+        FMOD_RESULT F_API getOutput              (int m_Index, DSP **output, DSPConnection **outputconnection);
 
         // DSP unit control.
         FMOD_RESULT F_API setActive              (bool active);
@@ -485,10 +485,10 @@ namespace FMOD
 		
 
         // DSP parameter control.
-        FMOD_RESULT F_API setParameter           (int index, float value);
-        FMOD_RESULT F_API getParameter           (int index, float *value, char *valuestr, int valuestrlen);
+        FMOD_RESULT F_API setParameter           (int m_Index, float value);
+        FMOD_RESULT F_API getParameter           (int m_Index, float *value, char *valuestr, int valuestrlen);
         FMOD_RESULT F_API getNumParameters       (int *numparams);
-        FMOD_RESULT F_API getParameterInfo       (int index, char *name, char *label, char *description, int descriptionlen, float *min, float *max);
+        FMOD_RESULT F_API getParameterInfo       (int m_Index, char *name, char *label, char *description, int descriptionlen, float *min, float *max);
         FMOD_RESULT F_API showConfigDialog       (void *hwnd, bool show);
         
         // DSP attributes.        
@@ -550,11 +550,11 @@ namespace FMOD
         FMOD_RESULT F_API addPolygon             (float directocclusion, float reverbocclusion, bool doublesided, int numvertices, const FMOD_VECTOR *vertices, int *polygonindex);
         FMOD_RESULT F_API getNumPolygons         (int *numpolygons); 
         FMOD_RESULT F_API getMaxPolygons         (int *maxpolygons, int *maxvertices);
-        FMOD_RESULT F_API getPolygonNumVertices  (int index, int *numvertices);
-        FMOD_RESULT F_API setPolygonVertex       (int index, int vertexindex, const FMOD_VECTOR *vertex); 
-        FMOD_RESULT F_API getPolygonVertex       (int index, int vertexindex, FMOD_VECTOR *vertex);
-        FMOD_RESULT F_API setPolygonAttributes   (int index, float directocclusion, float reverbocclusion, bool doublesided); 
-        FMOD_RESULT F_API getPolygonAttributes   (int index, float *directocclusion, float *reverbocclusion, bool *doublesided); 
+        FMOD_RESULT F_API getPolygonNumVertices  (int m_Index, int *numvertices);
+        FMOD_RESULT F_API setPolygonVertex       (int m_Index, int vertexindex, const FMOD_VECTOR *vertex); 
+        FMOD_RESULT F_API getPolygonVertex       (int m_Index, int vertexindex, FMOD_VECTOR *vertex);
+        FMOD_RESULT F_API setPolygonAttributes   (int m_Index, float directocclusion, float reverbocclusion, bool doublesided); 
+        FMOD_RESULT F_API getPolygonAttributes   (int m_Index, float *directocclusion, float *reverbocclusion, bool *doublesided); 
 
         // Object manipulation.
         FMOD_RESULT F_API setActive              (bool active);                                                 

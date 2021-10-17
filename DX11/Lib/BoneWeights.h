@@ -1,4 +1,12 @@
 #pragma once
+struct Weight
+{
+	Weight(int num, float weight) : m_BoneNumber(num), m_BoneWeight(weight) {}
+	
+	int			m_BoneNumber;		// Bone IndexNumber
+	float		m_BoneWeight;		// Bone Weight
+};
+
 class BoneWeights
 {
 public:
@@ -7,7 +15,7 @@ public:
 
 public:
 	void AddBoneWeight(int boneIndex, float boneWeight);
-	void AddBoneWeight(std::pair<int, float> boneWeightPair);
+	void AddBoneWeight(Weight* boneWeightPair);
 	void AddBoneWeights(const BoneWeights& boneWeights);
 
 	void Validate();
@@ -15,6 +23,6 @@ public:
 
 public:
 	float sumWeight;
-	std::vector<std::pair<int, float>> m_BoneWeights;
+	std::vector<Weight*> m_BoneWeights;
 };
 

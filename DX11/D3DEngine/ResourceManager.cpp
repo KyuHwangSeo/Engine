@@ -23,6 +23,7 @@ void ResourceManager::Initialize()
 	m_ModelRoute = "../Resource/Models/";
 
 	m_FBXParser = new FBXParser();
+	m_FBXParser->Initalize();
 
 	// Sampler 생성
 	CreateSamplerState();
@@ -216,8 +217,8 @@ void ResourceManager::LoadData_ASE(std::string objectName, std::string fileName)
 	// Mesh Object Buffer 생성
 	for (size_t i = 0; i < newASE->m_MeshList.size(); i++)
 	{
-		ParserData::Mesh* mesh = newASE->m_MeshList[i];
-		std::string key = objectName + " " + mesh->m_nodename;
+		ParserData::ASEMesh* mesh = newASE->m_MeshList[i];
+		std::string key = objectName + " " + mesh->m_NodeName;
 
 		/// 스키닝 오브젝트 유무 체크..
 		if (newASE->m_MeshList[i]->m_IsSkinningObject)
@@ -235,7 +236,7 @@ void ResourceManager::LoadData_ASE(std::string objectName, std::string fileName)
 			LoadData_Mesh(objectName, key, mesh);
 		}
 
-		if (mesh->m_animation)
+		if (mesh->m_Animation)
 		{
 			LoadData_Animation(objectName, key, mesh);
 		}
@@ -256,10 +257,10 @@ void ResourceManager::LoadData_ASE_Animation(std::string objectName, std::string
 	for (size_t i = 0; i < newASE->m_MeshList.size(); i++)
 	{
 		ParserData::Mesh* mesh = newASE->m_MeshList[i];
-		std::string key = objectName + " " + mesh->m_nodename;
+		std::string key = objectName + " " + mesh->m_NodeName;
 
 		// Animation Data 저장..
-		if (mesh->m_isAnimation)
+		if (mesh->m_Animation)
 		{
 			LoadData_Animation(objectName, key, mesh);
 		}
@@ -277,7 +278,7 @@ void ResourceManager::LoadData_FBX(std::string objectName, std::string fileName,
 	for (size_t i = 0; i < newFBX->m_MeshList.size(); i++)
 	{
 		ParserData::Mesh* mesh = newFBX->m_MeshList[i];
-		std::string key = objectName + " " + mesh->m_nodename;
+		std::string key = objectName + " " + mesh->m_NodeName;
 
 		/// 스키닝 오브젝트 유무 체크..
 		if (newFBX->m_MeshList[i]->m_IsSkinningObject)
@@ -291,7 +292,7 @@ void ResourceManager::LoadData_FBX(std::string objectName, std::string fileName,
 			LoadData_Mesh(objectName, key, mesh);
 		}
 
-		if (mesh->m_animation)
+		if (mesh->m_Animation)
 		{
 			LoadData_Animation(objectName, key, mesh);
 		}
@@ -311,10 +312,10 @@ void ResourceManager::LoadData_FBX_Animation(std::string objectName, std::string
 	for (size_t i = 0; i < newFBX->m_MeshList.size(); i++)
 	{
 		ParserData::Mesh* mesh = newFBX->m_MeshList[i];
-		std::string key = objectName + " " + mesh->m_nodename;
+		std::string key = objectName + " " + mesh->m_NodeName;
 
 		// Animation Data 저장..
-		if (mesh->m_isAnimation)
+		if (mesh->m_Animation)
 		{
 			LoadData_Animation(objectName, key, mesh);
 		}
@@ -377,7 +378,7 @@ void ResourceManager::LoadData_MaterialList(std::string objectName)
 	for (ParserData::CMaterial* mat : mat_list)
 	{
 		// 오브젝트별 Material을 리스트에 담기위해 키 재설정..
-		mat->m_material_name = objectName + " " + mat->m_material_name;
+		mat->m_MaterialName = objectName + " " + mat->m_MaterialName;
 
 		// Material 생성..
 		LoadData_Material(mat);
@@ -385,7 +386,7 @@ void ResourceManager::LoadData_MaterialList(std::string objectName)
 		// Material에 적용된 Texture 생성..
 		for (ParserData::MaterialMap* tex : mat->m_MapList)
 		{
-			LoadData_Texture(objectName, tex->m_bitmap.c_str(), tex);
+			LoadData_Texture(objectName, tex->m_BitMap, tex);
 		}
 	}
 }
@@ -396,12 +397,12 @@ void ResourceManager::LoadData_Material(ParserData::CMaterial* materialData)
 	/// 임시로 Reflect 속성과 w 값을 넣어두었으니 나중에 변경하도록 하자..
 
 	MaterialData newMaterial;
-	newMaterial.Ambient = XMFLOAT4(materialData->m_material_ambient.x, materialData->m_material_ambient.y, materialData->m_material_ambient.z, 1.0f);
-	newMaterial.Diffuse = XMFLOAT4(materialData->m_material_diffuse.x, materialData->m_material_diffuse.y, materialData->m_material_diffuse.z, 1.0f);
-	newMaterial.Specular = XMFLOAT4(materialData->m_material_specular.x, materialData->m_material_specular.y, materialData->m_material_specular.z, 16.0f);
+	newMaterial.Ambient = XMFLOAT4(materialData->m_Material_Ambient.x, materialData->m_Material_Ambient.y, materialData->m_Material_Ambient.z, 1.0f);
+	newMaterial.Diffuse = XMFLOAT4(materialData->m_Material_Diffuse.x, materialData->m_Material_Diffuse.y, materialData->m_Material_Diffuse.z, 1.0f);
+	newMaterial.Specular = XMFLOAT4(materialData->m_Material_Specular.x, materialData->m_Material_Specular.y, materialData->m_Material_Specular.z, 16.0f);
 	newMaterial.Reflect = XMFLOAT4(0.4f, 0.4f, 0.4f, 1.0f);
 
-	m_MaterialList.insert(make_pair(materialData->m_material_name, newMaterial));
+	m_MaterialList.insert(make_pair(materialData->m_MaterialName, newMaterial));
 }
 
 void ResourceManager::LoadData_Axis(std::string objectName, float length)
@@ -1052,23 +1053,23 @@ void ResourceManager::LoadData_SsaoQuad()
 {
 	VertexBuffer* newBuf = new VertexBuffer();
 
-	TexVertex v[4];
+	TexVertex m_V[4];
 
-	v[0].Pos = XMFLOAT3(-1.0f, -1.0f, 0.0f);
-	v[1].Pos = XMFLOAT3(-1.0f, +1.0f, 0.0f);
-	v[2].Pos = XMFLOAT3(+1.0f, +1.0f, 0.0f);
-	v[3].Pos = XMFLOAT3(+1.0f, -1.0f, 0.0f);
+	m_V[0].Pos = XMFLOAT3(-1.0f, -1.0f, 0.0f);
+	m_V[1].Pos = XMFLOAT3(-1.0f, +1.0f, 0.0f);
+	m_V[2].Pos = XMFLOAT3(+1.0f, +1.0f, 0.0f);
+	m_V[3].Pos = XMFLOAT3(+1.0f, -1.0f, 0.0f);
 
 	// Store far plane frustum corner indices in Normal.x slot.
-	v[0].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	v[1].Normal = XMFLOAT3(1.0f, 0.0f, 0.0f);
-	v[2].Normal = XMFLOAT3(2.0f, 0.0f, 0.0f);
-	v[3].Normal = XMFLOAT3(3.0f, 0.0f, 0.0f);
+	m_V[0].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	m_V[1].Normal = XMFLOAT3(1.0f, 0.0f, 0.0f);
+	m_V[2].Normal = XMFLOAT3(2.0f, 0.0f, 0.0f);
+	m_V[3].Normal = XMFLOAT3(3.0f, 0.0f, 0.0f);
 
-	v[0].Tex = XMFLOAT2(0.0f, 1.0f);
-	v[1].Tex = XMFLOAT2(0.0f, 0.0f);
-	v[2].Tex = XMFLOAT2(1.0f, 0.0f);
-	v[3].Tex = XMFLOAT2(1.0f, 1.0f);
+	m_V[0].Tex = XMFLOAT2(0.0f, 1.0f);
+	m_V[1].Tex = XMFLOAT2(0.0f, 0.0f);
+	m_V[2].Tex = XMFLOAT2(1.0f, 0.0f);
+	m_V[3].Tex = XMFLOAT2(1.0f, 1.0f);
 
 	UINT indices[6] =
 	{
@@ -1088,7 +1089,7 @@ void ResourceManager::LoadData_SsaoQuad()
 	vbd.StructureByteStride = 0;
 
 	D3D11_SUBRESOURCE_DATA vinitData;
-	vinitData.pSysMem = v;
+	vinitData.pSysMem = m_V;
 
 	HR(m_Device->CreateBuffer(&vbd, &vinitData, &newBuf->VB));
 
@@ -1112,17 +1113,17 @@ void ResourceManager::LoadData_UI()
 {
 	VertexBuffer* newBuf = new VertexBuffer();
 
-	PosTex v[4];
+	PosTex m_V[4];
 
-	v[0].Pos = DXVector3(1.0f, 0.0f, 0.0f);
-	v[1].Pos = DXVector3(0.0f, 1.0f, 0.0f);
-	v[2].Pos = DXVector3(0.0f, 0.0f, 0.0f);
-	v[3].Pos = DXVector3(1.0f, 1.0f, 0.0f);
+	m_V[0].Pos = DXVector3(1.0f, 0.0f, 0.0f);
+	m_V[1].Pos = DXVector3(0.0f, 1.0f, 0.0f);
+	m_V[2].Pos = DXVector3(0.0f, 0.0f, 0.0f);
+	m_V[3].Pos = DXVector3(1.0f, 1.0f, 0.0f);
 
-	v[0].Tex = DXVector2(1.0f, 0.0f);
-	v[1].Tex = DXVector2(0.0f, 1.0f);
-	v[2].Tex = DXVector2(0.0f, 0.0f);
-	v[3].Tex = DXVector2(1.0f, 1.0f);
+	m_V[0].Tex = DXVector2(1.0f, 0.0f);
+	m_V[1].Tex = DXVector2(0.0f, 1.0f);
+	m_V[2].Tex = DXVector2(0.0f, 0.0f);
+	m_V[3].Tex = DXVector2(1.0f, 1.0f);
 
 	UINT indices[6] =
 	{
@@ -1142,7 +1143,7 @@ void ResourceManager::LoadData_UI()
 	vbd.StructureByteStride = 0;
 
 	D3D11_SUBRESOURCE_DATA vinitData;
-	vinitData.pSysMem = v;
+	vinitData.pSysMem = m_V;
 
 	HR(m_Device->CreateBuffer(&vbd, &vinitData, &newBuf->VB));
 
@@ -1171,7 +1172,7 @@ void ResourceManager::LoadData_ASE_Gizmos(std::string objectName, std::string fi
 	newASE->Load((LPSTR)fileName.c_str());
 
 	// Mesh Object Buffer 생성
-	for (size_t index = 0; index < newASE->m_MeshList.size(); index++)
+	for (size_t m_Index = 0; m_Index < newASE->m_MeshList.size(); m_Index++)
 	{
 		VertexBuffer* newBuf = new VertexBuffer();
 
@@ -1181,13 +1182,13 @@ void ResourceManager::LoadData_ASE_Gizmos(std::string objectName, std::string fi
 		DXVector3 vMin(+MathHelper::Infinity, +MathHelper::Infinity, +MathHelper::Infinity);
 		DXVector3 vMax(-MathHelper::Infinity, -MathHelper::Infinity, -MathHelper::Infinity);
 
-		vcount = (UINT)newASE->m_MeshList[index]->m_opt_vertex.size();
+		vcount = (UINT)newASE->m_MeshList[m_Index]->m_Final_Vertex.size();
 
 		std::vector<Vertex> vertices(vcount);
 
 		for (UINT i = 0; i < vcount; i++)
 		{
-			vertices[i].Pos = newASE->m_MeshList[index]->m_opt_vertex[i]->m_Pos;
+			vertices[i].Pos = newASE->m_MeshList[m_Index]->m_Final_Vertex[i]->m_Pos;
 
 			vertices[i].Color = DXVector4(1.0f, 1.0f, 0.0f, 1.0f);
 
@@ -1202,15 +1203,15 @@ void ResourceManager::LoadData_ASE_Gizmos(std::string objectName, std::string fi
 		newBuf->m_MeshBox.Center = (vMin + vMax) * 0.5f;
 		newBuf->m_MeshBox.Extents = (vMax - vMin) * 0.5f;
 
-		tcount = newASE->m_MeshList[index]->m_mesh_numfaces;
+		tcount = newASE->m_MeshList[m_Index]->m_Mesh_NumFaces;
 
 		newBuf->IndexCount = 3 * tcount;
 		std::vector<UINT> indices(newBuf->IndexCount);
 		for (UINT i = 0; i < tcount; ++i)
 		{
-			indices[i * 3 + 0] = newASE->m_MeshList[index]->m_opt_index[i].index[0];
-			indices[i * 3 + 1] = newASE->m_MeshList[index]->m_opt_index[i].index[1];
-			indices[i * 3 + 2] = newASE->m_MeshList[index]->m_opt_index[i].index[2];
+			indices[i * 3 + 0] = newASE->m_MeshList[m_Index]->m_Final_Index[i].m_Index[0];
+			indices[i * 3 + 1] = newASE->m_MeshList[m_Index]->m_Final_Index[i].m_Index[1];
+			indices[i * 3 + 2] = newASE->m_MeshList[m_Index]->m_Final_Index[i].m_Index[2];
 		}
 
 		newBuf->m_MeshIndices = indices;
@@ -1241,8 +1242,8 @@ void ResourceManager::LoadData_ASE_Gizmos(std::string objectName, std::string fi
 		iinitData.pSysMem = &indices[0];
 		HR(m_Device->CreateBuffer(&ibd, &iinitData, &newBuf->IB));
 
-		m_MeshList.insert(make_pair(newASE->m_MeshList[index]->m_nodename, newASE->m_MeshList[index]));
-		m_VertexList.insert(make_pair(newASE->m_MeshList[index]->m_nodename, newBuf));
+		m_MeshList.insert(make_pair(newASE->m_MeshList[m_Index]->m_NodeName, newASE->m_MeshList[m_Index]));
+		m_VertexList.insert(make_pair(newASE->m_MeshList[m_Index]->m_NodeName, newBuf));
 	}
 
 	m_ASEParserList.insert(make_pair(objectName, newASE));
@@ -1255,7 +1256,7 @@ void ResourceManager::LoadData_SkinMesh(std::string objectName, std::string key,
 		return;
 
 	// Vertex Data가 없는 Mesh도 저장..
-	if (meshData->m_opt_vertex.empty())
+	if (meshData->m_Final_Vertex.empty())
 	{
 		m_MeshList.insert(make_pair(key, meshData));
 		return;
@@ -1269,42 +1270,42 @@ void ResourceManager::LoadData_SkinMesh(std::string objectName, std::string key,
 	UINT vcount = 0;
 	UINT tcount = 0;
 
-	vcount = (UINT)meshData->m_opt_vertex.size();
+	vcount = (UINT)meshData->m_Final_Vertex.size();
 
 	std::vector<SkinVertex> vertices(vcount);
 
 	for (UINT i = 0; i < vcount; i++)
 	{
-		vertices[i].Pos = meshData->m_opt_vertex[i]->m_Pos;
+		vertices[i].Pos = meshData->m_Final_Vertex[i]->m_Pos;
 
-		vertices[i].Normal = meshData->m_opt_vertex[i]->m_Normal;
+		vertices[i].Normal = meshData->m_Final_Vertex[i]->m_Normal;
 
-		vertices[i].Tex.x = meshData->m_opt_vertex[i]->u;
-		vertices[i].Tex.y = meshData->m_opt_vertex[i]->v;
+		vertices[i].Tex.x = meshData->m_Final_Vertex[i]->m_U;
+		vertices[i].Tex.y = meshData->m_Final_Vertex[i]->m_V;
 
 		/// 가중치, 본 인덱스 삽입!
-		for (size_t j = 0; j < meshData->m_opt_vertex[i]->m_boneIndices.size(); j++)
+		for (size_t j = 0; j < meshData->m_Final_Vertex[i]->m_BoneIndices.size(); j++)
 		{
 			if (j < 4)
 			{
-				vertices[i].BoneIndex1[j] = meshData->m_opt_vertex[i]->m_boneIndices[j];
-				vertices[i].BoneWeight1[j] = meshData->m_opt_vertex[i]->m_boneWeights[j];
+				vertices[i].BoneIndex1[j] = meshData->m_Final_Vertex[i]->m_BoneIndices[j];
+				vertices[i].BoneWeight1[j] = meshData->m_Final_Vertex[i]->m_BoneWeights[j];
 			}
 			else if (j < 8)
 			{
-				vertices[i].BoneIndex2[j - 4] = meshData->m_opt_vertex[i]->m_boneIndices[j];
-				vertices[i].BoneWeight2[j - 4] = meshData->m_opt_vertex[i]->m_boneWeights[j];
+				vertices[i].BoneIndex2[j - 4] = meshData->m_Final_Vertex[i]->m_BoneIndices[j];
+				vertices[i].BoneWeight2[j - 4] = meshData->m_Final_Vertex[i]->m_BoneWeights[j];
 			}
 			else if (j < 12)
 			{
-				vertices[i].BoneIndex3[j - 8] = meshData->m_opt_vertex[i]->m_boneIndices[j];
-				vertices[i].BoneWeight3[j - 8] = meshData->m_opt_vertex[i]->m_boneWeights[j];
+				vertices[i].BoneIndex3[j - 8] = meshData->m_Final_Vertex[i]->m_BoneIndices[j];
+				vertices[i].BoneWeight3[j - 8] = meshData->m_Final_Vertex[i]->m_BoneWeights[j];
 			}
 		}
 
-		vertices[i].Tangent = meshData->m_opt_vertex[i]->m_Tanget;
+		vertices[i].Tangent = meshData->m_Final_Vertex[i]->m_Tanget;
 
-		XMVECTOR P = meshData->m_opt_vertex[i]->m_Pos;
+		XMVECTOR P = meshData->m_Final_Vertex[i]->m_Pos;
 
 		vMin = XMVectorMin(vMin, P);
 		vMax = XMVectorMax(vMax, P);
@@ -1316,15 +1317,15 @@ void ResourceManager::LoadData_SkinMesh(std::string objectName, std::string key,
 	newBuf->m_MeshBox.Extents = (vMax - vMin) * 0.5f;
 	newBuf->m_ColType = eColliderType::Box;
 
-	tcount = meshData->m_meshface.size();
+	tcount = meshData->m_MeshFace.size();
 
 	newBuf->IndexCount = 3 * tcount;
 	std::vector<UINT> indices(newBuf->IndexCount);
 	for (UINT i = 0; i < tcount; ++i)
 	{
-		indices[i * 3 + 0] = meshData->m_opt_index[i].index[0];
-		indices[i * 3 + 1] = meshData->m_opt_index[i].index[1];
-		indices[i * 3 + 2] = meshData->m_opt_index[i].index[2];
+		indices[i * 3 + 0] = meshData->m_Final_Index[i].m_Index[0];
+		indices[i * 3 + 1] = meshData->m_Final_Index[i].m_Index[1];
+		indices[i * 3 + 2] = meshData->m_Final_Index[i].m_Index[2];
 	}
 
 	newBuf->m_MeshIndices = indices;
@@ -1366,7 +1367,7 @@ void ResourceManager::LoadData_Mesh(std::string objectName, std::string key, Par
 		return;
 
 	// Vertex Data가 없는 Mesh도 저장..
-	if (meshData->m_opt_vertex.size() <= 1 || meshData->m_meshface.empty())
+	if (meshData->m_Final_Vertex.size() <= 1 || meshData->m_MeshFace.empty())
 	{
 		m_MeshList.insert(make_pair(key, meshData));
 		return;
@@ -1380,22 +1381,22 @@ void ResourceManager::LoadData_Mesh(std::string objectName, std::string key, Par
 	UINT vcount = 0;
 	UINT tcount = 0;
 
-	vcount = (UINT)meshData->m_opt_vertex.size();
+	vcount = (UINT)meshData->m_Final_Vertex.size();
 
 	std::vector<NormalMapVertex> vertices(vcount);
 
 	for (UINT i = 0; i < vcount; i++)
 	{
-		vertices[i].Pos = meshData->m_opt_vertex[i]->m_Pos;
+		vertices[i].Pos = meshData->m_Final_Vertex[i]->m_Pos;
 
-		vertices[i].Normal = meshData->m_opt_vertex[i]->m_Normal;
+		vertices[i].Normal = meshData->m_Final_Vertex[i]->m_Normal;
 
-		vertices[i].Tex.x = meshData->m_opt_vertex[i]->u;
-		vertices[i].Tex.y = meshData->m_opt_vertex[i]->v;
+		vertices[i].Tex.x = meshData->m_Final_Vertex[i]->m_U;
+		vertices[i].Tex.y = meshData->m_Final_Vertex[i]->m_V;
 
-		vertices[i].Tangent = meshData->m_opt_vertex[i]->m_Tanget;
+		vertices[i].Tangent = meshData->m_Final_Vertex[i]->m_Tanget;
 
-		XMVECTOR P = meshData->m_opt_vertex[i]->m_Pos;
+		XMVECTOR P = meshData->m_Final_Vertex[i]->m_Pos;
 
 		vMin = XMVectorMin(vMin, P);
 		vMax = XMVectorMax(vMax, P);
@@ -1407,15 +1408,15 @@ void ResourceManager::LoadData_Mesh(std::string objectName, std::string key, Par
 	newBuf->m_MeshBox.Extents = (vMax - vMin) * 0.5f;
 	newBuf->m_ColType = eColliderType::Box;
 
-	tcount = meshData->m_meshface.size();
+	tcount = meshData->m_MeshFace.size();
 
 	newBuf->IndexCount = 3 * tcount;
 	std::vector<UINT> indices(newBuf->IndexCount);
 	for (UINT i = 0; i < tcount; ++i)
 	{
-		indices[i * 3 + 0] = meshData->m_opt_index[i].index[0];
-		indices[i * 3 + 1] = meshData->m_opt_index[i].index[1];
-		indices[i * 3 + 2] = meshData->m_opt_index[i].index[2];
+		indices[i * 3 + 0] = meshData->m_Final_Index[i].m_Index[0];
+		indices[i * 3 + 1] = meshData->m_Final_Index[i].m_Index[1];
+		indices[i * 3 + 2] = meshData->m_Final_Index[i].m_Index[2];
 	}
 
 	newBuf->m_MeshIndices = indices;
@@ -1452,7 +1453,7 @@ void ResourceManager::LoadData_Mesh(std::string objectName, std::string key, Par
 
 void ResourceManager::LoadData_Animation(std::string objectName, std::string key, ParserData::Mesh* meshData)
 {
-	m_AnimationList.insert(make_pair(key, meshData->m_animation));
+	m_AnimationList.insert(make_pair(key, meshData->m_Animation));
 }
 
 ENGINE_DLL void ResourceManager::CreateBoneCollider(std::string objectName, eColliderType colType, float range)
@@ -1463,7 +1464,7 @@ ENGINE_DLL void ResourceManager::CreateBoneCollider(std::string objectName, eCol
 	{
 		if (fbxParser->m_MeshList[i]->m_IsSkinningObject) continue;
 
-		std::string key = objectName + " " + fbxParser->m_MeshList[i]->m_nodename;
+		std::string key = objectName + " " + fbxParser->m_MeshList[i]->m_NodeName;
 
 		switch (colType)
 		{
@@ -1485,8 +1486,6 @@ void ResourceManager::SetBoxCollider(std::string objectName, std::string key, Pa
 {
 	if (meshData->m_IsBone)
 	{
-		if (meshData->m_bone->m_isCol == false) return;
-
 		auto buf = m_VertexList.find(key);
 
 		VertexBuffer* newBuf;
@@ -1513,8 +1512,6 @@ void ResourceManager::SetSphereCollider(std::string objectName, std::string key,
 {
 	if (meshData->m_IsBone)
 	{
-		if (meshData->m_bone->m_isCol == false) return;
-
 		auto buf = m_VertexList.find(key);
 
 		VertexBuffer* newBuf;
@@ -1542,8 +1539,8 @@ void ResourceManager::LoadData_Texture(std::string objectName, std::string fileN
 	ComPtr<ID3D11ShaderResourceView> newTex = nullptr;
 
 	std::string file_extension;
-	size_t index = fileName.rfind(".");
-	file_extension = fileName.substr(index, fileName.size() - index);
+	size_t m_Index = fileName.rfind(".");
+	file_extension = fileName.substr(m_Index, fileName.size() - m_Index);
 	CString file_path = fileName.c_str();
 
 	// 확장자에 따른 텍스처 파일 로드 방식..
@@ -1563,8 +1560,8 @@ void ResourceManager::LoadData_Texture(std::string objectName, std::string fileN
 	}
 	else
 	{
-		materialmap->m_map_name = objectName + " " + materialmap->m_map_name;
-		fileName = materialmap->m_map_name;
+		materialmap->m_MapName = objectName + " " + materialmap->m_MapName;
+		fileName = materialmap->m_MapName;
 	}
 
 	// map key 저장시 포인터 형태로 저장하면 주소값이 저장되므로 주의..
@@ -1583,39 +1580,39 @@ ENGINE_DLL ID3D11ShaderResourceView* ResourceManager::GetTexture(std::string mes
 {
 	std::string fileName;
 
-	if (m_MeshList[meshName]->m_materialdata == nullptr) return nullptr;
+	if (m_MeshList[meshName]->m_MaterialData == nullptr) return nullptr;
 
 	// 텍스쳐 타입에 따른 로딩방식..
 	switch (textureType)
 	{
 	case eTextureType::Diffuse:
 	{
-		if (m_MeshList[meshName]->m_materialdata->m_isDiffuseMap)
-			fileName = m_MeshList[meshName]->m_materialdata->m_DiffuseMap->m_map_name.c_str();
+		if (m_MeshList[meshName]->m_MaterialData->m_IsDiffuseMap)
+			fileName = m_MeshList[meshName]->m_MaterialData->m_DiffuseMap->m_MapName;
 		else
 			return nullptr;
 	}
 	break;
 	case eTextureType::Bump:
 	{
-		if (m_MeshList[meshName]->m_materialdata->m_isBumpMap)
-			fileName = m_MeshList[meshName]->m_materialdata->m_BumpMap->m_map_name.c_str();
+		if (m_MeshList[meshName]->m_MaterialData->m_IsBumpMap)
+			fileName = m_MeshList[meshName]->m_MaterialData->m_BumpMap->m_MapName;
 		else
 			return nullptr;
 	}
 	break;
 	case eTextureType::Specular:
 	{
-		if (m_MeshList[meshName]->m_materialdata->m_isSpecularMap)
-			fileName = m_MeshList[meshName]->m_materialdata->m_SpecularMap->m_map_name.c_str();
+		if (m_MeshList[meshName]->m_MaterialData->m_IsSpecularMap)
+			fileName = m_MeshList[meshName]->m_MaterialData->m_SpecularMap->m_MapName;
 		else
 			return nullptr;
 	}
 	break;
 	case eTextureType::Shine:
 	{
-		if (m_MeshList[meshName]->m_materialdata->m_isShineMap)
-			fileName = m_MeshList[meshName]->m_materialdata->m_ShineMap->m_map_name.c_str();
+		if (m_MeshList[meshName]->m_MaterialData->m_IsShineMap)
+			fileName = m_MeshList[meshName]->m_MaterialData->m_ShineMap->m_MapName;
 		else
 			return nullptr;
 	}
@@ -1667,30 +1664,30 @@ ParserData::Mesh* ResourceManager::GetMesh(std::string objectName, int count)
 	return nullptr;
 }
 
-AnimationData* ResourceManager::GetAnimation(std::string key)
+OneAnimation* ResourceManager::GetAnimation(std::string key)
 {
 	return m_AnimationList[key];
 }
 
 MaterialData ResourceManager::GetMaterial(std::string key)
 {
-	if (m_MeshList[key]->m_materialdata == nullptr)
+	if (m_MeshList[key]->m_MaterialData == nullptr)
 	{
 		return MaterialData();
 	}
 
-	return m_MaterialList[m_MeshList[key]->m_materialdata->m_material_name];
+	return m_MaterialList[m_MeshList[key]->m_MaterialData->m_MaterialName];
 }
 
 std::string ResourceManager::GetMeshName(std::string objectName, int count)
 {
 	if (m_ASEParserList.find(objectName) != m_ASEParserList.end())
 	{
-		return m_ASEParserList[objectName]->m_MeshList[count]->m_nodename.c_str();
+		return m_ASEParserList[objectName]->m_MeshList[count]->m_NodeName;
 	}
 	else if (m_FBXParserList.find(objectName) != m_FBXParserList.end())
 	{
-		return m_FBXParserList[objectName]->m_MeshList[count]->m_nodename.c_str();
+		return m_FBXParserList[objectName]->m_MeshList[count]->m_NodeName;
 	}
 
 	return "";

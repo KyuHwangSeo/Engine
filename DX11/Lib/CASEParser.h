@@ -33,14 +33,10 @@ public:
 	/// 초기화, 로드
 	PARSER_DLL bool Load(LPSTR p_File);		// ASE파일을 읽어서, 자체 리스트에 넣는다.
 
-	/// 1차 변환
-	// CScenedata 변환
-	bool TranslateToD3DFormat_scene(ParserData::Scenedata* pscene);
-
-	void OptimizeVertex(ParserData::Mesh* pMesh);		// 버텍스(노말), 텍스쳐 값으로 최적화를 해 준다.
-	void RecombinationTM(ParserData::Mesh* pMesh);
+	void OptimizeVertex(ParserData::ASEMesh* pMesh);		// 버텍스(노말), 텍스쳐 값으로 최적화를 해 준다.
+	void RecombinationTM(ParserData::ASEMesh* pMesh);
 	void OptimizeData();
-	PARSER_DLL void SetBoneTM(ParserData::Mesh* pMesh);
+	PARSER_DLL void SetBoneTM(ParserData::ASEMesh* pMesh);
 
 private:
 	// 토큰을 구별해내기 위한 스트링
@@ -56,28 +52,25 @@ public:
 
 	/// 매트리얼 관련
 	int	m_materialcount;					// Material이 총 몇개인가?
-	ParserData::CMaterial* m_materialdata;			// Material의 데이터가 들어갈 구조체
+	ParserData::CMaterial* m_MaterialData;			// Material의 데이터가 들어갈 구조체
 	ParserData::MaterialMap* m_materialmap;
 	std::vector<ParserData::CMaterial*> m_list_materialdata;	// Material들의 리스트
 
 	/// 한 씬에 N개의 메시가 존재할 수 있다.
-	ParserData::Mesh* m_OneMesh;						// 메시 하나의 데이터가 들어갈 구조체
-	std::vector<ParserData::Mesh*> m_MeshList;	 			// 메시들
+	ParserData::ASEMesh* m_OneMesh;						// 메시 하나의 데이터가 들어갈 구조체
+	std::vector<ParserData::ASEMesh*> m_MeshList;	 			// 메시들
 
-	/// 쉐이프 오브젝트를 파 싱할 때 필요한 중간 변수
-	//( 파서 내부에서 쉐이프 오브젝트는 GeomObject와 동일하게 취급된다)
-	ParserData::ShapeLine* m_nowshapeline;				// 현재 읽고 있는 Line
-	ParserData::ShapeVertex* m_nowshapevertex;			// 현재 읽고 있는 ShapeVertex
+	ParserData::Bone* m_Bone;
 
 	/// 애니메이션
-	bool m_isAnimation;
-	AnimationData* m_animation;					// 한 오브젝트의 애니메이션 데이터(파싱용)
+	bool m_IsAnimation;
+	OneAnimation* m_Animation;					// 한 오브젝트의 애니메이션 데이터(파싱용)
 
 public:
 	//--------------------------------------------------
 	// Export
 	//--------------------------------------------------
-	ParserData::Mesh* GetMesh(int index);
+	ParserData::Mesh* GetMesh(int m_Index);
 
 
 public:
@@ -112,8 +105,6 @@ private:
 	void Create_AnimationData_to_mesh(ParserData::Mesh* nowMesh);
 	void Create_OneVertex_to_list();	
 	void Create_BoneData_to_list();	
-	void Create_LightData_to_list();	
-
 };
 
 

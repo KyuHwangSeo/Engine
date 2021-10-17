@@ -194,14 +194,14 @@ void D3DEngine::SceneStart()
 	// 기본 오브젝트 생성..
 	m_SceneManager->CreateHelper();
 
-	// 창 사이즈에 대한 재설정..
-	OnResize(m_ClientSize->x, m_ClientSize->y);
-
 	// Scene 내에 존재하는 GameObject 생성..
 	m_Scene->Create();
 
 	// Scene 내에 존재하는 GameObject 설정..
 	m_Scene->Start();
+
+	// 창 사이즈에 대한 재설정..
+	OnResize(m_ClientSize->x, m_ClientSize->y);
 
 	m_Timer->Tick();
 }

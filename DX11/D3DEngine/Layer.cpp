@@ -41,7 +41,7 @@ void LayerList::RemoveLayer(int layerKey)
 	// 해당 레이어 오브젝트 레이어 초기화 추가해야함..
 	vector<Layer*>::iterator itor = g_LayerList.begin();
 
-	unsigned int index = 0;
+	unsigned int m_Index = 0;
 	for (; itor != g_LayerList.end(); itor++)
 	{
 		if ((*itor)->m_LayerKey == layerKey)
@@ -50,11 +50,11 @@ void LayerList::RemoveLayer(int layerKey)
 			break;
 		}
 
-		index++;
+		m_Index++;
 	}
 
-	for (;index < g_LayerList.size(); index++)
+	for (;m_Index < g_LayerList.size(); m_Index++)
 	{
-		g_LayerList[index]->m_LayerKey = index;
+		g_LayerList[m_Index]->m_LayerKey = m_Index;
 	}
 }

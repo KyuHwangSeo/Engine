@@ -284,9 +284,9 @@ void Camera::WorldUpDown(float d)
 {
 	// mPosition += d * mUp
 	XMVECTOR s = XMVectorReplicate(d);
-	XMVECTOR u = mUp;
+	XMVECTOR m_U = mUp;
 	XMVECTOR p = mPosition;
-	mPosition = XMVectorMultiplyAdd(s, u, p);
+	mPosition = XMVectorMultiplyAdd(s, m_U, p);
 }
 
 void Camera::Pitch(float angle)

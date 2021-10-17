@@ -106,6 +106,8 @@ void D3DRenderer::MainRender()
 
 void D3DRenderer::SSAORender()
 {
+	if (!Is_SSAO) return;
+
 	m_RenderTarget = m_SSAO->m_AmbientRT->GetRTV();
 
 	m_DeviceContext->OMSetBlendState(0, 0, 0xffffffff);

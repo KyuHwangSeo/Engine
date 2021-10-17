@@ -17,8 +17,8 @@ public:
 	void SetPointLight(PointLight pointLight);
 	void SetSpotLight(SpotLight spotLight);
 
-	void SetLightData(cbLights& lightData, int index = 0);
-	void SetLightListData(cbLightList& lightListData, int index = 0);
+	void SetLightData(cbLights& lightData, int m_Index = 0);
+	void SetLightListData(cbLightList& lightListData, int m_Index = 0);
 
 	template<typename T>
 	void SetPosition(T& lightData);
@@ -26,12 +26,12 @@ public:
 
 	void SetLightViewProj();
 
-	DXVector3 GetDirection(int index = 0);
+	DXVector3 GetDirection(int m_Index = 0);
 	
 	eLightType GetLightType()	{ return m_LightType; }
 	DXMatrix4X4 GetLightView()	{ return m_LightView; }
 	DXMatrix4X4 GetLightProj()	{ return m_LightProj; }
-	DirectionalLight GetLightData(int index) { return m_DirLights[index]; }
+	DirectionalLight GetLightData(int m_Index) { return m_DirLights[m_Index]; }
 
 	Transform* m_Target;
 

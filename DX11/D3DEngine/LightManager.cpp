@@ -101,14 +101,14 @@ void LightManager::SetLightData_Forward()
 {
 	Light::g_DirLight->SetLightData(m_LightData);
 
-	for (unsigned int index = 0; index < m_PointLightList.size(); index++)
+	for (unsigned int m_Index = 0; m_Index < m_PointLightList.size(); m_Index++)
 	{
-		m_PointLightList[index]->SetLightData(m_LightData, index);
+		m_PointLightList[m_Index]->SetLightData(m_LightData, m_Index);
 	}
 
-	for (unsigned int index = 0; index < m_SpotLightList.size(); index++)
+	for (unsigned int m_Index = 0; m_Index < m_SpotLightList.size(); m_Index++)
 	{
-		m_SpotLightList[index]->SetLightData(m_LightData, index);
+		m_SpotLightList[m_Index]->SetLightData(m_LightData, m_Index);
 	}
 }
 
@@ -124,14 +124,14 @@ void LightManager::SetLightData_Deferred()
 		return;
 	}
 
-	for (unsigned int index = 0; index < m_PointLightList.size(); index++)
+	for (unsigned int m_Index = 0; m_Index < m_PointLightList.size(); m_Index++)
 	{
-		m_PointLightList[index]->SetLightListData(m_LightListData, index);
+		m_PointLightList[m_Index]->SetLightListData(m_LightListData, m_Index);
 	}
 
-	for (unsigned int index = 0; index < m_SpotLightList.size(); index++)
+	for (unsigned int m_Index = 0; m_Index < m_SpotLightList.size(); m_Index++)
 	{
-		m_SpotLightList[index]->SetLightListData(m_LightListData, index);
+		m_SpotLightList[m_Index]->SetLightListData(m_LightListData, m_Index);
 	}
 
 	m_LightListData.gPointLightCount = (UINT)m_PointLightList.size();

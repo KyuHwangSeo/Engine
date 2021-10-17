@@ -254,9 +254,9 @@ void SSAO::BuildRandomVectorTexture()
 	{
 		for (int j = 0; j < 256; ++j)
 		{
-			XMFLOAT3 v(MathHelper::RandF(), MathHelper::RandF(), MathHelper::RandF());
+			XMFLOAT3 m_V(MathHelper::RandF(), MathHelper::RandF(), MathHelper::RandF());
 
-			color[i * 256 + j] = XMCOLOR(v.x, v.y, v.z, 0.0f);
+			color[i * 256 + j] = XMCOLOR(m_V.x, m_V.y, m_V.z, 0.0f);
 		}
 	}
 

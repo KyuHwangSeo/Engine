@@ -2,6 +2,7 @@
 #include "SingleTon.h"
 #include "GameTimer.h"
 #include "EnumDefine.h"
+#include "KHMath.h"
 #include "KHParser.h"
 #include "Component.h"
 #include "Transform.h"
@@ -17,32 +18,28 @@ void Animation::Update(float dTime)
 	}
 }
 
-void Animation::AnimationUpdate(Transform* nowMesh, AnimationData* nowAni, float dTime)
+void Animation::AnimationUpdate(Transform* nowMesh, OneAnimation* nowAni, float dTime)
 {
 	// 애니메이션 정보가 없을경우 처리하지 않는다..
 	if (nowAni == nullptr) return;
 
 	if (m_Loop == false)
 	{
-		if (nowAni->m_nextPosIndex == 0)
+		if (nowAni->m_NextIndex == 0)
 		{
 			m_Finish = true;
 			return;
 		}
 	}
 
-	nowAni->m_frameTime += dTime;
+	nowAni->m_FrameTime += dTime;
 
 	// 애니메이션 KeyFrame 체크..
 	CheckKeyFrame(nowAni);
 
-	int nowScaleIndex = nowAni->m_nowScaleIndex;
-	int nowPosIndex = nowAni->m_nowPosIndex;
-	int nowRotIndex = nowAni->m_nowRotIndex;
-	int nextScaleIndex = nowAni->m_nextScaleIndex;
-	int nextPosIndex = nowAni->m_nextPosIndex;
-	int nextRotIndex = nowAni->m_nextRotIndex;
-	int tickFrame = nowAni->m_tickFrame;
+	// 현재 Animation Data..
+	m_NowAniData = nowAni->m_AniData[nowAni->m_NowIndex];
+	m_NextAniData = nowAni->m_AniData[nowAni->m_NextIndex];
 
 	// 현재 LocalTM에서 추출할 변환 행렬요소..
 	XMVECTOR localScale;
@@ -52,7 +49,7 @@ void Animation::AnimationUpdate(Transform* nowMesh, AnimationData* nowAni, float
 	// 보간 결과값..
 	XMVECTOR nowVec;
 	XMVECTOR nextVec;
-	float nowFrame;
+	float nowFrame = (nowAni->m_TickFrame - m_NowAniData->m_Time) / (m_NextAniData->m_Time - m_NowAniData->m_Time);
 
 	// 현재 LocalTM에서 행렬 요소를 추출한다..
 	XMMatrixDecompose(&localScale, &localRot, &localPos, nowMesh->m_NodeTM);
@@ -61,9 +58,8 @@ void Animation::AnimationUpdate(Transform* nowMesh, AnimationData* nowAni, float
 	if (nowAni->m_isPosAnimation)
 	{
 		// 현재 프레임과 다음 프레임간의 보간..
-		nowVec = nowAni->m_scale[nowScaleIndex]->m_scale;
-		nextVec = nowAni->m_scale[nextScaleIndex]->m_scale;
-		nowFrame = (tickFrame - nowAni->m_scale[nowScaleIndex]->m_time) / (nowAni->m_scale[nextScaleIndex]->m_time - nowAni->m_scale[nowScaleIndex]->m_time);
+		nowVec = m_NowAniData->m_Scale;
+		nextVec = m_NextAniData->m_Scale;
 		localScale = XMVectorLerp(nowVec, nextVec, nowFrame);
 
 		// 노드 업데이트 체크..
@@ -74,9 +70,8 @@ void Animation::AnimationUpdate(Transform* nowMesh, AnimationData* nowAni, float
 	if (nowAni->m_isPosAnimation)
 	{
 		// 현재 프레임과 다음 프레임간의 보간..
-		nowVec = nowAni->m_position[nowPosIndex]->m_pos;
-		nextVec = nowAni->m_position[nextPosIndex]->m_pos;
-		nowFrame = (tickFrame - nowAni->m_position[nowPosIndex]->m_time) / (nowAni->m_position[nextPosIndex]->m_time - nowAni->m_position[nowPosIndex]->m_time);
+		nowVec = m_NowAniData->m_Pos;
+		nextVec = m_NextAniData->m_Pos;
 		localPos = XMVectorLerp(nowVec, nextVec, nowFrame);
 
 		// 노드 업데이트 체크..
@@ -87,9 +82,8 @@ void Animation::AnimationUpdate(Transform* nowMesh, AnimationData* nowAni, float
 	if (nowAni->m_isRotAnimation)
 	{
 		// 현재 프레임과 다음 프레임간의 보간..
-		nowVec = nowAni->m_rotation[nowRotIndex]->m_rotQT_accumulation;
-		nextVec = nowAni->m_rotation[nextRotIndex]->m_rotQT_accumulation;
-		nowFrame = (tickFrame - nowAni->m_rotation[nowRotIndex]->m_time) / (nowAni->m_rotation[nextRotIndex]->m_time - nowAni->m_rotation[nowRotIndex]->m_time);
+		nowVec = m_NowAniData->m_RotQt;
+		nextVec = m_NextAniData->m_RotQt;
 		localRot = XMQuaternionSlerp(nowVec, nextVec, nowFrame);
 
 		// 노드 업데이트 체크..
@@ -109,118 +103,61 @@ void Animation::AnimationUpdate(Transform* nowMesh, AnimationData* nowAni, float
 	nowMesh->m_NodeTM = ScaleTM * RotTM * TransTM;
 }
 
-void Animation::CheckKeyFrame(AnimationData* nowAni)
+void Animation::CheckKeyFrame(OneAnimation* nowAni)
 {
-	float frameTick = nowAni->m_ticksperFrame / m_FrameSpeed;
-	int nowScaleFrame = nowAni->m_nowScaleIndex;
-	int nowPosFrame = nowAni->m_nowPosIndex;
-	int nowRotFrame = nowAni->m_nowRotIndex;
-	int nextScaleFrame = nowAni->m_nextScaleIndex;
-	int nextPosFrame = nowAni->m_nextPosIndex;
-	int nextRotFrame = nowAni->m_nextRotIndex;
-	int lastScaleFrame = nowAni->m_lastScaleFrame;
-	int lastPosFrame = nowAni->m_lastPosFrame;
-	int lastRotFrame = nowAni->m_lastRotFrame;
+	float frameTick = nowAni->m_TicksPerFrame / m_FrameSpeed;
+	int nowFrame = nowAni->m_NowIndex;
+	int nextFrame = nowAni->m_NextIndex;
+	int lastFrame = nowAni->m_EndFrame;
 
 	// deltaTime이 oneTickFrame 만큼 시간이 지날경우 tickFrame 업데이트..
-	if (nowAni->m_frameTime > frameTick)
+	if (nowAni->m_FrameTime > frameTick)
 	{
 		// 매번 tick update시 마다 frameTime 초기화 & tickFrame 증가..
-		nowAni->m_frameTime = 0.0f;
-		nowAni->m_tickFrame++;
+		nowAni->m_FrameTime = 0.0f;
+		nowAni->m_TickFrame++;
 
 		// lastFrame에 도달할 경우 초기화..
-		if (nowAni->m_tickFrame > nowAni->m_totalFrame)
+		if (nowAni->m_TickFrame > nowAni->m_TotalFrame)
 		{
-			nowAni->m_tickFrame = 0;
-			nowScaleFrame = 0;
-			nowPosFrame = 0;
-			nowRotFrame = 0;
-			nextScaleFrame = 1;
-			nextPosFrame = 1;
-			nextRotFrame = 1;
+			nowAni->m_TickFrame = 0;
+			nowFrame = 0;
+			nextFrame = 1;
 		}
 
 		/// 한개의 Mesh의 프레임 기준 Position & Rotation KeyFrame Time 비교..
 		/// Position과 Rotation이 둘다 있을경우 같은 Mesh이니까 Mesh 내에서의 프레임 간격은 같지 않을까?
-		if (nowAni->m_isPosAnimation)
+		if (nowAni->m_TickFrame > nowAni->m_AniData[nextFrame]->m_Time)
 		{
-			if (nowAni->m_tickFrame > nowAni->m_position[nextPosFrame]->m_time)
+			nowFrame++;
+
+			// 마지막 프레임에서 바로 넘어가면 안되니 마지막 프레임 유지..
+			if (nowFrame > lastFrame)
 			{
-				nowPosFrame++;
-
-				// 마지막 프레임에서 바로 넘어가면 안되니 마지막 프레임 유지..
-				if (nowPosFrame > lastPosFrame)
-				{
-					nowPosFrame = lastPosFrame;
-				}
-
-				nextPosFrame = nowPosFrame + 1;
-				if (nextPosFrame > lastPosFrame)
-				{
-					nextPosFrame = 0;
-				}
+				nowFrame = lastFrame;
 			}
-		}
 
-		if (nowAni->m_isRotAnimation)
-		{
-			if (nowAni->m_tickFrame > nowAni->m_rotation[nextRotFrame]->m_time)
+			nextFrame = nowFrame + 1;
+			if (nextFrame > lastFrame)
 			{
-				nowRotFrame++;
-
-				// 마지막 프레임에서 바로 넘어가면 안되니 마지막 프레임 유지..
-				if (nowRotFrame > lastRotFrame)
-				{
-					nowRotFrame = lastRotFrame;
-				}
-
-				nextRotFrame = nowRotFrame + 1;
-				if (nextRotFrame > lastRotFrame)
-				{
-					nextRotFrame = 0;
-				}
-			}
-		}
-
-		if (nowAni->m_isScaleAnimation)
-		{
-			if (nowAni->m_tickFrame > nowAni->m_scale[nextScaleFrame]->m_time)
-			{
-				nowScaleFrame++;
-
-				// 마지막 프레임에서 바로 넘어가면 안되니 마지막 프레임 유지..
-				if (nowScaleFrame > lastScaleFrame)
-				{
-					nowScaleFrame = lastScaleFrame;
-				}
-
-				nextScaleFrame = nowScaleFrame + 1;
-				if (nextScaleFrame > lastScaleFrame)
-				{
-					nextScaleFrame = 0;
-				}
+				nextFrame = 0;
 			}
 		}
 	}
 
 	/// 결과적으로 나온 프레임 데이터 입력..
-	nowAni->m_nowScaleIndex = nowScaleFrame;
-	nowAni->m_nowPosIndex = nowPosFrame;
-	nowAni->m_nowRotIndex = nowRotFrame;
-	nowAni->m_nextScaleIndex = nextScaleFrame;
-	nowAni->m_nextPosIndex = nextPosFrame;
-	nowAni->m_nextRotIndex = nextRotFrame;
+	nowAni->m_NowIndex = nowFrame;
+	nowAni->m_NextIndex = nextFrame;
 }
 
-void Animation::AddAnimationData(GameObject* aniMesh, AnimationData* aniData)
+void Animation::AddAnimationData(GameObject* aniMesh, OneAnimation* aniData)
 {
 	// 애니메이션이 없을경우..
 	if (aniData == nullptr) return;
 
 	// 해당 Mesh 애니메이션 0프레임 기준 초기값 설정..
-	DXMatrix4X4 pos = KH_MATH::CreateTranslation(aniData->m_position[0]->m_pos);
-	DXMatrix4X4 rot = XMMatrixRotationQuaternion(aniData->m_rotation[0]->m_rotQT_accumulation);
+	DXMatrix4X4 pos = KH_MATH::CreateTranslation(aniData->m_AniData[0]->m_Pos);
+	DXMatrix4X4 rot = XMMatrixRotationQuaternion(aniData->m_AniData[0]->m_RotQt);
 
 	// 애니메이션 변경시 초기화 데이터가 필요해서 보관..
 	DXMatrix4X4 nodeTM = rot * pos;
@@ -230,7 +167,7 @@ void Animation::AddAnimationData(GameObject* aniMesh, AnimationData* aniData)
 	// 해당 오브젝트 Transform과 연동..
 	SetTransform(aniMesh->GetTransform(), nodeTM);
 
-	AnimationData* newData = new AnimationData(*aniData);
+	OneAnimation* newData = new OneAnimation(*aniData);
 
 	m_OneAnimation.insert(make_pair(aniMesh->GetTransform(), newData));
 }
@@ -286,16 +223,12 @@ float Animation::GetAnimationSpeed()
 	return m_FrameSpeed;
 }
 
-void Animation::ResetData(AnimationData* nowAni)
+void Animation::ResetData(OneAnimation* nowAni)
 {
-	nowAni->m_frameTime = 0.0f;
-	nowAni->m_tickFrame = 0;
-	nowAni->m_nowScaleIndex = 0;
-	nowAni->m_nowPosIndex = 0;
-	nowAni->m_nowRotIndex = 0;
-	nowAni->m_nextScaleIndex = 1;
-	nowAni->m_nextPosIndex = 1;
-	nowAni->m_nextRotIndex = 1;
+	nowAni->m_FrameTime = 0.0f;
+	nowAni->m_TickFrame = 0;
+	nowAni->m_NowIndex = 0;
+	nowAni->m_NextIndex = 1;
 }
 
 void Animation::Release()

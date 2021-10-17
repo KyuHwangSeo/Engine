@@ -58,7 +58,7 @@ public:
 	VertexBuffer* GetVertexBuffer(std::string key);
 	ParserData::Mesh* GetMesh(std::string key);
 	ParserData::Mesh* GetMesh(std::string objectName, int count);
-	AnimationData* GetAnimation(std::string key);
+	OneAnimation* GetAnimation(std::string key);
 	MaterialData GetMaterial(std::string key);
 	std::string GetMeshName(std::string objectName, int count = 0);
 	std::string GetMeshKey(std::string objectName, int count = 0);
@@ -88,7 +88,6 @@ private:
 	// FBX Parser 리스트 변수..
 	unordered_map<std::string, FBXModel*> m_FBXParserList;
 
-
 	// Texture 리스트 변수..
 	unordered_map<std::string, ComPtr<ID3D11ShaderResourceView>> m_TexList;
 
@@ -99,7 +98,7 @@ private:
 	unordered_map<std::string, ParserData::Mesh*> m_MeshList;
 
 	// Animation 리스트 변수..
-	unordered_map<std::string, AnimationData*> m_AnimationList;
+	unordered_map<std::string, OneAnimation*> m_AnimationList;
 
 	// Material 리스트 변수..
 	unordered_map<std::string, MaterialData> m_MaterialList;

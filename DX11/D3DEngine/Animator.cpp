@@ -122,7 +122,7 @@ float Animator::GetAnimationSpeed()
 	return	m_Animations[m_NowAni]->GetAnimationSpeed();
 }
 
-GameObject* Animator::GetMeshObject(int index)
+GameObject* Animator::GetMeshObject(int m_Index)
 {
-	return m_Objects[index];
+	return m_Objects[m_Index];
 }

@@ -1,4 +1,5 @@
-﻿#include "GameManager.h"
+﻿#include <windows.h>
+#include "GameManager.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow)
 {
@@ -6,7 +7,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 
 	GM->Initialize();
 	GM->Loop();
-	RELEASE_COM(GM);
+	GM->Release();
+	delete GM;
 
 	return 0;
 }

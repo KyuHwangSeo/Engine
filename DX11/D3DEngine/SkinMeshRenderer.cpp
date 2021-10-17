@@ -104,9 +104,9 @@ void SkinMeshRenderer::SetBone(GameObject* bone)
 
 void SkinMeshRenderer::BoneUpdate()
 {
-	for (size_t i = 0; i < m_Mesh->m_boneTMList.size(); i++)
+	for (size_t i = 0; i < m_Mesh->m_BoneTMList.size(); i++)
 	{
 		/// 최종 Bone TM -> BoneOffsetTM * BoneWorldTM (애니메이션 적용후의 TM)
-		m_BoneData.gBoneTransforms[i] = m_Mesh->m_boneTMList[i] * m_BoneList[m_Mesh->m_boneList[i]->m_nodename]->GetTransform()->m_LocalTM;
+		m_BoneData.gBoneTransforms[i] = m_Mesh->m_BoneTMList[i] * m_BoneList[m_Mesh->m_BoneMeshList[i]->m_NodeName]->GetTransform()->m_LocalTM;
 	}
 }

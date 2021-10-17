@@ -23,7 +23,7 @@ public:
 	void AddMeshObject(GameObject* obj);
 
 	float GetAnimationSpeed();
-	GameObject* GetMeshObject(int index);
+	GameObject* GetMeshObject(int m_Index);
 
 	std::string GetKey() { return m_NowAni; }
 	bool GetState() { return m_Play; }

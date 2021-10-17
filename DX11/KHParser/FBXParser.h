@@ -4,26 +4,19 @@ typedef std::pair<std::string, ParserData::Bone*> BonePair;
 
 struct PARSER_DLL FBXModel
 {
-	/// Material Data
-	int	m_materialcount;										// Material 개수
+	bool m_isAnimation = false;									// Animation 유무
+
+	int	m_materialcount = 0;									// Material 개수
 	std::vector<ParserData::CMaterial*> m_list_materialdata;	// Material List
 
-	/// Mesh Data
 	std::vector<ParserData::Mesh*> m_MeshList;	 				// Mesh List
-
-	/// Bone Data
-	std::vector<BonePair> m_AllBoneList;						// Skinning Object Bone List
-
-	/// Animation Data
-	bool m_isAnimation;
-	AnimationData* m_OneAnimation;								// Object One Animation Data
 };
 
 class FBXParser
 {
 public:
-	PARSER_DLL FBXParser();
-	PARSER_DLL ~FBXParser();
+	FBXParser() = default;
+	~FBXParser() = default;
 
 private:
 	fbxsdk::FbxManager* pManager;
@@ -39,17 +32,20 @@ private:
 public:
 	FBXModel* m_Model;
 
-	ParserData::CMaterial* m_materialdata;			// Material Data Struct
+	ParserData::CMaterial* m_MaterialData;			// Material Data Struct
+	
 	ParserData::Mesh* m_OneMesh;					// Mesh Data Struct
-	ParserData::Bone* m_OneBone;					// Bone Data Struct
-	AnimationData* m_OneAnimation;					// Animation Data Struct
 
-	bool m_Scaling = true;
+	ParserData::Bone* m_OneBone;					// Bone Data Struct
+	std::vector<BonePair> m_AllBoneList;			// Skinning Object Bone List
+
+	OneAnimation* m_OneAnimation;					// Object One Animation Data
+
 	bool m_OnlyAni = false;
 
 public:
-	void Initalize();
-	void SceneSetting();
+	PARSER_DLL void Initalize();
+	void SceneSetting(fbxsdk::FbxString fileName, bool scaling, bool onlyAni);
 	PARSER_DLL void Release();
 	void ResetModel();
 

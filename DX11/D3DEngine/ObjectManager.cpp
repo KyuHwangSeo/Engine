@@ -223,7 +223,7 @@ void ObjectManager::SetHierarchy(vector<GameObject*>& model)
 				continue;
 			}
 
-			if (mesh1->m_nodename == mesh2->m_nodeparent)
+			if (mesh1->m_NodeName == mesh2->m_ParentName)
 			{
 				obj1->AddChild(obj2->GetTransform());
 				obj2->SetParent(obj1->GetTransform());
@@ -252,9 +252,9 @@ void ObjectManager::SetBone(vector<GameObject*>& model, GameObject* obj)
 	{
 		for (GameObject* obj3 : model)
 		{
-			for (ParserData::Mesh* bone : obj->GetComponent<SkinMeshRenderer>()->GetMesh()->m_boneList)
+			for (ParserData::Mesh* bone : obj->GetComponent<SkinMeshRenderer>()->GetMesh()->m_BoneMeshList)
 			{
-				if (obj3->GetName() == bone->m_nodename)
+				if (obj3->GetName() == bone->m_NodeName)
 				{
 					obj->GetComponent<SkinMeshRenderer>()->SetBone(obj3);
 					break;
@@ -272,7 +272,7 @@ void ObjectManager::Picking(int x, int y, int width, int height)
 	bool is_Pick = false;
 	GameObject* selectObject = nullptr;
 
-	int index = 0;
+	int m_Index = 0;
 	int pickIndex = 0;
 	for (Model model : m_ModelList)
 	{
@@ -288,7 +288,7 @@ void ObjectManager::Picking(int x, int y, int width, int height)
 					selectObject = obj.second;
 					obj.second->SetPick(true);
 					is_Pick = true;
-					pickIndex = index;
+					pickIndex = m_Index;
 				}
 				else if (selectObject != obj.second)
 				{
@@ -306,12 +306,12 @@ void ObjectManager::Picking(int x, int y, int width, int height)
 
 						obj.second->SetPick(true);
 						is_Pick = true;
-						pickIndex = index;
+						pickIndex = m_Index;
 					}
 				}
 			}
 		}
-		index++;
+		m_Index++;
 	}
 
 	if (is_Pick == false)

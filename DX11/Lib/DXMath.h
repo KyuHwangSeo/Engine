@@ -104,9 +104,9 @@ struct MATH_DLL DXVector3
 	float		Dot(const DXVector3& v3) noexcept;
 
 	static DXVector3 Reflect(const DXVector3& ivec, const DXVector3& nvec) noexcept;
-	static DXVector3 Transform(const DXVector3& v, const DXQuaternion& quat) noexcept;
-	static DXVector3 Transform(const DXVector3& v, const DXMatrix4X4& m) noexcept;
-	static DXVector3 TransformNormal(const DXVector3& v, const DXMatrix4X4& m) noexcept;
+	static DXVector3 Transform(const DXVector3& m_V, const DXQuaternion& quat) noexcept;
+	static DXVector3 Transform(const DXVector3& m_V, const DXMatrix4X4& m) noexcept;
+	static DXVector3 TransformNormal(const DXVector3& m_V, const DXMatrix4X4& m) noexcept;
 	static DXVector3 Zero();
 	static DXVector3 One();
 };
@@ -159,8 +159,8 @@ struct MATH_DLL DXVector4
 	float		Dot(const DXVector4& v4) noexcept;
 
 	static DXVector4 Reflect(const DXVector4& ivec, const DXVector4& nvec) noexcept;
-	static DXVector4 Transform(const DXVector4& v, const DXQuaternion& quat) noexcept;
-	static DXVector4 Transform(const DXVector4& v, const DXMatrix4X4& m) noexcept;
+	static DXVector4 Transform(const DXVector4& m_V, const DXQuaternion& quat) noexcept;
+	static DXVector4 Transform(const DXVector4& m_V, const DXMatrix4X4& m) noexcept;
 	static DXVector4 Zero();
 	static DXVector4 One();
 };
@@ -216,7 +216,6 @@ struct MATH_DLL DXMatrix4X4
 	float       operator() (size_t Row, size_t Column) const	{ return m[Row][Column]; }
 	float&		operator() (size_t Row, size_t Column)			{ return m[Row][Column]; }
 	DXVector4	operator() (size_t Row) const					{ return DXVector4(m[Row][0], m[Row][1], m[Row][2], m[Row][3]); }
-	DXVector4&	operator() (size_t Row)							{ return DXVector4(m[Row][0], m[Row][1], m[Row][2], m[Row][3]); }
 
 	// 변환 연산자 (Conversion Operator)
 	operator DirectX::SimpleMath::Matrix()	{ return ConvertXMFLOAT4X4(); }
@@ -230,25 +229,25 @@ struct MATH_DLL DXMatrix4X4
 
 	// Matrix Properties
 	DXVector3 Up() const noexcept { return DXVector3(_21, _22, _23); }
-	void Up(const DXVector3& v) noexcept { _21 = v.x; _22 = v.y; _23 = v.z; }
+	void Up(const DXVector3& m_V) noexcept { _21 = m_V.x; _22 = m_V.y; _23 = m_V.z; }
 
 	DXVector3 Down() const  noexcept { return DXVector3(-_21, -_22, -_23); }
-	void Down(const DXVector3& v) noexcept { _21 = -v.x; _22 = -v.y; _23 = -v.z; }
+	void Down(const DXVector3& m_V) noexcept { _21 = -m_V.x; _22 = -m_V.y; _23 = -m_V.z; }
 
 	DXVector3 Right() const noexcept { return DXVector3(_11, _12, _13); }
-	void Right(const DXVector3& v) noexcept { _11 = v.x; _12 = v.y; _13 = v.z; }
+	void Right(const DXVector3& m_V) noexcept { _11 = m_V.x; _12 = m_V.y; _13 = m_V.z; }
 
 	DXVector3 Left() const noexcept { return DXVector3(-_11, -_12, -_13); }
-	void Left(const DXVector3& v) noexcept { _11 = -v.x; _12 = -v.y; _13 = -v.z; }
+	void Left(const DXVector3& m_V) noexcept { _11 = -m_V.x; _12 = -m_V.y; _13 = -m_V.z; }
 
 	DXVector3 Forward() const noexcept { return DXVector3(-_31, -_32, -_33); }
-	void Forward(const DXVector3& v) noexcept { _31 = -v.x; _32 = -v.y; _33 = -v.z; }
+	void Forward(const DXVector3& m_V) noexcept { _31 = -m_V.x; _32 = -m_V.y; _33 = -m_V.z; }
 
 	DXVector3 Backward() const noexcept { return DXVector3(_31, _32, _33); }
-	void Backward(const DXVector3& v) noexcept { _31 = v.x; _32 = v.y; _33 = v.z; }
+	void Backward(const DXVector3& m_V) noexcept { _31 = m_V.x; _32 = m_V.y; _33 = m_V.z; }
 	
 	DXVector3 Translation() const  noexcept { return DXVector3(_41, _42, _43); }
-	void Translation(const DXVector3& v) noexcept { _41 = v.x; _42 = v.y; _43 = v.z; }
+	void Translation(const DXVector3& m_V) noexcept { _41 = m_V.x; _42 = m_V.y; _43 = m_V.z; }
 	
 	// Matrix Function
 	bool Decompose(DXVector3& scale, DXQuaternion& rotation, DXVector3& translation) noexcept;
@@ -298,7 +297,7 @@ struct MATH_DLL DXQuaternion : public DXVector4
 	bool operator != (const DXQuaternion& q) const;
 
 	DXQuaternion& operator= (const DirectX::XMVECTORF32& vf) noexcept;
-	DXQuaternion& operator= (const DirectX::XMVECTOR& v) noexcept;
+	DXQuaternion& operator= (const DirectX::XMVECTOR& m_V) noexcept;
 	DXQuaternion& operator+= (const DXQuaternion& q) noexcept;
 	DXQuaternion& operator-= (const DXQuaternion& q) noexcept;
 	DXQuaternion& operator*= (const DXQuaternion& q) noexcept;

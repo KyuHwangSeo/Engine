@@ -349,25 +349,25 @@ DXVector3 DXVector3::Reflect(const DXVector3& ivec, const DXVector3& nvec) noexc
 	return DirectX::XMVector3Reflect(i, n);
 }
 
-DXVector3 DXVector3::Transform(const DXVector3& v, const DXQuaternion& quat) noexcept
+DXVector3 DXVector3::Transform(const DXVector3& m_V, const DXQuaternion& quat) noexcept
 {
-	DirectX::XMVECTOR v1 = KH_MATH::XMLoadVector3(v);
+	DirectX::XMVECTOR v1 = KH_MATH::XMLoadVector3(m_V);
 	DirectX::XMVECTOR q = KH_MATH::XMLoadVector3(quat);
 
 	return DirectX::XMVector3Rotate(v1, q);
 }
 
-DXVector3 DXVector3::Transform(const DXVector3& v, const DXMatrix4X4& m) noexcept
+DXVector3 DXVector3::Transform(const DXVector3& m_V, const DXMatrix4X4& m) noexcept
 {
-	DirectX::XMVECTOR v1 = KH_MATH::XMLoadVector3(v);
+	DirectX::XMVECTOR v1 = KH_MATH::XMLoadVector3(m_V);
 	DirectX::XMMATRIX xm = KH_MATH::XMLoadFloat4X4(m);
 
 	return DirectX::XMVector3TransformCoord(v1, xm);
 }
 
-DXVector3 DXVector3::TransformNormal(const DXVector3& v, const DXMatrix4X4& m) noexcept
+DXVector3 DXVector3::TransformNormal(const DXVector3& m_V, const DXMatrix4X4& m) noexcept
 {
-	DirectX::XMVECTOR v1 = KH_MATH::XMLoadVector3(v);
+	DirectX::XMVECTOR v1 = KH_MATH::XMLoadVector3(m_V);
 	DirectX::XMMATRIX xm = KH_MATH::XMLoadFloat4X4(m);
 
 	return DirectX::XMVector3TransformNormal(v1, xm);
@@ -582,18 +582,18 @@ DXVector4 DXVector4::Reflect(const DXVector4& ivec, const DXVector4& nvec) noexc
 	return DirectX::XMVector4Reflect(i, n);
 }
 
-DXVector4 DXVector4::Transform(const DXVector4& v, const DXQuaternion& quat) noexcept
+DXVector4 DXVector4::Transform(const DXVector4& m_V, const DXQuaternion& quat) noexcept
 {
-	DirectX::XMVECTOR v1 = KH_MATH::XMLoadVector4(v);
+	DirectX::XMVECTOR v1 = KH_MATH::XMLoadVector4(m_V);
 	DirectX::XMVECTOR q = KH_MATH::XMLoadVector4(quat);
 	DirectX::XMVECTOR x = DirectX::XMVector3Rotate(v1,q);
 
 	return DirectX::XMVectorSelect(DirectX::g_XMIdentityR3, x, DirectX::g_XMSelect1110);
 }
 
-DXVector4 DXVector4::Transform(const DXVector4& v, const DXMatrix4X4& m) noexcept
+DXVector4 DXVector4::Transform(const DXVector4& m_V, const DXMatrix4X4& m) noexcept
 {
-	DirectX::XMVECTOR v1 = KH_MATH::XMLoadVector4(v);
+	DirectX::XMVECTOR v1 = KH_MATH::XMLoadVector4(m_V);
 	DirectX::XMMATRIX xm = KH_MATH::XMLoadFloat4X4(m);
 
 	return DirectX::XMVector4Transform(v1, xm);
@@ -1089,12 +1089,12 @@ DXQuaternion& DXQuaternion::operator=(const DirectX::XMVECTORF32& vf) noexcept
 	return *this;
 }
 
-DXQuaternion& DXQuaternion::operator=(const DirectX::XMVECTOR& v) noexcept
+DXQuaternion& DXQuaternion::operator=(const DirectX::XMVECTOR& m_V) noexcept
 {
-	x = v.m128_f32[0];
-	y = v.m128_f32[1];
-	z = v.m128_f32[2];
-	w = v.m128_f32[3];
+	x = m_V.m128_f32[0];
+	y = m_V.m128_f32[1];
+	z = m_V.m128_f32[2];
+	w = m_V.m128_f32[3];
 
 	return *this;
 }

@@ -218,7 +218,7 @@ GameObject* Factory::CreateObject(string objName, eModelType modelType, DXVector
 		m_ObjMG->AddTopObject(newObj);
 
 		// 애니메이션이 있는경우..
-		if (parser->m_isAnimation)
+		if (parser->m_IsAnimation)
 		{
 			animator = new Animator();
 			newObj->AddComponent(animator);
@@ -246,16 +246,16 @@ GameObject* Factory::CreateObject(string objName, eModelType modelType, DXVector
 				objList.emplace_back(newNode);
 
 				// 파싱 데이터중 최상위 노드들을 한 오브젝트로 묶어준다..
-				if (newMesh->m_parent == nullptr)
+				if (newMesh->m_TopNode)
 				{
 					newNode->SetParent(newObj->GetTransform());
 					newObj->AddChild(newNode->GetTransform());
 				}
 			}
 
-			newNode->SetName(newMesh->m_nodename);
-			newNode->GetTransform()->SetNodeTM(newMesh->m_localTM);
-			newNode->GetTransform()->SetLocalTM(newMesh->m_worldTM);
+			newNode->SetName(newMesh->m_NodeName);
+			newNode->GetTransform()->SetNodeTM(newMesh->m_LocalTM);
+			newNode->GetTransform()->SetLocalTM(newMesh->m_WorldTM);
 
 			// Mesh 정보에 기반하여 Renderer 설정..
 			SetRenderer(newNode, meshKey, newMesh, newBuffer);
@@ -265,11 +265,6 @@ GameObject* Factory::CreateObject(string objName, eModelType modelType, DXVector
 			{
 				newNode->SetMeshType(eMeshType::Bone);
 			}
-			// 현 Object가 Helper일 경우..
-			else if (newMesh->m_IsHelper)
-			{
-				newNode->SetMeshType(eMeshType::Helper);
-			}
 			// 현 Obejct가 Mesh일 경우..
 			else
 			{
@@ -278,7 +273,7 @@ GameObject* Factory::CreateObject(string objName, eModelType modelType, DXVector
 			}
 
 			// 현 Object가 애니메이션이 있다면..
-			if (parser->m_isAnimation)
+			if (parser->m_IsAnimation)
 				animator->AddMeshObject(newNode);
 		}
 
@@ -344,16 +339,16 @@ GameObject* Factory::CreateObject(string objName, eModelType modelType, DXVector
 				objList.emplace_back(newNode);
 
 				// 파싱 데이터중 최상위 노드들을 한 오브젝트로 묶어준다..
-				if (newMesh->m_parent == nullptr)
+				if (newMesh->m_TopNode)
 				{
 					newNode->SetParent(newObj->GetTransform());
 					newObj->AddChild(newNode->GetTransform());
 				}
 			}
 
-			newNode->SetName(newMesh->m_nodename);
-			newNode->GetTransform()->SetNodeTM(newMesh->m_localTM);
-			newNode->GetTransform()->SetLocalTM(newMesh->m_worldTM);
+			newNode->SetName(newMesh->m_NodeName);
+			newNode->GetTransform()->SetNodeTM(newMesh->m_LocalTM);
+			newNode->GetTransform()->SetLocalTM(newMesh->m_WorldTM);
 
 			// Mesh 정보에 기반하여 Renderer 설정..
 			SetRenderer(newNode, meshKey, newMesh, newBuffer);
@@ -365,11 +360,6 @@ GameObject* Factory::CreateObject(string objName, eModelType modelType, DXVector
 
 				if (isCol && modelColType != eModelCollider::MeshList)
 					SetCollider(newNode, newBuffer);
-			}
-			// 현 Object가 Helper일 경우..
-			else if (newMesh->m_IsHelper)
-			{
-				newNode->SetMeshType(eMeshType::Helper);
 			}
 			// 현 Obejct가 Mesh일 경우..
 			else
@@ -413,16 +403,16 @@ void Factory::SetRenderer(GameObject* obj, std::string meshKey, ParserData::Mesh
 
 		// 적용되있는 Material 추가
 		/// Mesh의 m_materialdata는 ref Material이므로 바로 적용시켜주자..
-		if (mesh->m_materialdata != nullptr)
+		if (mesh->m_MaterialData != nullptr)
 		{
 			sRenderer->m_Material->SetMaterialData(m_RsMG->GetMaterial(meshKey));
 
-			if (mesh->m_materialdata->m_isDiffuseMap)
+			if (mesh->m_MaterialData->m_IsDiffuseMap)
 			{
 				sRenderer->m_Material->SetDiffuseMap(m_RsMG->GetTexture(meshKey, eTextureType::Diffuse));
 				sRenderer->m_Material->SetShader("SkinDeferredShader");
 			}
-			if (mesh->m_materialdata->m_isBumpMap)
+			if (mesh->m_MaterialData->m_IsBumpMap)
 			{
 				sRenderer->m_Material->SetNormalMap(m_RsMG->GetTexture(meshKey, eTextureType::Bump));
 				sRenderer->m_Material->SetShader("NormalSkinDeferredShader");
@@ -440,16 +430,16 @@ void Factory::SetRenderer(GameObject* obj, std::string meshKey, ParserData::Mesh
 
 		// 적용되있는 Material 추가
 		/// Mesh의 m_materialdata는 ref Material이므로 바로 적용시켜주자..
-		if (mesh->m_materialdata != nullptr)
+		if (mesh->m_MaterialData != nullptr)
 		{
 			mRenderer->m_Material->SetMaterialData(m_RsMG->GetMaterial(meshKey));
 			mRenderer->m_Material->SetShader("BasicDeferredShader");
-			if (mesh->m_materialdata->m_isDiffuseMap)
+			if (mesh->m_MaterialData->m_IsDiffuseMap)
 			{
 				mRenderer->m_Material->SetDiffuseMap(m_RsMG->GetTexture(meshKey, eTextureType::Diffuse));
 				mRenderer->m_Material->SetShader("TextureDeferredShader");
 			}
-			if (mesh->m_materialdata->m_isBumpMap)
+			if (mesh->m_MaterialData->m_IsBumpMap)
 			{
 				mRenderer->m_Material->SetNormalMap(m_RsMG->GetTexture(meshKey, eTextureType::Bump));
 				mRenderer->m_Material->SetShader("NormalDeferredShader");
@@ -574,7 +564,7 @@ Animation* Factory::CreateAnimation(string objName, string aniName, GameObject* 
 		string meshKey = m_RsMG->GetMeshKey(objName, i);
 
 		// Object 생성시 Animator에 들어있는 Obejct에 대한 애니메이션 정보를 넣는다..
-		AnimationData* animationData = m_RsMG->GetAnimation(meshKey);
+		OneAnimation* animationData = m_RsMG->GetAnimation(meshKey);
 		animation->AddAnimationData(animator->GetMeshObject(i), animationData);
 	}
 
@@ -602,7 +592,7 @@ Animation* Factory::CreateAnimation(string objName, string aniName, string nodeN
 		string meshKey = m_RsMG->GetMeshKey(objName, i);
 
 		// Object 생성시 Animator에 들어있는 Obejct에 대한 애니메이션 정보를 넣는다..
-		AnimationData* animationData = m_RsMG->GetAnimation(meshKey);
+		OneAnimation* animationData = m_RsMG->GetAnimation(meshKey);
 		animation->AddAnimationData(animator->GetMeshObject(i), animationData);
 	}
 

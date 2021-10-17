@@ -676,7 +676,7 @@ static BOOL IntersectRayTriangle(FXMVECTOR Origin, FXMVECTOR Direction, FXMVECTO
 	// det = e1 * p;
 	XMVECTOR det = XMVector3Dot(e1, p);
 
-	XMVECTOR u, v, t;
+	XMVECTOR m_U, m_V, t;
 
 	if (XMVector3GreaterOrEqual(det, Epsilon))
 	{
@@ -684,19 +684,19 @@ static BOOL IntersectRayTriangle(FXMVECTOR Origin, FXMVECTOR Direction, FXMVECTO
 		XMVECTOR s = Origin - V0;
 
 		// u = s * p;
-		u = XMVector3Dot(s, p);
+		m_U = XMVector3Dot(s, p);
 
-		XMVECTOR NoIntersection = XMVectorLess(u, Zero);
-		NoIntersection = XMVectorOrInt(NoIntersection, XMVectorGreater(u, det));
+		XMVECTOR NoIntersection = XMVectorLess(m_U, Zero);
+		NoIntersection = XMVectorOrInt(NoIntersection, XMVectorGreater(m_U, det));
 
 		// q = s ^ e1;
 		XMVECTOR q = XMVector3Cross(s, e1);
 
 		// v = Direction * q;
-		v = XMVector3Dot(Direction, q);
+		m_V = XMVector3Dot(Direction, q);
 
-		NoIntersection = XMVectorOrInt(NoIntersection, XMVectorLess(v, Zero));
-		NoIntersection = XMVectorOrInt(NoIntersection, XMVectorGreater(u + v, det));
+		NoIntersection = XMVectorOrInt(NoIntersection, XMVectorLess(m_V, Zero));
+		NoIntersection = XMVectorOrInt(NoIntersection, XMVectorGreater(m_U + m_V, det));
 
 		// t = e2 * q;
 		t = XMVector3Dot(e2, q);
@@ -712,19 +712,19 @@ static BOOL IntersectRayTriangle(FXMVECTOR Origin, FXMVECTOR Direction, FXMVECTO
 		XMVECTOR s = Origin - V0;
 
 		// u = s * p;
-		u = XMVector3Dot(s, p);
+		m_U = XMVector3Dot(s, p);
 
-		XMVECTOR NoIntersection = XMVectorGreater(u, Zero);
-		NoIntersection = XMVectorOrInt(NoIntersection, XMVectorLess(u, det));
+		XMVECTOR NoIntersection = XMVectorGreater(m_U, Zero);
+		NoIntersection = XMVectorOrInt(NoIntersection, XMVectorLess(m_U, det));
 
 		// q = s ^ e1;
 		XMVECTOR q = XMVector3Cross(s, e1);
 
 		// v = Direction * q;
-		v = XMVector3Dot(Direction, q);
+		m_V = XMVector3Dot(Direction, q);
 
-		NoIntersection = XMVectorOrInt(NoIntersection, XMVectorGreater(v, Zero));
-		NoIntersection = XMVectorOrInt(NoIntersection, XMVectorLess(u + v, det));
+		NoIntersection = XMVectorOrInt(NoIntersection, XMVectorGreater(m_V, Zero));
+		NoIntersection = XMVectorOrInt(NoIntersection, XMVectorLess(m_U + m_V, det));
 
 		// t = e2 * q;
 		t = XMVector3Dot(e2, q);

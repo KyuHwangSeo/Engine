@@ -12,9 +12,9 @@ public:
 			float px, float py, float pz,
 			float nx, float ny, float nz,
 			float tx, float ty, float tz,
-			float u, float v)
+			float m_U, float m_V)
 			: Position(px, py, pz), Normal(nx, ny, nz),
-			TangentU(tx, ty, tz), TexC(u, v) {}
+			TangentU(tx, ty, tz), TexC(m_U, m_V) {}
 
 		XMFLOAT3 Position;
 		XMFLOAT3 Normal;

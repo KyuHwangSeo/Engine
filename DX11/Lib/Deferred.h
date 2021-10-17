@@ -34,7 +34,7 @@ public:
 	void LightRender(ID3D11ShaderResourceView* ssaoSRV);
 	void OnResize(int width, int height);
 
-	ID3D11RenderTargetView* GetDeferredRTV(int index)		{ return m_DeferredRTV[index]; }
-	ID3D11ShaderResourceView* GetDeferredSRV(int index)		{ return m_DeferredSRV[index]; }
+	ID3D11RenderTargetView* GetDeferredRTV(int m_Index)		{ return m_DeferredRTV[m_Index]; }
+	ID3D11ShaderResourceView* GetDeferredSRV(int m_Index)		{ return m_DeferredSRV[m_Index]; }
 };
 

@@ -19,25 +19,12 @@ void BoneWeights::AddBoneWeight(int boneIndex, float boneWeight)
 
 	sumWeight += boneWeight;
 
-	bool isAdded = false;
-	std::vector<std::pair<int, float>>::iterator it;
-	for (it = m_BoneWeights.begin(); it != m_BoneWeights.end(); it++)
-	{
-		if (boneWeight > it->second)
-		{
-			m_BoneWeights.insert(it, std::make_pair(boneIndex, boneWeight));
-			isAdded = true;
-			break;
-		}
-	}
-
-	if (isAdded == false)
-		m_BoneWeights.push_back(std::make_pair(boneIndex, boneWeight));
+	m_BoneWeights.push_back(new Weight(boneIndex, boneWeight));
 }
 
-void BoneWeights::AddBoneWeight(std::pair<int, float> boneWeightPair)
+void BoneWeights::AddBoneWeight(Weight* boneWeightPair)
 {
-	AddBoneWeight(boneWeightPair.first, boneWeightPair.second);
+	AddBoneWeight(boneWeightPair->m_BoneNumber, boneWeightPair->m_BoneWeight);
 }
 
 void BoneWeights::AddBoneWeights(const BoneWeights& boneWeights)
@@ -53,10 +40,10 @@ void BoneWeights::Validate()
 	sumWeight = 0.0f;
 	int i = 0;
 
-	std::vector<std::pair<int, float>>::iterator it = m_BoneWeights.begin();
+	std::vector<Weight*>::iterator it = m_BoneWeights.begin();
 	while (it != m_BoneWeights.end())
 	{
-		sumWeight += it->second;
+		sumWeight += (*it)->m_BoneWeight;
 		++it;
 	}
 }
@@ -66,11 +53,11 @@ void BoneWeights::Normalize()
 	Validate();
 
 	float fScale = 1.0f / sumWeight;
-	std::vector<std::pair<int, float>>::iterator it = m_BoneWeights.begin();
 
+	std::vector<Weight*>::iterator it = m_BoneWeights.begin();
 	while (it != m_BoneWeights.end())
 	{
-		it->second *= fScale;
+		(*it)->m_BoneWeight *= fScale;
 		++it;
 	}
 }

@@ -13,11 +13,9 @@
 #endif
 
 #ifdef PARSER_EXPORT
-	#define PARSER_DLL  __declspec(dllexport)
-	#define PARSER_TEMPLATE
+	#define PARSER_DLL		__declspec(dllexport)
 #else
-	#define PARSER_DLL  __declspec(dllimport)		
-	#define PARSER_TEMPLATE extern
+	#define PARSER_DLL		__declspec(dllimport)		
 
 	#ifdef _WIN64
 		#ifdef _DEBUG

@@ -24,7 +24,7 @@ typedef FMOD_RESULT (F_CALLBACK *FMOD_CODEC_SETPOSITIONCALLBACK) (FMOD_CODEC_STA
 typedef FMOD_RESULT (F_CALLBACK *FMOD_CODEC_GETPOSITIONCALLBACK) (FMOD_CODEC_STATE *codec_state, unsigned int *position, FMOD_TIMEUNIT postype);
 typedef FMOD_RESULT (F_CALLBACK *FMOD_CODEC_SOUNDCREATECALLBACK) (FMOD_CODEC_STATE *codec_state, int subsound, FMOD_SOUND *gSound);
 typedef FMOD_RESULT (F_CALLBACK *FMOD_CODEC_METADATACALLBACK)    (FMOD_CODEC_STATE *codec_state, FMOD_TAGTYPE tagtype, char *name, void *data, unsigned int datalen, FMOD_TAGDATATYPE datatype, int unique);
-typedef FMOD_RESULT (F_CALLBACK *FMOD_CODEC_GETWAVEFORMAT)       (FMOD_CODEC_STATE *codec_state, int index, FMOD_CODEC_WAVEFORMAT *waveformat);
+typedef FMOD_RESULT (F_CALLBACK *FMOD_CODEC_GETWAVEFORMAT)       (FMOD_CODEC_STATE *codec_state, int m_Index, FMOD_CODEC_WAVEFORMAT *waveformat);
 
 
 /*

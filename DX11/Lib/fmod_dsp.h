@@ -23,8 +23,8 @@ typedef FMOD_RESULT (F_CALLBACK *FMOD_DSP_RELEASECALLBACK)    (FMOD_DSP_STATE *d
 typedef FMOD_RESULT (F_CALLBACK *FMOD_DSP_RESETCALLBACK)      (FMOD_DSP_STATE *dsp_state);
 typedef FMOD_RESULT (F_CALLBACK *FMOD_DSP_READCALLBACK)       (FMOD_DSP_STATE *dsp_state, float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels);
 typedef FMOD_RESULT (F_CALLBACK *FMOD_DSP_SETPOSITIONCALLBACK)(FMOD_DSP_STATE *dsp_state, unsigned int pos);
-typedef FMOD_RESULT (F_CALLBACK *FMOD_DSP_SETPARAMCALLBACK)   (FMOD_DSP_STATE *dsp_state, int index, float value);
-typedef FMOD_RESULT (F_CALLBACK *FMOD_DSP_GETPARAMCALLBACK)   (FMOD_DSP_STATE *dsp_state, int index, float *value, char *valuestr);
+typedef FMOD_RESULT (F_CALLBACK *FMOD_DSP_SETPARAMCALLBACK)   (FMOD_DSP_STATE *dsp_state, int m_Index, float value);
+typedef FMOD_RESULT (F_CALLBACK *FMOD_DSP_GETPARAMCALLBACK)   (FMOD_DSP_STATE *dsp_state, int m_Index, float *value, char *valuestr);
 typedef FMOD_RESULT (F_CALLBACK *FMOD_DSP_DIALOGCALLBACK)     (FMOD_DSP_STATE *dsp_state, void *hwnd, int show);
 
 /*

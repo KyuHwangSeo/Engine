@@ -224,7 +224,7 @@ void Light::SetLightViewProj()
 	Material::SetShadowTransform(m_LightView * m_LightProj);
 }
 
-void Light::SetLightData(cbLights& lightData, int index)
+void Light::SetLightData(cbLights& lightData, int m_Index)
 {
 	switch (m_LightType)
 	{
@@ -234,17 +234,17 @@ void Light::SetLightData(cbLights& lightData, int index)
 		lightData.gDirLights[2] = m_DirLights[2];
 		break;
 	case eLightType::Point:
-		lightData.gPointLights[index] = m_PointLight;
+		lightData.gPointLights[m_Index] = m_PointLight;
 		break;
 	case eLightType::Spot:
-		lightData.gSpotLights[index] = m_SpotLight;
+		lightData.gSpotLights[m_Index] = m_SpotLight;
 		break;
 	default:
 		break;
 	}
 }
 
-void Light::SetLightListData(cbLightList& lightListData, int index)
+void Light::SetLightListData(cbLightList& lightListData, int m_Index)
 {
 	switch (m_LightType)
 	{
@@ -254,22 +254,22 @@ void Light::SetLightListData(cbLightList& lightListData, int index)
 		lightListData.gDirLights[2] = m_DirLights[2];
 		break;
 	case eLightType::Point:
-		lightListData.gPointLights[index] = m_PointLight;
+		lightListData.gPointLights[m_Index] = m_PointLight;
 		break;
 	case eLightType::Spot:
-		lightListData.gSpotLights[index] = m_SpotLight;
+		lightListData.gSpotLights[m_Index] = m_SpotLight;
 		break;
 	default:
 		break;
 	}
 }
 
-DXVector3 Light::GetDirection(int index)
+DXVector3 Light::GetDirection(int m_Index)
 {
 	switch (m_LightType)
 	{
 	case eLightType::Direction:
-		return m_DirLights[index].Direction;
+		return m_DirLights[m_Index].Direction;
 		break;
 	case eLightType::Spot:
 		return m_SpotLight.Direction;
