@@ -9,7 +9,6 @@
 #include "KHMath.h"
 #include "ParserDLL.h"
 
-#include "AnimationData.h"
 #include "CParsingDataClass.h"
 #include "ASEFile.h"
 #include "CASEParser.h"

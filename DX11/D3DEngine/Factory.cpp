@@ -397,7 +397,7 @@ void Factory::SetRenderer(GameObject* obj, std::string meshKey, ParserData::Mesh
 	// 스키닝 오브젝트 구분..
 	if (mesh->m_IsSkinningObject)
 	{
-		SkinMeshRenderer* sRenderer = new SkinMeshRenderer(eRasterizerType::Solid);
+		SkinMeshRenderer* sRenderer = new SkinMeshRenderer(eRasterizerType::Wire);
 		sRenderer->SetMesh(mesh);
 		sRenderer->SetVertexBuffer(vBuffer);
 
@@ -424,7 +424,7 @@ void Factory::SetRenderer(GameObject* obj, std::string meshKey, ParserData::Mesh
 	}
 	else
 	{
-		MeshRenderer* mRenderer = new MeshRenderer(eRasterizerType::Solid);
+		MeshRenderer* mRenderer = new MeshRenderer(eRasterizerType::Wire);
 		mRenderer->SetMesh(mesh);
 		mRenderer->SetVertexBuffer(vBuffer);
 
@@ -564,7 +564,7 @@ Animation* Factory::CreateAnimation(string objName, string aniName, GameObject* 
 		string meshKey = m_RsMG->GetMeshKey(objName, i);
 
 		// Object 생성시 Animator에 들어있는 Obejct에 대한 애니메이션 정보를 넣는다..
-		OneAnimation* animationData = m_RsMG->GetAnimation(meshKey);
+		ParserData::OneAnimation* animationData = m_RsMG->GetAnimation(meshKey);
 		animation->AddAnimationData(animator->GetMeshObject(i), animationData);
 	}
 
@@ -592,7 +592,7 @@ Animation* Factory::CreateAnimation(string objName, string aniName, string nodeN
 		string meshKey = m_RsMG->GetMeshKey(objName, i);
 
 		// Object 생성시 Animator에 들어있는 Obejct에 대한 애니메이션 정보를 넣는다..
-		OneAnimation* animationData = m_RsMG->GetAnimation(meshKey);
+		ParserData::OneAnimation* animationData = m_RsMG->GetAnimation(meshKey);
 		animation->AddAnimationData(animator->GetMeshObject(i), animationData);
 	}
 

@@ -64,7 +64,7 @@ public:
 
 	/// 애니메이션
 	bool m_IsAnimation;
-	OneAnimation* m_Animation;					// 한 오브젝트의 애니메이션 데이터(파싱용)
+	ParserData::OneAnimation* m_Animation;					// 한 오브젝트의 애니메이션 데이터(파싱용)
 
 public:
 	//--------------------------------------------------

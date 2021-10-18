@@ -12,7 +12,6 @@
 #include "KHMath.h"
 #include "ParserDLL.h"
 
-#include "AnimationData.h"
 #include "CParsingDataClass.h"
 
 #include "BoneWeights.h"
@@ -526,7 +525,7 @@ void FBXParser::ProcessAnimation(fbxsdk::FbxNode* node)
 
 				XMMatrixDecompose(&scale, &rot, &pos, nodeTRS);
 
-				AnimationData* newAni = new AnimationData;
+				OneFrame* newAni = new OneFrame;
 
 				newAni->m_Time = (float)m_Index;
 				newAni->m_Pos = DXVector3(pos);

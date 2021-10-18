@@ -5,7 +5,6 @@
 #include <string>
 using namespace std;
 
-#include "AnimationData.h"
 #include "CParsingDataClass.h"
 
 namespace ParserData

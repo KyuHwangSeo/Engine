@@ -58,7 +58,7 @@ public:
 	VertexBuffer* GetVertexBuffer(std::string key);
 	ParserData::Mesh* GetMesh(std::string key);
 	ParserData::Mesh* GetMesh(std::string objectName, int count);
-	OneAnimation* GetAnimation(std::string key);
+	ParserData::OneAnimation* GetAnimation(std::string key);
 	MaterialData GetMaterial(std::string key);
 	std::string GetMeshName(std::string objectName, int count = 0);
 	std::string GetMeshKey(std::string objectName, int count = 0);
@@ -98,7 +98,7 @@ private:
 	unordered_map<std::string, ParserData::Mesh*> m_MeshList;
 
 	// Animation 리스트 변수..
-	unordered_map<std::string, OneAnimation*> m_AnimationList;
+	unordered_map<std::string, ParserData::OneAnimation*> m_AnimationList;
 
 	// Material 리스트 변수..
 	unordered_map<std::string, MaterialData> m_MaterialList;

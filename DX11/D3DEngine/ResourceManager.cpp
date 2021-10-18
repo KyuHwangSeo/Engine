@@ -1053,23 +1053,23 @@ void ResourceManager::LoadData_SsaoQuad()
 {
 	VertexBuffer* newBuf = new VertexBuffer();
 
-	TexVertex m_V[4];
+	TexVertex v[4];
 
-	m_V[0].Pos = XMFLOAT3(-1.0f, -1.0f, 0.0f);
-	m_V[1].Pos = XMFLOAT3(-1.0f, +1.0f, 0.0f);
-	m_V[2].Pos = XMFLOAT3(+1.0f, +1.0f, 0.0f);
-	m_V[3].Pos = XMFLOAT3(+1.0f, -1.0f, 0.0f);
+	v[0].Pos = XMFLOAT3(-1.0f, -1.0f, 0.0f);
+	v[1].Pos = XMFLOAT3(-1.0f, +1.0f, 0.0f);
+	v[2].Pos = XMFLOAT3(+1.0f, +1.0f, 0.0f);
+	v[3].Pos = XMFLOAT3(+1.0f, -1.0f, 0.0f);
 
 	// Store far plane frustum corner indices in Normal.x slot.
-	m_V[0].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	m_V[1].Normal = XMFLOAT3(1.0f, 0.0f, 0.0f);
-	m_V[2].Normal = XMFLOAT3(2.0f, 0.0f, 0.0f);
-	m_V[3].Normal = XMFLOAT3(3.0f, 0.0f, 0.0f);
+	v[0].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	v[1].Normal = XMFLOAT3(1.0f, 0.0f, 0.0f);
+	v[2].Normal = XMFLOAT3(2.0f, 0.0f, 0.0f);
+	v[3].Normal = XMFLOAT3(3.0f, 0.0f, 0.0f);
 
-	m_V[0].Tex = XMFLOAT2(0.0f, 1.0f);
-	m_V[1].Tex = XMFLOAT2(0.0f, 0.0f);
-	m_V[2].Tex = XMFLOAT2(1.0f, 0.0f);
-	m_V[3].Tex = XMFLOAT2(1.0f, 1.0f);
+	v[0].Tex = XMFLOAT2(0.0f, 1.0f);
+	v[1].Tex = XMFLOAT2(0.0f, 0.0f);
+	v[2].Tex = XMFLOAT2(1.0f, 0.0f);
+	v[3].Tex = XMFLOAT2(1.0f, 1.0f);
 
 	UINT indices[6] =
 	{
@@ -1089,7 +1089,7 @@ void ResourceManager::LoadData_SsaoQuad()
 	vbd.StructureByteStride = 0;
 
 	D3D11_SUBRESOURCE_DATA vinitData;
-	vinitData.pSysMem = m_V;
+	vinitData.pSysMem = v;
 
 	HR(m_Device->CreateBuffer(&vbd, &vinitData, &newBuf->VB));
 
@@ -1113,17 +1113,17 @@ void ResourceManager::LoadData_UI()
 {
 	VertexBuffer* newBuf = new VertexBuffer();
 
-	PosTex m_V[4];
+	PosTex v[4];
 
-	m_V[0].Pos = DXVector3(1.0f, 0.0f, 0.0f);
-	m_V[1].Pos = DXVector3(0.0f, 1.0f, 0.0f);
-	m_V[2].Pos = DXVector3(0.0f, 0.0f, 0.0f);
-	m_V[3].Pos = DXVector3(1.0f, 1.0f, 0.0f);
+	v[0].Pos = DXVector3(1.0f, 0.0f, 0.0f);
+	v[1].Pos = DXVector3(0.0f, 1.0f, 0.0f);
+	v[2].Pos = DXVector3(0.0f, 0.0f, 0.0f);
+	v[3].Pos = DXVector3(1.0f, 1.0f, 0.0f);
 
-	m_V[0].Tex = DXVector2(1.0f, 0.0f);
-	m_V[1].Tex = DXVector2(0.0f, 1.0f);
-	m_V[2].Tex = DXVector2(0.0f, 0.0f);
-	m_V[3].Tex = DXVector2(1.0f, 1.0f);
+	v[0].Tex = DXVector2(1.0f, 0.0f);
+	v[1].Tex = DXVector2(0.0f, 1.0f);
+	v[2].Tex = DXVector2(0.0f, 0.0f);
+	v[3].Tex = DXVector2(1.0f, 1.0f);
 
 	UINT indices[6] =
 	{
@@ -1143,7 +1143,7 @@ void ResourceManager::LoadData_UI()
 	vbd.StructureByteStride = 0;
 
 	D3D11_SUBRESOURCE_DATA vinitData;
-	vinitData.pSysMem = m_V;
+	vinitData.pSysMem = v;
 
 	HR(m_Device->CreateBuffer(&vbd, &vinitData, &newBuf->VB));
 
@@ -1664,7 +1664,7 @@ ParserData::Mesh* ResourceManager::GetMesh(std::string objectName, int count)
 	return nullptr;
 }
 
-OneAnimation* ResourceManager::GetAnimation(std::string key)
+ParserData::OneAnimation* ResourceManager::GetAnimation(std::string key)
 {
 	return m_AnimationList[key];
 }

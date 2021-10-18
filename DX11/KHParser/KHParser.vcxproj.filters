@@ -62,9 +62,6 @@
     <ClInclude Include="BoneWeights.h">
       <Filter>소스 파일\FBX</Filter>
     </ClInclude>
-    <ClInclude Include="AnimationData.h">
-      <Filter>소스 파일\ExportData</Filter>
-    </ClInclude>
     <ClInclude Include="ParserDLL.h">
       <Filter>소스 파일</Filter>
     </ClInclude>

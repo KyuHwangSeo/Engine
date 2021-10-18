@@ -9,6 +9,11 @@ BoneWeights::BoneWeights()
 
 BoneWeights::~BoneWeights()
 {
+	for (Weight* weight : m_BoneWeights)
+	{
+		delete weight;
+	}
+
 	m_BoneWeights.clear();
 }
 
@@ -22,23 +27,17 @@ void BoneWeights::AddBoneWeight(int boneIndex, float boneWeight)
 	m_BoneWeights.push_back(new Weight(boneIndex, boneWeight));
 }
 
-void BoneWeights::AddBoneWeight(Weight* boneWeightPair)
-{
-	AddBoneWeight(boneWeightPair->m_BoneNumber, boneWeightPair->m_BoneWeight);
-}
-
 void BoneWeights::AddBoneWeights(const BoneWeights& boneWeights)
 {
 	for (size_t i = 0; i < boneWeights.m_BoneWeights.size(); ++i)
 	{
-		AddBoneWeight(boneWeights.m_BoneWeights[i]);
+		AddBoneWeight(boneWeights.m_BoneWeights[i]->m_BoneNumber, boneWeights.m_BoneWeights[i]->m_BoneWeight);
 	}
 }
 
 void BoneWeights::Validate()
 {
 	sumWeight = 0.0f;
-	int i = 0;
 
 	std::vector<Weight*>::iterator it = m_BoneWeights.begin();
 	while (it != m_BoneWeights.end())

@@ -44,4 +44,3 @@ public:
 	bool GetEnabled() { return m_Enabled; }
 	void SetEnabled(bool enabled) { m_Enabled = enabled; }
 };
-

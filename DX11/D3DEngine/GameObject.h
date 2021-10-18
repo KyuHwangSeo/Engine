@@ -84,7 +84,7 @@ public:
 	bool Picking(DXMatrix4X4 view, DXMatrix4X4 proj, int sw, int sh, int x, int y);
 
 	//bool operator== (const GameObject* obj) { return (m_Name == obj.m_Name) ? true : false; }
-	bool operator== (string name)			{ return (m_Name == name) ? true : false; }
+	bool operator== (std::string name)		{ return (m_Name == name) ? true : false; }
 
 	// MeshType Get & Set
 	void SetMeshType(eMeshType meshType)	{ m_MeshType = meshType; }
@@ -97,7 +97,7 @@ public:
 	// Layer Get & Set
 	void SetLayer(Layer* layer)				{ m_Layer = layer; }
 	Layer* GetLayer()						{ return m_Layer; }
-	string GetLayerName()					{ return m_Layer->m_LayerName; }
+	std::string GetLayerName()				{ return m_Layer->m_LayerName; }
 	int GetLayerKey()						{ return m_Layer->m_LayerKey; }
 	bool CompareLayer(Layer* layer)			{ return m_Layer == layer; }
 
@@ -155,6 +155,7 @@ inline void GameObject::AddComponent()
 	// 해당 컴포넌트 생성..
 	T* newCo = new T;
 
+	//Component* _newCo = decltype(T);
 	Component* _newCo = dynamic_cast<Component*>(newCo);
 	_newCo->SetGameObject(this);
 	_newCo->SetName<T>();

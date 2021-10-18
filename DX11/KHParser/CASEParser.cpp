@@ -5,7 +5,6 @@
 #include <string>
 using namespace std;
 
-#include "AnimationData.h"
 #include "CParsingDataClass.h"
 #include "ASEFile.h"
 #include "CASEParser.h"
@@ -839,7 +838,7 @@ void CASEParser::DataParsing()
 		case TOKENR_TM_ANIMATION:
 			Create_AnimationData_to_mesh(m_OneMesh);
 			m_OneMesh->m_Type = eAnimation;
-			m_OneMesh->m_Animation->m_AniData.push_back(new AnimationData);
+			m_OneMesh->m_Animation->m_AniData.push_back(new OneFrame);
 			break;
 		case TOKENR_CONTROL_POS_TRACK:
 			m_OneMesh->m_Animation->m_isPosAnimation = true;

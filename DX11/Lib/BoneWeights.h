@@ -15,7 +15,6 @@ public:
 
 public:
 	void AddBoneWeight(int boneIndex, float boneWeight);
-	void AddBoneWeight(Weight* boneWeightPair);
 	void AddBoneWeights(const BoneWeights& boneWeights);
 
 	void Validate();

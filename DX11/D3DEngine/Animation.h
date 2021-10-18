@@ -16,17 +16,17 @@ public:
 
 public:
 	void Update(float dTime);
-	void AnimationUpdate(Transform* nowMesh, OneAnimation* nowAni, float dTime);
-	void CheckKeyFrame(OneAnimation* nowAni);
+	void AnimationUpdate(Transform* nowMesh, ParserData::OneAnimation* nowAni, float dTime);
+	void CheckKeyFrame(ParserData::OneAnimation* nowAni);
 
-	void AddAnimationData(GameObject* aniMesh, OneAnimation* aniData);
+	void AddAnimationData(GameObject* aniMesh, ParserData::OneAnimation* aniData);
 	void SetAnimation(bool loop);
 	void SetTransform(Transform* aniMesh, DXMatrix4X4& originalData);
 	void ResetAnimation();
 
 	void SetAnimationSpeed(float speed);
 	void AddAnimationSpeed(float speed);
-	void ResetData(OneAnimation* nowAni);
+	void ResetData(ParserData::OneAnimation* nowAni);
 
 	void Release();
 
@@ -35,13 +35,13 @@ public:
 
 private:
 	// 한개의 애니메이션..
-	unordered_map <Transform*, OneAnimation*> m_OneAnimation;
+	unordered_map <Transform*, ParserData::OneAnimation*> m_OneAnimation;
 
 	// 원본 데이터 값..
 	unordered_map <Transform*, DXMatrix4X4> m_ResetData;
 
-	AnimationData* m_NowAniData;
-	AnimationData* m_NextAniData;
+	ParserData::OneFrame* m_NowAniData;
+	ParserData::OneFrame* m_NextAniData;
 
 	DXVector3 m_NowPos;
 	DXVector3 m_NextPos;

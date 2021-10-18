@@ -39,7 +39,7 @@ public:
 	ParserData::Bone* m_OneBone;					// Bone Data Struct
 	std::vector<BonePair> m_AllBoneList;			// Skinning Object Bone List
 
-	OneAnimation* m_OneAnimation;					// Object One Animation Data
+	ParserData::OneAnimation* m_OneAnimation;		// Object One Animation Data
 
 	bool m_OnlyAni = false;
 

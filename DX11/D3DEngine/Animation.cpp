@@ -18,7 +18,7 @@ void Animation::Update(float dTime)
 	}
 }
 
-void Animation::AnimationUpdate(Transform* nowMesh, OneAnimation* nowAni, float dTime)
+void Animation::AnimationUpdate(Transform* nowMesh, ParserData::OneAnimation* nowAni, float dTime)
 {
 	// 애니메이션 정보가 없을경우 처리하지 않는다..
 	if (nowAni == nullptr) return;
@@ -103,7 +103,7 @@ void Animation::AnimationUpdate(Transform* nowMesh, OneAnimation* nowAni, float 
 	nowMesh->m_NodeTM = ScaleTM * RotTM * TransTM;
 }
 
-void Animation::CheckKeyFrame(OneAnimation* nowAni)
+void Animation::CheckKeyFrame(ParserData::OneAnimation* nowAni)
 {
 	float frameTick = nowAni->m_TicksPerFrame / m_FrameSpeed;
 	int nowFrame = nowAni->m_NowIndex;
@@ -150,7 +150,7 @@ void Animation::CheckKeyFrame(OneAnimation* nowAni)
 	nowAni->m_NextIndex = nextFrame;
 }
 
-void Animation::AddAnimationData(GameObject* aniMesh, OneAnimation* aniData)
+void Animation::AddAnimationData(GameObject* aniMesh, ParserData::OneAnimation* aniData)
 {
 	// 애니메이션이 없을경우..
 	if (aniData == nullptr) return;
@@ -167,7 +167,7 @@ void Animation::AddAnimationData(GameObject* aniMesh, OneAnimation* aniData)
 	// 해당 오브젝트 Transform과 연동..
 	SetTransform(aniMesh->GetTransform(), nodeTM);
 
-	OneAnimation* newData = new OneAnimation(*aniData);
+	ParserData::OneAnimation* newData = new ParserData::OneAnimation(*aniData);
 
 	m_OneAnimation.insert(make_pair(aniMesh->GetTransform(), newData));
 }
@@ -223,7 +223,7 @@ float Animation::GetAnimationSpeed()
 	return m_FrameSpeed;
 }
 
-void Animation::ResetData(OneAnimation* nowAni)
+void Animation::ResetData(ParserData::OneAnimation* nowAni)
 {
 	nowAni->m_FrameTime = 0.0f;
 	nowAni->m_TickFrame = 0;

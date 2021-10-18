@@ -226,7 +226,6 @@ copy/Y "..\FBX\lib\64\r\libfbxsdk.dll"   "..\\lib"</Command>
     <ClCompile Include="Lexer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AnimationData.h" />
     <ClInclude Include="ASEFile.h" />
     <ClInclude Include="BoneWeights.h" />
     <ClInclude Include="CASEParser.h" />
