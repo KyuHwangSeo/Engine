@@ -275,7 +275,7 @@ void CASEParser::RecombinationTM(ParserData::ASEMesh* pMesh)
 	}
 
 	// 애니메이션이 있을경우 사이즈를 구해두자..
-	if (m_IsAnimation)
+	if (pMesh->m_Animation)
 	{
 		pMesh->m_Animation->m_TicksPerFrame = 1.0f / m_scenedata.m_FrameSpeed;
 		pMesh->m_Animation->m_TotalFrame = m_scenedata.m_LastFrame - m_scenedata.m_FirstFrame;

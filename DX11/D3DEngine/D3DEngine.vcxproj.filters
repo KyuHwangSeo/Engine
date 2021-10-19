@@ -247,6 +247,9 @@
     <Filter Include="소스 파일\Component\UI\Button">
       <UniqueIdentifier>{39183c58-fe05-48f2-a5e1-8cbc3447d90d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Shader\HLSL\Terrain">
+      <UniqueIdentifier>{e1883dec-6de5-49c0-b428-7e3f5072344d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -653,122 +656,128 @@
     <FxCompile Include="..\Resource\FX\fx\Blur.fx">
       <Filter>소스 파일\Shader\FX</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\NormalTextureDeferredPS.hlsl">
+    <FxCompile Include="..\Resource\Shader\TerrainPS.hlsl">
+      <Filter>소스 파일\Shader\HLSL\Terrain</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resource\Shader\TerrainVS.hlsl">
+      <Filter>소스 파일\Shader\HLSL\Terrain</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resource\Shader\NormalTextureDeferredPS.hlsl">
       <Filter>소스 파일\Shader\HLSL\Deferred\Basic</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\TextureDeferredPS.hlsl">
+    <FxCompile Include="..\Resource\Shader\TextureDeferredPS.hlsl">
       <Filter>소스 파일\Shader\HLSL\Deferred\Basic</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\BasicDeferredPS.hlsl">
+    <FxCompile Include="..\Resource\Shader\BasicDeferredPS.hlsl">
       <Filter>소스 파일\Shader\HLSL\Deferred\Basic</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\ColorPS.hlsl">
+    <FxCompile Include="..\Resource\Shader\ColorPS.hlsl">
       <Filter>소스 파일\Shader\HLSL\Deferred\Basic</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\FullScreenVS.hlsl">
+    <FxCompile Include="..\Resource\Shader\FullScreenVS.hlsl">
       <Filter>소스 파일\Shader\HLSL\Deferred\Light</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\LightPS.hlsl">
+    <FxCompile Include="..\Resource\Shader\LightPS.hlsl">
       <Filter>소스 파일\Shader\HLSL\Deferred\Light</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\SSAOPS.hlsl">
+    <FxCompile Include="..\Resource\Shader\SSAOBlurVS.hlsl">
+      <Filter>소스 파일\Shader\HLSL\Deferred\SSAO\Blur</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resource\Shader\SSAOHorizonBlurPS.hlsl">
+      <Filter>소스 파일\Shader\HLSL\Deferred\SSAO\Blur</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resource\Shader\SSAOVerticalBlurPS.hlsl">
+      <Filter>소스 파일\Shader\HLSL\Deferred\SSAO\Blur</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resource\Shader\SSAOPS.hlsl">
       <Filter>소스 파일\Shader\HLSL\Deferred\SSAO</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\SSAOVS.hlsl">
+    <FxCompile Include="..\Resource\Shader\SSAOVS.hlsl">
       <Filter>소스 파일\Shader\HLSL\Deferred\SSAO</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\SSAOBlurVS.hlsl">
-      <Filter>소스 파일\Shader\HLSL\Deferred\SSAO\Blur</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Resource\FX\SSAOHorizonBlurPS.hlsl">
-      <Filter>소스 파일\Shader\HLSL\Deferred\SSAO\Blur</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Resource\FX\SSAOVerticalBlurPS.hlsl">
-      <Filter>소스 파일\Shader\HLSL\Deferred\SSAO\Blur</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Resource\FX\NormalMapPS.hlsl">
+    <FxCompile Include="..\Resource\Shader\NormalMapPS.hlsl">
       <Filter>소스 파일\Shader\HLSL\Forward\Basic</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\TexturePS.hlsl">
+    <FxCompile Include="..\Resource\Shader\TexturePS.hlsl">
       <Filter>소스 파일\Shader\HLSL\Forward\Basic</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\BasicPS.hlsl">
+    <FxCompile Include="..\Resource\Shader\BasicPS.hlsl">
       <Filter>소스 파일\Shader\HLSL\Forward\Basic</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\FinalPS.hlsl">
+    <FxCompile Include="..\Resource\Shader\FinalPS.hlsl">
       <Filter>소스 파일\Shader\HLSL\Forward\Final</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\FinalVS.hlsl">
+    <FxCompile Include="..\Resource\Shader\FinalVS.hlsl">
       <Filter>소스 파일\Shader\HLSL\Forward\Final</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\NormalMapReflectPS.hlsl">
+    <FxCompile Include="..\Resource\Shader\TextureReflectPS.hlsl">
       <Filter>소스 파일\Shader\HLSL\Forward\Reflect</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\TextureReflectPS.hlsl">
+    <FxCompile Include="..\Resource\Shader\BasicReflectPS.hlsl">
       <Filter>소스 파일\Shader\HLSL\Forward\Reflect</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\BasicReflectPS.hlsl">
+    <FxCompile Include="..\Resource\Shader\NormalMapReflectPS.hlsl">
       <Filter>소스 파일\Shader\HLSL\Forward\Reflect</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\NormalTextureVS.hlsl">
+    <FxCompile Include="..\Resource\Shader\SkinVS.hlsl">
       <Filter>소스 파일\Shader\HLSL\ObjectVS</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\SkinVS.hlsl">
+    <FxCompile Include="..\Resource\Shader\TextureVS.hlsl">
       <Filter>소스 파일\Shader\HLSL\ObjectVS</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\TextureVS.hlsl">
+    <FxCompile Include="..\Resource\Shader\BasicVS.hlsl">
       <Filter>소스 파일\Shader\HLSL\ObjectVS</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\BasicVS.hlsl">
+    <FxCompile Include="..\Resource\Shader\ColorVS.hlsl">
       <Filter>소스 파일\Shader\HLSL\ObjectVS</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\ColorVS.hlsl">
+    <FxCompile Include="..\Resource\Shader\NormalSkinVS.hlsl">
       <Filter>소스 파일\Shader\HLSL\ObjectVS</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\NormalSkinVS.hlsl">
+    <FxCompile Include="..\Resource\Shader\NormalTextureVS.hlsl">
       <Filter>소스 파일\Shader\HLSL\ObjectVS</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\HorizonBlurCS.hlsl">
+    <FxCompile Include="..\Resource\Shader\HorizonBlurCS.hlsl">
       <Filter>소스 파일\Shader\HLSL\PostProcessing\Blur</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\VerticalBlurCS.hlsl">
+    <FxCompile Include="..\Resource\Shader\VerticalBlurCS.hlsl">
       <Filter>소스 파일\Shader\HLSL\PostProcessing\Blur</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\MotionBlurPS.hlsl">
+    <FxCompile Include="..\Resource\Shader\MotionBlurPS.hlsl">
       <Filter>소스 파일\Shader\HLSL\PostProcessing\MotionBlur</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\VelocityPS.hlsl">
+    <FxCompile Include="..\Resource\Shader\VelocityPS.hlsl">
       <Filter>소스 파일\Shader\HLSL\PostProcessing\MotionBlur</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\SkyCubePS.hlsl">
+    <FxCompile Include="..\Resource\Shader\ShadowPS.hlsl">
+      <Filter>소스 파일\Shader\HLSL\Shadow</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resource\Shader\SkinShadowVS.hlsl">
+      <Filter>소스 파일\Shader\HLSL\Shadow</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resource\Shader\NormalShadowVS.hlsl">
+      <Filter>소스 파일\Shader\HLSL\Shadow</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resource\Shader\SkyCubePS.hlsl">
       <Filter>소스 파일\Shader\HLSL\SkyCube</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\SkyCubeVS.hlsl">
+    <FxCompile Include="..\Resource\Shader\SkyCubeVS.hlsl">
       <Filter>소스 파일\Shader\HLSL\SkyCube</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\UIBasicPS.hlsl">
+    <FxCompile Include="..\Resource\Shader\UIBasicPS.hlsl">
       <Filter>소스 파일\Shader\HLSL\UI</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\UIBasicVS.hlsl">
+    <FxCompile Include="..\Resource\Shader\UIBasicVS.hlsl">
       <Filter>소스 파일\Shader\HLSL\UI</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resource\FX\LightHelper.fx">
+    <FxCompile Include="..\Resource\Shader\UIColliderPS.hlsl">
+      <Filter>소스 파일\Shader\HLSL\UI</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resource\Shader\UIColliderVS.hlsl">
+      <Filter>소스 파일\Shader\HLSL\UI</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resource\Shader\LightHelper.fx">
       <Filter>소스 파일\Shader\HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Resource\FX\NormalShadowVS.hlsl">
-      <Filter>소스 파일\Shader\HLSL\Shadow</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Resource\FX\SkinShadowVS.hlsl">
-      <Filter>소스 파일\Shader\HLSL\Shadow</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Resource\FX\ShadowPS.hlsl">
-      <Filter>소스 파일\Shader\HLSL\Shadow</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Resource\FX\UIColliderVS.hlsl">
-      <Filter>소스 파일\Shader\HLSL\UI</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Resource\FX\UIColliderPS.hlsl">
-      <Filter>소스 파일\Shader\HLSL\UI</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -789,7 +798,7 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Resource\FX\PixelHeader.hlsli">
+    <None Include="..\Resource\Shader\PixelHeader.hlsli">
       <Filter>소스 파일\Shader\HLSL</Filter>
     </None>
   </ItemGroup>

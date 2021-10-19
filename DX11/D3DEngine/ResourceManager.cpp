@@ -28,7 +28,6 @@ void ResourceManager::Initialize()
 	// Sampler »ý¼º
 	CreateSamplerState();
 
-
 	LoadShader("ColorShader", "ColorVS.cso", "ColorPS.cso", "");
 	LoadShader("SkyCubeShader", "SkyCubeVS.cso", "SkyCubePS.cso", "");
 	LoadShader("FinalShader", "FinalVS.cso", "FinalPS.cso", "");

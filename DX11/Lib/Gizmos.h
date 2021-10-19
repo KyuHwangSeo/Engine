@@ -38,7 +38,5 @@ private:
 	Shader* m_Shader;
 
 	cbPerObject m_ObjectData;
-
-	DirectX::BoundingBox m_Bounds;
 };
 

@@ -43,7 +43,7 @@ Shader::~Shader()
 
 void Shader::CreateShader(const wchar_t* vertexFilename, const wchar_t* pixelFilename, const wchar_t* computeFilename)
 {
-	std::wstring _path = L"../Resource/FX/";
+	std::wstring _path = L"../Resource/Shader/";
 
 	// 현재는 Vertex, Pixel Shader만 사용하므로 두개만 적용..
 	if (wcscmp(vertexFilename, L"") != 0)
