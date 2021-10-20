@@ -58,13 +58,17 @@ void MeshRenderer::Render(DXMatrix4X4 view, DXMatrix4X4 proj)
 	m_ObjectData.gWorld = world;
 	m_ObjectData.gWorldInvTranspose = worldInvTranspose;
 	m_ObjectData.gWorldViewProj = worldViewProj;
-	m_ObjectData.gTexTransform = m_Material->GetTexTransform();
 	m_ObjectData.gWorldView = world * view;
 	m_ObjectData.gWorldInvTransposeView = worldInvTranspose * view;
-	m_Material->SetVertexConstantBuffer(m_ObjectData);
 
 	// Material & Shader Update
-	m_Material->Update(world, view, proj);
+	for (auto& material : m_MaterialList)
+	{
+		m_ObjectData.gTexTransform = material.second->GetTexTransform();
+
+		material.second->SetVertexConstantBuffer(m_ObjectData);
+		material.second->Update(world, view, proj);
+	}
 
 	// Rendering Type
 	switch (m_RasterizerType)

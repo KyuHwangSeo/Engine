@@ -61,6 +61,9 @@ void ResourceManager::Initialize()
 	LoadShader("UIBasicShader", "UIBasicVS.cso", "UIBasicPS.cso", "");
 	LoadShader("UIColliderShader", "UIColliderVS.cso", "UIColliderPS.cso", "");
 
+	// Terrain Shader 로드..
+	LoadShader("TerrainShader", "TerrainVS.cso", "TerrainPS.cso", "");
+
 	// Shader에 적용된 Sampler 설정..
 	SetShaderSamplerState();
 
@@ -116,6 +119,7 @@ void ResourceManager::CreateSamplerState()
 	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
 	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.BorderColor[0] = samplerDesc.BorderColor[1] = samplerDesc.BorderColor[2] = samplerDesc.BorderColor[3] = 0.0f;
 	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 

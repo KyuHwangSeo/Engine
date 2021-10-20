@@ -250,6 +250,9 @@
     <Filter Include="소스 파일\Shader\HLSL\Terrain">
       <UniqueIdentifier>{e1883dec-6de5-49c0-b428-7e3f5072344d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Component\Terrain">
+      <UniqueIdentifier>{9b74b4c3-e62d-4714-9b61-524cc11c0626}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -471,6 +474,9 @@
     <ClInclude Include="RenderData.h">
       <Filter>소스 파일\D3DRenderer</Filter>
     </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>소스 파일\Component\Terrain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="D3DEngine.rc">
@@ -647,6 +653,9 @@
     </ClCompile>
     <ClCompile Include="UI_Button.cpp">
       <Filter>소스 파일\Component\UI\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>소스 파일\Component\Terrain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

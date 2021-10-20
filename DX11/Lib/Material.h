@@ -34,7 +34,7 @@ public:
 	bool Is_CubeMap;
 	bool Is_ShadowMap;
 
-	string m_Name;
+	std::string m_Name;
 
 public:
 	void Update(DXMatrix4X4 world, DXMatrix4X4 view, DXMatrix4X4 proj);
@@ -44,7 +44,7 @@ public:
 	ENGINE_DLL void SetNormalMap(ID3D11ShaderResourceView* normalMap);
 	ENGINE_DLL void SetCubeMap(ID3D11ShaderResourceView* cubeMap);
 	ENGINE_DLL void SetTexTransform(DXMatrix4X4 texTransform);
-	void SetShader(string shaderName);
+	void SetShader(Shader* shader);
 	void SetMaterialID(UINT matID);	
 
 	template <typename T>

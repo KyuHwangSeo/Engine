@@ -154,7 +154,7 @@ void Scene::MainRender()
 	m_ObjMG->Render(view, proj);
 
 	// SSAO Rendering..
-	m_Renderer->SSAORender();
+	//m_Renderer->SSAORender();
 
 	// Final Deferred Rendering..
 	m_Renderer->DeferredRender();

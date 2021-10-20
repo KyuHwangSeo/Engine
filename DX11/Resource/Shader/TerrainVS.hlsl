@@ -67,7 +67,7 @@ TerrainVertexOut main(TerrainVertexIn vin)
     vout.ShadowPosH = mul(gShadowTransform, float4(vin.PosL, 1.0f));
     
     // Terrain Texture Index
-    vout.TerrainTex = float2(vin.PosL.x, vin.PosL.z);
+    vout.TerrainTex = float2(abs(vin.PosL.x / 57), abs(vin.PosL.z / 57));
 	
     return vout;
 }

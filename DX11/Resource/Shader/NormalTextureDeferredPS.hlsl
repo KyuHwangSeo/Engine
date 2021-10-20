@@ -43,12 +43,12 @@ PixelOut main(VertexIn pin) : SV_TARGET
 	float3 bumpedNormalW = mul(normalMapSample, pin.TBN);
 	
 	vout.Albedo = albedo;
-    vout.Normal = float4(bumpedNormalW, 1.0f);
-	vout.Position = float4(pin.PosW, 1.0f);
-    vout.Light = float4(0.0f, gMatID, 1.0f, 1.0f);
-    vout.Shadow = float4(pin.ShadowPosH.xyz, 1.0f);
-    vout.NormalDepth = float4(pin.NormalV.xyz, 1.0f);
-    vout.Depth = float4(pin.PosH.z / pin.PosH.w, pin.ShadowPosH.w, pin.PosV.z, 1.0f);
+    vout.Normal = float4(bumpedNormalW, 0.0f);
+	vout.Position = float4(pin.PosW, 0.0f);
+    vout.Light = float4(0.0f, gMatID, 1.0f, 0.0f);
+    vout.Shadow = float4(pin.ShadowPosH.xyz, 0.0f);
+    vout.NormalDepth = float4(pin.NormalV.xyz, 0.0f);
+    vout.Depth = float4(pin.PosH.z / pin.PosH.w, pin.ShadowPosH.w, pin.PosV.z, 0.0f);
 	
 	return vout;
 }

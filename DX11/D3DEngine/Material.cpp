@@ -4,7 +4,6 @@
 #include "Transform.h"
 #include "GameObject.h"
 #include "Shader.h"
-#include "ResourceManager.h"
 #include "Gizmos.h"
 #include "Camera.h"
 #include "Material.h"
@@ -109,9 +108,9 @@ void Material::SetShadowTransform(DXMatrix4X4 shadowTransform)
 	g_ShadowTranspose = shadowTransform;
 }
 
-void Material::SetShader(string shaderName)
+void Material::SetShader(Shader* shader)
 {
-	m_Shader = D3DEngine::GetInstance()->GetResourceManager()->GetShader(shaderName);
+	m_Shader = shader;
 }
 
 void Material::SetMaterialID(UINT matID)

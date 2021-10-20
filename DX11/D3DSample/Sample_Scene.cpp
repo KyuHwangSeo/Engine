@@ -21,7 +21,7 @@ void Sample_Scene::Create()
 	//player->GetTransform()->MoveWorld(DXVector3(0.0f, 0.0f, 0.0f));
 	//player->GetTransform()->RotateLocal(DXVector3(0.0f, 180.0f, 0.0f));
 
-	GameObject* ground = KH_UTILITY::CreateObject("Map_Origin", eModelType::FBX, DXVector3(1.0f, 1.0f, 1.0f));
+	GameObject* ground = KH_UTILITY::CreateObject("Map_Origin", eModelType::TerrainMesh, DXVector3(1.0f, 1.0f, 1.0f));
 	ground->GetTransform()->RotateLocal(DXVector3(90.0f, 0.0f, 0.0f));
 
 	//Player* playerCom = new Player;

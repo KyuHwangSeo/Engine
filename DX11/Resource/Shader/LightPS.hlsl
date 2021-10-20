@@ -94,9 +94,9 @@ float4 main(VertexIn pin) : SV_TARGET
 			ComputeDirectionalLight(gMaterials[matID], gDirLights[i], float3(normal.xyz), ViewDirection,
 				A, D, S);
 
-            ambient += ambientAccess * A;
-            diffuse += shadows * D;
-            spec += shadows * S;
+            ambient += A;
+            diffuse += D;
+            spec += S;
         }
 
 
@@ -109,7 +109,7 @@ float4 main(VertexIn pin) : SV_TARGET
 				ComputePointLight(gMaterials[matID], gPointLights[i], float3(position.xyz), float3(normal.xyz), ViewDirection,
 					A, D, S);
 
-                ambient += ambientAccess * A;
+                ambient += A;
                 diffuse += D;
                 spec += S;
             }
@@ -124,7 +124,7 @@ float4 main(VertexIn pin) : SV_TARGET
 				ComputeSpotLight(gMaterials[matID], gSpotLights[i], float3(position.xyz), float3(normal.xyz), ViewDirection,
 					A, D, S);
 
-                ambient += ambientAccess * A;
+                ambient += A;
                 diffuse += D;
                 spec += S;
             }

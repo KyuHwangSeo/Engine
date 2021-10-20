@@ -18,6 +18,5 @@ public:
 
 private:
 	cbPerObject m_ObjectData;
-
 };
 

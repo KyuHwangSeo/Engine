@@ -86,6 +86,7 @@ enum class eModelType
 	Gizmo,
 	ASE,
 	FBX,
+	TerrainMesh,
 };
 
 // ModelCollider Type Enum Class

@@ -53,7 +53,24 @@ void GameManager::LoadData()
 {
 	//KH_UTILITY::LoadData(eLoadType::FBX, "CHARACTER_idle", "Character/CHARACTER_idle.fbx", false);
 	KH_UTILITY::LoadData(eLoadType::FBX, "Map_Origin", "Map/Map_Origin.fbx", true);
+
+	KH_UTILITY::LoadData(eLoadType::Texture, "mask", "mask.png");
+	KH_UTILITY::LoadData(eLoadType::Texture, "Dead_Leaves_Mask", "Dead_Leaves_Mask.png");
+	KH_UTILITY::LoadData(eLoadType::Texture, "Dead_Leaves_Diffuse", "Dead_Leaves_Diffuse.png");
+	KH_UTILITY::LoadData(eLoadType::Texture, "Dead_Leaves_Normal", "Dead_Leaves_Normal.png");
 	
+	KH_UTILITY::LoadData(eLoadType::Texture, "Dry_Ground_Mask", "Dry_Ground_Mask.png");
+	KH_UTILITY::LoadData(eLoadType::Texture, "Dry_Ground_Diffuse", "Dry_Ground_Diffuse.png");
+	KH_UTILITY::LoadData(eLoadType::Texture, "Dry_Ground_Normal", "Dry_Ground_Normal.png");
+
+	KH_UTILITY::LoadData(eLoadType::Texture, "Grass_Ivy_Mask", "Grass_Ivy_Mask.png");
+	KH_UTILITY::LoadData(eLoadType::Texture, "Grass_Ivy_Diffuse", "Grass_Ivy_Diffuse.png");
+	KH_UTILITY::LoadData(eLoadType::Texture, "Grass_Ivy_Normal", "Grass_Ivy_Normal.png");
+
+	KH_UTILITY::LoadData(eLoadType::Texture, "Rock_Mask", "Rock_Mask.png");
+	KH_UTILITY::LoadData(eLoadType::Texture, "Rock_Diffuse", "Rock_Diffuse.png");
+	KH_UTILITY::LoadData(eLoadType::Texture, "Rock_Normal", "Rock_Normal.png");
+
 	// FBX Mananger «ÿ¡¶..
 	KH_UTILITY::ResetFBX();
 }

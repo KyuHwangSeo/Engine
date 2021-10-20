@@ -10,6 +10,7 @@
 #include "MeshRenderer.h"
 #include "SkinMeshRenderer.h"
 #include "CanvasRenderer.h"
+#include "Terrain.h"
 #include "Gizmos.h"
 #include "Camera.h"
 #include "Light.h"
@@ -96,7 +97,7 @@ GameObject* Factory::CreateObject(string objName, eModelType modelType, DXVector
 	{
 		MeshRenderer* mRenderer = new MeshRenderer(eRasterizerType::Wire, eTopologyType::Line);
 		mRenderer->SetVertexBuffer(m_RsMG->GetVertexBuffer("Grid"));
-		mRenderer->m_Material->SetShader("ColorShader");
+		mRenderer->m_Material->SetShader(m_RsMG->GetShader("ColorShader"));
 
 		newObj->AddComponent(mRenderer);
 		m_HelpMG->AddObject(newObj);
@@ -107,7 +108,7 @@ GameObject* Factory::CreateObject(string objName, eModelType modelType, DXVector
 	{
 		MeshRenderer* mRenderer = new MeshRenderer(eRasterizerType::Wire, eTopologyType::Line);
 		mRenderer->SetVertexBuffer(m_RsMG->GetVertexBuffer("Axis"));
-		mRenderer->m_Material->SetShader("ColorShader");
+		mRenderer->m_Material->SetShader(m_RsMG->GetShader("ColorShader"));
 
 		newObj->AddComponent(mRenderer);
 		m_HelpMG->AddObject(newObj);
@@ -118,7 +119,7 @@ GameObject* Factory::CreateObject(string objName, eModelType modelType, DXVector
 	{
 		MeshRenderer* mRenderer = new MeshRenderer();
 		mRenderer->SetVertexBuffer(m_RsMG->GetVertexBuffer("Sky"));
-		mRenderer->m_Material->SetShader("SkyCubeShader");
+		mRenderer->m_Material->SetShader(m_RsMG->GetShader("SkyCubeShader"));
 
 		newObj->AddComponent(mRenderer);
 		m_ObjMG->AddTopObject(newObj);
@@ -130,7 +131,7 @@ GameObject* Factory::CreateObject(string objName, eModelType modelType, DXVector
 	{
 		MeshRenderer* mRenderer = new MeshRenderer();
 		mRenderer->SetVertexBuffer(m_RsMG->GetVertexBuffer("GeoBox"));
-		mRenderer->m_Material->SetShader("BasicDeferredShader");
+		mRenderer->m_Material->SetShader(m_RsMG->GetShader("BasicDeferredShader"));
 
 		if (isCol)
 		{
@@ -150,7 +151,7 @@ GameObject* Factory::CreateObject(string objName, eModelType modelType, DXVector
 	{
 		MeshRenderer* mRenderer = new MeshRenderer();
 		mRenderer->SetVertexBuffer(m_RsMG->GetVertexBuffer("GeoSphere"));
-		mRenderer->m_Material->SetShader("BasicDeferredShader");
+		mRenderer->m_Material->SetShader(m_RsMG->GetShader("BasicDeferredShader"));
 
 		if (isCol)
 		{
@@ -170,7 +171,7 @@ GameObject* Factory::CreateObject(string objName, eModelType modelType, DXVector
 	{
 		MeshRenderer* mRenderer = new MeshRenderer();
 		mRenderer->SetVertexBuffer(m_RsMG->GetVertexBuffer("GeoCylinder"));
-		mRenderer->m_Material->SetShader("BasicDeferredShader");
+		mRenderer->m_Material->SetShader(m_RsMG->GetShader("BasicDeferredShader"));
 
 		if (isCol)
 		{
@@ -190,7 +191,7 @@ GameObject* Factory::CreateObject(string objName, eModelType modelType, DXVector
 	{
 		MeshRenderer* mRenderer = new MeshRenderer();
 		mRenderer->SetVertexBuffer(m_RsMG->GetVertexBuffer(objName));
-		mRenderer->m_Material->SetShader("BasicDeferredShader");
+		mRenderer->m_Material->SetShader(m_RsMG->GetShader("BasicDeferredShader"));
 
 		if (isCol)
 		{
@@ -291,7 +292,7 @@ GameObject* Factory::CreateObject(string objName, eModelType modelType, DXVector
 	{
 		MeshRenderer* mRenderer = new MeshRenderer(eRasterizerType::Wire);
 		mRenderer->SetVertexBuffer(m_RsMG->GetVertexBuffer(objName));
-		mRenderer->m_Material->SetShader("ColorShader");
+		mRenderer->m_Material->SetShader(m_RsMG->GetShader("ColorShader"));
 
 		newObj->AddComponent(mRenderer);
 		m_ObjMG->AddObject(newObj);
@@ -321,7 +322,7 @@ GameObject* Factory::CreateObject(string objName, eModelType modelType, DXVector
 		size_t meshSize = m_RsMG->GetMeshListSize(objName);
 		for (size_t i = 0; i < meshSize; i++)
 		{
-			string meshKey = m_RsMG->GetMeshKey(objName, i);
+			std::string meshKey = m_RsMG->GetMeshKey(objName, i);
 
 			ParserData::Mesh* newMesh = m_RsMG->GetMesh(meshKey);
 			VertexBuffer* newBuffer = m_RsMG->GetVertexBuffer(meshKey);
@@ -385,6 +386,33 @@ GameObject* Factory::CreateObject(string objName, eModelType modelType, DXVector
 		objList.clear();
 	}
 	break;
+	case eModelType::TerrainMesh:
+	{
+		FBXModel* parser = m_RsMG->GetFBXParser(objName);
+		m_ObjMG->AddTopObject(newObj);
+		m_ObjMG->AddObject(newObj);
+
+		std::string meshKey = m_RsMG->GetMeshKey(objName);
+
+		ParserData::Mesh* newMesh = m_RsMG->GetMesh(meshKey);
+		VertexBuffer* newBuffer = m_RsMG->GetVertexBuffer(meshKey);
+
+		newObj->GetTransform()->SetNodeTM(newMesh->m_LocalTM);
+		newObj->GetTransform()->SetLocalTM(newMesh->m_WorldTM);
+
+		Terrain* terrainCom = new Terrain();
+		terrainCom->SetVertexBuffer(newBuffer);
+		terrainCom->SetShader(m_RsMG->GetShader("TerrainShader"));
+
+		/// 임시 Layer 추가 코드..
+		terrainCom->AddLayer(m_RsMG->GetTexture("Dead_Leaves_Diffuse"), m_RsMG->GetTexture("Dead_Leaves_Diffuse"), m_RsMG->GetTexture("Dead_Leaves_Normal"));
+		terrainCom->AddLayer(m_RsMG->GetTexture("Dry_Ground_Mask"), m_RsMG->GetTexture("Dry_Ground_Diffuse"), m_RsMG->GetTexture("Dry_Ground_Normal"));
+		terrainCom->AddLayer(m_RsMG->GetTexture("Grass_Ivy_Mask"), m_RsMG->GetTexture("Grass_Ivy_Diffuse"), m_RsMG->GetTexture("Grass_Ivy_Normal"));
+		terrainCom->AddLayer(m_RsMG->GetTexture("Rock_Mask"), m_RsMG->GetTexture("Rock_Diffuse"), m_RsMG->GetTexture("Rock_Normal"));
+
+		newObj->AddComponent(terrainCom);
+	}
+		break;
 	default:
 		break;
 	}
@@ -397,7 +425,7 @@ void Factory::SetRenderer(GameObject* obj, std::string meshKey, ParserData::Mesh
 	// 스키닝 오브젝트 구분..
 	if (mesh->m_IsSkinningObject)
 	{
-		SkinMeshRenderer* sRenderer = new SkinMeshRenderer(eRasterizerType::Wire);
+		SkinMeshRenderer* sRenderer = new SkinMeshRenderer(eRasterizerType::Solid);
 		sRenderer->SetMesh(mesh);
 		sRenderer->SetVertexBuffer(vBuffer);
 
@@ -410,12 +438,12 @@ void Factory::SetRenderer(GameObject* obj, std::string meshKey, ParserData::Mesh
 			if (mesh->m_MaterialData->m_IsDiffuseMap)
 			{
 				sRenderer->m_Material->SetDiffuseMap(m_RsMG->GetTexture(meshKey, eTextureType::Diffuse));
-				sRenderer->m_Material->SetShader("SkinDeferredShader");
+				sRenderer->m_Material->SetShader(m_RsMG->GetShader("SkinDeferredShader"));
 			}
 			if (mesh->m_MaterialData->m_IsBumpMap)
 			{
 				sRenderer->m_Material->SetNormalMap(m_RsMG->GetTexture(meshKey, eTextureType::Bump));
-				sRenderer->m_Material->SetShader("NormalSkinDeferredShader");
+				sRenderer->m_Material->SetShader(m_RsMG->GetShader("NormalSkinDeferredShader"));
 			}
 		}
 
@@ -424,7 +452,7 @@ void Factory::SetRenderer(GameObject* obj, std::string meshKey, ParserData::Mesh
 	}
 	else
 	{
-		MeshRenderer* mRenderer = new MeshRenderer(eRasterizerType::Wire);
+		MeshRenderer* mRenderer = new MeshRenderer(eRasterizerType::Solid);
 		mRenderer->SetMesh(mesh);
 		mRenderer->SetVertexBuffer(vBuffer);
 
@@ -433,21 +461,21 @@ void Factory::SetRenderer(GameObject* obj, std::string meshKey, ParserData::Mesh
 		if (mesh->m_MaterialData != nullptr)
 		{
 			mRenderer->m_Material->SetMaterialData(m_RsMG->GetMaterial(meshKey));
-			mRenderer->m_Material->SetShader("BasicDeferredShader");
+			mRenderer->m_Material->SetShader(m_RsMG->GetShader("BasicDeferredShader"));
 			if (mesh->m_MaterialData->m_IsDiffuseMap)
 			{
 				mRenderer->m_Material->SetDiffuseMap(m_RsMG->GetTexture(meshKey, eTextureType::Diffuse));
-				mRenderer->m_Material->SetShader("TextureDeferredShader");
+				mRenderer->m_Material->SetShader(m_RsMG->GetShader("TextureDeferredShader"));
 			}
 			if (mesh->m_MaterialData->m_IsBumpMap)
 			{
 				mRenderer->m_Material->SetNormalMap(m_RsMG->GetTexture(meshKey, eTextureType::Bump));
-				mRenderer->m_Material->SetShader("NormalDeferredShader");
+				mRenderer->m_Material->SetShader(m_RsMG->GetShader("NormalDeferredShader"));
 			}
 		}
 		else
 		{
-			mRenderer->m_Material->SetShader("BasicDeferredShader");
+			mRenderer->m_Material->SetShader(m_RsMG->GetShader("BasicDeferredShader"));
 		}
 
 		m_MatMG->AddMaterial(mRenderer->m_Material);
@@ -510,7 +538,7 @@ GameObject* Factory::CreateUI(string objName, eUIType uiType, string texKey, DXV
 		CanvasRenderer* cRenderer = new CanvasRenderer(eRasterizerType::Solid);
 		cRenderer->SetVertexBuffer(m_RsMG->GetVertexBuffer("UIBasic"));
 		cRenderer->m_Material->SetDiffuseMap(m_RsMG->GetTexture(texKey));
-		cRenderer->m_Material->SetShader("UIBasicShader");
+		cRenderer->m_Material->SetShader(m_RsMG->GetShader("UIBasicShader"));
 		newObj->AddComponent(cRenderer);
 
 		UI_Image* uiImage = new UI_Image();
@@ -532,7 +560,7 @@ GameObject* Factory::CreateUI(string objName, eUIType uiType, string texKey, DXV
 		CanvasRenderer* cRenderer = new CanvasRenderer(eRasterizerType::Solid);
 		cRenderer->SetVertexBuffer(m_RsMG->GetVertexBuffer("UIBasic"));
 		cRenderer->m_Material->SetDiffuseMap(m_RsMG->GetTexture(texKey));
-		cRenderer->m_Material->SetShader("UIBasicShader");
+		cRenderer->m_Material->SetShader(m_RsMG->GetShader("UIBasicShader"));
 		newObj->AddComponent(cRenderer);
 
 		UI_Button* uiButton = new UI_Button();

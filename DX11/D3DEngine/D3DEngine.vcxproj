@@ -275,6 +275,7 @@ copy/Y "$(TargetPath)"  "..\\bin" </Command>
     <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="SSAO.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Terrain.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="UIManager.h" />
@@ -333,6 +334,7 @@ copy/Y "$(TargetPath)"  "..\\bin" </Command>
     <ClCompile Include="SkyBox.cpp" />
     <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="SSAO.cpp" />
+    <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="UIManager.cpp" />
