@@ -37,10 +37,16 @@ void Terrain::Render(DXMatrix4X4 view, DXMatrix4X4 proj)
 	UINT index = 0;
 	for (TerrainLayer* layer : m_LayerList)
 	{
-		m_TerrainShader->SetSRV(0 + index, layer->m_MaskTex.Get());
-		m_TerrainShader->SetSRV(1 + index, layer->m_DiffuseTex.Get());
-		m_TerrainShader->SetSRV(2 + index, layer->m_NormalMapTex.Get());
-		index += 3;
+		m_TerrainShader->SetSRV(index, layer->m_MaskTex.Get());
+
+		for (MaterialLayer& matLayer : layer->m_MatList)
+		{
+			index++;
+			m_TerrainShader->SetSRV(index, matLayer.m_DiffuseTex.Get());
+			index++;
+			m_TerrainShader->SetSRV(index, matLayer.m_NormalMapTex.Get());
+		}
+		index++;
 	}
 
 	// Vertex Shader Update
@@ -68,8 +74,12 @@ void Terrain::Release()
 	for (TerrainLayer* layer : m_LayerList)
 	{
 		layer->m_MaskTex.Reset();
-		layer->m_DiffuseTex.Reset();
-		layer->m_NormalMapTex.Reset();
+
+		for (MaterialLayer& matLayer : layer->m_MatList)
+		{
+			matLayer.m_DiffuseTex.Reset();
+			matLayer.m_NormalMapTex.Reset();
+		}
 
 		SAFE_DELETE(layer);
 	}
@@ -94,7 +104,29 @@ void Terrain::SetShader(Shader* shader)
 	m_TerrainShader = shader;
 }
 
-void Terrain::AddLayer(Texture mask, Texture diffuse, Texture normalmap)
+void Terrain::AddLayer(Texture mask, MaterialLayer& layer1, MaterialLayer& layer2, MaterialLayer& layer3)
 {
-	m_LayerList.push_back(new TerrainLayer(mask, diffuse, normalmap));
+	TerrainLayer* terrainLayer = new TerrainLayer(mask);
+	terrainLayer->m_MatList.push_back(layer1);
+	terrainLayer->m_MatList.push_back(layer2);
+	terrainLayer->m_MatList.push_back(layer3);
+
+	m_LayerList.push_back(terrainLayer);
+}
+
+void Terrain::AddLayer(Texture mask, MaterialLayer& layer1, MaterialLayer& layer2)
+{
+	TerrainLayer* terrainLayer = new TerrainLayer(mask);
+	terrainLayer->m_MatList.push_back(layer1);
+	terrainLayer->m_MatList.push_back(layer2);
+
+	m_LayerList.push_back(terrainLayer);
+}
+
+void Terrain::AddLayer(Texture mask, MaterialLayer& layer1)
+{
+	TerrainLayer* terrainLayer = new TerrainLayer(mask);
+	terrainLayer->m_MatList.push_back(layer1);
+
+	m_LayerList.push_back(terrainLayer);
 }

@@ -405,10 +405,12 @@ GameObject* Factory::CreateObject(string objName, eModelType modelType, DXVector
 		terrainCom->SetShader(m_RsMG->GetShader("TerrainShader"));
 
 		/// 임시 Layer 추가 코드..
-		terrainCom->AddLayer(m_RsMG->GetTexture("Dead_Leaves_Diffuse"), m_RsMG->GetTexture("Dead_Leaves_Diffuse"), m_RsMG->GetTexture("Dead_Leaves_Normal"));
-		terrainCom->AddLayer(m_RsMG->GetTexture("Dry_Ground_Mask"), m_RsMG->GetTexture("Dry_Ground_Diffuse"), m_RsMG->GetTexture("Dry_Ground_Normal"));
-		terrainCom->AddLayer(m_RsMG->GetTexture("Grass_Ivy_Mask"), m_RsMG->GetTexture("Grass_Ivy_Diffuse"), m_RsMG->GetTexture("Grass_Ivy_Normal"));
-		terrainCom->AddLayer(m_RsMG->GetTexture("Rock_Mask"), m_RsMG->GetTexture("Rock_Diffuse"), m_RsMG->GetTexture("Rock_Normal"));
+		MaterialLayer matLayer1 = MaterialLayer(m_RsMG->GetTexture("Grass_Ivy_Diffuse"), m_RsMG->GetTexture("Grass_Ivy_Normal"));
+		MaterialLayer matLayer2 = MaterialLayer(m_RsMG->GetTexture("Dry_Ground_Diffuse"), m_RsMG->GetTexture("Dry_Ground_Normal"));
+		MaterialLayer matLayer3 = MaterialLayer(m_RsMG->GetTexture("Dead_Leaves_Diffuse"), m_RsMG->GetTexture("Dead_Leaves_Normal"));
+		MaterialLayer matLayer4 = MaterialLayer(m_RsMG->GetTexture("Rock_Diffuse"), m_RsMG->GetTexture("Rock_Normal"));
+		terrainCom->AddLayer(m_RsMG->GetTexture("mask"), matLayer1, matLayer2, matLayer3);
+		terrainCom->AddLayer(m_RsMG->GetTexture("Rock_Mask"), matLayer4);
 
 		newObj->AddComponent(terrainCom);
 	}

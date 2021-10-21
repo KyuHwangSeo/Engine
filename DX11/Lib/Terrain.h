@@ -1,13 +1,20 @@
 #pragma once
 typedef ComPtr<ID3D11ShaderResourceView> Texture;
 
-struct TerrainLayer
+struct MaterialLayer
 {
-	TerrainLayer(Texture mask, Texture diffuse, Texture normalmap) : m_MaskTex(mask), m_DiffuseTex(diffuse), m_NormalMapTex(normalmap) {}
+	MaterialLayer(Texture diffuse, Texture normalmap) : m_DiffuseTex(diffuse), m_NormalMapTex(normalmap) {}
 
-	Texture m_MaskTex;
 	Texture m_DiffuseTex;
 	Texture m_NormalMapTex;
+};
+
+struct TerrainLayer
+{
+	TerrainLayer(Texture mask) : m_MaskTex(mask) {}
+
+	Texture m_MaskTex;
+	std::vector<MaterialLayer> m_MatList;
 };
 
 class Terrain : public Component
@@ -24,7 +31,9 @@ public:
 
 	void SetVertexBuffer(VertexBuffer* vBuffer);
 	void SetShader(Shader* shader);
-	void AddLayer(Texture mask, Texture diffuse, Texture normalmap);
+	void AddLayer(Texture mask, MaterialLayer& layer1, MaterialLayer& layer2, MaterialLayer& layer3);
+	void AddLayer(Texture mask, MaterialLayer& layer1, MaterialLayer& layer2);
+	void AddLayer(Texture mask, MaterialLayer& layer1);
 
 private:
 	ComPtr<ID3D11DeviceContext> m_DeviceContext;

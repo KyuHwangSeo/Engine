@@ -51,7 +51,7 @@ void GameManager::Render()
 
 void GameManager::LoadData()
 {
-	//KH_UTILITY::LoadData(eLoadType::FBX, "CHARACTER_idle", "Character/CHARACTER_idle.fbx", false);
+	KH_UTILITY::LoadData(eLoadType::FBX, "CHARACTER_idle", "Character/CHARACTER_idle.fbx", false);
 	KH_UTILITY::LoadData(eLoadType::FBX, "Map_Origin", "Map/Map_Origin.fbx", true);
 
 	KH_UTILITY::LoadData(eLoadType::Texture, "mask", "mask.png");

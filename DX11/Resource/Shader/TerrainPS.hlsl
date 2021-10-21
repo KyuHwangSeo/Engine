@@ -1,18 +1,16 @@
 Texture2D gMask1 : register(t0);
+
 Texture2D gColor1 : register(t1);
 Texture2D gNormal1 : register(t2);
+Texture2D gColor2 : register(t3);
+Texture2D gNormal2 : register(t4);
+Texture2D gColor3 : register(t5);
+Texture2D gNormal3 : register(t6);
 
-Texture2D gMask2 : register(t3);
-Texture2D gColor2 : register(t4);
-Texture2D gNormal2 : register(t5);
+Texture2D gMask2 : register(t7);
 
-Texture2D gMask3 : register(t6);
-Texture2D gColor3 : register(t7);
-Texture2D gNormal3 : register(t8);
-
-Texture2D gMask4 : register(t9);
-Texture2D gColor4 : register(t10);
-Texture2D gNormal4 : register(t11);
+Texture2D gColor4 : register(t8);
+Texture2D gNormal4 : register(t9);
 
 SamplerState samWrapMinLinear : register(s0);
 
@@ -51,28 +49,29 @@ PixelOut main(VertexIn pin) : SV_TARGET
 {
     PixelOut vout;
 	
-    float4 tex1 = gMask1.Sample(samWrapMinLinear, pin.TerrainTex);
-    if (tex1.r > 0.0f)
+    float4 mask1 = gMask1.Sample(samWrapMinLinear, pin.TerrainTex);
+    float4 tex1 = float4(0.0f, 0.0f, 0.0f, 0.0f);
+    if (mask1.r > 0.0f)
     {
-        tex1.rgb = gColor1.Sample(samWrapMinLinear, pin.Tex) * tex1.r;
+        tex1.rgb += gColor1.Sample(samWrapMinLinear, pin.Tex).rgb * mask1.r;
     }
-    float4 tex2 = gMask2.Sample(samWrapMinLinear, pin.TerrainTex);
-    if (tex2.r > 0.0f)
+    if (mask1.g > 0.0f)
     {
-        tex2.rgb = gColor2.Sample(samWrapMinLinear, pin.Tex) * tex2.r;
+        tex1.rgb += gColor2.Sample(samWrapMinLinear, pin.Tex).rgb * mask1.g;
     }
-    float4 tex3 = gMask3.Sample(samWrapMinLinear, pin.TerrainTex);
-    if (tex3.r > 0.0f)
+    if (mask1.b > 0.0f)
     {
-        tex3.rgb = gColor3.Sample(samWrapMinLinear, pin.Tex) * tex3.r;
-    }
-    float4 tex4 = gMask4.Sample(samWrapMinLinear, pin.TerrainTex);
-    if (tex4.r > 0.0f)
-    {
-        tex4.rgb = gColor4.Sample(samWrapMinLinear, pin.Tex) * tex4.r;
+        tex1.rgb += gColor3.Sample(samWrapMinLinear, pin.Tex).rgb * mask1.b;
     }
     
-    float4 albedo = float4(float3(tex1.rgb + tex2.rgb + tex3.rgb + tex4.rgb), 1.0f);
+    float4 mask2 = gMask2.Sample(samWrapMinLinear, pin.TerrainTex);
+    float4 tex2 = float4(0.0f, 0.0f, 0.0f, 0.0f);
+    if (mask2.r > 0.0f)
+    {
+        tex2.rgb += gColor4.Sample(samWrapMinLinear, pin.Tex).rgb * mask2.r;
+    }
+    
+    float4 albedo = float4(float3(tex1.rgb + tex2.rgb), 1.0f);
     
     vout.Albedo = albedo;
     vout.Normal = float4(pin.NormalW, 1.0f);
