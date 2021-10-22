@@ -8,6 +8,12 @@
 #include "Shader.h"
 #include "Terrain.h"
 
+#ifndef STB_IMAGE_IMPLEMENTATION
+	#define STB_IMAGE_IMPLEMENTATION
+#endif
+
+#include "stb_image.h"
+
 void Terrain::Start()
 {
 	m_DeviceContext = D3DEngine::GetInstance()->GetDeviceContext();
@@ -104,29 +110,48 @@ void Terrain::SetShader(Shader* shader)
 	m_TerrainShader = shader;
 }
 
-void Terrain::AddLayer(Texture mask, MaterialLayer& layer1, MaterialLayer& layer2, MaterialLayer& layer3)
+void Terrain::AddLayer(Texture mask, MaterialLayer& channel_R, MaterialLayer& channel_G, MaterialLayer& channel_B, MaterialLayer& channel_A)
 {
 	TerrainLayer* terrainLayer = new TerrainLayer(mask);
-	terrainLayer->m_MatList.push_back(layer1);
-	terrainLayer->m_MatList.push_back(layer2);
-	terrainLayer->m_MatList.push_back(layer3);
+	terrainLayer->m_MatList.push_back(channel_R);
+	terrainLayer->m_MatList.push_back(channel_G);
+	terrainLayer->m_MatList.push_back(channel_B);
+	terrainLayer->m_MatList.push_back(channel_A);
 
 	m_LayerList.push_back(terrainLayer);
 }
 
-void Terrain::AddLayer(Texture mask, MaterialLayer& layer1, MaterialLayer& layer2)
+void Terrain::AddLayer(Texture mask, MaterialLayer& channel_R, MaterialLayer& channel_G, MaterialLayer& channel_B)
 {
+	int width, height, channels; 
+	unsigned char* img = stbi_load("../Resource/Textures/mask.png", &width, &height, &channels, 4);
+
+	unsigned char r = img[0];
+	unsigned char g = img[1];
+	unsigned char b = img[2];
+	unsigned char a = img[3];
+
 	TerrainLayer* terrainLayer = new TerrainLayer(mask);
-	terrainLayer->m_MatList.push_back(layer1);
-	terrainLayer->m_MatList.push_back(layer2);
+	terrainLayer->m_MatList.push_back(channel_R);
+	terrainLayer->m_MatList.push_back(channel_G);
+	terrainLayer->m_MatList.push_back(channel_B);
 
 	m_LayerList.push_back(terrainLayer);
 }
 
-void Terrain::AddLayer(Texture mask, MaterialLayer& layer1)
+void Terrain::AddLayer(Texture mask, MaterialLayer& channel_R, MaterialLayer& channel_G)
 {
 	TerrainLayer* terrainLayer = new TerrainLayer(mask);
-	terrainLayer->m_MatList.push_back(layer1);
+	terrainLayer->m_MatList.push_back(channel_R);
+	terrainLayer->m_MatList.push_back(channel_G);
+
+	m_LayerList.push_back(terrainLayer);
+}
+
+void Terrain::AddLayer(Texture mask, MaterialLayer& channel_R)
+{
+	TerrainLayer* terrainLayer = new TerrainLayer(mask);
+	terrainLayer->m_MatList.push_back(channel_R);
 
 	m_LayerList.push_back(terrainLayer);
 }

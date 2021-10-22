@@ -22,6 +22,7 @@ public:
 	void LoadData_ASE_Animation(std::string objectName, std::string fileName = "");
 	void LoadData_FBX(std::string objectName, std::string fileName = "", bool fbxScaling = true);
 	void LoadData_FBX_Animation(std::string objectName, std::string fileName = "", bool fbxScaling = true);
+	void LoadData_Terrain(std::string objectName, std::string fileName = "", std::string maskName = "", bool fbxScaling = true);
 	ENGINE_DLL void LoadData(eLoadType loadType, std::string objectName, std::string fileName, bool fbxScaling = true);
 	void LoadData_MaterialList(std::string objectName);
 

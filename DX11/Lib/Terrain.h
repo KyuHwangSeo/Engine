@@ -3,6 +3,7 @@ typedef ComPtr<ID3D11ShaderResourceView> Texture;
 
 struct MaterialLayer
 {
+	MaterialLayer() = default;
 	MaterialLayer(Texture diffuse, Texture normalmap) : m_DiffuseTex(diffuse), m_NormalMapTex(normalmap) {}
 
 	Texture m_DiffuseTex;
@@ -11,7 +12,7 @@ struct MaterialLayer
 
 struct TerrainLayer
 {
-	TerrainLayer(Texture mask) : m_MaskTex(mask) {}
+	TerrainLayer(Texture mask) : m_MaskTex(mask) { m_MatList.resize(4); }
 
 	Texture m_MaskTex;
 	std::vector<MaterialLayer> m_MatList;

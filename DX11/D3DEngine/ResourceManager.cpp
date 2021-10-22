@@ -327,6 +327,26 @@ void ResourceManager::LoadData_FBX_Animation(std::string objectName, std::string
 	m_FBXParserList.insert(make_pair(objectName, newFBX));
 }
 
+void ResourceManager::LoadData_Terrain(std::string objectName, std::string fileName /*= ""*/, std::string maskName /*= ""*/, bool fbxScaling /*= true*/)
+{
+	m_FBXParser->LoadScene(fileName.c_str(), fbxScaling);
+	FBXModel* newFBX = m_FBXParser->GetModel();
+
+	// Mesh Object Buffer 持失
+	for (size_t i = 0; i < newFBX->m_MeshList.size(); i++)
+	{
+		ParserData::Mesh* mesh = newFBX->m_MeshList[i];
+		std::string key = objectName + " " + mesh->m_NodeName;
+
+		LoadData_Mesh(objectName, key, mesh);
+	}
+
+	m_FBXParserList.insert(make_pair(objectName, newFBX));
+
+	/// FBX Texture, FBX Material 持失
+	LoadData_MaterialList(objectName);
+}
+
 ENGINE_DLL void ResourceManager::LoadData(eLoadType loadType, std::string objectName, std::string fileName, bool fbxScaling)
 {
 	switch (loadType)
@@ -352,6 +372,8 @@ ENGINE_DLL void ResourceManager::LoadData(eLoadType loadType, std::string object
 	case eLoadType::FBX_Ani:
 		LoadData_FBX_Animation(objectName, m_ModelRoute + fileName);
 		break;
+	case eLoadType::Terrain:
+
 	default:
 		break;
 	}
