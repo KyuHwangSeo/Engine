@@ -22,6 +22,7 @@ public:
 	void LoadData_ASE_Animation(std::string objectName, std::string fileName = "");
 	void LoadData_FBX(std::string objectName, std::string fileName = "", bool fbxScaling = true);
 	void LoadData_FBX_Animation(std::string objectName, std::string fileName = "", bool fbxScaling = true);
+	void LoadData_Terrain(std::string objectName, std::string fileName = "", std::string maskName = "", bool fbxScaling = true);
 	ENGINE_DLL void LoadData(eLoadType loadType, std::string objectName, std::string fileName, bool fbxScaling = true);
 	void LoadData_MaterialList(std::string objectName);
 
@@ -41,6 +42,7 @@ public:
 
 	void LoadData_SkinMesh(std::string objectName, std::string key, ParserData::Mesh* meshData);
 	void LoadData_Mesh(std::string objectName, std::string key, ParserData::Mesh* meshData);
+	void LoadData_Terrain(std::string objectName, std::string key, ParserData::Mesh* meshData);
 	void LoadData_Animation(std::string objectName, std::string key, ParserData::Mesh* meshData);
 	ENGINE_DLL void CreateBoneCollider(std::string objectName, eColliderType colType, float range);
 	void SetBoxCollider(std::string objectName, std::string key, ParserData::Mesh* meshData, DXVector3 range);

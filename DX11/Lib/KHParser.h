@@ -23,3 +23,5 @@ using namespace fbxsdk;
 #include <cassert>
 #include "BoneWeights.h"
 #include "FBXParser.h"
+
+#include "ImageParser.h"

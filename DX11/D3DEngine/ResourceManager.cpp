@@ -25,6 +25,8 @@ void ResourceManager::Initialize()
 	m_FBXParser = new FBXParser();
 	m_FBXParser->Initalize();
 
+	m_ImgParser = new ImageParser();
+
 	// Sampler 생성
 	CreateSamplerState();
 
@@ -327,7 +329,7 @@ void ResourceManager::LoadData_FBX_Animation(std::string objectName, std::string
 	m_FBXParserList.insert(make_pair(objectName, newFBX));
 }
 
-void ResourceManager::LoadData_Terrain(std::string objectName, std::string fileName /*= ""*/, std::string maskName /*= ""*/, bool fbxScaling /*= true*/)
+void ResourceManager::LoadData_Terrain(std::string objectName, std::string fileName, bool fbxScaling)
 {
 	m_FBXParser->LoadScene(fileName.c_str(), fbxScaling);
 	FBXModel* newFBX = m_FBXParser->GetModel();
@@ -338,13 +340,105 @@ void ResourceManager::LoadData_Terrain(std::string objectName, std::string fileN
 		ParserData::Mesh* mesh = newFBX->m_MeshList[i];
 		std::string key = objectName + " " + mesh->m_NodeName;
 
-		LoadData_Mesh(objectName, key, mesh);
+		LoadData_TerrainMesh(objectName, key, mesh);
 	}
 
 	m_FBXParserList.insert(make_pair(objectName, newFBX));
 
 	/// FBX Texture, FBX Material 생성
 	LoadData_MaterialList(objectName);
+}
+
+
+void ResourceManager::LoadData_TerrainMesh(std::string objectName, std::string key, ParserData::Mesh* meshData)
+{
+	// 동일한 Mesh Data가 있을경우 저장하지 않는다..
+	if (m_MeshList.find(key) != m_MeshList.end())
+		return;
+
+	// Vertex Data가 없는 Mesh도 저장..
+	if (meshData->m_Final_Vertex.size() <= 1 || meshData->m_MeshFace.empty())
+	{
+		m_MeshList.insert(make_pair(key, meshData));
+		return;
+	}
+
+	VertexBuffer* newBuf = new VertexBuffer();
+
+	DXVector3 vMin(+MathHelper::Infinity, +MathHelper::Infinity, +MathHelper::Infinity);
+	DXVector3 vMax(-MathHelper::Infinity, -MathHelper::Infinity, -MathHelper::Infinity);
+
+	UINT vcount = 0;
+	UINT tcount = 0;
+
+	vcount = (UINT)meshData->m_Final_Vertex.size();
+
+	std::vector<TerrainVertex> vertices(vcount);
+
+	for (UINT i = 0; i < vcount; i++)
+	{
+		vertices[i].Pos = meshData->m_Final_Vertex[i]->m_Pos;
+
+		vertices[i].Normal = meshData->m_Final_Vertex[i]->m_Normal;
+
+		vertices[i].Tex.x = meshData->m_Final_Vertex[i]->m_U;
+		vertices[i].Tex.y = meshData->m_Final_Vertex[i]->m_V;
+
+		vertices[i].Tangent = meshData->m_Final_Vertex[i]->m_Tanget;
+
+		XMVECTOR P = meshData->m_Final_Vertex[i]->m_Pos;
+
+		vMin = XMVectorMin(vMin, P);
+		vMax = XMVectorMax(vMax, P);
+
+		newBuf->m_VertexPos.push_back(vertices[i].Pos);
+	}
+
+	newBuf->m_MeshBox.Center = (vMin + vMax) * 0.5f;
+	newBuf->m_MeshBox.Extents = (vMax - vMin) * 0.5f;
+	newBuf->m_ColType = eColliderType::Box;
+
+	tcount = meshData->m_MeshFace.size();
+
+	newBuf->IndexCount = 3 * tcount;
+	std::vector<UINT> indices(newBuf->IndexCount);
+	for (UINT i = 0; i < tcount; ++i)
+	{
+		indices[i * 3 + 0] = meshData->m_Final_Index[i].m_Index[0];
+		indices[i * 3 + 1] = meshData->m_Final_Index[i].m_Index[1];
+		indices[i * 3 + 2] = meshData->m_Final_Index[i].m_Index[2];
+	}
+
+	newBuf->m_MeshIndices = indices;
+
+	newBuf->Stride = sizeof(TerrainVertex);
+
+	D3D11_BUFFER_DESC vbd;
+	vbd.Usage = D3D11_USAGE_IMMUTABLE;
+	vbd.ByteWidth = newBuf->Stride * vcount;
+	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vbd.CPUAccessFlags = 0;
+	vbd.MiscFlags = 0;
+	D3D11_SUBRESOURCE_DATA vinitData;
+	vinitData.pSysMem = &vertices[0];
+	HR(m_Device->CreateBuffer(&vbd, &vinitData, &newBuf->VB));
+
+	//
+	// Pack the indices of all the meshes into one index buffer.
+	//
+
+	D3D11_BUFFER_DESC ibd;
+	ibd.Usage = D3D11_USAGE_IMMUTABLE;
+	ibd.ByteWidth = sizeof(UINT) * newBuf->IndexCount;
+	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	ibd.CPUAccessFlags = 0;
+	ibd.MiscFlags = 0;
+	D3D11_SUBRESOURCE_DATA iinitData;
+	iinitData.pSysMem = &indices[0];
+	HR(m_Device->CreateBuffer(&ibd, &iinitData, &newBuf->IB));
+
+	m_MeshList.insert(make_pair(key, meshData));
+	m_VertexList.insert(make_pair(key, newBuf));
 }
 
 ENGINE_DLL void ResourceManager::LoadData(eLoadType loadType, std::string objectName, std::string fileName, bool fbxScaling)
@@ -373,7 +467,8 @@ ENGINE_DLL void ResourceManager::LoadData(eLoadType loadType, std::string object
 		LoadData_FBX_Animation(objectName, m_ModelRoute + fileName);
 		break;
 	case eLoadType::Terrain:
-
+		LoadData_Terrain(objectName, m_ModelRoute + fileName, fbxScaling);
+		break;
 	default:
 		break;
 	}

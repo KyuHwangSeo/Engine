@@ -65,7 +65,8 @@ enum class eLoadType
 	ASE,
 	ASE_Ani,
 	FBX,
-	FBX_Ani
+	FBX_Ani,
+	Terrain
 };
 
 // Model Data Load Type Enum Class

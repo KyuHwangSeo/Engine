@@ -134,6 +134,16 @@ struct NormalMapVertex
 	DXVector3 Tangent;
 };
 
+struct TerrainVertex
+{
+	DXVector3 Pos;
+	DXVector3 Normal;
+	DXVector2 Tex;
+	DXVector3 Tangent;
+	DXVector4 Mask1;
+	DXVector4 Mask2;
+};
+
 struct VertexBuffer
 {
 	ComPtr<ID3D11Buffer> VB;		// 버텍스버퍼

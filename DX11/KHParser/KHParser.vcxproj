@@ -223,6 +223,7 @@ copy/Y "..\FBX\lib\64\r\libfbxsdk.dll"   "..\\lib"</Command>
     <ClCompile Include="CASEParser.cpp" />
     <ClCompile Include="CParsingDataClass.cpp" />
     <ClCompile Include="FBXParser.cpp" />
+    <ClCompile Include="ImageParser.cpp" />
     <ClCompile Include="Lexer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -231,6 +232,7 @@ copy/Y "..\FBX\lib\64\r\libfbxsdk.dll"   "..\\lib"</Command>
     <ClInclude Include="CASEParser.h" />
     <ClInclude Include="CParsingDataClass.h" />
     <ClInclude Include="FBXParser.h" />
+    <ClInclude Include="ImageParser.h" />
     <ClInclude Include="KHParser.h" />
     <ClInclude Include="Lexer.h" />
     <ClInclude Include="ParserDLL.h" />

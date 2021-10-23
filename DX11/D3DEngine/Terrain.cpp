@@ -8,12 +8,6 @@
 #include "Shader.h"
 #include "Terrain.h"
 
-#ifndef STB_IMAGE_IMPLEMENTATION
-	#define STB_IMAGE_IMPLEMENTATION
-#endif
-
-#include "stb_image.h"
-
 void Terrain::Start()
 {
 	m_DeviceContext = D3DEngine::GetInstance()->GetDeviceContext();
@@ -123,13 +117,7 @@ void Terrain::AddLayer(Texture mask, MaterialLayer& channel_R, MaterialLayer& ch
 
 void Terrain::AddLayer(Texture mask, MaterialLayer& channel_R, MaterialLayer& channel_G, MaterialLayer& channel_B)
 {
-	int width, height, channels; 
-	unsigned char* img = stbi_load("../Resource/Textures/mask.png", &width, &height, &channels, 4);
 
-	unsigned char r = img[0];
-	unsigned char g = img[1];
-	unsigned char b = img[2];
-	unsigned char a = img[3];
 
 	TerrainLayer* terrainLayer = new TerrainLayer(mask);
 	terrainLayer->m_MatList.push_back(channel_R);

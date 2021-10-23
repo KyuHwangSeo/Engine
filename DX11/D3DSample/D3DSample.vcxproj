@@ -113,12 +113,13 @@
       <AdditionalLibraryDirectories>..\Lib;..\DXTK\Lib;..\FBX\lib\86\d;</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
-      <Command>
-      </Command>
+      <Command>copy ..\lib\*.dll   .\</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>md  ..\bin
+
 copy/Y "$(TargetPath)"  ".\\"
+
 copy/Y "$(TargetPath)"  "..\\bin" 
 copy/Y ..\lib\*.dll      ..\bin</Command>
     </PostBuildEvent>
@@ -144,13 +145,15 @@ copy/Y ..\lib\*.dll      ..\bin</Command>
       <AdditionalLibraryDirectories>..\Lib;..\DXTK\Lib;..\FBX\lib\86\r;</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
-      <Command>
-      </Command>
+      <Command>copy ..\lib\*.dll   .\</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>md  ..\bin
+
 copy/Y "$(TargetPath)"  ".\\"
+
 copy/Y "$(TargetPath)"  "..\\bin" 
+
 copy/Y ..\lib\*.dll      ..\bin</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -171,13 +174,15 @@ copy/Y ..\lib\*.dll      ..\bin</Command>
       <Profile>true</Profile>
     </Link>
     <PreBuildEvent>
-      <Command>
-      </Command>
+      <Command>copy ..\lib\*.dll   .\</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>md  ..\bin
+
 copy/Y "$(TargetPath)"  ".\\"
+
 copy/Y "$(TargetPath)"  "..\\bin" 
+
 copy/Y ..\lib\*.dll      ..\bin</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -201,13 +206,14 @@ copy/Y ..\lib\*.dll      ..\bin</Command>
       <AdditionalLibraryDirectories>..\Lib;..\DXTK\Lib;..\FBX\lib\64\r;</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
-      <Command>
-      </Command>
+      <Command>copy ..\lib\*.dll   .\</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>md  ..\bin
+
 copy/Y "$(TargetPath)"  ".\\"
 copy/Y "$(TargetPath)"  "..\\bin" 
+
 copy/Y ..\lib\*.dll      ..\bin</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
