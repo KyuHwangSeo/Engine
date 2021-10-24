@@ -1,23 +1,21 @@
 #pragma once
-#ifndef STB_IMAGE_IMPLEMENTATION
-	#define STB_IMAGE_IMPLEMENTATION
-#endif
 
-#include "stb_image.h"
 struct PARSER_DLL ImageData
 {
 	int width;
 	int height;
-	unsigned char* imgColor;
+	float* imgColor;
 };
 
 class ImageParser
 {
 public:
-	ImageParser();
-	~ImageParser();
+	ImageParser() = default;
+	~ImageParser() = default;
 
 public:
-	PARSER_DLL ImageData LoadImage(const char* fileName, unsigned int channels);
+	PARSER_DLL ImageData LoadImageData(const char* fileName, unsigned int channels);
+	PARSER_DLL DXVector4 GetPixelColor(ImageData& img, int x, int y);
+	PARSER_DLL DXVector4 GetPixelColor(ImageData& img, float x, float y);
 };
 

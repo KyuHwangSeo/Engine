@@ -373,6 +373,10 @@ void ResourceManager::LoadData_TerrainMesh(std::string objectName, std::string k
 
 	vcount = (UINT)meshData->m_Final_Vertex.size();
 
+	// Terrain Mask Data
+	ImageData mask1 = m_ImgParser->LoadImageData("../Resource/Textures/mask.png", 4);
+	ImageData mask2 = m_ImgParser->LoadImageData("../Resource/Textures/Rock_Mask.png", 4);
+
 	std::vector<TerrainVertex> vertices(vcount);
 
 	for (UINT i = 0; i < vcount; i++)
@@ -392,6 +396,9 @@ void ResourceManager::LoadData_TerrainMesh(std::string objectName, std::string k
 		vMax = XMVectorMax(vMax, P);
 
 		newBuf->m_VertexPos.push_back(vertices[i].Pos);
+
+		vertices[i].Mask1 = m_ImgParser->GetPixelColor(mask1, vertices[i].Pos.x, abs(vertices[i].Pos.z));
+		vertices[i].Mask2 = m_ImgParser->GetPixelColor(mask2, vertices[i].Pos.x, abs(vertices[i].Pos.z));
 	}
 
 	newBuf->m_MeshBox.Center = (vMin + vMax) * 0.5f;
@@ -1671,8 +1678,9 @@ void ResourceManager::LoadData_Texture(std::string objectName, std::string fileN
 	else
 	{
 		HR(CreateWICTextureFromFile(m_Device.Get(), m_DeviceContext.Get(), file_path, &texResource, newTex.GetAddressOf()));
+		//HR(CreateWICTextureFromFileEx(m_Device.Get(), m_DeviceContext.Get(), file_path, 0, D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, 0, WIC_LOADER_IGNORE_SRGB, &texResource, newTex.GetAddressOf()));
 	}
-
+	
 	// Material ¼³Á¤..
 	if (materialmap == nullptr)
 	{

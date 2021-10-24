@@ -30,8 +30,12 @@ struct VertexIn
     float2 Tex : TEXCOORD;
     float3 ViewDirection : VIEWDIR;
 
+    float3 TangentW : TANGENTW;
+    float3x3 TBN : TANGENT;
+    
     float4 ShadowPosH : POS_SHADOW;
-    float2 TerrainTex : TEXCOORD1;
+    float4 MaskColor1 : MASK_COLOR1;
+    float4 MaskColor2 : MASK_COLOR2;
 };
 
 struct PixelOut
@@ -49,32 +53,40 @@ PixelOut main(VertexIn pin) : SV_TARGET
 {
     PixelOut vout;
 	
-    float4 mask1 = gMask1.Sample(samWrapMinLinear, pin.TerrainTex);
+    float3 normalColor = float3(0.0f, 0.0f, 0.0f);
+    
+    float4 mask1 = pin.MaskColor1;
     float4 tex1 = float4(0.0f, 0.0f, 0.0f, 0.0f);
     if (mask1.r > 0.0f)
     {
         tex1.rgb += gColor1.Sample(samWrapMinLinear, pin.Tex).rgb * mask1.r;
+        normalColor += gNormal1.Sample(samWrapMinLinear, pin.Tex).rgb * mask1.r;
     }
     if (mask1.g > 0.0f)
     {
         tex1.rgb += gColor2.Sample(samWrapMinLinear, pin.Tex).rgb * mask1.g;
+        normalColor += gNormal2.Sample(samWrapMinLinear, pin.Tex).rgb * mask1.g;
     }
     if (mask1.b > 0.0f)
     {
         tex1.rgb += gColor3.Sample(samWrapMinLinear, pin.Tex).rgb * mask1.b;
+        normalColor += gNormal3.Sample(samWrapMinLinear, pin.Tex).rgb * mask1.b;
     }
     
-    float4 mask2 = gMask2.Sample(samWrapMinLinear, pin.TerrainTex);
+    float4 mask2 = pin.MaskColor2;
     float4 tex2 = float4(0.0f, 0.0f, 0.0f, 0.0f);
     if (mask2.r > 0.0f)
     {
         tex2.rgb += gColor4.Sample(samWrapMinLinear, pin.Tex).rgb * mask2.r;
+        normalColor += gNormal4.Sample(samWrapMinLinear, pin.Tex).rgb * mask2.r;
     }
     
     float4 albedo = float4(float3(tex1.rgb + tex2.rgb), 1.0f);
+    float3 normalMapSample = 2.0f * normalColor - 1.0f;
+    float3 bumpedNormalW = mul(normalMapSample, pin.TBN);
     
     vout.Albedo = albedo;
-    vout.Normal = float4(pin.NormalW, 1.0f);
+    vout.Normal = float4(bumpedNormalW, 1.0f);
     vout.Position = float4(pin.PosW, 1.0f);
     vout.Light = float4(0.0f, gMatID, 0.0f, 1.0f);
     vout.Shadow = float4(pin.ShadowPosH.xyz, 1.0f);

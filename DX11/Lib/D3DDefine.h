@@ -53,8 +53,6 @@
 
 #include "MathHelper.h"
 #include <d3d11.h>
-#include "DDSTextureLoader.h"
-#include "WICTextureLoader.h"
 #include "SingleTon.h"
 
 #include "Patch_Chapters.h"
@@ -75,6 +73,9 @@
 #include <DirectXMath.h>
 #include <memory>
 #include <concrt.h>
+
+#include "DDSTextureLoader.h"
+#include "WICTextureLoader.h"
 
 using namespace std;
 using namespace DirectX;

@@ -117,8 +117,6 @@ void Terrain::AddLayer(Texture mask, MaterialLayer& channel_R, MaterialLayer& ch
 
 void Terrain::AddLayer(Texture mask, MaterialLayer& channel_R, MaterialLayer& channel_G, MaterialLayer& channel_B)
 {
-
-
 	TerrainLayer* terrainLayer = new TerrainLayer(mask);
 	terrainLayer->m_MatList.push_back(channel_R);
 	terrainLayer->m_MatList.push_back(channel_G);

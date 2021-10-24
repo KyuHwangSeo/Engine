@@ -23,6 +23,9 @@ struct TerrainVertexIn
     float3 PosL : POSITION;
     float3 NormalL : NORMAL;
     float2 Tex : TEXCOORD;
+    float3 TangentL : TANGENT;
+    float4 Mask1 : MASK1;
+    float4 Mask2 : MASK2;
 };
 
 struct TerrainVertexOut
@@ -35,8 +38,12 @@ struct TerrainVertexOut
     float2 Tex : TEXCOORD;
     float3 ViewDirection : VIEWDIR;
 
+    float3 TangentW : TANGENTW;
+    float3x3 TBN : TANGENT;
+    
     float4 ShadowPosH : POS_SHADOW;
-    float2 TerrainTex : TEXCOORD1;
+    float4 MaskColor1 : MASK_COLOR1;
+    float4 MaskColor2 : MASK_COLOR2;
 };
 
 
@@ -55,7 +62,7 @@ TerrainVertexOut main(TerrainVertexIn vin)
     vout.NormalV = mul((float3x3) gWorldInvTransposeView, vin.NormalL);
     vout.NormalV = normalize(vout.NormalV);
 	
-	//동차 공간으로 변환
+	// 동차 공간으로 변환
     vout.PosH = mul(gWorldViewProj, float4(vin.PosL, 1.0f));
 
     vout.ViewDirection = gEyePosW - vout.PosW;
@@ -66,8 +73,19 @@ TerrainVertexOut main(TerrainVertexIn vin)
 
     vout.ShadowPosH = mul(gShadowTransform, float4(vin.PosL, 1.0f));
     
+    vout.TangentW = mul((float3x3) gWorld, vin.TangentL);
+
+	// Vertex Shader 에서 TBN을 구해주자..
+	// Pixel Shader에서 연산은 최소한으로 해야하기 때문..
+    float3 N = vout.NormalW;
+    float3 T = normalize(vout.TangentW - dot(vout.TangentW, N) * N);
+    float3 B = cross(N, T);
+
+    vout.TBN = float3x3(T, B, N);
+    
     // Terrain Texture Index
-    vout.TerrainTex = float2(abs(vin.PosL.x / 57), abs(vin.PosL.z / 57));
+    vout.MaskColor1 = vin.Mask1;
+    vout.MaskColor2 = vin.Mask2;
 	
     return vout;
 }

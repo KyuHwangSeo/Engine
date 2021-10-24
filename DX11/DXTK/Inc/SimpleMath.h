@@ -1,7 +1,7 @@
 //-------------------------------------------------------------------------------------
 // SimpleMath.h -- Simplified C++ Math wrapper for DirectXMath
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 //
 // http://go.microsoft.com/fwlink/?LinkId=248929
@@ -10,9 +10,9 @@
 
 #pragma once
 
-//#if (defined(WIN32) || defined(WINAPI_FAMILY)) && !(defined(_XBOX_ONE) && defined(_TITLE)) && !defined(_GAMING_XBOX)
+#if (defined(WIN32) || defined(WINAPI_FAMILY)) && !(defined(_XBOX_ONE) && defined(_TITLE)) && !defined(_GAMING_XBOX)
 #include <dxgi1_2.h>
-//#endif
+#endif
 
 #include <cassert>
 #include <cstddef>
@@ -934,7 +934,6 @@ namespace DirectX
         };
 
     #include "SimpleMath.inl"
-    //#include "./DXTK/Inc/SimpleMath.inl"
 
     } // namespace SimpleMath
 

@@ -12,7 +12,7 @@ struct MaterialLayer
 
 struct TerrainLayer
 {
-	TerrainLayer(Texture mask) : m_MaskTex(mask) { m_MatList.resize(4); }
+	TerrainLayer(Texture mask) : m_MaskTex(mask) {}
 
 	Texture m_MaskTex;
 	std::vector<MaterialLayer> m_MatList;
