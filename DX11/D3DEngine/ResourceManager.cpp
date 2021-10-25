@@ -23,9 +23,10 @@ void ResourceManager::Initialize()
 	m_ModelRoute = "../Resource/Models/";
 
 	m_FBXParser = new FBXParser();
-	m_FBXParser->Initalize();
+	m_FBXParser->Initialize(m_TexRoute);
 
 	m_ImgParser = new ImageParser();
+	m_ImgParser->Initialize(m_TexRoute);
 
 	// Sampler 생성
 	CreateSamplerState();
@@ -357,7 +358,7 @@ void ResourceManager::LoadData_TerrainMesh(std::string objectName, std::string k
 		return;
 
 	// Vertex Data가 없는 Mesh도 저장..
-	if (meshData->m_Final_Vertex.size() <= 1 || meshData->m_MeshFace.empty())
+	if (meshData->m_VertexList.size() <= 1)
 	{
 		m_MeshList.insert(make_pair(key, meshData));
 		return;
@@ -371,49 +372,49 @@ void ResourceManager::LoadData_TerrainMesh(std::string objectName, std::string k
 	UINT vcount = 0;
 	UINT tcount = 0;
 
-	vcount = (UINT)meshData->m_Final_Vertex.size();
+	vcount = (UINT)meshData->m_VertexList.size();
 
 	// Terrain Mask Data
-	ImageData mask1 = m_ImgParser->LoadImageData("../Resource/Textures/mask.png", 4);
-	ImageData mask2 = m_ImgParser->LoadImageData("../Resource/Textures/Rock_Mask.png", 4);
+	ImageDataF mask1 = m_ImgParser->LoadImagePixelByFloat("mask.png", 4);
+	ImageDataF mask2 = m_ImgParser->LoadImagePixelByFloat("Rock_Mask.png", 4);
 
 	std::vector<TerrainVertex> vertices(vcount);
 
 	for (UINT i = 0; i < vcount; i++)
 	{
-		vertices[i].Pos = meshData->m_Final_Vertex[i]->m_Pos;
+		vertices[i].Pos = meshData->m_VertexList[i]->m_Pos;
 
-		vertices[i].Normal = meshData->m_Final_Vertex[i]->m_Normal;
+		vertices[i].Normal = meshData->m_VertexList[i]->m_Normal;
 
-		vertices[i].Tex.x = meshData->m_Final_Vertex[i]->m_U;
-		vertices[i].Tex.y = meshData->m_Final_Vertex[i]->m_V;
+		vertices[i].Tex.x = meshData->m_VertexList[i]->m_U;
+		vertices[i].Tex.y = meshData->m_VertexList[i]->m_V;
 
-		vertices[i].Tangent = meshData->m_Final_Vertex[i]->m_Tanget;
+		vertices[i].Tangent = meshData->m_VertexList[i]->m_Tanget;
 
-		XMVECTOR P = meshData->m_Final_Vertex[i]->m_Pos;
+		XMVECTOR P = meshData->m_VertexList[i]->m_Pos;
 
 		vMin = XMVectorMin(vMin, P);
 		vMax = XMVectorMax(vMax, P);
 
 		newBuf->m_VertexPos.push_back(vertices[i].Pos);
 
-		vertices[i].Mask1 = m_ImgParser->GetPixelColor(mask1, vertices[i].Pos.x, abs(vertices[i].Pos.z));
-		vertices[i].Mask2 = m_ImgParser->GetPixelColor(mask2, vertices[i].Pos.x, abs(vertices[i].Pos.z));
+		vertices[i].Mask1 = m_ImgParser->GetPixelColorF(mask1, vertices[i].Pos.x, abs(vertices[i].Pos.z));
+		vertices[i].Mask2 = m_ImgParser->GetPixelColorF(mask2, vertices[i].Pos.x, abs(vertices[i].Pos.z));
 	}
 
 	newBuf->m_MeshBox.Center = (vMin + vMax) * 0.5f;
 	newBuf->m_MeshBox.Extents = (vMax - vMin) * 0.5f;
 	newBuf->m_ColType = eColliderType::Box;
 
-	tcount = meshData->m_MeshFace.size();
+	tcount = meshData->m_IndexList.size();
 
 	newBuf->IndexCount = 3 * tcount;
 	std::vector<UINT> indices(newBuf->IndexCount);
 	for (UINT i = 0; i < tcount; ++i)
 	{
-		indices[i * 3 + 0] = meshData->m_Final_Index[i].m_Index[0];
-		indices[i * 3 + 1] = meshData->m_Final_Index[i].m_Index[1];
-		indices[i * 3 + 2] = meshData->m_Final_Index[i].m_Index[2];
+		indices[i * 3 + 0] = meshData->m_IndexList[i]->m_Index[0];
+		indices[i * 3 + 1] = meshData->m_IndexList[i]->m_Index[1];
+		indices[i * 3 + 2] = meshData->m_IndexList[i]->m_Index[2];
 	}
 
 	newBuf->m_MeshIndices = indices;
@@ -1309,13 +1310,13 @@ void ResourceManager::LoadData_ASE_Gizmos(std::string objectName, std::string fi
 		DXVector3 vMin(+MathHelper::Infinity, +MathHelper::Infinity, +MathHelper::Infinity);
 		DXVector3 vMax(-MathHelper::Infinity, -MathHelper::Infinity, -MathHelper::Infinity);
 
-		vcount = (UINT)newASE->m_MeshList[m_Index]->m_Final_Vertex.size();
+		vcount = (UINT)newASE->m_MeshList[m_Index]->m_VertexList.size();
 
 		std::vector<Vertex> vertices(vcount);
 
 		for (UINT i = 0; i < vcount; i++)
 		{
-			vertices[i].Pos = newASE->m_MeshList[m_Index]->m_Final_Vertex[i]->m_Pos;
+			vertices[i].Pos = newASE->m_MeshList[m_Index]->m_VertexList[i]->m_Pos;
 
 			vertices[i].Color = DXVector4(1.0f, 1.0f, 0.0f, 1.0f);
 
@@ -1330,15 +1331,15 @@ void ResourceManager::LoadData_ASE_Gizmos(std::string objectName, std::string fi
 		newBuf->m_MeshBox.Center = (vMin + vMax) * 0.5f;
 		newBuf->m_MeshBox.Extents = (vMax - vMin) * 0.5f;
 
-		tcount = newASE->m_MeshList[m_Index]->m_Mesh_NumFaces;
+		tcount = newASE->m_MeshList[m_Index]->m_IndexList.size();
 
 		newBuf->IndexCount = 3 * tcount;
 		std::vector<UINT> indices(newBuf->IndexCount);
 		for (UINT i = 0; i < tcount; ++i)
 		{
-			indices[i * 3 + 0] = newASE->m_MeshList[m_Index]->m_Final_Index[i].m_Index[0];
-			indices[i * 3 + 1] = newASE->m_MeshList[m_Index]->m_Final_Index[i].m_Index[1];
-			indices[i * 3 + 2] = newASE->m_MeshList[m_Index]->m_Final_Index[i].m_Index[2];
+			indices[i * 3 + 0] = newASE->m_MeshList[m_Index]->m_IndexList[i]->m_Index[0];
+			indices[i * 3 + 1] = newASE->m_MeshList[m_Index]->m_IndexList[i]->m_Index[1];
+			indices[i * 3 + 2] = newASE->m_MeshList[m_Index]->m_IndexList[i]->m_Index[2];
 		}
 
 		newBuf->m_MeshIndices = indices;
@@ -1383,7 +1384,7 @@ void ResourceManager::LoadData_SkinMesh(std::string objectName, std::string key,
 		return;
 
 	// Vertex Data가 없는 Mesh도 저장..
-	if (meshData->m_Final_Vertex.empty())
+	if (meshData->m_VertexList.empty())
 	{
 		m_MeshList.insert(make_pair(key, meshData));
 		return;
@@ -1397,42 +1398,42 @@ void ResourceManager::LoadData_SkinMesh(std::string objectName, std::string key,
 	UINT vcount = 0;
 	UINT tcount = 0;
 
-	vcount = (UINT)meshData->m_Final_Vertex.size();
+	vcount = (UINT)meshData->m_VertexList.size();
 
 	std::vector<SkinVertex> vertices(vcount);
 
 	for (UINT i = 0; i < vcount; i++)
 	{
-		vertices[i].Pos = meshData->m_Final_Vertex[i]->m_Pos;
+		vertices[i].Pos = meshData->m_VertexList[i]->m_Pos;
 
-		vertices[i].Normal = meshData->m_Final_Vertex[i]->m_Normal;
+		vertices[i].Normal = meshData->m_VertexList[i]->m_Normal;
 
-		vertices[i].Tex.x = meshData->m_Final_Vertex[i]->m_U;
-		vertices[i].Tex.y = meshData->m_Final_Vertex[i]->m_V;
+		vertices[i].Tex.x = meshData->m_VertexList[i]->m_U;
+		vertices[i].Tex.y = meshData->m_VertexList[i]->m_V;
 
 		/// 가중치, 본 인덱스 삽입!
-		for (size_t j = 0; j < meshData->m_Final_Vertex[i]->m_BoneIndices.size(); j++)
+		for (size_t j = 0; j < meshData->m_VertexList[i]->m_BoneIndices.size(); j++)
 		{
 			if (j < 4)
 			{
-				vertices[i].BoneIndex1[j] = meshData->m_Final_Vertex[i]->m_BoneIndices[j];
-				vertices[i].BoneWeight1[j] = meshData->m_Final_Vertex[i]->m_BoneWeights[j];
+				vertices[i].BoneIndex1[j] = meshData->m_VertexList[i]->m_BoneIndices[j];
+				vertices[i].BoneWeight1[j] = meshData->m_VertexList[i]->m_BoneWeights[j];
 			}
 			else if (j < 8)
 			{
-				vertices[i].BoneIndex2[j - 4] = meshData->m_Final_Vertex[i]->m_BoneIndices[j];
-				vertices[i].BoneWeight2[j - 4] = meshData->m_Final_Vertex[i]->m_BoneWeights[j];
+				vertices[i].BoneIndex2[j - 4] = meshData->m_VertexList[i]->m_BoneIndices[j];
+				vertices[i].BoneWeight2[j - 4] = meshData->m_VertexList[i]->m_BoneWeights[j];
 			}
 			else if (j < 12)
 			{
-				vertices[i].BoneIndex3[j - 8] = meshData->m_Final_Vertex[i]->m_BoneIndices[j];
-				vertices[i].BoneWeight3[j - 8] = meshData->m_Final_Vertex[i]->m_BoneWeights[j];
+				vertices[i].BoneIndex3[j - 8] = meshData->m_VertexList[i]->m_BoneIndices[j];
+				vertices[i].BoneWeight3[j - 8] = meshData->m_VertexList[i]->m_BoneWeights[j];
 			}
 		}
 
-		vertices[i].Tangent = meshData->m_Final_Vertex[i]->m_Tanget;
+		vertices[i].Tangent = meshData->m_VertexList[i]->m_Tanget;
 
-		XMVECTOR P = meshData->m_Final_Vertex[i]->m_Pos;
+		XMVECTOR P = meshData->m_VertexList[i]->m_Pos;
 
 		vMin = XMVectorMin(vMin, P);
 		vMax = XMVectorMax(vMax, P);
@@ -1444,15 +1445,15 @@ void ResourceManager::LoadData_SkinMesh(std::string objectName, std::string key,
 	newBuf->m_MeshBox.Extents = (vMax - vMin) * 0.5f;
 	newBuf->m_ColType = eColliderType::Box;
 
-	tcount = meshData->m_MeshFace.size();
+	tcount = meshData->m_IndexList.size();
 
 	newBuf->IndexCount = 3 * tcount;
 	std::vector<UINT> indices(newBuf->IndexCount);
 	for (UINT i = 0; i < tcount; ++i)
 	{
-		indices[i * 3 + 0] = meshData->m_Final_Index[i].m_Index[0];
-		indices[i * 3 + 1] = meshData->m_Final_Index[i].m_Index[1];
-		indices[i * 3 + 2] = meshData->m_Final_Index[i].m_Index[2];
+		indices[i * 3 + 0] = meshData->m_IndexList[i]->m_Index[0];
+		indices[i * 3 + 1] = meshData->m_IndexList[i]->m_Index[1];
+		indices[i * 3 + 2] = meshData->m_IndexList[i]->m_Index[2];
 	}
 
 	newBuf->m_MeshIndices = indices;
@@ -1494,7 +1495,7 @@ void ResourceManager::LoadData_Mesh(std::string objectName, std::string key, Par
 		return;
 
 	// Vertex Data가 없는 Mesh도 저장..
-	if (meshData->m_Final_Vertex.size() <= 1 || meshData->m_MeshFace.empty())
+	if (meshData->m_VertexList.size() <= 1)
 	{
 		m_MeshList.insert(make_pair(key, meshData));
 		return;
@@ -1508,22 +1509,22 @@ void ResourceManager::LoadData_Mesh(std::string objectName, std::string key, Par
 	UINT vcount = 0;
 	UINT tcount = 0;
 
-	vcount = (UINT)meshData->m_Final_Vertex.size();
+	vcount = (UINT)meshData->m_VertexList.size();
 
 	std::vector<NormalMapVertex> vertices(vcount);
 
 	for (UINT i = 0; i < vcount; i++)
 	{
-		vertices[i].Pos = meshData->m_Final_Vertex[i]->m_Pos;
+		vertices[i].Pos = meshData->m_VertexList[i]->m_Pos;
 
-		vertices[i].Normal = meshData->m_Final_Vertex[i]->m_Normal;
+		vertices[i].Normal = meshData->m_VertexList[i]->m_Normal;
 
-		vertices[i].Tex.x = meshData->m_Final_Vertex[i]->m_U;
-		vertices[i].Tex.y = meshData->m_Final_Vertex[i]->m_V;
+		vertices[i].Tex.x = meshData->m_VertexList[i]->m_U;
+		vertices[i].Tex.y = meshData->m_VertexList[i]->m_V;
 
-		vertices[i].Tangent = meshData->m_Final_Vertex[i]->m_Tanget;
+		vertices[i].Tangent = meshData->m_VertexList[i]->m_Tanget;
 
-		XMVECTOR P = meshData->m_Final_Vertex[i]->m_Pos;
+		XMVECTOR P = meshData->m_VertexList[i]->m_Pos;
 
 		vMin = XMVectorMin(vMin, P);
 		vMax = XMVectorMax(vMax, P);
@@ -1535,15 +1536,15 @@ void ResourceManager::LoadData_Mesh(std::string objectName, std::string key, Par
 	newBuf->m_MeshBox.Extents = (vMax - vMin) * 0.5f;
 	newBuf->m_ColType = eColliderType::Box;
 
-	tcount = meshData->m_MeshFace.size();
+	tcount = meshData->m_IndexList.size();
 
 	newBuf->IndexCount = 3 * tcount;
 	std::vector<UINT> indices(newBuf->IndexCount);
 	for (UINT i = 0; i < tcount; ++i)
 	{
-		indices[i * 3 + 0] = meshData->m_Final_Index[i].m_Index[0];
-		indices[i * 3 + 1] = meshData->m_Final_Index[i].m_Index[1];
-		indices[i * 3 + 2] = meshData->m_Final_Index[i].m_Index[2];
+		indices[i * 3 + 0] = meshData->m_IndexList[i]->m_Index[0];
+		indices[i * 3 + 1] = meshData->m_IndexList[i]->m_Index[1];
+		indices[i * 3 + 2] = meshData->m_IndexList[i]->m_Index[2];
 	}
 
 	newBuf->m_MeshIndices = indices;

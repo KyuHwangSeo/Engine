@@ -142,22 +142,21 @@ namespace ParserData
 		DXMatrix4X4 m_LocalTM;		// Mesh LocalTM
 
 		/// Material Data
-		ParserData::CMaterial* m_MaterialData;		// Mesh Material Data
+		CMaterial*					m_MaterialData;		// Mesh Material Data
 
-		/// Vertex Data
-		std::vector<Vertex*>		m_MeshVertex;		// Vertex List
+		/// Face Data (파싱용)
 		std::vector<Face*>			m_MeshFace;			// Face List
 
 		/// Animation Data
-		ParserData::OneAnimation* m_Animation;		// Animation Data
+		OneAnimation*				m_Animation;		// Animation Data
 
 		/// Skinning Data
 		std::vector<DXMatrix4X4>	m_BoneTMList;		// Bone Offset TM List
 		std::vector<Mesh*>			m_BoneMeshList;		// Bone Mesh List
 
 		/// Final Data
-		std::vector<Vertex*>		m_Final_Vertex;		/// 최적화 후 Final Vertex List
-		ParserData::IndexList* m_Final_Index;		/// 최적화 후 Final Index List
+		std::vector<Vertex*>		m_VertexList;		// Vertex List
+		std::vector<IndexList*>		m_IndexList;		/// 최적화 후 Final Index List
 
 	public:
 		Mesh();

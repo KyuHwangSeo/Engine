@@ -25,15 +25,15 @@ private:
 	fbxsdk::FbxGeometryConverter* pConverter;
 
 	fbxsdk::FbxMesh* pMesh;
-	
+
 	fbxsdk::FbxString fbxFileName;
 	std::vector<fbxsdk::FbxSurfaceMaterial*> fbxMaterials;
 
-public:
+private:
 	FBXModel* m_Model;
 
 	ParserData::CMaterial* m_MaterialData;			// Material Data Struct
-	
+
 	ParserData::Mesh* m_OneMesh;					// Mesh Data Struct
 
 	ParserData::Bone* m_OneBone;					// Bone Data Struct
@@ -43,10 +43,12 @@ public:
 
 	bool m_OnlyAni = false;
 
+	std::string m_TextureRoute;
+
 public:
-	PARSER_DLL void Initalize();
-	void SceneSetting(fbxsdk::FbxString fileName, bool scaling, bool onlyAni);
+	PARSER_DLL void Initialize(std::string texRoute);
 	PARSER_DLL void Release();
+	void SceneSetting(fbxsdk::FbxString fileName, bool scaling, bool onlyAni);
 	void ResetModel();
 
 	PARSER_DLL void LoadScene(fbxsdk::FbxString fileName, bool scaling, bool onlyAni = false);
@@ -58,7 +60,7 @@ public:
 	void ProcessMesh(fbxsdk::FbxNode* node);
 
 	bool ProcessBoneWeights(fbxsdk::FbxNode* node, std::vector<BoneWeights>& meshBoneWeights);
-	
+
 	void ProcessAnimation(fbxsdk::FbxNode* node);
 
 	void OptimizeData();
@@ -82,7 +84,7 @@ public:
 
 	void SetTransform(fbxsdk::FbxNode* node);
 	DXMatrix4X4 GetGlobalAnimationTransform(fbxsdk::FbxNode* node, fbxsdk::FbxTime time);
-	
+
 	int GetMaterialIndex(fbxsdk::FbxSurfaceMaterial* material);
 	void SetMaterial(fbxsdk::FbxSurfaceMaterial* material);
 	void SetTexture(fbxsdk::FbxSurfaceMaterial* material, const char* materialName);
@@ -121,7 +123,7 @@ inline DXVector3 FBXParser::ConvertVector3(FbxVector4 v4)
 	// xyz -> xzy
 	return DXVector3
 	(
-		static_cast<float>(v4.mData[0]), 
+		static_cast<float>(v4.mData[0]),
 		static_cast<float>(v4.mData[2]),
 		static_cast<float>(v4.mData[1])
 	);
@@ -143,9 +145,9 @@ inline DXVector4 FBXParser::ConvertVector4(FbxVector4 v4)
 	// xyzw -> xzyw
 	return DXVector4
 	(
-		static_cast<float>(v4.mData[0]), 
-		static_cast<float>(v4.mData[2]), 
-		static_cast<float>(v4.mData[1]), 
+		static_cast<float>(v4.mData[0]),
+		static_cast<float>(v4.mData[2]),
+		static_cast<float>(v4.mData[1]),
 		static_cast<float>(v4.mData[3])
 	);
 }
@@ -204,7 +206,7 @@ inline std::string FBXParser::ConvertFileRoute(const char* fileName)
 	size_t indexDot = filePath.rfind(".");
 
 	// 파일 임시경로..
-	std::string fileRoute = "../Resource/Textures/";
+	std::string fileRoute = m_TextureRoute;
 
 	std::string fileame = filePath.substr(indexSlash, indexDot - indexSlash);
 	fileRoute += filePath.substr(indexSlash, filePath.size() - indexSlash);

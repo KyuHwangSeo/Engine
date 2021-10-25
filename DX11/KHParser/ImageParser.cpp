@@ -1,5 +1,8 @@
+#include <string>
+
 #include "ParserDLL.h"
 #include "KHMath.h"
+
 #include "ImageParser.h"
 
 #ifndef STB_IMAGE_IMPLEMENTATION
@@ -8,24 +11,55 @@
 
 #include "stb_image.h"
 
-ImageData ImageParser::LoadImageData(const char* fileName, unsigned int channels)
+PARSER_DLL void ImageParser::Initialize(std::string texRoute)
 {
-	ImageData imgData;
-	imgData.imgColor = stbi_loadf(fileName, &imgData.width, &imgData.height, nullptr, channels);
+	m_TextureRoute = texRoute;
+}
+
+PARSER_DLL ImageDataF ImageParser::LoadImagePixelByFloat(const char* fileName, unsigned int channels)
+{
+	std::string filePath = m_TextureRoute + fileName;
+
+	ImageDataF imgData;
+	imgData.imgColor = stbi_loadf(filePath.c_str(), &imgData.width, &imgData.height, nullptr, channels);
 	
 	return imgData;
 }
 
-PARSER_DLL DXVector4 ImageParser::GetPixelColor(ImageData& img, int x, int y)
+PARSER_DLL ImageDataI ImageParser::LoadImagePixelByInt(const char* fileName, unsigned int channels)
+{
+	std::string filePath = m_TextureRoute + fileName;
+
+	ImageDataI imgData;
+	imgData.imgColor = stbi_load(filePath.c_str(), &imgData.width, &imgData.height, nullptr, channels);
+
+	return imgData;
+}
+
+PARSER_DLL DXVector4 ImageParser::GetPixelColorF(ImageDataF& img, int x, int y)
 {
 	const float* p = img.imgColor + (4 * (y * img.width + x));
 
 	return DXVector4(p[0], p[1], p[2], p[3]);
 }
 
-PARSER_DLL DXVector4 ImageParser::GetPixelColor(ImageData& img, float x, float y)
+PARSER_DLL DXVector4 ImageParser::GetPixelColorF(ImageDataF& img, float x, float y)
 {
 	const float* p = img.imgColor + (4 * ((int)y * img.width + (int)x));
+
+	return DXVector4(p[0], p[1], p[2], p[3]);
+}
+
+PARSER_DLL DXVector4 ImageParser::GetPixelColorI(ImageDataI& img, int x, int y)
+{
+	const unsigned char* p = img.imgColor + (4 * (y * img.width + x));
+
+	return DXVector4(p[0], p[1], p[2], p[3]);
+}
+
+PARSER_DLL DXVector4 ImageParser::GetPixelColorI(ImageDataI& img, float x, float y)
+{
+	const unsigned char* p = img.imgColor + (4 * ((int)y * img.width + (int)x));
 
 	return DXVector4(p[0], p[1], p[2], p[3]);
 }

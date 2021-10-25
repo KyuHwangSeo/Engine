@@ -48,19 +48,19 @@ PARSER_DLL bool CASEParser::Load(LPSTR p_File)
 void CASEParser::OptimizeVertex(ASEMesh* pMesh)
 {
 	bool new_VertexSet = true;
-	unsigned int resize_VertexIndex = pMesh->m_MeshVertex.size();
+	unsigned int resize_VertexIndex = pMesh->m_VertexList.size();
 
 	// 기본 Vertex 넣어두고 시작..
-	for (unsigned int i = 0; i < pMesh->m_MeshVertex.size(); i++)
-	{
-		Vertex* newVertex = new Vertex;
-		newVertex->m_Pos = pMesh->m_MeshVertex[i]->m_Pos;
-		newVertex->m_Indices = pMesh->m_MeshVertex[i]->m_Indices;
-		newVertex->m_BoneIndices = pMesh->m_MeshVertex[i]->m_BoneIndices;
-		newVertex->m_BoneWeights = pMesh->m_MeshVertex[i]->m_BoneWeights;
-
-		pMesh->m_Final_Vertex.push_back(newVertex);
-	}
+	//for (unsigned int i = 0; i < pMesh->m_VertexList.size(); i++)
+	//{
+	//	Vertex* newVertex = new Vertex;
+	//	newVertex->m_Pos = pMesh->m_VertexList[i]->m_Pos;
+	//	newVertex->m_Indices = pMesh->m_VertexList[i]->m_Indices;
+	//	newVertex->m_BoneIndices = pMesh->m_VertexList[i]->m_BoneIndices;
+	//	newVertex->m_BoneWeights = pMesh->m_VertexList[i]->m_BoneWeights;
+	//
+	//	pMesh->m_Final_Vertex.push_back(newVertex);
+	//}
 
 	// 각각 Face마다 존재하는 3개의 Vertex 비교..
 	for (unsigned int i = 0; i < pMesh->m_MeshFace.size(); i++)
@@ -69,7 +69,7 @@ void CASEParser::OptimizeVertex(ASEMesh* pMesh)
 		{
 			unsigned int vertexIndex = pMesh->m_MeshFace[i]->m_VertexIndex[j];
 
-			Vertex* nowVertex = pMesh->m_Final_Vertex[vertexIndex];
+			Vertex* nowVertex = pMesh->m_VertexList[vertexIndex];
 
 			// 텍스처가 있고, 설정하지 않았으면 텍스처 u,v 설정..
 			if (pMesh->m_Mesh_NumTVertex > 0 && nowVertex->m_IsTextureSet == false)
@@ -87,15 +87,15 @@ void CASEParser::OptimizeVertex(ASEMesh* pMesh)
 			}
 
 			// Normal, U, V 값중 한개라도 다르면 Vertex 새로 생성..
-			if ((pMesh->m_Final_Vertex[vertexIndex]->m_Normal != pMesh->m_MeshFace[i]->m_NormalVertex[j]))
+			if ((pMesh->m_VertexList[vertexIndex]->m_Normal != pMesh->m_MeshFace[i]->m_NormalVertex[j]))
 			{
 				new_VertexSet = true;
 			}
 
 			if (pMesh->m_Mesh_NumTVertex > 0)
 			{
-				if ((pMesh->m_Final_Vertex[vertexIndex]->m_U != pMesh->m_Mesh_TVertex[pMesh->m_MeshFace[i]->m_TFace[j]]->m_U) ||
-					(pMesh->m_Final_Vertex[vertexIndex]->m_V != pMesh->m_Mesh_TVertex[pMesh->m_MeshFace[i]->m_TFace[j]]->m_V))
+				if ((pMesh->m_VertexList[vertexIndex]->m_U != pMesh->m_Mesh_TVertex[pMesh->m_MeshFace[i]->m_TFace[j]]->m_U) ||
+					(pMesh->m_VertexList[vertexIndex]->m_V != pMesh->m_Mesh_TVertex[pMesh->m_MeshFace[i]->m_TFace[j]]->m_V))
 				{
 					new_VertexSet = true;
 				}
@@ -104,18 +104,18 @@ void CASEParser::OptimizeVertex(ASEMesh* pMesh)
 			if (new_VertexSet)
 			{
 				// 추가된 Vertex가 있다면 체크..
-				if (resize_VertexIndex > pMesh->m_MeshVertex.size())
+				if (resize_VertexIndex > pMesh->m_VertexList.size())
 				{
-					for (unsigned int k = pMesh->m_MeshVertex.size(); k < resize_VertexIndex; k++)
+					for (unsigned int k = pMesh->m_VertexList.size(); k < resize_VertexIndex; k++)
 					{
 						// 새로 추가한 Vertex와 동일한 데이터를 갖고있는 Face 내의 Vertex Index 수정..
-						if ((pMesh->m_Final_Vertex[k]->m_Indices == pMesh->m_MeshFace[i]->m_VertexIndex[j]) &&
-							(pMesh->m_Final_Vertex[k]->m_Normal == pMesh->m_MeshFace[i]->m_NormalVertex[j]))
+						if ((pMesh->m_VertexList[k]->m_Indices == pMesh->m_MeshFace[i]->m_VertexIndex[j]) &&
+							(pMesh->m_VertexList[k]->m_Normal == pMesh->m_MeshFace[i]->m_NormalVertex[j]))
 						{
 							if (pMesh->m_Mesh_NumTVertex > 0)
 							{
-								if ((pMesh->m_Final_Vertex[k]->m_U == pMesh->m_Mesh_TVertex[pMesh->m_MeshFace[i]->m_TFace[j]]->m_U) &&
-									(pMesh->m_Final_Vertex[k]->m_V == pMesh->m_Mesh_TVertex[pMesh->m_MeshFace[i]->m_TFace[j]]->m_V))
+								if ((pMesh->m_VertexList[k]->m_U == pMesh->m_Mesh_TVertex[pMesh->m_MeshFace[i]->m_TFace[j]]->m_U) &&
+									(pMesh->m_VertexList[k]->m_V == pMesh->m_Mesh_TVertex[pMesh->m_MeshFace[i]->m_TFace[j]]->m_V))
 								{
 									pMesh->m_MeshFace[i]->m_VertexIndex[j] = (int)k;
 									new_VertexSet = false;
@@ -139,8 +139,8 @@ void CASEParser::OptimizeVertex(ASEMesh* pMesh)
 					newVertex->m_Pos = nowVertex->m_Pos;
 					newVertex->m_Indices = nowVertex->m_Indices;
 					newVertex->m_Normal = pMesh->m_MeshFace[i]->m_NormalVertex[j];
-					newVertex->m_BoneIndices = pMesh->m_MeshVertex[nowVertex->m_Indices]->m_BoneIndices;
-					newVertex->m_BoneWeights = pMesh->m_MeshVertex[nowVertex->m_Indices]->m_BoneWeights;
+					newVertex->m_BoneIndices = pMesh->m_VertexList[nowVertex->m_Indices]->m_BoneIndices;
+					newVertex->m_BoneWeights = pMesh->m_VertexList[nowVertex->m_Indices]->m_BoneWeights;
 					newVertex->m_IsNormalSet = true;
 
 					if (pMesh->m_Mesh_NumTVertex > 0)
@@ -150,7 +150,7 @@ void CASEParser::OptimizeVertex(ASEMesh* pMesh)
 						newVertex->m_IsTextureSet = true;
 					}
 
-					pMesh->m_Final_Vertex.push_back(newVertex);
+					pMesh->m_VertexList.push_back(newVertex);
 					pMesh->m_MeshFace[i]->m_VertexIndex[j] = resize_VertexIndex;
 					resize_VertexIndex++;
 				}
@@ -165,13 +165,13 @@ void CASEParser::OptimizeVertex(ASEMesh* pMesh)
 		int index1 = pMesh->m_MeshFace[i]->m_VertexIndex[1];
 		int index2 = pMesh->m_MeshFace[i]->m_VertexIndex[2];
 
-		DXVector3 ep1 = pMesh->m_Final_Vertex[index1]->m_Pos - pMesh->m_Final_Vertex[index0]->m_Pos;
-		DXVector3 ep2 = pMesh->m_Final_Vertex[index2]->m_Pos - pMesh->m_Final_Vertex[index0]->m_Pos;
+		DXVector3 ep1 = pMesh->m_VertexList[index1]->m_Pos - pMesh->m_VertexList[index0]->m_Pos;
+		DXVector3 ep2 = pMesh->m_VertexList[index2]->m_Pos - pMesh->m_VertexList[index0]->m_Pos;
 
-		DXVector3 uv1 = { pMesh->m_Final_Vertex[index1]->m_U - pMesh->m_Final_Vertex[index0]->m_U,
-						  pMesh->m_Final_Vertex[index1]->m_V - pMesh->m_Final_Vertex[index0]->m_V };
-		DXVector3 uv2 = { pMesh->m_Final_Vertex[index2]->m_U - pMesh->m_Final_Vertex[index0]->m_U,
-						  pMesh->m_Final_Vertex[index2]->m_V - pMesh->m_Final_Vertex[index0]->m_V };
+		DXVector3 uv1 = { pMesh->m_VertexList[index1]->m_U - pMesh->m_VertexList[index0]->m_U,
+						  pMesh->m_VertexList[index1]->m_V - pMesh->m_VertexList[index0]->m_V };
+		DXVector3 uv2 = { pMesh->m_VertexList[index2]->m_U - pMesh->m_VertexList[index0]->m_U,
+						  pMesh->m_VertexList[index2]->m_V - pMesh->m_VertexList[index0]->m_V };
 
 		float den = 1.0f / (uv1.x * uv2.y - uv2.x * uv1.y);
 
@@ -186,21 +186,25 @@ void CASEParser::OptimizeVertex(ASEMesh* pMesh)
 		//binormal.Normalize();
 
 		// 유사 정점은 값을 누적하여 쉐이더에서 평균값을 사용하도록 하자..
-		pMesh->m_Final_Vertex[index0]->m_Tanget += tangent;
-		pMesh->m_Final_Vertex[index1]->m_Tanget += tangent;
-		pMesh->m_Final_Vertex[index2]->m_Tanget += tangent;
+		pMesh->m_VertexList[index0]->m_Tanget += tangent;
+		pMesh->m_VertexList[index1]->m_Tanget += tangent;
+		pMesh->m_VertexList[index2]->m_Tanget += tangent;
 	}
 
 	// 인덱스는 그냥 복사
-	pMesh->m_Final_Index = new IndexList[pMesh->m_MeshFace.size()];
-
 	for (unsigned int i = 0; i < pMesh->m_MeshFace.size(); i++)
 	{
+		pMesh->m_IndexList.push_back(new IndexList);
+		
 		for (int j = 0; j < 3; j++)
 		{
-			pMesh->m_Final_Index[i].m_Index[j] = pMesh->m_MeshFace[i]->m_VertexIndex[j];
+			pMesh->m_IndexList[i]->m_Index[j] = pMesh->m_MeshFace[i]->m_VertexIndex[j];
 		}
+
+		delete pMesh->m_MeshFace[i];
 	}
+
+	pMesh->m_MeshFace.clear();
 }
 
 void CASEParser::RecombinationTM(ParserData::ASEMesh* pMesh)
@@ -240,7 +244,7 @@ void CASEParser::RecombinationTM(ParserData::ASEMesh* pMesh)
 		nodeScale *= -1;
 
 		// 노말값 재조정..
-		for (auto& k : pMesh->m_Final_Vertex)
+		for (auto& k : pMesh->m_VertexList)
 		{
 			k->m_Normal *= -1;
 		}
@@ -269,9 +273,9 @@ void CASEParser::RecombinationTM(ParserData::ASEMesh* pMesh)
 		pMesh->m_LocalTM = pMesh->m_WorldTM * piMatrix.Inverse();
 	}
 
-	for (unsigned int i = 0; i < pMesh->m_Final_Vertex.size(); i++)
+	for (unsigned int i = 0; i < pMesh->m_VertexList.size(); i++)
 	{
-		pMesh->m_Final_Vertex[i]->m_Pos = XMVector3Transform(pMesh->m_Final_Vertex[i]->m_Pos, iMatrix);
+		pMesh->m_VertexList[i]->m_Pos = XMVector3Transform(pMesh->m_VertexList[i]->m_Pos, iMatrix);
 	}
 
 	// 애니메이션이 있을경우 사이즈를 구해두자..
@@ -693,8 +697,8 @@ void CASEParser::DataParsing()
 			int boneNum = Parsing_NumberInt();
 			float boneWeight = Parsing_NumberFloat();
 
-			m_OneMesh->m_MeshVertex[m_Index]->m_BoneIndices.push_back(boneNum);
-			m_OneMesh->m_MeshVertex[m_Index]->m_BoneWeights.push_back(boneWeight);
+			m_OneMesh->m_VertexList[m_Index]->m_BoneIndices.push_back(boneNum);
+			m_OneMesh->m_VertexList[m_Index]->m_BoneWeights.push_back(boneWeight);
 		}
 		break;
 
@@ -718,15 +722,15 @@ void CASEParser::DataParsing()
 		{
 			for (int i = 0; i < m_OneMesh->m_Mesh_NumVertex; i++)
 			{
-				m_OneMesh->m_MeshVertex.push_back(new Vertex);
+				m_OneMesh->m_VertexList.push_back(new Vertex);
 			}
 		}
 		break;
 		case TOKENR_MESH_VERTEX:
 		{
 			m_Index = Parsing_NumberInt();
-			m_OneMesh->m_MeshVertex[m_Index]->m_Indices = m_Index;
-			m_OneMesh->m_MeshVertex[m_Index]->m_Pos = Parsing_ChangeNumberVector3();
+			m_OneMesh->m_VertexList[m_Index]->m_Indices = m_Index;
+			m_OneMesh->m_VertexList[m_Index]->m_Pos = Parsing_ChangeNumberVector3();
 		}
 		break;
 
@@ -1086,7 +1090,7 @@ void CASEParser::Create_AnimationData_to_mesh(Mesh* nowMesh)
 void CASEParser::Create_OneVertex_to_list()
 {
 	Vertex* temp = new Vertex;
-	m_OneMesh->m_MeshVertex.push_back(temp);
+	m_OneMesh->m_VertexList.push_back(temp);
 }
 
 void CASEParser::Create_BoneData_to_list()

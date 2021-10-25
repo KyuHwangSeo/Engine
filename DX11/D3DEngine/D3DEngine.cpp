@@ -67,7 +67,6 @@ D3DEngine::~D3DEngine()
 
 bool D3DEngine::Initialize(INT_PTR hinstance, INT_PTR hwnd, int screenWidth, int screenHeight)
 {
-
 	UINT createDeviceFlags = 0;
 
 #ifdef _DEBUG
