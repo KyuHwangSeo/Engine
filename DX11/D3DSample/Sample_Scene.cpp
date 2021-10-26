@@ -14,7 +14,7 @@ Sample_Scene::~Sample_Scene()
 
 void Sample_Scene::Create()
 {
-	GameObject* player = KH_UTILITY::CreateObject("CHARACTER_idle", eModelType::FBX, DXVector3(0.01f, 0.01f, 0.01f), true, eModelCollider::BoneList);
+	GameObject* player = KH_UTILITY::CreateObject("CHARACTER_idle", eModelType::Model, DXVector3(0.01f, 0.01f, 0.01f), true, eModelCollider::BoneList);
 	KH_UTILITY::CreateAnimation("CHARACTER_idle", "Idle", player, true);
 	player->SetName("Player");
 	player->SetTag(eTag::Player);

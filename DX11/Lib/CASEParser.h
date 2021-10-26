@@ -9,7 +9,7 @@ enum eParsingmode
 	eEnd,
 };
 
-class CASEParser : public IParser
+class CASEParser : public ModelParser
 {
 public:
 	CASEParser();

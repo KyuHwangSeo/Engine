@@ -1,19 +1,10 @@
 #define SAFE_DELETE(x) { if(x != nullptr) {delete x; x = nullptr;} }
 
+#include "ModelParser.h"
+
 #define FBXSDK_SHARED
 #include <fbxsdk.h>
 #pragma comment(lib, "libfbxsdk")
-
-#include <windows.h>
-#include <cassert>
-#include <string>
-#include <vector>
-
-#include "ParserDLL.h"
-
-#include "CParsingDataClass.h"
-
-#include "IParser.h"
 
 #include "BoneWeights.h"
 #include "FBXParser.h"
@@ -142,7 +133,7 @@ void FBXParser::SceneSetting(std::string fileName, bool scaling, bool onlyAni)
 
 void FBXParser::CreateModel()
 {
-	SAFE_DELETE(m_Model);
+	//SAFE_DELETE(m_Model);
 	m_Model = new Model();
 }
 

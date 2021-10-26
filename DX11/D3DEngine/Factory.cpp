@@ -497,8 +497,6 @@ GameObject* Factory::CreateUI(string objName, eUIType uiType, string texKey, DXV
 
 Animation* Factory::CreateAnimation(std::string objName, std::string aniName, GameObject* topNode, bool play)
 {
-	ParserData::Model* model = m_RsMG->GetModel(objName);
-
 	// Animator가 있는 최상위 노드의 Animator Component 찾기..
 	GameObject* topObject = topNode;
 	Animator* animator = topObject->GetComponent<Animator>();
@@ -507,7 +505,8 @@ Animation* Factory::CreateAnimation(std::string objName, std::string aniName, Ga
 	Animation* animation = new Animation();
 
 	// 현 Object의 Animation Data 삽입..
-	for (int i = 0; i < model->m_MeshList.size(); i++)
+	ParserData::Model* model = m_RsMG->GetModel(objName);
+	for (unsigned int i = 0; i < model->m_MeshList.size(); i++)
 	{
 		std::string meshKey = m_RsMG->GetMeshKey(objName, i);
 
@@ -535,7 +534,7 @@ Animation* Factory::CreateAnimation(string objName, string aniName, string nodeN
 
 	// 현 Object의 Animation Data 삽입..
 	ParserData::Model* model = m_RsMG->GetModel(objName);
-	for (int i = 0; i < model->m_MeshList.size(); i++)
+	for (unsigned int i = 0; i < model->m_MeshList.size(); i++)
 	{
 		string meshKey = m_RsMG->GetMeshKey(objName, i);
 

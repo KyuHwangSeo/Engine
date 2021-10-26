@@ -2,7 +2,8 @@
 #include "SingleTon.h"
 #include "GameTimer.h"
 #include "EnumDefine.h"
-#include "KHParser.h"
+#include "KHMath.h"
+#include "../ShareData/ParserData.h"
 #include "Component.h"
 #include "Transform.h"
 #include "GameObject.h"
@@ -53,41 +54,32 @@ void Animation::AnimationUpdate(Transform* nowMesh, ParserData::OneAnimation* no
 	// 현재 LocalTM에서 행렬 요소를 추출한다..
 	XMMatrixDecompose(&localScale, &localRot, &localPos, nowMesh->m_NodeTM);
 
-	// Scale Lerp
-	if (nowAni->m_isPosAnimation)
-	{
-		// 현재 프레임과 다음 프레임간의 보간..
-		nowVec = m_NowAniData->m_Scale;
-		nextVec = m_NextAniData->m_Scale;
-		localScale = XMVectorLerp(nowVec, nextVec, nowFrame);
+	/// Scale Lerp
+	// 현재 프레임과 다음 프레임간의 보간..
+	nowVec = m_NowAniData->m_Scale;
+	nextVec = m_NextAniData->m_Scale;
+	localScale = XMVectorLerp(nowVec, nextVec, nowFrame);
 
-		// 노드 업데이트 체크..
-		nowMesh->m_UpdateLocal = true;
-	}
+	// 노드 업데이트 체크..
+	nowMesh->m_UpdateLocal = true;
 
-	// Position Lerp
-	if (nowAni->m_isPosAnimation)
-	{
-		// 현재 프레임과 다음 프레임간의 보간..
-		nowVec = m_NowAniData->m_Pos;
-		nextVec = m_NextAniData->m_Pos;
-		localPos = XMVectorLerp(nowVec, nextVec, nowFrame);
+	/// Position Lerp
+	// 현재 프레임과 다음 프레임간의 보간..
+	nowVec = m_NowAniData->m_Pos;
+	nextVec = m_NextAniData->m_Pos;
+	localPos = XMVectorLerp(nowVec, nextVec, nowFrame);
 
-		// 노드 업데이트 체크..
-		nowMesh->m_UpdateLocal = true;
-	}
+	// 노드 업데이트 체크..
+	nowMesh->m_UpdateLocal = true;
 
-	// Rotation Slerp
-	if (nowAni->m_isRotAnimation)
-	{
-		// 현재 프레임과 다음 프레임간의 보간..
-		nowVec = m_NowAniData->m_RotQt;
-		nextVec = m_NextAniData->m_RotQt;
-		localRot = XMQuaternionSlerp(nowVec, nextVec, nowFrame);
+	/// Rotation Slerp
+	// 현재 프레임과 다음 프레임간의 보간..
+	nowVec = m_NowAniData->m_RotQt;
+	nextVec = m_NextAniData->m_RotQt;
+	localRot = XMQuaternionSlerp(nowVec, nextVec, nowFrame);
 
-		// 노드 업데이트 체크..
-		nowMesh->m_UpdateLocal = true;
-	}
+	// 노드 업데이트 체크..
+	nowMesh->m_UpdateLocal = true;
 
 	// 애니메이션 정보가 있으면 애니메이션에서 추출한 TM으로 LocalTM 생성..
 	// 만약 애니메이션에 없을경우 기존 LocalTM 요소를 대입..

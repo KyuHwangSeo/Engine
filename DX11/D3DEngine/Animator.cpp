@@ -2,7 +2,7 @@
 #include "SingleTon.h"
 #include "GameTimer.h"
 #include "EnumDefine.h"
-#include "KHParser.h"
+#include "KHMath.h"
 #include "Component.h"
 #include "Transform.h"
 #include "GameObject.h"

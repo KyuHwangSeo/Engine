@@ -1,14 +1,4 @@
-#include "ParserDLL.h"
-
-#include <vector>
-#include <string>
-#include <windows.h>
-#include <cassert>
-using namespace std;
-
-#include "CParsingDataClass.h"
-
-#include "IParser.h"
+#include "ModelParser.h"
 
 #include "ASEFile.h"
 #include "CASEParser.h"
@@ -19,17 +9,19 @@ using namespace std;
 #include <fbxsdk.h>
 #include "FBXParser.h"
 
-IParser* IParser::Create(ParserType type)
+ModelParser* ModelParser::Create(Type type)
 {
-	IParser* newParser = nullptr;
+	ModelParser* newParser = nullptr;
 
 	switch (type)
 	{
-	case ParserType::ASE:
+	case ModelParser::Type::ASE:
 		newParser = new CASEParser;
+		newParser->Initialize();
 		break;
-	case ParserType::FBX:
+	case ModelParser::Type::FBX:
 		newParser = new FBXParser;
+		newParser->Initialize();
 		break;
 	default:
 		break;

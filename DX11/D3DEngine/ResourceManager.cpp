@@ -22,16 +22,14 @@ void ResourceManager::Initialize()
 	m_TexRoute = "../Resource/Textures/";
 	m_ModelRoute = "../Resource/Models/";
 
-	m_FBXParser = IParser::Create(ParserType::FBX); 
-	m_FBXParser->Initialize();
+	m_FBXParser = ModelParser::Create(ModelParser::Type::FBX);
 	m_FBXParser->SetTextureRoute(m_TexRoute);
 
-	m_ASEParser = IParser::Create(ParserType::ASE);
-	m_ASEParser->Initialize();
+	m_ASEParser = ModelParser::Create(ModelParser::Type::ASE);
 	m_ASEParser->SetTextureRoute(m_TexRoute);
 
-	m_ImgParser = new ImageParser();
-	m_ImgParser->Initialize(m_TexRoute);
+	m_ImgParser = ImageParser::Create(ImageParser::Type::FLOAT);
+	m_ImgParser->SetTextureRoute(m_TexRoute);
 
 	// Sampler »ý¼º
 	CreateSamplerState();
@@ -368,8 +366,8 @@ void ResourceManager::LoadData_TerrainMesh(std::string objectName, std::string k
 	vcount = (UINT)meshData->m_VertexList.size();
 
 	// Terrain Mask Data
-	ImageDataF mask1 = m_ImgParser->LoadImagePixelByFloat("mask.png", 4);
-	ImageDataF mask2 = m_ImgParser->LoadImagePixelByFloat("Rock_Mask.png", 4);
+	ParserData::ImageData mask1 = m_ImgParser->LoadImagePixel("mask.png", 4);
+	ParserData::ImageData mask2 = m_ImgParser->LoadImagePixel("Rock_Mask.png", 4);
 
 	std::vector<TerrainVertex> vertices(vcount);
 
@@ -391,8 +389,8 @@ void ResourceManager::LoadData_TerrainMesh(std::string objectName, std::string k
 
 		newBuf->m_VertexPos.push_back(vertices[i].Pos);
 
-		vertices[i].Mask1 = m_ImgParser->GetPixelColorF(mask1, vertices[i].Pos.x, abs(vertices[i].Pos.z));
-		vertices[i].Mask2 = m_ImgParser->GetPixelColorF(mask2, vertices[i].Pos.x, abs(vertices[i].Pos.z));
+		vertices[i].Mask1 = m_ImgParser->GetPixelColor(mask1, vertices[i].Pos.x, abs(vertices[i].Pos.z));
+		vertices[i].Mask2 = m_ImgParser->GetPixelColor(mask2, vertices[i].Pos.x, abs(vertices[i].Pos.z));
 	}
 
 	newBuf->m_MeshBox.Center = (vMin + vMax) * 0.5f;

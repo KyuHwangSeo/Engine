@@ -2,7 +2,7 @@
 
 typedef std::pair<std::string, ParserData::Bone*> BonePair;
 
-class FBXParser : public IParser
+class FBXParser : public ModelParser
 {
 public:
 	FBXParser() = default;

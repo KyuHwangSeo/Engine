@@ -1,6 +1,8 @@
 #pragma once
 #pragma warning(disable : 4251)
 
+#include <string>
+#include <vector>
 #include "SimpleMath.h"
 
 namespace ParserData
@@ -16,9 +18,9 @@ namespace ParserData
 	struct OneAnimation
 	{
 	public:
-		OneAnimation();
+		OneAnimation() = default;
 		OneAnimation(const OneAnimation& ani) = default;
-		~OneAnimation();
+		~OneAnimation() = default;
 
 	public:
 		std::vector<OneFrame*>	m_AniData;
@@ -30,7 +32,7 @@ namespace ParserData
 		int		m_StartFrame;
 		int		m_EndFrame;
 		int		m_NowIndex;
-		int		m_NextIndex;
+		int		m_NextIndex = 1;
 	};
 }
 
@@ -44,8 +46,8 @@ namespace ParserData
 	struct Vertex
 	{
 	public:
-		Vertex();
-		~Vertex();
+		Vertex() = default;
+		~Vertex() = default;
 
 	public:
 		DirectX::SimpleMath::Vector3 m_Pos;
@@ -67,7 +69,7 @@ namespace ParserData
 	struct Face
 	{
 	public:
-		Face();
+		Face() = default;
 		~Face() = default;
 
 	public:
@@ -90,8 +92,8 @@ namespace ParserData
 	struct CMaterial
 	{
 	public:
-		CMaterial();
-		~CMaterial();
+		CMaterial() = default;
+		~CMaterial() = default;
 
 	public:
 		int	m_MaterialNumber;
@@ -122,9 +124,9 @@ namespace ParserData
 	class Mesh
 	{
 	public:
-		Mesh();
+		Mesh() = default;
 		Mesh(const Mesh& mesh) = default;
-		virtual ~Mesh();
+		virtual ~Mesh() = default;
 
 	public:
 		std::string	m_NodeName; 
@@ -175,13 +177,13 @@ namespace ParserData
 		float				m_TicksPerFrame;
 
 	public:
-		Scenedata();
-		~Scenedata();
+		Scenedata() = default;
+		~Scenedata() = default;
 	};
 
 	struct TVertex
 	{
-		TVertex();
+		TVertex() = default;
 
 		float m_U, m_V, m_W;
 	};
@@ -196,8 +198,8 @@ namespace ParserData
 	class ASEMesh : public Mesh
 	{
 	public:
-		ASEMesh();
-		~ASEMesh();
+		ASEMesh() = default;
+		~ASEMesh() = default;
 
 	public:
 		int	m_Type;
@@ -219,12 +221,19 @@ namespace ParserData
 {
 	struct Model
 	{
-		Model();
-		~Model();
+		Model() = default;
+		~Model() = default;
 
 		bool m_isAnimation;											// Animation À¯¹«
 
 		std::vector<ParserData::CMaterial*> m_MaterialList;			// Material List
 		std::vector<ParserData::Mesh*> m_MeshList;	 				// Mesh List
+	};
+
+	struct ImageData
+	{
+		int width;
+		int height;
+		void* imgColor;
 	};
 }

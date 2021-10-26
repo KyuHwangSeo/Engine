@@ -1,19 +1,22 @@
 #pragma once
+#include "ParserDLL.h"
+#include "../ShareData/ParserData.h"
 
-enum class ParserType
-{
-	ASE,
-	FBX
-};
-
-class IParser
+class ModelParser
 {
 public:
-	IParser() = default;
-	virtual ~IParser() = default;
+	ModelParser() = default;
+	virtual ~ModelParser() = default;
 
 public:
-	static PARSER_DLL IParser* Create(ParserType type);
+	enum class Type
+	{
+		ASE,
+		FBX
+	};
+
+public:
+	static PARSER_DLL ModelParser* Create(Type type);
 
 public:
 	virtual PARSER_DLL void Initialize() abstract;

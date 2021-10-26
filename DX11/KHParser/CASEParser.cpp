@@ -1,18 +1,11 @@
 #define SAFE_DELETE(x) { if(x != nullptr) {delete x; x = nullptr;} }
 
-#include "ParserDLL.h"
-
-#include <vector>
-#include <string>
-using namespace std;
-
-#include "CParsingDataClass.h"
-
-#include "IParser.h"
+#include "ModelParser.h"
 
 #include "ASEFile.h"
 #include "CASEParser.h"
 
+using namespace std;
 using namespace ParserData;
 using namespace DirectX;
 using namespace SimpleMath;

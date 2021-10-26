@@ -2,7 +2,7 @@
 #include "Component.h"
 #include "Transform.h"
 #include "GameObject.h"
-#include "KHParser.h"
+#include "KHMath.h"
 #include "Shader.h"
 #include "Material.h"
 #include "Renderer.h"

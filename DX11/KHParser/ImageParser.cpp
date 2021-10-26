@@ -1,65 +1,38 @@
-#include <string>
-
-#include "ParserDLL.h"
-#include "SimpleMath.h"
-
 #include "ImageParser.h"
 
-#ifndef STB_IMAGE_IMPLEMENTATION
-	#define STB_IMAGE_IMPLEMENTATION
-#endif
+#include "FloatImage.h"
+#include "CharImage.h"
 
+#define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-PARSER_DLL void ImageParser::Initialize(std::string texRoute)
+float* ImageParser::LoadImage_Float(const char* filename, int* x, int* y, int* comp, int req_comp)
 {
-	m_TextureRoute = texRoute;
+	return stbi_loadf(filename, x, y, comp, req_comp);
 }
 
-PARSER_DLL ImageDataF ImageParser::LoadImagePixelByFloat(const char* fileName, unsigned int channels)
+unsigned char* ImageParser::LoadImage_Char(const char* filename, int* x, int* y, int* comp, int req_comp)
 {
-	std::string filePath = m_TextureRoute + fileName;
-
-	ImageDataF imgData;
-	imgData.imgColor = stbi_loadf(filePath.c_str(), &imgData.width, &imgData.height, nullptr, channels);
-	
-	return imgData;
+	return stbi_load(filename, x, y, comp, req_comp);
 }
 
-PARSER_DLL ImageDataI ImageParser::LoadImagePixelByInt(const char* fileName, unsigned int channels)
+PARSER_DLL ImageParser* ImageParser::Create(Type type)
 {
-	std::string filePath = m_TextureRoute + fileName;
+	ImageParser* newParser = nullptr;
 
-	ImageDataI imgData;
-	imgData.imgColor = stbi_load(filePath.c_str(), &imgData.width, &imgData.height, nullptr, channels);
+	switch (type)
+	{
+	case ImageParser::Type::FLOAT:
+		newParser = new FloatImage();
+		newParser->Initialize();
+		break;
+	case ImageParser::Type::CHAR:
+		newParser = new CharImage();
+		newParser->Initialize();
+		break;
+	default:
+		break;
+	}
 
-	return imgData;
-}
-
-PARSER_DLL DirectX::SimpleMath::Vector4 ImageParser::GetPixelColorF(ImageDataF& img, int x, int y)
-{
-	const float* p = img.imgColor + (4 * (y * img.width + x));
-
-	return DirectX::SimpleMath::Vector4(p[0], p[1], p[2], p[3]);
-}
-
-PARSER_DLL DirectX::SimpleMath::Vector4 ImageParser::GetPixelColorF(ImageDataF& img, float x, float y)
-{
-	const float* p = img.imgColor + (4 * ((int)y * img.width + (int)x));
-
-	return DirectX::SimpleMath::Vector4(p[0], p[1], p[2], p[3]);
-}
-
-PARSER_DLL DirectX::SimpleMath::Vector4 ImageParser::GetPixelColorI(ImageDataI& img, int x, int y)
-{
-	const unsigned char* p = img.imgColor + (4 * (y * img.width + x));
-
-	return DirectX::SimpleMath::Vector4(p[0], p[1], p[2], p[3]);
-}
-
-PARSER_DLL DirectX::SimpleMath::Vector4 ImageParser::GetPixelColorI(ImageDataI& img, float x, float y)
-{
-	const unsigned char* p = img.imgColor + (4 * ((int)y * img.width + (int)x));
-
-	return DirectX::SimpleMath::Vector4(p[0], p[1], p[2], p[3]);
+	return newParser;
 }

@@ -1,6 +1,6 @@
 #include "MathDLL.h"
 #include <math.h>
-#include "SimpleMath.h"
+#include "../ShareData/SimpleMath.h"
 #include "DXMath.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////

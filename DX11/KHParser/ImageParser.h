@@ -1,39 +1,35 @@
 #pragma once
-
-struct ImageData
-{
-	int width;
-	int height;
-};
-
-// Pixel By Color 0 ~ 1
-struct PARSER_DLL ImageDataF : public ImageData
-{
-	float* imgColor;
-};
-
-// Pixel By Color 0 ~ 255
-struct PARSER_DLL ImageDataI : public ImageData
-{
-	unsigned char* imgColor;
-};
+#include "ParserDLL.h"
+#include "../ShareData/ParserData.h"
 
 class ImageParser
 {
 public:
 	ImageParser() = default;
-	~ImageParser() = default;
-
-private:
-	std::string m_TextureRoute;
+	virtual ~ImageParser() = default;
 
 public:
-	PARSER_DLL void Initialize(std::string texRoute);
-	PARSER_DLL ImageDataF LoadImagePixelByFloat(const char* fileName, unsigned int channels);
-	PARSER_DLL ImageDataI LoadImagePixelByInt(const char* fileName, unsigned int channels);
+	enum class Type
+	{
+		FLOAT,
+		CHAR
+	};
 
-	PARSER_DLL DirectX::SimpleMath::Vector4 GetPixelColorF(ImageDataF& img, int x, int y);
-	PARSER_DLL DirectX::SimpleMath::Vector4 GetPixelColorF(ImageDataF& img, float x, float y);
-	PARSER_DLL DirectX::SimpleMath::Vector4 GetPixelColorI(ImageDataI& img, int x, int y);
-	PARSER_DLL DirectX::SimpleMath::Vector4 GetPixelColorI(ImageDataI& img, float x, float y);
+protected:
+	std::string m_TextureRoute;
+
+protected:
+	float* LoadImage_Float(const char* filename, int* x, int* y, int* comp, int req_comp);
+	unsigned char* LoadImage_Char(const char* filename, int* x, int* y, int* comp, int req_comp);
+
+public:
+	static PARSER_DLL ImageParser* Create(Type type);
+
+public:
+	virtual PARSER_DLL void Initialize() abstract;
+	virtual PARSER_DLL void SetTextureRoute(std::string texRoute) abstract;
+	virtual PARSER_DLL ParserData::ImageData LoadImagePixel(const char* fileName, unsigned int channels) abstract;
+
+	virtual PARSER_DLL DirectX::SimpleMath::Vector4 GetPixelColor(ParserData::ImageData& img, int x, int y) abstract;
+	virtual PARSER_DLL DirectX::SimpleMath::Vector4 GetPixelColor(ParserData::ImageData& img, float x, float y) abstract;
 };

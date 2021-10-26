@@ -1,7 +1,7 @@
 #include "EngineDLL.h"
 #include "D3DDefine.h"
-#include <DirectXMath.h>
 #include "EnumDefine.h"
+#include "KHMath.h"
 #include "Component.h"
 #include "Transform.h"
 #include "GameObject.h"
