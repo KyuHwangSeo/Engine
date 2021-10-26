@@ -25,6 +25,9 @@
     <Filter Include="소스 파일\Image">
       <UniqueIdentifier>{abeef8ea-824f-4750-b145-1500a86c7d7d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\ParserBase">
+      <UniqueIdentifier>{399884c6-03d9-4583-8461-8543cc6ecf40}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Lexer.cpp">
@@ -47,6 +50,9 @@
     </ClCompile>
     <ClCompile Include="ImageParser.cpp">
       <Filter>소스 파일\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="IParser.cpp">
+      <Filter>소스 파일\ParserBase</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -76,6 +82,9 @@
     </ClInclude>
     <ClInclude Include="ImageParser.h">
       <Filter>소스 파일\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="IParser.h">
+      <Filter>소스 파일\ParserBase</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

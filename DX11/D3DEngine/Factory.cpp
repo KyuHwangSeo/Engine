@@ -46,7 +46,7 @@ Factory::~Factory()
 
 }
 
-GameObject* Factory::CreateObject(string objName, eModelType modelType, DXVector3 scale, bool isCol, eModelCollider modelColType)
+GameObject* Factory::CreateObject(std::string objName, eModelType modelType, DXVector3 scale, bool isCol, eModelCollider modelColType)
 {
 	GameObject* newObj = new GameObject();
 	newObj->SetName(objName);
@@ -206,88 +206,6 @@ GameObject* Factory::CreateObject(string objName, eModelType modelType, DXVector
 		m_MatMG->AddMaterial(mRenderer->m_Material);
 	}
 	break;
-	case eModelType::ASE:
-	{
-		CASEParser* parser = m_RsMG->GetASEParser(objName);
-		Animation* animation = nullptr;
-		Animator* animator = nullptr;
-
-		// 계층 구조를 설정하기위한 리스트..
-		vector<GameObject*> objList;
-		objList.emplace_back(newObj);
-
-		m_ObjMG->AddTopObject(newObj);
-
-		// 애니메이션이 있는경우..
-		if (parser->m_IsAnimation)
-		{
-			animator = new Animator();
-			newObj->AddComponent(animator);
-		}
-
-		// 로딩한 데이터를 기반으로 모든 Mesh를 생성한다..
-		int meshSize = (int)m_RsMG->GetMeshListSize(objName);
-		for (int i = 0; i < meshSize; i++)
-		{
-			string meshKey = m_RsMG->GetMeshKey(objName, i);
-
-			ParserData::Mesh* newMesh = m_RsMG->GetMesh(meshKey);
-			VertexBuffer* newBuffer = m_RsMG->GetVertexBuffer(meshKey);
-
-			GameObject* newNode = nullptr;
-
-			// Mesh가 1개 이상인 경우 최상위 오브젝트로 묶어주기 위해..
-			if (meshSize == 1)
-				newNode = newObj;
-			else
-			{
-				newNode = new GameObject();
-
-				// 오브젝트(노드) 리스트에 삽입..
-				objList.emplace_back(newNode);
-
-				// 파싱 데이터중 최상위 노드들을 한 오브젝트로 묶어준다..
-				if (newMesh->m_TopNode)
-				{
-					newNode->SetParent(newObj->GetTransform());
-					newObj->AddChild(newNode->GetTransform());
-				}
-			}
-
-			newNode->SetName(newMesh->m_NodeName);
-			newNode->GetTransform()->SetNodeTM(newMesh->m_LocalTM);
-			newNode->GetTransform()->SetLocalTM(newMesh->m_WorldTM);
-
-			// Mesh 정보에 기반하여 Renderer 설정..
-			SetRenderer(newNode, meshKey, newMesh, newBuffer);
-
-			// 현 Object가 Bone일 경우..
-			if (newMesh->m_IsBone)
-			{
-				newNode->SetMeshType(eMeshType::Bone);
-			}
-			// 현 Obejct가 Mesh일 경우..
-			else
-			{
-				if (isCol && modelColType != eModelCollider::BoneList)
-					SetCollider(newNode, newBuffer);
-			}
-
-			// 현 Object가 애니메이션이 있다면..
-			if (parser->m_IsAnimation)
-				animator->AddMeshObject(newNode);
-		}
-
-		// 현재 오브젝트 Collider 저장..
-		if (isCol)
-			m_ColMG->AddModel(objList);
-
-		// 현재 오브젝트 계층구조 설정 및 리스트 초기화..
-		m_ObjMG->AddModel(objList);
-		m_ObjMG->SetHierarchy(objList);
-		objList.clear();
-	}
-	break;
 	case eModelType::Gizmo:
 	{
 		MeshRenderer* mRenderer = new MeshRenderer(eRasterizerType::Wire);
@@ -299,9 +217,9 @@ GameObject* Factory::CreateObject(string objName, eModelType modelType, DXVector
 		m_MatMG->AddMaterial(mRenderer->m_Material);
 	}
 	break;
-	case eModelType::FBX:
+	case eModelType::Model:
 	{
-		FBXModel* parser = m_RsMG->GetFBXParser(objName);
+		ParserData::Model* parser = m_RsMG->GetModel(objName);
 		Animation* animation = nullptr;
 		Animator* animator = nullptr;
 
@@ -319,7 +237,7 @@ GameObject* Factory::CreateObject(string objName, eModelType modelType, DXVector
 		}
 
 		// 로딩한 데이터를 기반으로 모든 Mesh를 생성한다..
-		size_t meshSize = m_RsMG->GetMeshListSize(objName);
+		size_t meshSize = parser->m_MeshList.size();
 		for (size_t i = 0; i < meshSize; i++)
 		{
 			std::string meshKey = m_RsMG->GetMeshKey(objName, i);
@@ -388,7 +306,7 @@ GameObject* Factory::CreateObject(string objName, eModelType modelType, DXVector
 	break;
 	case eModelType::TerrainMesh:
 	{
-		FBXModel* parser = m_RsMG->GetFBXParser(objName);
+		ParserData::Model* parser = m_RsMG->GetModel(objName);
 		m_ObjMG->AddTopObject(newObj);
 		m_ObjMG->AddObject(newObj);
 
@@ -577,9 +495,9 @@ GameObject* Factory::CreateUI(string objName, eUIType uiType, string texKey, DXV
 	return newObj;
 }
 
-Animation* Factory::CreateAnimation(string objName, string aniName, GameObject* topNode, bool play)
+Animation* Factory::CreateAnimation(std::string objName, std::string aniName, GameObject* topNode, bool play)
 {
-	int meshSize = (int)m_RsMG->GetMeshListSize(objName);
+	ParserData::Model* model = m_RsMG->GetModel(objName);
 
 	// Animator가 있는 최상위 노드의 Animator Component 찾기..
 	GameObject* topObject = topNode;
@@ -589,9 +507,9 @@ Animation* Factory::CreateAnimation(string objName, string aniName, GameObject* 
 	Animation* animation = new Animation();
 
 	// 현 Object의 Animation Data 삽입..
-	for (int i = 0; i < meshSize; i++)
+	for (int i = 0; i < model->m_MeshList.size(); i++)
 	{
-		string meshKey = m_RsMG->GetMeshKey(objName, i);
+		std::string meshKey = m_RsMG->GetMeshKey(objName, i);
 
 		// Object 생성시 Animator에 들어있는 Obejct에 대한 애니메이션 정보를 넣는다..
 		ParserData::OneAnimation* animationData = m_RsMG->GetAnimation(meshKey);
@@ -616,8 +534,8 @@ Animation* Factory::CreateAnimation(string objName, string aniName, string nodeN
 	Animation* animation = new Animation();
 
 	// 현 Object의 Animation Data 삽입..
-	int meshSize = (int)m_RsMG->GetMeshListSize(objName);
-	for (int i = 0; i < meshSize; i++)
+	ParserData::Model* model = m_RsMG->GetModel(objName);
+	for (int i = 0; i < model->m_MeshList.size(); i++)
 	{
 		string meshKey = m_RsMG->GetMeshKey(objName, i);
 

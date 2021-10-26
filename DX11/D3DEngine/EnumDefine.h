@@ -85,8 +85,7 @@ enum class eModelType
 	Cylinder,
 	Text,
 	Gizmo,
-	ASE,
-	FBX,
+	Model,
 	TerrainMesh,
 };
 

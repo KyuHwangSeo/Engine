@@ -6,10 +6,12 @@
 #include <vector>
 #include <unordered_map>
 
-#include "KHMath.h"
 #include "ParserDLL.h"
 
 #include "CParsingDataClass.h"
+
+#include "IParser.h"
+
 #include "ASEFile.h"
 #include "CASEParser.h"
 

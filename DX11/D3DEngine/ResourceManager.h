@@ -55,8 +55,7 @@ public:
 public:
 	ENGINE_DLL ID3D11ShaderResourceView* GetTexture(std::string meshName, eTextureType textureType);
 	ENGINE_DLL ID3D11ShaderResourceView* GetTexture(std::string texName);
-	CASEParser* GetASEParser(std::string objectName);
-	FBXModel* GetFBXParser(std::string objectName);
+	ParserData::Model* GetModel(std::string objectName);
 	VertexBuffer* GetVertexBuffer(std::string key);
 	ParserData::Mesh* GetMesh(std::string key);
 	ParserData::Mesh* GetMesh(std::string objectName, int count);
@@ -64,7 +63,6 @@ public:
 	MaterialData GetMaterial(std::string key);
 	std::string GetMeshName(std::string objectName, int count = 0);
 	std::string GetMeshKey(std::string objectName, int count = 0);
-	size_t GetMeshListSize(std::string objectName);
 	Shader* GetShader(std::string name);
 	unordered_map<std::string, Shader*> GetShaderList();
 
@@ -73,7 +71,8 @@ private:
 	std::string m_TexRoute;
 	std::string m_ModelRoute;
 
-	FBXParser* m_FBXParser;
+	IParser* m_FBXParser;
+	IParser* m_ASEParser;
 	ImageParser* m_ImgParser;
 
 	///////////////////////////////////////////////////////////////////////
@@ -85,11 +84,8 @@ private:
 	// Shader 리스트 변수..
 	unordered_map<std::string, Shader*> m_ShaderList;
 
-	// ASE Parser 리스트 변수..
-	unordered_map<std::string, CASEParser*> m_ASEParserList;
-
-	// FBX Parser 리스트 변수..
-	unordered_map<std::string, FBXModel*> m_FBXParserList;
+	// Model 리스트 변수..
+	unordered_map<std::string, ParserData::Model*> m_ModelList;
 
 	// Texture 리스트 변수..
 	unordered_map<std::string, ComPtr<ID3D11ShaderResourceView>> m_TexList;

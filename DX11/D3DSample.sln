@@ -15,9 +15,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "D3DEngine", "D3DEngine\D3DE
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KHParser", "KHParser\KHParser.vcxproj", "{31B9DAA7-DAA1-48B4-B5B5-D895F4BB0675}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A7F15817-8FE4-4D97-899F-798D4573AD95} = {A7F15817-8FE4-4D97-899F-798D4573AD95}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KHMath", "KHMath\KHMath.vcxproj", "{A7F15817-8FE4-4D97-899F-798D4573AD95}"
 EndProject

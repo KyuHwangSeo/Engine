@@ -1,7 +1,7 @@
 #include <string>
 
 #include "ParserDLL.h"
-#include "KHMath.h"
+#include "SimpleMath.h"
 
 #include "ImageParser.h"
 
@@ -36,30 +36,30 @@ PARSER_DLL ImageDataI ImageParser::LoadImagePixelByInt(const char* fileName, uns
 	return imgData;
 }
 
-PARSER_DLL DXVector4 ImageParser::GetPixelColorF(ImageDataF& img, int x, int y)
+PARSER_DLL DirectX::SimpleMath::Vector4 ImageParser::GetPixelColorF(ImageDataF& img, int x, int y)
 {
 	const float* p = img.imgColor + (4 * (y * img.width + x));
 
-	return DXVector4(p[0], p[1], p[2], p[3]);
+	return DirectX::SimpleMath::Vector4(p[0], p[1], p[2], p[3]);
 }
 
-PARSER_DLL DXVector4 ImageParser::GetPixelColorF(ImageDataF& img, float x, float y)
+PARSER_DLL DirectX::SimpleMath::Vector4 ImageParser::GetPixelColorF(ImageDataF& img, float x, float y)
 {
 	const float* p = img.imgColor + (4 * ((int)y * img.width + (int)x));
 
-	return DXVector4(p[0], p[1], p[2], p[3]);
+	return DirectX::SimpleMath::Vector4(p[0], p[1], p[2], p[3]);
 }
 
-PARSER_DLL DXVector4 ImageParser::GetPixelColorI(ImageDataI& img, int x, int y)
+PARSER_DLL DirectX::SimpleMath::Vector4 ImageParser::GetPixelColorI(ImageDataI& img, int x, int y)
 {
 	const unsigned char* p = img.imgColor + (4 * (y * img.width + x));
 
-	return DXVector4(p[0], p[1], p[2], p[3]);
+	return DirectX::SimpleMath::Vector4(p[0], p[1], p[2], p[3]);
 }
 
-PARSER_DLL DXVector4 ImageParser::GetPixelColorI(ImageDataI& img, float x, float y)
+PARSER_DLL DirectX::SimpleMath::Vector4 ImageParser::GetPixelColorI(ImageDataI& img, float x, float y)
 {
 	const unsigned char* p = img.imgColor + (4 * ((int)y * img.width + (int)x));
 
-	return DXVector4(p[0], p[1], p[2], p[3]);
+	return DirectX::SimpleMath::Vector4(p[0], p[1], p[2], p[3]);
 }

@@ -22,8 +22,13 @@ void ResourceManager::Initialize()
 	m_TexRoute = "../Resource/Textures/";
 	m_ModelRoute = "../Resource/Models/";
 
-	m_FBXParser = new FBXParser();
-	m_FBXParser->Initialize(m_TexRoute);
+	m_FBXParser = IParser::Create(ParserType::FBX); 
+	m_FBXParser->Initialize();
+	m_FBXParser->SetTextureRoute(m_TexRoute);
+
+	m_ASEParser = IParser::Create(ParserType::ASE);
+	m_ASEParser->Initialize();
+	m_ASEParser->SetTextureRoute(m_TexRoute);
 
 	m_ImgParser = new ImageParser();
 	m_ImgParser->Initialize(m_TexRoute);
@@ -215,15 +220,12 @@ void ResourceManager::LoadShader(std::string shaderName, std::string vSName, std
 
 void ResourceManager::LoadData_ASE(std::string objectName, std::string fileName)
 {
-	// Parser 생성 및 초기화
-	CASEParser* newASE = new CASEParser();
-
-	newASE->Load((LPSTR)fileName.c_str());
+	ParserData::Model* newASE = m_ASEParser->LoadModel(fileName.c_str());
 
 	// Mesh Object Buffer 생성
 	for (size_t i = 0; i < newASE->m_MeshList.size(); i++)
 	{
-		ParserData::ASEMesh* mesh = newASE->m_MeshList[i];
+		ParserData::Mesh* mesh = newASE->m_MeshList[i];
 		std::string key = objectName + " " + mesh->m_NodeName;
 
 		/// 스키닝 오브젝트 유무 체크..
@@ -231,10 +233,6 @@ void ResourceManager::LoadData_ASE(std::string objectName, std::string fileName)
 		{
 			/// 스키닝 Mesh Object
 			LoadData_SkinMesh(objectName, key, mesh);
-
-			/// Bone의 Offset을 구하는 함수..
-			// 모든 Local, WorldTM 초기값이 설정된 후에 해주어야 한다..
-			newASE->SetBoneTM(mesh);
 		}
 		else
 		{
@@ -248,7 +246,7 @@ void ResourceManager::LoadData_ASE(std::string objectName, std::string fileName)
 		}
 	}
 
-	m_ASEParserList.insert(make_pair(objectName, newASE));
+	m_ModelList.insert(make_pair(objectName, newASE));
 
 	/// ASE Texture, ASE Material 생성
 	LoadData_MaterialList(objectName);
@@ -256,9 +254,7 @@ void ResourceManager::LoadData_ASE(std::string objectName, std::string fileName)
 
 void ResourceManager::LoadData_ASE_Animation(std::string objectName, std::string fileName)
 {
-	CASEParser* newASE = new CASEParser();
-
-	newASE->Load((LPSTR)fileName.c_str());
+	ParserData::Model* newASE = m_ASEParser->LoadModel(fileName.c_str());
 
 	for (size_t i = 0; i < newASE->m_MeshList.size(); i++)
 	{
@@ -272,13 +268,12 @@ void ResourceManager::LoadData_ASE_Animation(std::string objectName, std::string
 		}
 	}
 
-	m_ASEParserList.insert(make_pair(objectName, newASE));
+	m_ModelList.insert(make_pair(objectName, newASE));
 }
 
 void ResourceManager::LoadData_FBX(std::string objectName, std::string fileName, bool fbxScaling)
 {
-	m_FBXParser->LoadScene(fileName.c_str(), fbxScaling);
-	FBXModel* newFBX = m_FBXParser->GetModel();
+	ParserData::Model* newFBX = m_FBXParser->LoadModel(fileName.c_str(), fbxScaling);
 
 	// Mesh Object Buffer 생성
 	for (size_t i = 0; i < newFBX->m_MeshList.size(); i++)
@@ -304,7 +299,7 @@ void ResourceManager::LoadData_FBX(std::string objectName, std::string fileName,
 		}
 	}
 
-	m_FBXParserList.insert(make_pair(objectName, newFBX));
+	m_ModelList.insert(make_pair(objectName, newFBX));
 
 	/// FBX Texture, FBX Material 생성
 	LoadData_MaterialList(objectName);
@@ -312,8 +307,7 @@ void ResourceManager::LoadData_FBX(std::string objectName, std::string fileName,
 
 void ResourceManager::LoadData_FBX_Animation(std::string objectName, std::string fileName, bool fbxScaling)
 {
-	m_FBXParser->LoadScene(fileName.c_str(), fbxScaling);
-	FBXModel* newFBX = m_FBXParser->GetModel();
+	ParserData::Model* newFBX = m_FBXParser->LoadModel(fileName.c_str(), fbxScaling, true);
 
 	for (size_t i = 0; i < newFBX->m_MeshList.size(); i++)
 	{
@@ -327,13 +321,12 @@ void ResourceManager::LoadData_FBX_Animation(std::string objectName, std::string
 		}
 	}
 
-	m_FBXParserList.insert(make_pair(objectName, newFBX));
+	m_ModelList.insert(make_pair(objectName, newFBX));
 }
 
 void ResourceManager::LoadData_Terrain(std::string objectName, std::string fileName, bool fbxScaling)
 {
-	m_FBXParser->LoadScene(fileName.c_str(), fbxScaling);
-	FBXModel* newFBX = m_FBXParser->GetModel();
+	ParserData::Model* newFBX = m_FBXParser->LoadModel(fileName.c_str(), fbxScaling);
 
 	// Mesh Object Buffer 생성
 	for (size_t i = 0; i < newFBX->m_MeshList.size(); i++)
@@ -344,7 +337,7 @@ void ResourceManager::LoadData_Terrain(std::string objectName, std::string fileN
 		LoadData_TerrainMesh(objectName, key, mesh);
 	}
 
-	m_FBXParserList.insert(make_pair(objectName, newFBX));
+	m_ModelList.insert(make_pair(objectName, newFBX));
 
 	/// FBX Texture, FBX Material 생성
 	LoadData_MaterialList(objectName);
@@ -484,23 +477,19 @@ ENGINE_DLL void ResourceManager::LoadData(eLoadType loadType, std::string object
 
 void ResourceManager::LoadData_MaterialList(std::string objectName)
 {
-	/// Material Data가 없을경우..
-
 	vector<ParserData::CMaterial*> mat_list;
+	unordered_map<std::string, ParserData::Model*>::iterator model = m_ModelList.find(objectName);
 
-	if (m_ASEParserList.find(objectName) != m_ASEParserList.end())
+	if (model != m_ModelList.end())
 	{
-		if (m_ASEParserList[objectName]->m_materialcount == 0)
+		if (model->second->m_MaterialList.empty())
 			return;
 		else
-			mat_list = m_ASEParserList[objectName]->m_list_materialdata;
+			mat_list = model->second->m_MaterialList;
 	}
-	else if (m_FBXParserList.find(objectName) != m_FBXParserList.end())
+	else
 	{
-		if (m_FBXParserList[objectName]->m_materialcount == 0)
-			return;
-		else
-			mat_list = m_FBXParserList[objectName]->m_list_materialdata;
+		return;
 	}
 
 	for (ParserData::CMaterial* mat : mat_list)
@@ -1295,9 +1284,7 @@ void ResourceManager::LoadData_UI()
 void ResourceManager::LoadData_ASE_Gizmos(std::string objectName, std::string fileName)
 {
 	// Parser 생성 및 초기화
-	CASEParser* newASE = new CASEParser();
-
-	newASE->Load((LPSTR)fileName.c_str());
+	ParserData::Model* newASE = m_ASEParser->LoadModel(fileName.c_str());
 
 	// Mesh Object Buffer 생성
 	for (size_t m_Index = 0; m_Index < newASE->m_MeshList.size(); m_Index++)
@@ -1374,7 +1361,7 @@ void ResourceManager::LoadData_ASE_Gizmos(std::string objectName, std::string fi
 		m_VertexList.insert(make_pair(newASE->m_MeshList[m_Index]->m_NodeName, newBuf));
 	}
 
-	m_ASEParserList.insert(make_pair(objectName, newASE));
+	m_ModelList.insert(make_pair(objectName, newASE));
 }
 
 void ResourceManager::LoadData_SkinMesh(std::string objectName, std::string key, ParserData::Mesh* meshData)
@@ -1586,21 +1573,21 @@ void ResourceManager::LoadData_Animation(std::string objectName, std::string key
 
 ENGINE_DLL void ResourceManager::CreateBoneCollider(std::string objectName, eColliderType colType, float range)
 {
-	FBXModel* fbxParser = m_FBXParserList.find(objectName)->second;
+	ParserData::Model* model = m_ModelList.find(objectName)->second;
 
-	for (size_t i = 0; i < fbxParser->m_MeshList.size(); i++)
+	for (size_t i = 0; i < model->m_MeshList.size(); i++)
 	{
-		if (fbxParser->m_MeshList[i]->m_IsSkinningObject) continue;
+		if (model->m_MeshList[i]->m_IsSkinningObject) continue;
 
-		std::string key = objectName + " " + fbxParser->m_MeshList[i]->m_NodeName;
+		std::string key = objectName + " " + model->m_MeshList[i]->m_NodeName;
 
 		switch (colType)
 		{
 		case eColliderType::Box:
-			SetBoxCollider(objectName, key, fbxParser->m_MeshList[i], DXVector3(range, range, range));
+			SetBoxCollider(objectName, key, model->m_MeshList[i], DXVector3(range, range, range));
 			break;
 		case eColliderType::Sphere:
-			SetSphereCollider(objectName, key, fbxParser->m_MeshList[i], range);
+			SetSphereCollider(objectName, key, model->m_MeshList[i], range);
 			break;
 		case eColliderType::Mesh:
 			break;
@@ -1759,14 +1746,9 @@ ENGINE_DLL ID3D11ShaderResourceView* ResourceManager::GetTexture(std::string tex
 	return m_TexList[texName].Get();
 }
 
-CASEParser* ResourceManager::GetASEParser(std::string objectName)
+ParserData::Model* ResourceManager::GetModel(std::string objectName)
 {
-	return m_ASEParserList[objectName];
-}
-
-FBXModel* ResourceManager::GetFBXParser(std::string objectName)
-{
-	return m_FBXParserList[objectName];
+	return m_ModelList[objectName];
 }
 
 VertexBuffer* ResourceManager::GetVertexBuffer(std::string key)
@@ -1781,13 +1763,11 @@ ParserData::Mesh* ResourceManager::GetMesh(std::string key)
 
 ParserData::Mesh* ResourceManager::GetMesh(std::string objectName, int count)
 {
-	if (m_ASEParserList.find(objectName) != m_ASEParserList.end())
+	unordered_map<std::string, ParserData::Model*>::iterator model = m_ModelList.find(objectName);
+	
+	if (model != m_ModelList.end())
 	{
-		return m_ASEParserList[objectName]->m_MeshList[count];
-	}
-	else if (m_FBXParserList.find(objectName) != m_FBXParserList.end())
-	{
-		return m_FBXParserList[objectName]->m_MeshList[count];
+		return model->second->m_MeshList[count];
 	}
 
 	return nullptr;
@@ -1810,13 +1790,11 @@ MaterialData ResourceManager::GetMaterial(std::string key)
 
 std::string ResourceManager::GetMeshName(std::string objectName, int count)
 {
-	if (m_ASEParserList.find(objectName) != m_ASEParserList.end())
+	unordered_map<std::string, ParserData::Model*>::iterator model = m_ModelList.find(objectName);
+	
+	if (model != m_ModelList.end())
 	{
-		return m_ASEParserList[objectName]->m_MeshList[count]->m_NodeName;
-	}
-	else if (m_FBXParserList.find(objectName) != m_FBXParserList.end())
-	{
-		return m_FBXParserList[objectName]->m_MeshList[count]->m_NodeName;
+		return model->second->m_MeshList[count]->m_NodeName;
 	}
 
 	return "";
@@ -1829,20 +1807,6 @@ std::string ResourceManager::GetMeshKey(std::string objectName, int count /*= 0*
 	key += GetMeshName(objectName, count);
 
 	return key;
-}
-
-size_t ResourceManager::GetMeshListSize(std::string objectName)
-{
-	if (m_ASEParserList.find(objectName) != m_ASEParserList.end())
-	{
-		return m_ASEParserList[objectName]->m_MeshList.size();
-	}
-	else if (m_FBXParserList.find(objectName) != m_FBXParserList.end())
-	{
-		return m_FBXParserList[objectName]->m_MeshList.size();
-	}
-
-	return 0;
 }
 
 Shader* ResourceManager::GetShader(std::string name)
@@ -1874,15 +1838,9 @@ void ResourceManager::Release()
 		SAFE_DELETE((&k)->second);
 	}
 
-	for (auto& k : m_ASEParserList)
-	{
-		SAFE_DELETE((&k)->second);
-	}
-
 	m_TexList.clear();
 	m_VertexList.clear();
 	m_MeshList.clear();
 	m_AnimationList.clear();
 	m_MaterialList.clear();
-	m_ASEParserList.clear();
 }

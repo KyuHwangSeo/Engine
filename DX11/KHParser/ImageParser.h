@@ -32,8 +32,8 @@ public:
 	PARSER_DLL ImageDataF LoadImagePixelByFloat(const char* fileName, unsigned int channels);
 	PARSER_DLL ImageDataI LoadImagePixelByInt(const char* fileName, unsigned int channels);
 
-	PARSER_DLL DXVector4 GetPixelColorF(ImageDataF& img, int x, int y);
-	PARSER_DLL DXVector4 GetPixelColorF(ImageDataF& img, float x, float y);
-	PARSER_DLL DXVector4 GetPixelColorI(ImageDataI& img, int x, int y);
-	PARSER_DLL DXVector4 GetPixelColorI(ImageDataI& img, float x, float y);
+	PARSER_DLL DirectX::SimpleMath::Vector4 GetPixelColorF(ImageDataF& img, int x, int y);
+	PARSER_DLL DirectX::SimpleMath::Vector4 GetPixelColorF(ImageDataF& img, float x, float y);
+	PARSER_DLL DirectX::SimpleMath::Vector4 GetPixelColorI(ImageDataI& img, int x, int y);
+	PARSER_DLL DirectX::SimpleMath::Vector4 GetPixelColorI(ImageDataI& img, float x, float y);
 };

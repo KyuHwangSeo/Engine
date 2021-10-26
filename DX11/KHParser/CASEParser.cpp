@@ -1,4 +1,5 @@
-#include "KHMath.h"
+#define SAFE_DELETE(x) { if(x != nullptr) {delete x; x = nullptr;} }
+
 #include "ParserDLL.h"
 
 #include <vector>
@@ -6,27 +7,49 @@
 using namespace std;
 
 #include "CParsingDataClass.h"
+
+#include "IParser.h"
+
 #include "ASEFile.h"
 #include "CASEParser.h"
 
 using namespace ParserData;
+using namespace DirectX;
+using namespace SimpleMath;
 
 CASEParser::CASEParser()
 	: m_Token(0), m_parsingmode(eNone), m_data_asciiexport(0), m_materialcount(0),
 	m_MaterialData(nullptr), m_materialmap(nullptr), m_OneMesh(nullptr), m_IsAnimation(false), m_Animation(nullptr), m_lexer(nullptr)
 {
-	m_lexer = new ASE::CASELexer;
 }
 
 CASEParser::~CASEParser()
 {
-	delete m_lexer;
+	SAFE_DELETE(m_lexer);
 }
 
-PARSER_DLL bool CASEParser::Load(LPSTR p_File)
+void CASEParser::Initialize()
 {
+	m_lexer = new ASE::CASELexer;
+}
+
+void CASEParser::SetTextureRoute(std::string texRoute)
+{
+	m_TexRoute = texRoute;
+}
+
+void CASEParser::Release()
+{
+	SAFE_DELETE(m_lexer);
+}
+
+ParserData::Model* CASEParser::LoadModel(std::string fileName)
+{
+	// 새로운 Model 생성..
+	CreateModel();
+
 	/// 파일을 로드한다.
-	if (!m_lexer->Open(p_File))
+	if (!m_lexer->Open(const_cast<char*>(fileName.c_str())))
 	{
 		TRACE("파일을 여는 중에 문제가 발생했습니다!");
 		return FALSE;
@@ -38,29 +61,16 @@ PARSER_DLL bool CASEParser::Load(LPSTR p_File)
 	// Optimize & Parent Set..
 	OptimizeData();
 
-	return TRUE;
+	// 필요없는 데이터 제거..
+	ResetData();
+
+	return m_Model;
 }
 
-/// <summary>
-/// 메시의 최적화를 해 준다.
-/// 노말값, 텍스쳐 좌표에 따라 버텍스를 늘리고, 중첩되는것은 제거하고..
-/// </summary>
 void CASEParser::OptimizeVertex(ASEMesh* pMesh)
 {
 	bool new_VertexSet = true;
 	unsigned int resize_VertexIndex = pMesh->m_VertexList.size();
-
-	// 기본 Vertex 넣어두고 시작..
-	//for (unsigned int i = 0; i < pMesh->m_VertexList.size(); i++)
-	//{
-	//	Vertex* newVertex = new Vertex;
-	//	newVertex->m_Pos = pMesh->m_VertexList[i]->m_Pos;
-	//	newVertex->m_Indices = pMesh->m_VertexList[i]->m_Indices;
-	//	newVertex->m_BoneIndices = pMesh->m_VertexList[i]->m_BoneIndices;
-	//	newVertex->m_BoneWeights = pMesh->m_VertexList[i]->m_BoneWeights;
-	//
-	//	pMesh->m_Final_Vertex.push_back(newVertex);
-	//}
 
 	// 각각 Face마다 존재하는 3개의 Vertex 비교..
 	for (unsigned int i = 0; i < pMesh->m_MeshFace.size(); i++)
@@ -165,12 +175,12 @@ void CASEParser::OptimizeVertex(ASEMesh* pMesh)
 		int index1 = pMesh->m_MeshFace[i]->m_VertexIndex[1];
 		int index2 = pMesh->m_MeshFace[i]->m_VertexIndex[2];
 
-		DXVector3 ep1 = pMesh->m_VertexList[index1]->m_Pos - pMesh->m_VertexList[index0]->m_Pos;
-		DXVector3 ep2 = pMesh->m_VertexList[index2]->m_Pos - pMesh->m_VertexList[index0]->m_Pos;
+		DirectX::SimpleMath::Vector3 ep1 = pMesh->m_VertexList[index1]->m_Pos - pMesh->m_VertexList[index0]->m_Pos;
+		DirectX::SimpleMath::Vector3 ep2 = pMesh->m_VertexList[index2]->m_Pos - pMesh->m_VertexList[index0]->m_Pos;
 
-		DXVector3 uv1 = { pMesh->m_VertexList[index1]->m_U - pMesh->m_VertexList[index0]->m_U,
+		DirectX::SimpleMath::Vector2 uv1 = { pMesh->m_VertexList[index1]->m_U - pMesh->m_VertexList[index0]->m_U,
 						  pMesh->m_VertexList[index1]->m_V - pMesh->m_VertexList[index0]->m_V };
-		DXVector3 uv2 = { pMesh->m_VertexList[index2]->m_U - pMesh->m_VertexList[index0]->m_U,
+		DirectX::SimpleMath::Vector2 uv2 = { pMesh->m_VertexList[index2]->m_U - pMesh->m_VertexList[index0]->m_U,
 						  pMesh->m_VertexList[index2]->m_V - pMesh->m_VertexList[index0]->m_V };
 
 		float den = 1.0f / (uv1.x * uv2.y - uv2.x * uv1.y);
@@ -179,10 +189,10 @@ void CASEParser::OptimizeVertex(ASEMesh* pMesh)
 		// 픽셀 쉐이더 내의 연산은 버텍스 쉐이더의 연산에 비해 호출 횟수가 차원이 다르게 크므로 부하가 올 수 있다..
 		// 법선맵의 픽셀의 색은 픽셀 쉐이더 안이 아니면 얻을수 없기 때문에 픽셀 쉐이더에서 연산을 한다고 한다..
 		/// 현재 연산과정을 버텍스 쉐이더로 옮겨둠
-		DXVector3 tangent = (ep1 * uv2.y - ep2 * uv1.y) * den;
+		DirectX::SimpleMath::Vector3 tangent = (ep1 * uv2.y - ep2 * uv1.y) * den;
 		tangent.Normalize();
 
-		//DXVector3 binormal = (ep2 * uv1.x - ep1 * uv2.x) * den;
+		//DirectX::SimpleMath::Vector3 binormal = (ep2 * uv1.x - ep1 * uv2.x) * den;
 		//binormal.Normalize();
 
 		// 유사 정점은 값을 누적하여 쉐이더에서 평균값을 사용하도록 하자..
@@ -195,28 +205,25 @@ void CASEParser::OptimizeVertex(ASEMesh* pMesh)
 	for (unsigned int i = 0; i < pMesh->m_MeshFace.size(); i++)
 	{
 		pMesh->m_IndexList.push_back(new IndexList);
-		
+
 		for (int j = 0; j < 3; j++)
 		{
 			pMesh->m_IndexList[i]->m_Index[j] = pMesh->m_MeshFace[i]->m_VertexIndex[j];
 		}
 
-		delete pMesh->m_MeshFace[i];
 	}
-
-	pMesh->m_MeshFace.clear();
 }
 
 void CASEParser::RecombinationTM(ParserData::ASEMesh* pMesh)
 {
 	// WorldTM -> LocalTM 변환..
-	DXVector4 row0 = pMesh->m_tm_row0;
-	DXVector4 row1 = pMesh->m_tm_row1;
-	DXVector4 row2 = pMesh->m_tm_row2;
-	DXVector4 row3 = pMesh->m_tm_row3;
+	DirectX::SimpleMath::Vector4 row0 = pMesh->m_tm_row0;
+	DirectX::SimpleMath::Vector4 row1 = pMesh->m_tm_row1;
+	DirectX::SimpleMath::Vector4 row2 = pMesh->m_tm_row2;
+	DirectX::SimpleMath::Vector4 row3 = pMesh->m_tm_row3;
 	row3.w = 1;
 
-	DXMatrix4X4 oMatrix(row0, row1, row2, row3);
+	DirectX::SimpleMath::Matrix oMatrix(row0, row1, row2, row3);
 
 	/// Negative Scale Check
 	// 3D Max의 작업상 Mirroring으로 인해 Scale값이 음수가 나올 경우를 Negative Scale 이라고 한다
@@ -256,7 +263,7 @@ void CASEParser::RecombinationTM(ParserData::ASEMesh* pMesh)
 	}
 
 	// WorldTM 역행렬을 구한다..
-	DXMatrix4X4 iMatrix = oMatrix.Inverse();
+	DirectX::SimpleMath::Matrix iMatrix = oMatrix.Invert();
 
 	// 원점으로 이동하기위해 WorldTM 을 LocalTM 으로 설정..
 	pMesh->m_WorldTM = oMatrix;
@@ -269,8 +276,8 @@ void CASEParser::RecombinationTM(ParserData::ASEMesh* pMesh)
 	}
 	else
 	{
-		DXMatrix4X4 piMatrix = pMesh->m_Parent->m_WorldTM;
-		pMesh->m_LocalTM = pMesh->m_WorldTM * piMatrix.Inverse();
+		DirectX::SimpleMath::Matrix piMatrix = pMesh->m_Parent->m_WorldTM;
+		pMesh->m_LocalTM = pMesh->m_WorldTM * piMatrix.Invert();
 	}
 
 	for (unsigned int i = 0; i < pMesh->m_VertexList.size(); i++)
@@ -311,10 +318,20 @@ void CASEParser::OptimizeData()
 	{
 		OptimizeVertex(m_MeshList[i]);
 		RecombinationTM(m_MeshList[i]);
+		SetBoneTM(m_MeshList[i]);
+	}
+
+	m_Model->m_isAnimation = m_IsAnimation;
+	m_Model->m_MaterialList = m_MaterialList;
+	m_Model->m_MeshList.resize(m_MeshList.size());
+
+	for (unsigned int i = 0; i< m_MeshList.size(); i++)
+	{
+		m_Model->m_MeshList[i] = m_MeshList[i];
 	}
 }
 
-PARSER_DLL void CASEParser::SetBoneTM(ParserData::ASEMesh* pMesh)
+void CASEParser::SetBoneTM(ParserData::ASEMesh* pMesh)
 {
 	for (size_t i = 0; i < pMesh->m_BoneList.size(); i++)
 	{
@@ -341,22 +358,35 @@ PARSER_DLL void CASEParser::SetBoneTM(ParserData::ASEMesh* pMesh)
 	for (size_t i = 0; i < pMesh->m_BoneMeshList.size(); i++)
 	{
 		// Bone의 WorldTM(NodeTM)
-		DXMatrix4X4 boneNodeTM = pMesh->m_BoneMeshList[i]->m_WorldTM;
+		DirectX::SimpleMath::Matrix boneNodeTM = pMesh->m_BoneMeshList[i]->m_WorldTM;
 
 		// Mesh의 WorldTM(NodeTM)
-		DXMatrix4X4 skinNodeTM = pMesh->m_WorldTM;
+		DirectX::SimpleMath::Matrix skinNodeTM = pMesh->m_WorldTM;
 
 		// Bone NodeTM * Mesh NodeTM 역행렬 -> Mesh 기준 Bone의 OffsetTM
-		DXMatrix4X4 boneoffsetTM = boneNodeTM * skinNodeTM.Inverse();
+		DirectX::SimpleMath::Matrix boneoffsetTM = boneNodeTM * skinNodeTM.Invert();
 
 		// Bone OffsetTM 역행렬 -> Bone 기준 Mesh의 OffsetTM
-		pMesh->m_BoneTMList.emplace_back(boneoffsetTM.Inverse());
+		pMesh->m_BoneTMList.emplace_back(boneoffsetTM.Invert());
 	}
 }
 
-ParserData::Mesh* CASEParser::GetMesh(int m_Index)
+void CASEParser::CreateModel()
 {
-	return m_MeshList[m_Index];
+	m_Model = nullptr; 
+	m_Model = new Model();
+}
+
+void CASEParser::ResetData()
+{
+	m_MaterialData = nullptr;
+	m_materialmap = nullptr;
+	m_OneMesh = nullptr;
+	m_Bone = nullptr;
+	m_Animation = nullptr;
+
+	m_MeshList.clear();
+	m_MaterialList.clear();
 }
 
 void CASEParser::DataParsing()
@@ -597,19 +627,19 @@ void CASEParser::DataParsing()
 		case TOKENR_INHERIT_ROT:
 		case TOKENR_INHERIT_SCL:
 		case TOKENR_TM_ROW0:
-			if (m_OneMesh->m_tm_row0 == DXVector3::Zero())
+			if (m_OneMesh->m_tm_row0 == DirectX::SimpleMath::Vector3())
 				m_OneMesh->m_tm_row0 = Parsing_ChangeNumberVector3();
 			break;
 		case TOKENR_TM_ROW1:
-			if (m_OneMesh->m_tm_row2 == DXVector3::Zero())
+			if (m_OneMesh->m_tm_row2 == DirectX::SimpleMath::Vector3())
 				m_OneMesh->m_tm_row2 = Parsing_ChangeNumberVector3();
 			break;
 		case TOKENR_TM_ROW2:
-			if (m_OneMesh->m_tm_row1 == DXVector3::Zero())
+			if (m_OneMesh->m_tm_row1 == DirectX::SimpleMath::Vector3())
 				m_OneMesh->m_tm_row1 = Parsing_ChangeNumberVector3();
 			break;
 		case TOKENR_TM_ROW3:
-			if (m_OneMesh->m_tm_row3 == DXVector3::Zero())
+			if (m_OneMesh->m_tm_row3 == DirectX::SimpleMath::Vector3())
 				m_OneMesh->m_tm_row3 = Parsing_ChangeNumberVector3();
 			break;
 		case TOKENR_TM_POS:
@@ -845,7 +875,6 @@ void CASEParser::DataParsing()
 			m_OneMesh->m_Animation->m_AniData.push_back(new OneFrame);
 			break;
 		case TOKENR_CONTROL_POS_TRACK:
-			m_OneMesh->m_Animation->m_isPosAnimation = true;
 			break;
 		case TOKENR_CONTROL_POS_SAMPLE:
 		{
@@ -854,7 +883,6 @@ void CASEParser::DataParsing()
 			break;
 		}
 		case TOKENR_CONTROL_ROT_TRACK:
-			m_OneMesh->m_Animation->m_isRotAnimation = true;
 			break;
 		case TOKENR_CONTROL_ROT_SAMPLE:
 		{
@@ -881,7 +909,6 @@ void CASEParser::DataParsing()
 			break;
 		}
 		case TOKENR_CONTROL_SCALE_TRACK:
-			m_OneMesh->m_Animation->m_isScaleAnimation = true;
 			break;
 		case TOKENR_CONTROL_SCALE_SAMPLE:
 		{
@@ -897,7 +924,7 @@ void CASEParser::DataParsing()
 			int materialIndex = Parsing_NumberInt();
 
 			// Mesh에 해당하는 Material Data 삽입
-			m_OneMesh->m_MaterialData = m_list_materialdata[materialIndex];
+			m_OneMesh->m_MaterialData = m_MaterialList[materialIndex];
 		}
 		break;
 
@@ -939,11 +966,6 @@ void CASEParser::DataParsing()
 }
 
 
-///----------------------------------------------------------------------
-/// parsing을 위한 단위별 함수들
-///----------------------------------------------------------------------
-
-// long을 읽어서 리턴해준다.
 int CASEParser::Parsing_NumberLong()
 {
 	LONG			token;
@@ -955,7 +977,6 @@ int CASEParser::Parsing_NumberLong()
 	return			tempNumber;
 }
 
-// float
 float CASEParser::Parsing_NumberFloat()
 {
 	LONG			token;
@@ -967,7 +988,6 @@ float CASEParser::Parsing_NumberFloat()
 	return			tempNumber;
 }
 
-// String
 LPSTR CASEParser::Parsing_String()
 {
 	m_lexer->GetToken(m_TokenString);
@@ -975,8 +995,6 @@ LPSTR CASEParser::Parsing_String()
 	return m_TokenString;
 }
 
-
-// int
 int CASEParser::Parsing_NumberInt() {
 
 	LONG			token;
@@ -988,8 +1006,6 @@ int CASEParser::Parsing_NumberInt() {
 	return			tempNumber;
 }
 
-
-// 3개의 Float를 벡터 하나로
 Vector3 CASEParser::Parsing_ChangeNumberVector3()
 {
 	LONG				token;
@@ -1020,10 +1036,6 @@ Vector3 CASEParser::Parsing_NormalNumberVector3()
 	return			tempVector3;
 }
 
-///--------------------------------------------------
-/// 내부에서 뭔가를 생성, 리스트에 넣는다
-///--------------------------------------------------
-// 메시를 하나 동적으로 생성하고, 그 포인터를 리스트에 넣는다.
 void CASEParser::Create_OneMesh_to_list()
 {
 	ASEMesh* temp = new ASEMesh;
@@ -1031,12 +1043,11 @@ void CASEParser::Create_OneMesh_to_list()
 	m_MeshList.push_back(m_OneMesh);
 }
 
-// 메트리얼 하나를 동적으로 생성하고, 그 포인터를 리스트에 넣는다.
 void CASEParser::Create_MaterialData_to_list()
 {
 	CMaterial* temp = new CMaterial;
 	m_MaterialData = temp;
-	m_list_materialdata.push_back(m_MaterialData);
+	m_MaterialList.push_back(m_MaterialData);
 }
 
 void CASEParser::Create_DiffuseMap_to_list()
@@ -1099,10 +1110,3 @@ void CASEParser::Create_BoneData_to_list()
 	m_Bone = temp;
 	m_OneMesh->m_BoneList.push_back(temp);
 }
-
-
-
-
-
-
-
