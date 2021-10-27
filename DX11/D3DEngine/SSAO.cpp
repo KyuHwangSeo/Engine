@@ -41,7 +41,7 @@ SSAO::~SSAO()
 
 }
 
-void SSAO::SsaoRender(ID3D11ShaderResourceView* normalDepthSRV1, ID3D11ShaderResourceView* normalDepthSRV2)
+void SSAO::SsaoRender(ID3D11ShaderResourceView* normalDepthSRV)
 {
 	// Bind the ambient map as the render target.  Observe that this pass does not bind 
 	// a depth/stencil buffer--it does not need it, and without one, no depth test is
@@ -57,8 +57,7 @@ void SSAO::SsaoRender(ID3D11ShaderResourceView* normalDepthSRV1, ID3D11ShaderRes
 	m_SSAOShader->VSUpdate();
 
 	m_SSAOShader->SetPixelConstantBuffer(m_SsaoFrame);
-	m_SSAOShader->SetSRV("gNormalDepthMap", normalDepthSRV1);
-	m_SSAOShader->SetSRV("DepthSRV", normalDepthSRV2);
+	m_SSAOShader->SetSRV("gNormalDepthMap", normalDepthSRV);
 	m_SSAOShader->SetSRV("gRandomVecMap", m_RandomVectorRT->GetSRV());
 	m_SSAOShader->PSUpdate();
 
@@ -68,7 +67,7 @@ void SSAO::SsaoRender(ID3D11ShaderResourceView* normalDepthSRV1, ID3D11ShaderRes
 	Shader::ResetPSResources();
 }
 
-void SSAO::BlurRender(ID3D11ShaderResourceView* normalDepthSRV1, ID3D11ShaderResourceView* normalDepthSRV2, int blurCount)
+void SSAO::BlurRender(ID3D11ShaderResourceView* normalDepthSRV, int blurCount)
 {
 	for (int i = 0; i < blurCount; i++)
 	{
@@ -84,8 +83,7 @@ void SSAO::BlurRender(ID3D11ShaderResourceView* normalDepthSRV1, ID3D11ShaderRes
 		m_HorzBlurShader->VSUpdate();
 
 		m_HorzBlurShader->SetPixelConstantBuffer(m_TexelWidth);
-		m_HorzBlurShader->SetSRV("gNormalDepthMap", normalDepthSRV1);
-		m_HorzBlurShader->SetSRV("DepthSRV", normalDepthSRV2);
+		m_HorzBlurShader->SetSRV("gNormalDepthMap", normalDepthSRV);
 		m_HorzBlurShader->SetSRV("gInputMap", m_AmbientRT->GetSRV());
 		m_HorzBlurShader->PSUpdate();
 
@@ -106,8 +104,7 @@ void SSAO::BlurRender(ID3D11ShaderResourceView* normalDepthSRV1, ID3D11ShaderRes
 		m_VertBlurShader->VSUpdate();
 
 		m_VertBlurShader->SetPixelConstantBuffer(m_TexelHeight);
-		m_VertBlurShader->SetSRV("gNormalDepthMap", normalDepthSRV1);
-		m_VertBlurShader->SetSRV("DepthSRV", normalDepthSRV2);
+		m_VertBlurShader->SetSRV("gNormalDepthMap", normalDepthSRV);
 		m_VertBlurShader->SetSRV("gInputMap", m_BlurRT->GetSRV());
 
 		m_VertBlurShader->PSUpdate();

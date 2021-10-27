@@ -49,7 +49,6 @@ private:
 	UINT m_Offset;
 
 	// Shader Data
-	cbMaterial m_MatData;
 	cbShadow m_ShadowData;
 	cbPerObject m_ShadowObjectData;
 	cbID m_ResourceID;

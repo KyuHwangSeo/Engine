@@ -17,10 +17,8 @@ public:
 	RenderTarget* m_AlbedoRT;
 	RenderTarget* m_NormalRT;
 	RenderTarget* m_PositionRT;
-	RenderTarget* m_LightRT;
 	RenderTarget* m_ShadowRT;
 	RenderTarget* m_NormalDepthRT;
-	RenderTarget* m_DepthRT;
 
 private:
 	vector<ID3D11RenderTargetView*> m_DeferredRTV;

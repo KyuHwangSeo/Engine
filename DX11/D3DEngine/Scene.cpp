@@ -35,6 +35,9 @@ void Scene::Update(float dTime)
 	// Light Update..
 	m_LightMG->Update(dTime);
 
+	// Material Update..
+	m_MatMG->Update(dTime);
+
 	// Helper Update..
 	m_HelpMG->Update(dTime);
 

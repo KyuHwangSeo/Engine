@@ -23,12 +23,12 @@
 #include "CircleCollider2D.h"
 #include "UI_Image.h"
 #include "UI_Button.h"
+#include "SkyBox.h"
 
 #include "IManager.h"
 #include "MaterialManager.h"
 #include "ObjectManager.h"
 #include "HelperManager.h"
-#include "SkyBox.h"
 #include "CameraManager.h"
 #include "LightManager.h"
 #include "CollisionManager.h"

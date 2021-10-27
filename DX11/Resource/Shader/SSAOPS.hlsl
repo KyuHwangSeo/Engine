@@ -12,9 +12,8 @@ cbuffer cbSsaoFrame : register(b0)
 };
 
 Texture2D gNormalDepthMap	: register(t0);
-Texture2D DepthSRV			: register(t1);
 
-Texture2D gRandomVecMap		: register(t2);
+Texture2D gRandomVecMap		: register(t1);
 
 SamplerState samBorderLinerPoint	: register(s0);
 SamplerState samWrapLinerPoint		: register(s1);
@@ -71,8 +70,9 @@ float4 main(VertexIn pin) : SV_Target
 
 	// Get viewspace normal and z-coord of this pixel.  The tex-coords for
 	// the fullscreen quad we drew are already in uv-space.
-    float3 n = gNormalDepthMap.SampleLevel(samBorderLinerPoint, pin.Tex, 0.0f).xyz;
-    float pz = DepthSRV.SampleLevel(samBorderLinerPoint, pin.Tex, 0.0f).z;
+    float4 normalDepth = gNormalDepthMap.SampleLevel(samBorderLinerPoint, pin.Tex, 0.0f);
+    float3 n = normalDepth.xyz;
+    float pz = normalDepth.w;
 
 	//
 	// Reconstruct full view space position (x,y,z).
@@ -110,7 +110,7 @@ float4 main(VertexIn pin) : SV_Target
 		// the depth of q, as q is just an arbitrary point near p and might
 		// occupy empty space).  To find the nearest depth we look it up in the depthmap.
 
-        float rz = DepthSRV.SampleLevel(samBorderLinerPoint, projQ.xy, 0.0f).z;
+        float rz = gNormalDepthMap.SampleLevel(samBorderLinerPoint, projQ.xy, 0.0f).w;
 
 		// Reconstruct full view space position r = (rx,ry,rz).  We know r
 		// lies on the ray of q, so there exists a t such that r = t*q.

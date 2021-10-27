@@ -170,8 +170,8 @@ void D3DRenderer::SSAORender()
 	m_DeviceContext->RSSetViewports(1, &m_SSAO->GetViewPort());
 
 	// SSAO Render
-	m_SSAO->SsaoRender(m_Deferred->m_NormalDepthRT->GetSRV(), m_Deferred->m_DepthRT->GetSRV());
-	m_SSAO->BlurRender(m_Deferred->m_NormalDepthRT->GetSRV(), m_Deferred->m_DepthRT->GetSRV(), 4);
+	m_SSAO->SsaoRender(m_Deferred->m_NormalDepthRT->GetSRV());
+	m_SSAO->BlurRender(m_Deferred->m_NormalDepthRT->GetSRV(), 4);
 }
 
 void D3DRenderer::PostRender(RenderTarget* finalRT, RenderTarget* horzRT, RenderTarget* vertRT)
@@ -228,21 +228,21 @@ void D3DRenderer::MotionBlurRender()
 	m_DeviceContext->ClearRenderTargetView(m_RenderTarget, reinterpret_cast<const float*>(&DXColors::DeepDarkGray));
 	m_DeviceContext->ClearDepthStencilView(m_DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-	m_MotionBlur->VelocityRender(m_Deferred->m_DepthRT->GetSRV());
+	//m_MotionBlur->VelocityRender(m_Deferred->m_DepthRT->GetSRV());
 
 	m_RenderTarget = m_MotionBlur->m_MotionBlurRT->GetRTV();
 	m_DeviceContext->OMSetRenderTargets(1, &m_RenderTarget, m_DepthStencilView);
 	m_DeviceContext->ClearRenderTargetView(m_RenderTarget, reinterpret_cast<const float*>(&DXColors::DeepDarkGray));
 	m_DeviceContext->ClearDepthStencilView(m_DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-	m_MotionBlur->MotionBlurRender(m_Forward->m_ForwardRT->GetSRV());
+	//m_MotionBlur->MotionBlurRender(m_Forward->m_ForwardRT->GetSRV());
 
 	m_RenderTarget = m_Forward->m_ForwardRT->GetRTV();
 	m_DeviceContext->OMSetRenderTargets(1, &m_RenderTarget, m_DepthStencilView);
 	m_DeviceContext->ClearRenderTargetView(m_RenderTarget, reinterpret_cast<const float*>(&DXColors::DeepDarkGray));
 	m_DeviceContext->ClearDepthStencilView(m_DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-	m_Forward->FinalRender(m_MotionBlur->m_MotionBlurRT->GetSRV());
+	//m_Forward->FinalRender(m_MotionBlur->m_MotionBlurRT->GetSRV());
 }
 
 void D3DRenderer::DebugRender()

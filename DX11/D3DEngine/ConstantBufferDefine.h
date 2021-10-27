@@ -34,13 +34,6 @@ struct cbLights
 	SpotLight gSpotLights[4];
 };
 
-struct cbMaterial
-{
-	std::string GetName() { return "cbMaterial"; }
-	
-	MaterialData gMaterial;
-};
-
 struct cbCamera
 {
 	std::string GetName() { return "cbCamera"; }

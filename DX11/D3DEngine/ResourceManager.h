@@ -1,6 +1,7 @@
 #pragma once
 #include "ModelParser.h"
 #include "ImageParser.h"
+
 /// 부가기능들을 모아논 클래스
 /// 오브젝트마다 다양하게 사용되는 것들을 포함시키기 싫어서 임시로 만든 클래스..
 

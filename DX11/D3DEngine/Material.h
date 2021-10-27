@@ -21,7 +21,6 @@ private:
 	static DXMatrix4X4 g_ShadowTranspose;
 
 	// Shader Data
-	cbMaterial m_MatData;
 	cbShadow m_ShadowData;
 
 	cbID m_ResourceID;

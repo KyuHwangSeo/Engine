@@ -5,6 +5,8 @@
 #include "GeometryGenerator.h"
 #include "Object.h"
 #include "Shader.h"
+#include "ModelParser.h"
+#include "ImageParser.h"
 #include "ResourceManager.h"
 
 ResourceManager::ResourceManager()

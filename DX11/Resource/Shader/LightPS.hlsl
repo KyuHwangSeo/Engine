@@ -28,11 +28,9 @@ cbuffer cbTexViewProj : register(b3)
 Texture2D AlbedoSRV		 : register(t0);
 Texture2D NormalSRV		 : register(t1);
 Texture2D PositionSRV	 : register(t2);
-Texture2D LightSRV		 : register(t3);
-Texture2D ShadowSRV		 : register(t4);
-Texture2D DepthSRV		 : register(t5);
+Texture2D ShadowSRV		 : register(t3);
 
-Texture2D SsaoSRV		 : register(t6);
+Texture2D SsaoSRV		 : register(t4);
 
 // 공용 TextureMap
 Texture2D gShadowMap : register(t16);
@@ -51,9 +49,7 @@ float4 main(VertexIn pin) : SV_TARGET
 	float4 albedo = AlbedoSRV.Sample(samWrapMinLinear, pin.Tex);
 	float4 normal = NormalSRV.Sample(samWrapMinLinear, pin.Tex);
 	float4 position = PositionSRV.Sample(samWrapMinLinear, pin.Tex);
-	float4 light = LightSRV.Sample(samWrapMinLinear, pin.Tex);
     float4 shadow = ShadowSRV.Sample(samWrapMinLinear, pin.Tex);
-    float4 depth = DepthSRV.Sample(samWrapMinLinear, pin.Tex);
     float4 ssao = mul(gViewProjTex, float4(position.xyz, 1.0f));
 	
     // Gamma Correction
@@ -74,18 +70,18 @@ float4 main(VertexIn pin) : SV_TARGET
 
 	// 현재 픽셀의 Shadow 값..
     
-    float shadows = CalcShadowFactor(gShadowSam, gShadowMap, float4(shadow.xyz, depth.y));
+    float shadows = CalcShadowFactor(gShadowSam, gShadowMap, float3(shadow.xyz));
 	
 	// 현재 픽셀의 SSAO 값..
     ssao /= ssao.w;
     float ambientAccess = SsaoSRV.Sample(samWrapMinLinear, ssao.xy, 0.0f).r;
 	
 	// 현재 픽셀의 Material ID..
-    uint matID = round(light.y);
+    uint matID = round(position.w);
 
 	float4 A, D, S;
 	
-	if (light.x < 1.0f)
+    if (shadow.w < 1.0f)
 	{
 		// Directional Light
 		[unroll]
@@ -140,7 +136,7 @@ float4 main(VertexIn pin) : SV_TARGET
 	// Gamma Correction
 	// Normal Map은 선형공간에서 출력..
 	// Diffuse Map은 감마공간에서 출력..
-    if (light.z < 1.0f)
+    if (normal.w < 1.0f)
         litColor.rgb = pow(litColor.rgb, 1.0f / 2.2f);
 
 	return litColor;

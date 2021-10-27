@@ -17,7 +17,6 @@ SamplerState samWrapMinLinear : register(s0);
 cbuffer cbID : register(b0)
 {
     int gMatID : packoffset(c0.x);
-    bool gTex : packoffset(c0.y);
 };
 
 struct VertexIn
@@ -40,13 +39,11 @@ struct VertexIn
 
 struct PixelOut
 {
-    float4 Albedo : SV_Target0;
-    float4 Normal : SV_Target1;
-    float4 Position : SV_Target2;
-    float4 Light : SV_Target3;
-    float4 Shadow : SV_Target4;
-    float4 NormalDepth : SV_Target5;
-    float4 Depth : SV_Target6;
+    float4 Albedo       : SV_Target0;
+    float4 Normal       : SV_Target1;
+    float4 Position     : SV_Target2;
+    float4 Shadow       : SV_Target3;
+    float4 NormalDepth  : SV_Target4;
 };
 
 PixelOut main(VertexIn pin)
@@ -78,7 +75,7 @@ PixelOut main(VertexIn pin)
     }
     
     float4 mask2 = pin.MaskColor2;
-    float4 tex2 = float4(0.0f, 0.0f, 0.0f,  0.0f);
+    float4 tex2 = float4(0.0f, 0.0f, 0.0f, 0.0f);
     if (mask2.r > 0.0f)
     {
         tex2.rgb += gColor4.Sample(samWrapMinLinear, pin.Tex).rgb * mask2.r;
@@ -88,14 +85,12 @@ PixelOut main(VertexIn pin)
     
     float4 albedo = float4(float3(tex1.rgb + tex2.rgb), 1.0f);
     float3 bumpedNormalW = mul(normalMapSample, pin.TBN);
-    
+
     vout.Albedo = albedo;
-    vout.Normal = float4(bumpedNormalW, 0.0f);
-    vout.Position = float4(pin.PosW, 0.0f);
-    vout.Light = float4(0.0f, gMatID, 1.0f, 0.0f);
-    vout.Shadow = float4(pin.ShadowPosH.xyz, 0.0f);
-    vout.NormalDepth = float4(pin.NormalV.xyz, 0.0f);
-    vout.Depth = float4(pin.PosH.z / pin.PosH.w, pin.ShadowPosH.w, pin.PosV.z, 0.0f);
+    vout.Normal = float4(bumpedNormalW, 1.0f);
+    vout.Position = float4(pin.PosW, gMatID);
+    vout.Shadow = float4(pin.ShadowPosH.xyz / pin.ShadowPosH.w, 0.0f);
+    vout.NormalDepth = float4(pin.NormalV.xyz, pin.PosV.z);
     
     return vout;
 }

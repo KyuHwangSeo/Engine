@@ -33,8 +33,8 @@ private:
 	cbTexel m_TexelHeight;
 
 public:
-	void SsaoRender(ID3D11ShaderResourceView* normalDepthSRV1, ID3D11ShaderResourceView* normalDepthSRV2);
-	void BlurRender(ID3D11ShaderResourceView* normalDepthSRV1, ID3D11ShaderResourceView* normalDepthSRV2, int blurCount);
+	void SsaoRender(ID3D11ShaderResourceView* normalDepthSRV);
+	void BlurRender(ID3D11ShaderResourceView* normalDepthSRV, int blurCount);
 
 	void OnResize(int width, int height);
 	void BuildFrustumFarCorners();
