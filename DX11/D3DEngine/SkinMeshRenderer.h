@@ -25,6 +25,6 @@ private:
 	cbSkinned m_BoneData;
 	cbPerObject m_ObjectData;
 
-	unordered_map<string, GameObject*> m_BoneList;
+	std::vector<Transform*> m_BoneTransList;
 };
 

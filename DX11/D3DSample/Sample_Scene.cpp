@@ -24,11 +24,41 @@ void Sample_Scene::Create()
 	GameObject* ground = KH_UTILITY::CreateObject("Map_Origin", eModelType::TerrainMesh, DXVector3(1.0f, 1.0f, 1.0f));
 	ground->GetTransform()->RotateLocal(DXVector3(90.0f, 0.0f, 0.0f));
 
+	GameObject* light2 = KH_UTILITY::CreateObject("Spot Light", eModelType::PointLight);
+	light2->GetTransform()->SetScale(DXVector3(10.0f, 10.0f, 10.0f));
+	m_Transform = light2->GetTransform();
+
 	//Player* playerCom = new Player;
 	//player->AddComponent(playerCom);
 }
 
 void Sample_Scene::SceneUpdate(float dTime)
 {
+	if (KH_KEYINPUT::IsKeyDownKeep(VK_W))
+	{
+		m_Transform->MoveLocal(DXVector3(0.0f, 0.0f, 2.0f * dTime));
+	}
+	if (KH_KEYINPUT::IsKeyDownKeep(VK_S))
+	{
+		m_Transform->MoveLocal(DXVector3(0.0f, 0.0f, -2.0f * dTime));
+	}
 
+	if (KH_KEYINPUT::IsKeyDownKeep(VK_A))
+	{
+		m_Transform->MoveLocal(DXVector3(-2.0f * dTime, 0.0f, 0.0f));
+	}
+
+	if (KH_KEYINPUT::IsKeyDownKeep(VK_D))
+	{
+		m_Transform->MoveLocal(DXVector3(2.0f * dTime, 0.0f, 0.0f));
+	}
+
+	if (KH_KEYINPUT::IsKeyDownKeep(VK_Z))
+	{
+		m_Transform->MoveLocal(DXVector3(0.0f, 2.0f * dTime, 0.0f));
+	}
+	if (KH_KEYINPUT::IsKeyDownKeep(VK_X))
+	{
+		m_Transform->MoveLocal(DXVector3(0.0f, -2.0f * dTime, 0.0f));
+	}
 }

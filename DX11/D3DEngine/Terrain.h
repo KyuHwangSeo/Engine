@@ -31,6 +31,7 @@ public:
 	void Release();
 
 	void SetVertexBuffer(VertexBuffer* vBuffer);
+	void SetShadowShader(Shader* shader);
 	void SetShader(Shader* shader);
 	void AddLayer(Texture mask, MaterialLayer& channel_R, MaterialLayer& channel_G, MaterialLayer& channel_B, MaterialLayer& channel_A);
 	void AddLayer(Texture mask, MaterialLayer& channel_R, MaterialLayer& channel_G, MaterialLayer& channel_B);
@@ -47,6 +48,16 @@ private:
 	UINT m_Stride;
 	UINT m_Offset;
 
+	// Shader Data
+	cbMaterial m_MatData;
+	cbShadow m_ShadowData;
+	cbPerObject m_ShadowObjectData;
+	cbID m_ResourceID;
+
+	DXMatrix4X4 m_TextureSpace;
+	DXMatrix4X4 m_ShadowTransform;
+
+	Shader* m_ShadowShader;
 	Shader* m_TerrainShader;
 
 	cbPerObject m_ObjectData;

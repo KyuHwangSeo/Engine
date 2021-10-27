@@ -12,7 +12,7 @@
 
 // Light 전용 전역 변수 초기화..
 Light* Light::g_DirLight = nullptr;
-DXVector3	Light::g_CenterPos = DXVector3(-5.0, 5.0, 0.0);
+DXVector3	Light::g_CenterPos = DXVector3(0.0, 0.0, 0.0);
 float		Light::g_ShadowRadius = sqrtf(10.0f * 10.0f + 15.0f * 15.0f);
 
 Light::Light(eLightType lightType)
@@ -87,7 +87,7 @@ void Light::Start()
 	m_PointLight.Specular = DXVector4(0.7f, 0.7f, 0.7f, 1.0f);
 	m_PointLight.Position = m_GameObject->GetTransform()->GetPosition();
 	m_PointLight.Att = DXVector3(0.0f, 0.2f, 0.0f);
-	m_PointLight.Range = 10.0f;
+	m_PointLight.Range = 50.0f;
 	m_PointLight.Pad = 1.0f;
 
 	// SpotLight Initial Data

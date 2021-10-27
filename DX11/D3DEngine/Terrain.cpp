@@ -11,11 +11,39 @@
 void Terrain::Start()
 {
 	m_DeviceContext = D3DEngine::GetInstance()->GetDeviceContext();
+
+	m_TextureSpace = DXMatrix4X4(
+		0.5f, 0.0f, 0.0f, 0.0f,
+		0.0f, -0.5f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.5f, 0.5f, 0.0f, 1.0f);
 }
 
 void Terrain::ShadowRender(DXMatrix4X4 view, DXMatrix4X4 proj)
 {
+	m_ShadowTransform = view * proj;
+	
+	m_ShadowObjectData.gWorldViewProj = m_GameObject->GetWorld() * view * proj;
+	m_ShadowObjectData.gTexTransform = XMMatrixIdentity();
+	m_ShadowShader->SetVertexConstantBuffer(m_ShadowObjectData);
 
+	// Vertex Shader Update
+	m_ShadowShader->VSUpdate();
+
+	// Rendering Type
+	D3DEngine::GetInstance()->SetDepth();
+
+	// Rendering..
+	m_DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	m_DeviceContext->IASetVertexBuffers(0, 1, m_VB.GetAddressOf(), &m_Stride, &m_Offset);
+	m_DeviceContext->IASetIndexBuffer(m_IB.Get(), DXGI_FORMAT_R32_UINT, 0);
+
+	// Draw..
+	m_DeviceContext->DrawIndexed(m_IndexCount, 0, 0);
+
+	Shader::ResetVSResources();
+	Shader::ResetPSResources();
 }
 
 void Terrain::Render(DXMatrix4X4 view, DXMatrix4X4 proj)
@@ -33,6 +61,12 @@ void Terrain::Render(DXMatrix4X4 view, DXMatrix4X4 proj)
 	m_ObjectData.gWorldInvTransposeView = worldInvTranspose * view;
 
 	m_TerrainShader->SetVertexConstantBuffer(m_ObjectData);
+
+	m_ShadowData.gShadowTransform = world * m_ShadowTransform * m_TextureSpace;
+	m_TerrainShader->SetVertexConstantBuffer(m_ShadowData);
+
+	m_ResourceID.gMatID = 0;
+	m_TerrainShader->SetPixelConstantBuffer(m_ResourceID);
 
 	UINT index = 0;
 	for (TerrainLayer* layer : m_LayerList)
@@ -97,6 +131,11 @@ void Terrain::SetVertexBuffer(VertexBuffer* vBuffer)
 	m_Stride = vBuffer->Stride;
 	m_IndexCount = vBuffer->IndexCount;
 	m_Offset = vBuffer->Offset;
+}
+
+void Terrain::SetShadowShader(Shader* shader)
+{
+	m_ShadowShader = shader;
 }
 
 void Terrain::SetShader(Shader* shader)

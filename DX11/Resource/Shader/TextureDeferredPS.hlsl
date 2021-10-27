@@ -30,7 +30,7 @@ struct PixelOut
     float4 Depth		: SV_Target6;
 };
 
-PixelOut main(VertexIn pin) : SV_TARGET
+PixelOut main(VertexIn pin)
 {
 	PixelOut vout;
 	

@@ -19,7 +19,7 @@ TextureCube gCubeMap	: register(t3);
 
 SamplerState samWrapMinLinear : register(s3);
 
-PixelOut main(SkyCubeVertexIn pin) : SV_TARGET
+PixelOut main(SkyCubeVertexIn pin)
 {
 	PixelOut vout;
 

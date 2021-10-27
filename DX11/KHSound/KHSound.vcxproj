@@ -114,12 +114,16 @@
       <AdditionalLibraryDirectories>$(ProjectDir)lib;</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
-      <Command>copy/Y "$(OutDir)$(TargetName).lib"      "..\\lib"
-copy/Y "$(ProjectDir)*.h"   "..\\lib"
-copy/Y "$(ProjectDir)inc"   "..\\lib"
-copy/Y "$(ProjectDir)lib"   "..\\lib"
-copy ".\\lib\\fmodex.dll"   "..\\bin"
-copy ".\\lib\\fmodex.dll"   "..\\lib"</Command>
+      <Command>md  "..\\Lib"
+md  "..\\Inc"
+md  "..\\Bin" 
+
+copy/Y "$(OutDir)$(TargetName).lib"      "..\\Lib"
+copy/Y "$(ProjectDir)*.h"   "..\\Inc"
+copy/Y "$(ProjectDir)inc"   "..\\Inc"
+copy/Y "$(ProjectDir)lib"   "..\\Lib"
+copy/Y ".\\lib\\fmodex.dll"   "..\\Bin"
+copy ".\\lib\\fmodex.dll"   "..\\Lib"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -145,12 +149,16 @@ copy ".\\lib\\fmodex.dll"   "..\\lib"</Command>
       <AdditionalLibraryDirectories>$(ProjectDir)lib;</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
-      <Command>copy/Y "$(OutDir)$(TargetName).lib"      "..\\lib"
-copy/Y "$(ProjectDir)*.h"   "..\\lib"
-copy/Y "$(ProjectDir)inc"   "..\\lib"
-copy/Y "$(ProjectDir)lib"   "..\\lib"
-copy ".\\lib\\fmodex.dll"   "..\\bin"
-copy ".\\lib\\fmodex.dll"   "..\\lib"</Command>
+      <Command>md  "..\\Lib"
+md  "..\\Inc"
+md  "..\\Bin" 
+
+copy/Y "$(OutDir)$(TargetName).lib"      "..\\Lib"
+copy/Y "$(ProjectDir)*.h"   "..\\Inc"
+copy/Y "$(ProjectDir)inc"   "..\\Inc"
+copy/Y "$(ProjectDir)lib"   "..\\Lib"
+copy/Y ".\\lib\\fmodex.dll"   "..\\Bin"
+copy ".\\lib\\fmodex.dll"   "..\\Lib"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -173,12 +181,16 @@ copy ".\\lib\\fmodex.dll"   "..\\lib"</Command>
       <AdditionalLibraryDirectories>$(ProjectDir)lib;</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
-      <Command>copy/Y "$(OutDir)$(TargetName).lib"      "..\\lib"
-copy/Y "$(ProjectDir)*.h"   "..\\lib"
-copy/Y "$(ProjectDir)inc"   "..\\lib"
-copy/Y "$(ProjectDir)lib"   "..\\lib"
-copy ".\\lib\\fmodex.dll"   "..\\bin"
-copy ".\\lib\\fmodex.dll"   "..\\lib"</Command>
+      <Command>md  "..\\Lib"
+md  "..\\Inc"
+md  "..\\Bin" 
+
+copy/Y "$(OutDir)$(TargetName).lib"      "..\\Lib"
+copy/Y "$(ProjectDir)*.h"   "..\\Inc"
+copy/Y "$(ProjectDir)inc"   "..\\Inc"
+copy/Y "$(ProjectDir)lib"   "..\\Lib"
+copy/Y ".\\lib\\fmodex.dll"   "..\\Bin"
+copy ".\\lib\\fmodex.dll"   "..\\Lib"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -204,12 +216,16 @@ copy ".\\lib\\fmodex.dll"   "..\\lib"</Command>
       <AdditionalLibraryDirectories>$(ProjectDir)lib;</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
-      <Command>copy/Y "$(OutDir)$(TargetName).lib"      "..\\lib"
-copy/Y "$(ProjectDir)*.h"   "..\\lib"
-copy/Y "$(ProjectDir)inc"   "..\\lib"
-copy/Y "$(ProjectDir)lib"   "..\\lib"
-copy ".\\lib\\fmodex.dll"   "..\\bin"
-copy ".\\lib\\fmodex.dll"   "..\\lib"</Command>
+      <Command>md  "..\\Lib"
+md  "..\\Inc"
+md  "..\\Bin" 
+
+copy/Y "$(OutDir)$(TargetName).lib"      "..\\Lib"
+copy/Y "$(ProjectDir)*.h"   "..\\Inc"
+copy/Y "$(ProjectDir)inc"   "..\\Inc"
+copy/Y "$(ProjectDir)lib"   "..\\Lib"
+copy/Y ".\\lib\\fmodex.dll"   "..\\Bin"
+copy ".\\lib\\fmodex.dll"   "..\\Lib"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

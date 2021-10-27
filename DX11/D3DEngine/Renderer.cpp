@@ -4,7 +4,7 @@
 #include "Transform.h"
 #include "GameObject.h"
 #include "Shader.h"
-#include "KHParser.h"
+#include "../ShareData/ParserData.h"
 #include "Material.h"
 #include "Renderer.h"
 

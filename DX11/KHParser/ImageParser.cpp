@@ -6,6 +6,13 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+// Global Parser List
+std::vector<ImageParser*> ImageParser::g_ParserList;
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+// stb_image 내부 extern 함수의 재정의 문제로 최상위 클래스에 함수 구현
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float* ImageParser::LoadImage_Float(const char* filename, int* x, int* y, int* comp, int req_comp)
 {
 	return stbi_loadf(filename, x, y, comp, req_comp);
@@ -34,5 +41,19 @@ PARSER_DLL ImageParser* ImageParser::Create(Type type)
 		break;
 	}
 
+	ImageParser::g_ParserList.push_back(newParser);
+
 	return newParser;
+}
+
+PARSER_DLL void ImageParser::Destroy()
+{
+	if (ImageParser::g_ParserList.empty()) return;
+
+	for (ImageParser* parser : ImageParser::g_ParserList)
+	{
+		delete parser;
+	}
+
+	ImageParser::g_ParserList.clear();
 }

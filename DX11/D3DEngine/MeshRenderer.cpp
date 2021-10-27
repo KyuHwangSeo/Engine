@@ -30,6 +30,7 @@ void MeshRenderer::ShadowRender(DXMatrix4X4 view, DXMatrix4X4 proj)
 	DXMatrix4X4 world = m_GameObject->GetWorld();
 
 	m_ShadowObjectData.gWorldViewProj = world * view * proj;
+	m_ShadowObjectData.gTexTransform = m_Material->GetTexTransform();
 	m_ShadowShader->SetVertexConstantBuffer(m_ShadowObjectData);
 
 	// Vertex Shader Update

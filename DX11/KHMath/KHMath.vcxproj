@@ -96,7 +96,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>MATH_EXPORT;_WINDOWS;_USRDLL;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>..\DXTK\Inc;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
@@ -105,11 +106,14 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>md  "..\\lib"
-md  "..\\bin" 
-copy/Y "$(TargetPath)"      "..\\lib" 
-copy/Y "$(OutDir)$(TargetName).lib"      "../lib"
-copy/Y "$(ProjectDir)*.h"   "..\\lib"</Command>
+      <Command>md  "..\\Lib"
+md  "..\\Inc"
+md  "..\\Bin" 
+
+copy/Y "$(TargetPath)"      "..\\Lib" 
+copy/Y "$(TargetPath)"      "..\\Bin"
+copy/Y "$(OutDir)$(TargetName).lib"      "..\\Lib"
+copy/Y "$(ProjectDir)*.h"   "..\\Inc"</Command>
     </PostBuildEvent>
     <Lib>
       <AdditionalLibraryDirectories>..\DXTK\Lib</AdditionalLibraryDirectories>
@@ -123,7 +127,8 @@ copy/Y "$(ProjectDir)*.h"   "..\\lib"</Command>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>MATH_EXPORT;_WINDOWS;_USRDLL;WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>..\DXTK\Inc;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -133,11 +138,14 @@ copy/Y "$(ProjectDir)*.h"   "..\\lib"</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>md  "..\\lib"
-md  "..\\bin" 
-copy/Y "$(TargetPath)"      "..\\lib" 
-copy/Y "$(OutDir)$(TargetName).lib"      "../lib"
-copy/Y "$(ProjectDir)*.h"   "..\\lib"</Command>
+      <Command>md  "..\\Lib"
+md  "..\\Inc"
+md  "..\\Bin" 
+
+copy/Y "$(TargetPath)"      "..\\Lib" 
+copy/Y "$(TargetPath)"      "..\\Bin"
+copy/Y "$(OutDir)$(TargetName).lib"      "..\\Lib"
+copy/Y "$(ProjectDir)*.h"   "..\\Inc"</Command>
     </PostBuildEvent>
     <Lib>
       <AdditionalLibraryDirectories>..\DXTK\Lib</AdditionalLibraryDirectories>
@@ -149,7 +157,8 @@ copy/Y "$(ProjectDir)*.h"   "..\\lib"</Command>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>MATH_EXPORT;_WINDOWS;_USRDLL;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>..\DXTK\Inc;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
@@ -158,11 +167,14 @@ copy/Y "$(ProjectDir)*.h"   "..\\lib"</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>md  "..\\lib"
-md  "..\\bin" 
-copy/Y "$(TargetPath)"      "..\\lib" 
-copy/Y "$(OutDir)$(TargetName).lib"      "../lib"
-copy/Y "$(ProjectDir)*.h"   "..\\lib"</Command>
+      <Command>md  "..\\Lib"
+md  "..\\Inc"
+md  "..\\Bin" 
+
+copy/Y "$(TargetPath)"      "..\\Lib" 
+copy/Y "$(TargetPath)"      "..\\Bin"
+copy/Y "$(OutDir)$(TargetName).lib"      "..\\Lib"
+copy/Y "$(ProjectDir)*.h"   "..\\Inc"</Command>
     </PostBuildEvent>
     <Lib>
       <AdditionalLibraryDirectories>..\DXTK\Lib</AdditionalLibraryDirectories>
@@ -176,7 +188,8 @@ copy/Y "$(ProjectDir)*.h"   "..\\lib"</Command>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>MATH_EXPORT;_WINDOWS;_USRDLL;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>..\DXTK\Inc;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -186,11 +199,14 @@ copy/Y "$(ProjectDir)*.h"   "..\\lib"</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>md  "..\\lib"
-md  "..\\bin" 
-copy/Y "$(TargetPath)"      "..\\lib" 
-copy/Y "$(OutDir)$(TargetName).lib"      "../lib"
-copy/Y "$(ProjectDir)*.h"   "..\\lib"</Command>
+      <Command>md  "..\\Lib"
+md  "..\\Inc"
+md  "..\\Bin" 
+
+copy/Y "$(TargetPath)"      "..\\Lib" 
+copy/Y "$(TargetPath)"      "..\\Bin"
+copy/Y "$(OutDir)$(TargetName).lib"      "..\\Lib"
+copy/Y "$(ProjectDir)*.h"   "..\\Inc"</Command>
     </PostBuildEvent>
     <Lib>
       <AdditionalLibraryDirectories>..\DXTK\Lib</AdditionalLibraryDirectories>

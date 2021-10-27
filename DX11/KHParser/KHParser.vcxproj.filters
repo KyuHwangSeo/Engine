@@ -42,7 +42,7 @@
     <ClCompile Include="ASEFile.cpp">
       <Filter>소스 파일\Model\ASE</Filter>
     </ClCompile>
-    <ClCompile Include="CASEParser.cpp">
+    <ClCompile Include="ASEParser.cpp">
       <Filter>소스 파일\Model\ASE</Filter>
     </ClCompile>
     <ClCompile Include="FBXParser.cpp">
@@ -71,7 +71,7 @@
     <ClInclude Include="ASEFile.h">
       <Filter>소스 파일\Model\ASE</Filter>
     </ClInclude>
-    <ClInclude Include="CASEParser.h">
+    <ClInclude Include="ASEParser.h">
       <Filter>소스 파일\Model\ASE</Filter>
     </ClInclude>
     <ClInclude Include="FBXParser.h">
@@ -80,20 +80,20 @@
     <ClInclude Include="BoneWeights.h">
       <Filter>소스 파일\Model\FBX</Filter>
     </ClInclude>
-    <ClInclude Include="ParserDLL.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="ImageParser.h">
-      <Filter>소스 파일\ParserBase</Filter>
-    </ClInclude>
     <ClInclude Include="CharImage.h">
       <Filter>소스 파일\Image\Char</Filter>
     </ClInclude>
     <ClInclude Include="FloatImage.h">
       <Filter>소스 파일\Image\Float</Filter>
     </ClInclude>
-    <ClInclude Include="ModelParser.h">
+    <ClInclude Include="Export\ImageParser.h">
       <Filter>소스 파일\ParserBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Export\ModelParser.h">
+      <Filter>소스 파일\ParserBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Export\ParserDLL.h">
+      <Filter>소스 파일</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

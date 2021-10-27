@@ -54,6 +54,7 @@ void GameManager::LoadData()
 	KH_UTILITY::LoadData(eLoadType::FBX, "CHARACTER_idle", "Character/CHARACTER_idle.fbx", false);
 	KH_UTILITY::LoadData(eLoadType::Terrain, "Map_Origin", "Map/Map_Origin.fbx", true);
 
+	KH_UTILITY::LoadData(eLoadType::Texture, "Green", "Green.png");
 	KH_UTILITY::LoadData(eLoadType::Texture, "mask", "mask.png");
 	KH_UTILITY::LoadData(eLoadType::Texture, "Dead_Leaves_Mask", "Dead_Leaves_Mask.png");
 	KH_UTILITY::LoadData(eLoadType::Texture, "Dead_Leaves_Diffuse", "Dead_Leaves_Diffuse.png");

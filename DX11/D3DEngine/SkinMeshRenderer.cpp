@@ -27,6 +27,7 @@ void SkinMeshRenderer::ShadowRender(DXMatrix4X4 view, DXMatrix4X4 proj)
 	DXMatrix4X4 world = m_GameObject->GetWorld();
 	
 	m_ShadowObjectData.gWorldViewProj = world * view * proj;
+	m_ShadowObjectData.gTexTransform = m_Material->GetTexTransform();
 	m_ShadowShader->SetVertexConstantBuffer(m_ShadowObjectData);
 
 	// BoneTM Update..
@@ -87,7 +88,7 @@ void SkinMeshRenderer::Render(DXMatrix4X4 view, DXMatrix4X4 proj)
 
 void SkinMeshRenderer::Release()
 {
-	m_BoneList.clear();
+	m_BoneTransList.clear();
 
 	Renderer::Release();
 }
@@ -99,7 +100,7 @@ void SkinMeshRenderer::SetMesh(ParserData::Mesh* mesh)
 
 void SkinMeshRenderer::SetBone(GameObject* bone)
 {
-	m_BoneList.insert(make_pair(bone->GetName(), bone));
+	m_BoneTransList.push_back(bone->GetTransform());
 }
 
 void SkinMeshRenderer::BoneUpdate()
@@ -107,6 +108,6 @@ void SkinMeshRenderer::BoneUpdate()
 	for (size_t i = 0; i < m_Mesh->m_BoneTMList.size(); i++)
 	{
 		/// 최종 Bone TM -> BoneOffsetTM * BoneWorldTM (애니메이션 적용후의 TM)
-		m_BoneData.gBoneTransforms[i] = m_Mesh->m_BoneTMList[i] * m_BoneList[m_Mesh->m_BoneMeshList[i]->m_NodeName]->GetTransform()->m_LocalTM;
+		m_BoneData.gBoneTransforms[i] = m_Mesh->m_BoneTMList[i] * m_BoneTransList[i]->m_LocalTM;
 	}
 }

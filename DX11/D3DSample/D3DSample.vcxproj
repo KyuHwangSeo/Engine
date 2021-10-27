@@ -101,7 +101,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>..\Debug;..\Lib;..\DXTK\Inc;..\FBX\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Inc;..\DXTK\Inc;</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
@@ -110,18 +110,17 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <Profile>true</Profile>
-      <AdditionalLibraryDirectories>..\Lib;..\DXTK\Lib;..\FBX\lib\86\d;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Lib;..\DXTK\Lib;</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
       <Command>copy ..\lib\*.dll   .\</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>md  ..\bin
+      <Command>md  "..\Bin"
 
 copy/Y "$(TargetPath)"  ".\\"
 
-copy/Y "$(TargetPath)"  "..\\bin" 
-copy/Y ..\lib\*.dll      ..\bin</Command>
+copy/Y "$(TargetPath)"  "..\\Bin"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -132,7 +131,7 @@ copy/Y ..\lib\*.dll      ..\bin</Command>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>..\Release;..\Lib;..\DXTK\Inc;..\FBX\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Inc;..\DXTK\Inc;</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
@@ -142,19 +141,17 @@ copy/Y ..\lib\*.dll      ..\bin</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\Lib;..\DXTK\Lib;..\FBX\lib\86\r;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Lib;..\DXTK\Lib;</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
       <Command>copy ..\lib\*.dll   .\</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>md  ..\bin
+      <Command>md  "..\Bin"
 
 copy/Y "$(TargetPath)"  ".\\"
 
-copy/Y "$(TargetPath)"  "..\\bin" 
-
-copy/Y ..\lib\*.dll      ..\bin</Command>
+copy/Y "$(TargetPath)"  "..\\Bin"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -163,27 +160,25 @@ copy/Y ..\lib\*.dll      ..\bin</Command>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>..\x64\Debug;..\Lib;..\DXTK\Inc;..\FBX\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Inc;..\DXTK\Inc;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\Lib;..\DXTK\Lib;..\FBX\lib\64\d;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Lib;..\DXTK\Lib;</AdditionalLibraryDirectories>
       <Profile>true</Profile>
     </Link>
     <PreBuildEvent>
       <Command>copy ..\lib\*.dll   .\</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>md  ..\bin
+      <Command>md  "..\Bin"
 
 copy/Y "$(TargetPath)"  ".\\"
 
-copy/Y "$(TargetPath)"  "..\\bin" 
-
-copy/Y ..\lib\*.dll      ..\bin</Command>
+copy/Y "$(TargetPath)"  "..\\Bin"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -194,7 +189,7 @@ copy/Y ..\lib\*.dll      ..\bin</Command>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>..\x64\Release;..\Lib;..\DXTK\Inc;..\FBX\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Inc;..\DXTK\Inc;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
@@ -203,18 +198,17 @@ copy/Y ..\lib\*.dll      ..\bin</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\Lib;..\DXTK\Lib;..\FBX\lib\64\r;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Lib;..\DXTK\Lib;</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
       <Command>copy ..\lib\*.dll   .\</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>md  ..\bin
+      <Command>md  "..\Bin"
 
 copy/Y "$(TargetPath)"  ".\\"
-copy/Y "$(TargetPath)"  "..\\bin" 
 
-copy/Y ..\lib\*.dll      ..\bin</Command>
+copy/Y "$(TargetPath)"  "..\\Bin"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

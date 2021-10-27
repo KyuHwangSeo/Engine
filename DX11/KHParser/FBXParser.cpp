@@ -39,9 +39,6 @@ void FBXParser::Initialize()
 	// Convert 객체 생성
 	pConverter = new FbxGeometryConverter(pManager);
 
-	FbxPropertyT<std::string> pro;
-	pro.Get();
-
 	if (!pScene)
 		throw std::exception("error: unable to create FBX scene\n");
 }
@@ -58,13 +55,32 @@ void FBXParser::Release()
 	SAFE_DELETE(pConverter);
 	pScene->Destroy();
 	pManager->Destroy();
+
+	for (Model* model : m_ModelList)
+	{
+		for (Mesh* mesh : model->m_MeshList)
+		{
+			for (Face* face : mesh->m_MeshFace)
+			{
+				SAFE_DELETE(face);
+			}
+			for (Vertex* vertex : mesh->m_VertexList)
+			{
+				SAFE_DELETE(vertex);
+			}
+			for (IndexList* index : mesh->m_IndexList)
+			{
+				SAFE_DELETE(index);
+			}
+			mesh->m_MeshFace.clear();
+			mesh->m_VertexList.clear();
+			mesh->m_IndexList.clear();
+		}
+	}
 }
 
 ParserData::Model* FBXParser::LoadModel(std::string fileName, bool scaling, bool onlyAni)
 {
-	// 새로운 Model 생성..
-	CreateModel();
-
 	// Scene 설정..
 	SceneSetting(fileName, scaling, onlyAni);
 
@@ -133,8 +149,8 @@ void FBXParser::SceneSetting(std::string fileName, bool scaling, bool onlyAni)
 
 void FBXParser::CreateModel()
 {
-	//SAFE_DELETE(m_Model);
 	m_Model = new Model();
+	m_ModelList.push_back(m_Model);
 }
 
 void FBXParser::ResetData()
@@ -143,13 +159,8 @@ void FBXParser::ResetData()
 	fbxMaterials.clear();
 
 	m_MaterialData = nullptr;
-	m_OneBone = nullptr;
 	m_OneAnimation = nullptr;
 
-	for (BonePair bonePair : m_AllBoneList)
-	{
-		SAFE_DELETE(bonePair.second);
-	}
 	m_AllBoneList.clear();
 }
 
@@ -288,9 +299,6 @@ void FBXParser::ProcessSkeleton(fbxsdk::FbxNode* node)
 	// Node TRS 설정..
 	SetTransform(node);
 
-	// 새로운 Bone 생성..
-	CreateBone();
-
 	FbxSkeleton* fbxSkeleton = node->GetSkeleton();
 
 	if (fbxSkeleton == nullptr) return;
@@ -308,11 +316,13 @@ void FBXParser::ProcessSkeleton(fbxsdk::FbxNode* node)
 		parentBoneIndex = FindBoneIndex(nodeName);
 	}
 
+	// 새로운 Bone 생성..
+	Bone newBone;
 	const char* boneName = node->GetName();
-	m_OneBone->m_BoneName = boneName;
-	m_OneBone->m_parent_bone_number = parentBoneIndex;
-	m_OneBone->m_BoneNumber = m_AllBoneList.size();
-	m_AllBoneList.push_back(BonePair(boneName, m_OneBone));
+	newBone.m_BoneName = boneName;
+	newBone.m_parent_bone_number = parentBoneIndex;
+	newBone.m_BoneNumber = m_AllBoneList.size();
+	m_AllBoneList.push_back(BonePair(boneName, newBone));
 }
 
 void FBXParser::ProcessMesh(fbxsdk::FbxNode* node)
@@ -432,15 +442,11 @@ bool FBXParser::ProcessBoneWeights(fbxsdk::FbxNode* node, std::vector<BoneWeight
 
 				std::string lineNodeName = pLinkNode->GetName();
 
-				int BoneIndex = FindBoneIndex(lineNodeName);
-
-				if (BoneIndex < 0) continue;
-
-				// Bone Index에 해당하는 Bone 추출..
-				Bone* nowBone = m_AllBoneList[BoneIndex].second;
-
 				// Bone Mesh 체크..
 				Mesh* boneMesh = FindMesh(lineNodeName);
+
+				if (boneMesh == nullptr) continue;
+				if (boneMesh->m_IsBone == false) continue;
 
 				FbxAMatrix matClusterTransformMatrix;
 				FbxAMatrix matClusterLinkTransformMatrix;
@@ -723,21 +729,13 @@ void FBXParser::OptimizeVertex(ParserData::Mesh* pMesh)
 
 void FBXParser::RecombinationTM(ParserData::Mesh* pMesh)
 {
-	// WorldTM -> LocalTM 변환..
-	DirectX::SimpleMath::Vector4 row0 = pMesh->m_tm_row0;
-	DirectX::SimpleMath::Vector4 row1 = pMesh->m_tm_row1;
-	DirectX::SimpleMath::Vector4 row2 = pMesh->m_tm_row2;
-	DirectX::SimpleMath::Vector4 row3 = pMesh->m_tm_row3;
-	row3.w = 1;
-
-	//
 	/// Negative Scale Check
 	// 3D Max의 작업상 Mirroring으로 인해 Scale값이 음수가 나올 경우를 Negative Scale 이라고 한다
 	// 처리를 안해줄 경우 Normal 처리나 Animation 처리시에 문제가 된다
 	// Rotaion을 나타내는 축 Row1 ~ Row3 중 두축을 외적 한 값과 다른 한 축을 내적하여 음수이면 축이 반대이고 양수이면 축이 일치한다
 	//
-	XMVECTOR crossVec = XMVector3Cross(pMesh->m_tm_row0, pMesh->m_tm_row1);
-	XMVECTOR dotVec = XMVector3Dot(crossVec, pMesh->m_tm_row2);
+	XMVECTOR crossVec = XMVector3Cross(pMesh->m_WorldTM.Right(), pMesh->m_WorldTM.Up());
+	XMVECTOR dotVec = XMVector3Dot(crossVec, pMesh->m_WorldTM.Backward());
 
 	XMFLOAT3 resultVec;
 
@@ -953,11 +951,6 @@ void FBXParser::SetTransform(fbxsdk::FbxNode* node)
 		local *= XMMatrixRotationQuaternion(q);
 	}
 
-	m_OneMesh->m_tm_row0 = Vector3(world._11, world._12, world._13);
-	m_OneMesh->m_tm_row1 = Vector3(world._21, world._22, world._23);
-	m_OneMesh->m_tm_row2 = Vector3(world._31, world._32, world._33);
-	m_OneMesh->m_tm_row3 = Vector3(world._41, world._42, world._43);
-
 	m_OneMesh->m_WorldTM = world;
 	m_OneMesh->m_LocalTM = local;
 }
@@ -1141,32 +1134,15 @@ void FBXParser::CreateMesh()
 	m_Model->m_MeshList.push_back(m_OneMesh);
 }
 
-void FBXParser::CreateBone()
-{
-	m_OneBone = nullptr;
-	m_OneBone = new Bone();
-}
-
 int FBXParser::FindBoneIndex(std::string boneName)
 {
 	for (BonePair bone : m_AllBoneList)
 	{
 		if (bone.first == boneName)
-			return bone.second->m_BoneNumber;
+			return bone.second.m_BoneNumber;
 	}
 
 	return -1;
-}
-
-ParserData::Bone* FBXParser::FindBone(std::string boneName)
-{
-	for (BonePair bone : m_AllBoneList)
-	{
-		if (bone.first == boneName)
-			return bone.second;
-	}
-
-	return nullptr;
 }
 
 ParserData::Mesh* FBXParser::FindMesh(std::string meshName)

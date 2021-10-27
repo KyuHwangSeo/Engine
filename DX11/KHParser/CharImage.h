@@ -1,10 +1,13 @@
 #pragma once
-// Pixel By Color 0 ~ 255
+// Pixel Color Range 0 ~ 255
 class CharImage : public ImageParser
 {
 public:
 	CharImage() = default;
 	~CharImage() = default;
+
+private:
+	std::string m_TextureRoute;
 
 public:
 	void Initialize();

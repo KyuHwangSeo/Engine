@@ -1,5 +1,4 @@
 #pragma once
-#pragma warning(disable : 4251)
 
 #include <string>
 #include <vector>
@@ -18,9 +17,9 @@ namespace ParserData
 	struct OneAnimation
 	{
 	public:
-		OneAnimation() = default;
+		OneAnimation();
 		OneAnimation(const OneAnimation& ani) = default;
-		~OneAnimation() = default;
+		~OneAnimation();
 
 	public:
 		std::vector<OneFrame*>	m_AniData;
@@ -32,7 +31,7 @@ namespace ParserData
 		int		m_StartFrame;
 		int		m_EndFrame;
 		int		m_NowIndex;
-		int		m_NextIndex = 1;
+		int		m_NextIndex;
 	};
 }
 
@@ -46,8 +45,8 @@ namespace ParserData
 	struct Vertex
 	{
 	public:
-		Vertex() = default;
-		~Vertex() = default;
+		Vertex();
+		~Vertex();
 
 	public:
 		DirectX::SimpleMath::Vector3 m_Pos;
@@ -69,15 +68,13 @@ namespace ParserData
 	struct Face
 	{
 	public:
-		Face() = default;
+		Face();
 		~Face() = default;
 
 	public:
 		int	m_VertexIndex[3];	// Face Vertex List Index
 		int	m_TFace[3];			// Texture Coordinate
 		
-		DirectX::SimpleMath::Vector3 m_Normal;				// Face Normal
-
 		DirectX::SimpleMath::Vector3 m_NormalVertex[3];		// Vertex Normal
 		DirectX::SimpleMath::Vector3 m_TangentVertex[3];	// Vertex Tangent
 		DirectX::SimpleMath::Vector2 m_UVvertex[3];			// Vertex UV
@@ -92,8 +89,8 @@ namespace ParserData
 	struct CMaterial
 	{
 	public:
-		CMaterial() = default;
-		~CMaterial() = default;
+		CMaterial();
+		~CMaterial();
 
 	public:
 		int	m_MaterialNumber;
@@ -118,15 +115,14 @@ namespace ParserData
 		bool m_IsShineMap;
 
 		std::vector<MaterialMap*> m_MapList;
-		CMaterial* m_SubMaterial;
 	};
 
 	class Mesh
 	{
 	public:
-		Mesh() = default;
+		Mesh();
 		Mesh(const Mesh& mesh) = default;
-		virtual ~Mesh() = default;
+		virtual ~Mesh();
 
 	public:
 		std::string	m_NodeName; 
@@ -136,12 +132,6 @@ namespace ParserData
 		bool m_TopNode;
 		bool m_IsSkinningObject;
 		bool m_IsBone;
-
-		/// Transform Matrix Data
-		DirectX::SimpleMath::Vector3 m_tm_row0;
-		DirectX::SimpleMath::Vector3 m_tm_row1;
-		DirectX::SimpleMath::Vector3 m_tm_row2;
-		DirectX::SimpleMath::Vector3 m_tm_row3;
 
 		DirectX::SimpleMath::Matrix m_WorldTM;		// Mesh WorldTM
 		DirectX::SimpleMath::Matrix m_LocalTM;		// Mesh LocalTM
@@ -156,12 +146,12 @@ namespace ParserData
 		OneAnimation*				m_Animation;		// Animation Data
 
 		/// Skinning Data
-		std::vector<DirectX::SimpleMath::Matrix>	m_BoneTMList;		// Bone Offset TM List
-		std::vector<Mesh*>			m_BoneMeshList;		// Bone Mesh List
+		std::vector<DirectX::SimpleMath::Matrix> m_BoneTMList;		// Bone Offset TM List
+		std::vector<Mesh*> m_BoneMeshList;							// Bone Mesh List
 
 		/// Final Data
-		std::vector<Vertex*>		m_VertexList;		// Vertex List
-		std::vector<IndexList*>		m_IndexList;		/// 최적화 후 Final Index List
+		std::vector<Vertex*>		m_VertexList;		/// Vertex List
+		std::vector<IndexList*>		m_IndexList;		/// Index List
 	};
 }
 
@@ -170,26 +160,27 @@ namespace ParserData
 	struct Scenedata
 	{
 	public:
+		Scenedata();
+
+	public:
 		std::string			m_FileName;
 		int					m_FirstFrame;
 		int					m_LastFrame;
 		int					m_FrameSpeed;
 		float				m_TicksPerFrame;
-
-	public:
-		Scenedata() = default;
-		~Scenedata() = default;
 	};
 
 	struct TVertex
 	{
-		TVertex() = default;
+		TVertex();
 
 		float m_U, m_V, m_W;
 	};
 
 	struct Bone
 	{
+		Bone();
+
 		std::string	m_BoneName;
 		int			m_BoneNumber;
 		int			m_parent_bone_number;
@@ -198,8 +189,8 @@ namespace ParserData
 	class ASEMesh : public Mesh
 	{
 	public:
-		ASEMesh() = default;
-		~ASEMesh() = default;
+		ASEMesh();
+		~ASEMesh();
 
 	public:
 		int	m_Type;
@@ -221,8 +212,8 @@ namespace ParserData
 {
 	struct Model
 	{
-		Model() = default;
-		~Model() = default;
+		Model();
+		~Model();
 
 		bool m_isAnimation;											// Animation 유무
 
@@ -237,3 +228,5 @@ namespace ParserData
 		void* imgColor;
 	};
 }
+
+#include "ParserData.inl"

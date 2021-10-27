@@ -320,6 +320,7 @@ GameObject* Factory::CreateObject(std::string objName, eModelType modelType, DXV
 
 		Terrain* terrainCom = new Terrain();
 		terrainCom->SetVertexBuffer(newBuffer);
+		terrainCom->SetShadowShader(m_RsMG->GetShader("NormalShadowShader"));
 		terrainCom->SetShader(m_RsMG->GetShader("TerrainShader"));
 
 		/// 임시 Layer 추가 코드..

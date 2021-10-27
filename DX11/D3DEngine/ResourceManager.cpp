@@ -60,8 +60,8 @@ void ResourceManager::Initialize()
 	LoadShader("SSAOVerticalBlurShader", "SSAOBlurVS.cso", "SSAOVerticalBlurPS.cso", "");
 
 	// Motion Blur Shader 로드..
-	LoadShader("VelocityShader", "FinalVS.cso", "VelocityPS.cso", "");
-	LoadShader("MotionBlurShader", "FinalVS.cso", "MotionBlurPS.cso", "");
+	//LoadShader("VelocityShader", "FinalVS.cso", "VelocityPS.cso", "");
+	//LoadShader("MotionBlurShader", "FinalVS.cso", "MotionBlurPS.cso", "");
 
 	// UI Shader 로드..
 	LoadShader("UIBasicShader", "UIBasicVS.cso", "UIBasicPS.cso", "");
@@ -1778,12 +1778,12 @@ ParserData::OneAnimation* ResourceManager::GetAnimation(std::string key)
 
 MaterialData ResourceManager::GetMaterial(std::string key)
 {
-	if (m_MeshList[key]->m_MaterialData == nullptr)
-	{
-		return MaterialData();
-	}
-
-	return m_MaterialList[m_MeshList[key]->m_MaterialData->m_MaterialName];
+	//if (m_MeshList[key]->m_MaterialData == nullptr)
+	//{
+	//	return MaterialData();
+	//}
+	//
+	return m_MaterialList[key];
 }
 
 std::string ResourceManager::GetMeshName(std::string objectName, int count)

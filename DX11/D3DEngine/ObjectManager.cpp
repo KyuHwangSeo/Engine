@@ -47,7 +47,7 @@ void ObjectManager::Update(float dTime)
 	for (Model model : m_ModelList)
 	{
 		if (model.begin()->second->GetEnabled() == false) continue;
-		
+
 		for (pair<string, GameObject*> obj : model)
 		{
 			obj.second->Update(dTime);
@@ -60,7 +60,7 @@ void ObjectManager::FinalUpdate(float dTime)
 	for (Model model : m_ModelList)
 	{
 		if (model.begin()->second->GetEnabled() == false) continue;
-		
+
 		for (pair<string, GameObject*> obj : model)
 		{
 			obj.second->FinalUpdate(dTime);
@@ -73,7 +73,7 @@ void ObjectManager::ShadowRender(DXMatrix4X4 view, DXMatrix4X4 proj)
 	for (Model model : m_ModelList)
 	{
 		if (model.begin()->second->GetEnabled() == false) continue;
-		
+
 		for (pair<string, GameObject*> obj : model)
 		{
 			obj.second->ShadowRender(view, proj);
@@ -86,7 +86,7 @@ void ObjectManager::Render(DXMatrix4X4 view, DXMatrix4X4 proj)
 	for (Model model : m_ModelList)
 	{
 		if (model.begin()->second->GetEnabled() == false) continue;
-		
+
 		for (pair<string, GameObject*> obj : model)
 		{
 			obj.second->Render(view, proj);
@@ -250,13 +250,13 @@ void ObjectManager::SetBone(vector<GameObject*>& model, GameObject* obj)
 {
 	if (obj->GetMeshType() == eMeshType::SkinMesh)
 	{
-		for (GameObject* obj3 : model)
+		for (ParserData::Mesh* bone : obj->GetComponent<SkinMeshRenderer>()->GetMesh()->m_BoneMeshList)
 		{
-			for (ParserData::Mesh* bone : obj->GetComponent<SkinMeshRenderer>()->GetMesh()->m_BoneMeshList)
+			for (GameObject* boneObj : model)
 			{
-				if (obj3->GetName() == bone->m_NodeName)
+				if (boneObj->GetName() == bone->m_NodeName)
 				{
-					obj->GetComponent<SkinMeshRenderer>()->SetBone(obj3);
+					obj->GetComponent<SkinMeshRenderer>()->SetBone(boneObj);
 					break;
 				}
 			}

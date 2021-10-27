@@ -8,5 +8,7 @@ public:
 public:
 	void Create();
 	void SceneUpdate(float dTime);
+
+	Transform* m_Transform;
 };
 

@@ -1,10 +1,13 @@
 #pragma once
-// Pixel By Color 0 ~ 1
+// Pixel Color Range 0 ~ 1
 class FloatImage : public ImageParser
 {
 public:
 	FloatImage() = default;
 	~FloatImage() = default;
+
+private:
+	std::string m_TextureRoute;
 
 public:
 	void Initialize();

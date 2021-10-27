@@ -102,8 +102,8 @@ void SceneManager::CreateHelper()
 
 	// HerlperObject 생성 및 초기화..
 #ifdef _DEBUG
-	m_Factory->CreateObject("Grid", eModelType::Grid);
-	m_Factory->CreateObject("Axis", eModelType::Axis);
+	//m_Factory->CreateObject("Grid", eModelType::Grid);
+	//m_Factory->CreateObject("Axis", eModelType::Axis);
 #endif
 
 	// 기본 Directional Light 생성..

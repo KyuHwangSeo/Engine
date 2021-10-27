@@ -94,7 +94,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>ENGINE_EXPORT;_USRDLL;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>..\Debug;..\Lib;..\DXTK\Inc;..\FBX\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Inc;..\DXTK\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -102,15 +102,16 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\Lib;..\DXTK\Lib;..\FBX\lib\86\d;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Lib;..\DXTK\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>md  "..\\lib"
-md  "..\\bin" 
-copy/Y "$(TargetPath)"      "..\\lib" 
-copy/Y "$(OutDir)$(TargetName).lib"      "..\\lib"
-copy/Y "$(ProjectDir)*.h"   "..\\lib"
-copy/Y "$(TargetPath)"  "..\\bin" </Command>
+      <Command>md  "..\\Lib"
+md  "..\\Inc"
+md  "..\\Bin" 
+copy/Y "$(TargetPath)"      "..\\Lib" 
+copy/Y "$(OutDir)$(TargetName).lib"      "..\\Lib"
+copy/Y "$(ProjectDir)*.h"   "..\\Inc"
+copy/Y "$(TargetPath)"  "..\\Bin" </Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>
@@ -125,7 +126,7 @@ copy/Y "$(TargetPath)"  "..\\bin" </Command>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>ENGINE_EXPORT;_USRDLL;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>..\Release;..\Lib;..\DXTK\Inc;..\FBX\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Inc;..\DXTK\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -135,16 +136,17 @@ copy/Y "$(TargetPath)"  "..\\bin" </Command>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\Lib;..\DXTK\Lib;..\FBX\lib\86\r;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Lib;..\DXTK\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>md  "..\\lib"
-md  "..\\bin" 
-copy/Y "$(TargetPath)"      "..\\lib" 
-copy/Y "$(OutDir)$(TargetName).lib"      "..\\lib"
-copy/Y "$(ProjectDir)*.h"   "..\\lib"
-copy/Y "$(TargetPath)"  "..\\bin" </Command>
+      <Command>md  "..\\Lib"
+md  "..\\Inc"
+md  "..\\Bin" 
+copy/Y "$(TargetPath)"      "..\\Lib" 
+copy/Y "$(OutDir)$(TargetName).lib"      "..\\Lib"
+copy/Y "$(ProjectDir)*.h"   "..\\Inc"
+copy/Y "$(TargetPath)"  "..\\Bin" </Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>
@@ -157,23 +159,24 @@ copy/Y "$(TargetPath)"  "..\\bin" </Command>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>ENGINE_EXPORT;_USRDLL;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>../x64/Debug;..\Lib;..\DXTK\Inc;..\FBX\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Inc;..\DXTK\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\Lib;..\DXTK\Lib;..\FBX\lib\64\d;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Lib;..\DXTK\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>md  "..\\lib"
-md  "..\\bin" 
-copy/Y "$(TargetPath)"      "..\\lib" 
-copy/Y "$(OutDir)$(TargetName).lib"      "..\\lib"
-copy/Y "$(ProjectDir)*.h"   "..\\lib"
-copy/Y "$(TargetPath)"  "..\\bin" </Command>
+      <Command>md  "..\\Lib"
+md  "..\\Inc"
+md  "..\\Bin" 
+copy/Y "$(TargetPath)"      "..\\Lib" 
+copy/Y "$(OutDir)$(TargetName).lib"      "..\\Lib"
+copy/Y "$(ProjectDir)*.h"   "..\\Inc"
+copy/Y "$(TargetPath)"  "..\\Bin" </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -184,7 +187,7 @@ copy/Y "$(TargetPath)"  "..\\bin" </Command>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>ENGINE_EXPORT;_USRDLL;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>../x64/Release;..\Lib;..\DXTK\Inc;..\FBX\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Inc;..\DXTK\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -192,16 +195,17 @@ copy/Y "$(TargetPath)"  "..\\bin" </Command>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\Lib;..\DXTK\Lib;..\FBX\lib\64\r;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Lib;..\DXTK\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>md  "..\\lib"
-md  "..\\bin" 
-copy/Y "$(TargetPath)"      "..\\lib" 
-copy/Y "$(OutDir)$(TargetName).lib"      "..\\lib"
-copy/Y "$(ProjectDir)*.h"   "..\\lib"
-copy/Y "$(TargetPath)"  "..\\bin" </Command>
+      <Command>md  "..\\Lib"
+md  "..\\Inc"
+md  "..\\Bin" 
+copy/Y "$(TargetPath)"      "..\\Lib" 
+copy/Y "$(OutDir)$(TargetName).lib"      "..\\Lib"
+copy/Y "$(ProjectDir)*.h"   "..\\Inc"
+copy/Y "$(TargetPath)"  "..\\Bin" </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

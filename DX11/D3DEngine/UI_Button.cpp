@@ -6,7 +6,6 @@
 #include "UI_Image.h"
 #include "Shader.h"
 #include "Material.h"
-#include "KHParser.h"
 #include "Renderer.h"
 #include "CanvasRenderer.h"
 #include "UI_Button.h"
