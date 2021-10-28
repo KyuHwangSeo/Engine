@@ -12,21 +12,13 @@
 
 class ImageParser
 {
-protected:
-	ImageParser() = default;
-	virtual ~ImageParser() = default;
-
 public:
 	// 사용 할 Image Color 타입
-	enum class Type
+	enum Type
 	{
 		FLOAT,
 		CHAR
 	};
-
-public:
-	// 생성된 모든 ImageParser List
-	static std::vector<ImageParser*> g_ParserList;
 
 protected:
 	float* LoadImage_Float(const char* filename, int* x, int* y, int* comp, int req_comp);
@@ -35,9 +27,6 @@ protected:
 public:
 	// Create 함수를 통해 ImageParser 생성..
 	static PARSER_DLL ImageParser* Create(Type type);
-
-	// Destroy 함수를 통해 할당 했던 ImageParser 전부 해제..
-	static PARSER_DLL void Destroy();
 
 public:
 	// 기본적인 초기화 함수..

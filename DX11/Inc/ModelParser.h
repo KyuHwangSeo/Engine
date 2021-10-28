@@ -18,22 +18,15 @@ public:
 
 public:
 	// 사용 할 Model Parser 타입
-	enum class Type
+	enum Type
 	{
 		ASE,
 		FBX
 	};
 
 public:
-	// 생성된 모든 ModelParser List
-	static std::vector<ModelParser*> g_ParserList;
-
-public:
 	// Create 함수를 통해 ModelParser 생성..
 	static PARSER_DLL ModelParser* Create(Type type);
-
-	// Destroy 함수를 통해 할당 했던 ModelParser 전부 해제..
-	static PARSER_DLL void Destroy();
 
 public:
 	// 기본적인 초기화 함수..

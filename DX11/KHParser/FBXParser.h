@@ -30,7 +30,7 @@ private:
 	std::vector<BonePair> m_AllBoneList;			// Skinning Object Bone List
 
 	ParserData::OneAnimation* m_OneAnimation;		// Object One Animation Data
-
+	
 	bool m_OnlyAni = false;
 
 	std::string m_TextureRoute;
