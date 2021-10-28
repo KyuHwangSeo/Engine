@@ -11,7 +11,7 @@ D3D11Renderer::~D3D11Renderer()
 
 }
 
-bool D3D11Renderer::Initialize(INT_PTR hwnd, int screenWidth, int screenHeight)
+bool D3D11Renderer::Initialize(HWND hwnd, int screenWidth, int screenHeight)
 {
 	// 스왑 체인 설정을 초기화..
 	DXGI_SWAP_CHAIN_DESC swapChainDesc;
