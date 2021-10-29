@@ -24,5 +24,8 @@ private:
 	ComPtr<ID3D11Device> m_Device = nullptr;
 	ComPtr<ID3D11DeviceContext> m_DeviceContext = nullptr;
 	ComPtr<IDXGISwapChain> m_SwapChain = nullptr;
+
+private:
+	friend class RenderBase;
 };
 

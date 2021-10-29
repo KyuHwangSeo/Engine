@@ -1,6 +1,7 @@
 #pragma once
 #pragma warning(disable : 4251)
 
+#include <windows.h>
 #include "ParserDLL.h"
 #include "../ShareData/ParserData.h"
 
@@ -12,6 +13,10 @@
 
 class ImageParser
 {
+public:
+	ImageParser() = default;
+	virtual ~ImageParser() = default;
+
 public:
 	// 사용 할 Image Color 타입
 	enum Type

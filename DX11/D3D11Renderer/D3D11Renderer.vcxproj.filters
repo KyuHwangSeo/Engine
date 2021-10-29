@@ -22,6 +22,51 @@
     <Filter Include="소스 파일\Shader">
       <UniqueIdentifier>{94272436-00a5-4240-be10-085ee3e42e81}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Renderer\RenderState">
+      <UniqueIdentifier>{5bb6ea15-ec89-49c4-92eb-f3d30d629932}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Renderer\RenderState\Shadow">
+      <UniqueIdentifier>{6113e5ac-3fb0-40b7-8ec7-54b9227c4f80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Renderer\RenderState\Deferred">
+      <UniqueIdentifier>{6cb0a81a-39e5-42f4-bbcc-d2bbb69ca579}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Renderer\RenderState\SSAO">
+      <UniqueIdentifier>{bfeb7af3-a627-4905-b1e2-406f0ef93259}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Renderer\RenderState\PostProcessing">
+      <UniqueIdentifier>{1b803ac8-ff72-42f9-9732-fbc159f80bfd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Renderer\RenderState\PostProcessing\Blur">
+      <UniqueIdentifier>{279bc0d9-64b6-4b8e-b375-14fa674b62c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Renderer\RenderState\PostProcessing\MotionBlur">
+      <UniqueIdentifier>{e66b9488-b556-4324-b101-501bbdd69123}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Renderer\RenderState\Light">
+      <UniqueIdentifier>{d916299b-c111-4436-b2b9-acb7dd62d47f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Renderer\RenderResource">
+      <UniqueIdentifier>{29f02623-e306-43bb-b283-ceca7eb83a18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Renderer\RenderResource\DepthStencil">
+      <UniqueIdentifier>{53a16fcb-58e4-454d-86d3-092f13e509ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Renderer\RenderResource\RenderTarget">
+      <UniqueIdentifier>{8fd5d1ad-a26b-440c-b9a5-d69daf50e6d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Renderer\RenderResource\Blend">
+      <UniqueIdentifier>{87d5948d-d9d3-4a54-8201-52104588c062}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Renderer\RenderResource\ViewPort">
+      <UniqueIdentifier>{681da163-f11a-4944-a1fa-415321f95e0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Renderer\RenderResource\Rasterizer">
+      <UniqueIdentifier>{654a219b-111f-4031-b5aa-618a8fcd83d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Renderer\RenderState\RenderBase">
+      <UniqueIdentifier>{c096983e-e671-488f-af73-d163d9a7772e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -33,6 +78,12 @@
     <ClInclude Include="DirectDefine.h">
       <Filter>소스 파일\Define</Filter>
     </ClInclude>
+    <ClInclude Include="Shadow.h">
+      <Filter>소스 파일\Renderer\RenderState\Shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderBase.h">
+      <Filter>소스 파일\Renderer\RenderState\RenderBase</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -40,6 +91,12 @@
     </ClCompile>
     <ClCompile Include="D3D11Renderer.cpp">
       <Filter>소스 파일\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Shadow.cpp">
+      <Filter>소스 파일\Renderer\RenderState\Shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderBase.cpp">
+      <Filter>소스 파일\Renderer\RenderState\RenderBase</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

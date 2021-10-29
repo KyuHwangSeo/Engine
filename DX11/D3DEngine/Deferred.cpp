@@ -103,7 +103,7 @@ void Deferred::OnResize(int width, int height)
 	textureDescDiffuse.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 	textureDescDiffuse.CPUAccessFlags = 0;
 	textureDescDiffuse.MiscFlags = 0;
-
+	
 	ComPtr<ID3D11Texture2D> renderTargetTextureArray[5];
 	m_Device->CreateTexture2D(&textureDescDiffuse, 0, &renderTargetTextureArray[0]);
 	m_Device->CreateTexture2D(&textureDescPosNorm, 0, &renderTargetTextureArray[1]);
