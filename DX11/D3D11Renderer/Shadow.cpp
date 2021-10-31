@@ -1,4 +1,3 @@
-#include "DirectDefine.h"
 #include "RenderBase.h"
 #include "Shadow.h"
 

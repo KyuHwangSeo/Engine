@@ -1,4 +1,6 @@
 #pragma once
+#include "DirectDefine.h"
+
 class RenderBase
 {
 public:
