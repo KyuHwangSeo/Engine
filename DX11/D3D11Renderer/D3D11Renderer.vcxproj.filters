@@ -16,9 +16,6 @@
     <Filter Include="소스 파일\Renderer">
       <UniqueIdentifier>{d3793654-85a3-4a24-877f-18c6e22356ec}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Define">
-      <UniqueIdentifier>{9ed2e7f9-6443-4843-b53b-ea7a087bcf7d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Shader">
       <UniqueIdentifier>{94272436-00a5-4240-be10-085ee3e42e81}</UniqueIdentifier>
     </Filter>
@@ -67,6 +64,27 @@
     <Filter Include="소스 파일\Renderer\RenderState\RenderBase">
       <UniqueIdentifier>{c096983e-e671-488f-af73-d163d9a7772e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Renderer\Define">
+      <UniqueIdentifier>{9ed2e7f9-6443-4843-b53b-ea7a087bcf7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Shader\ShaderClass">
+      <UniqueIdentifier>{7dd4e53d-6aa4-4f95-bfe8-41bc7866d640}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Shader\ShaderClass\Base">
+      <UniqueIdentifier>{86089128-aa66-450d-96ea-3dd998a71cd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Shader\ShaderClass\ComputeShader">
+      <UniqueIdentifier>{10b837d2-f703-4981-bfb2-dafd1755690c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Shader\ShaderClass\PixelShader">
+      <UniqueIdentifier>{3e1472fc-2d55-4e29-bb09-14515f0a3d59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Shader\ShaderClass\VertexShader">
+      <UniqueIdentifier>{bffc6c2b-015a-4a20-8f74-4fbda52fa904}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Shader\Resource">
+      <UniqueIdentifier>{5c707931-5597-4146-87cc-1b596dd5fd62}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -76,7 +94,7 @@
       <Filter>소스 파일\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="DirectDefine.h">
-      <Filter>소스 파일\Define</Filter>
+      <Filter>소스 파일\Renderer\Define</Filter>
     </ClInclude>
     <ClInclude Include="Shadow.h">
       <Filter>소스 파일\Renderer\RenderState\Shadow</Filter>
@@ -84,8 +102,38 @@
     <ClInclude Include="RenderBase.h">
       <Filter>소스 파일\Renderer\RenderState\RenderBase</Filter>
     </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>소스 파일\Shader</Filter>
+    <ClInclude Include="ShaderBase.h">
+      <Filter>소스 파일\Shader\ShaderClass\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderResourceHash.h">
+      <Filter>소스 파일\Shader\ShaderClass\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="ComputeShader.h">
+      <Filter>소스 파일\Shader\ShaderClass\ComputeShader</Filter>
+    </ClInclude>
+    <ClInclude Include="PixelShader.h">
+      <Filter>소스 파일\Shader\ShaderClass\PixelShader</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexShader.h">
+      <Filter>소스 파일\Shader\ShaderClass\VertexShader</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantBufferDefine.h">
+      <Filter>소스 파일\Shader\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferNameDefine.h">
+      <Filter>소스 파일\Shader\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderResourceViewDefine.h">
+      <Filter>소스 파일\Shader\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="UnorderedAccessViewDefine.h">
+      <Filter>소스 파일\Shader\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderResourceBase.h">
+      <Filter>소스 파일\Shader\ShaderClass\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="SamplerStateDefine.h">
+      <Filter>소스 파일\Shader\Resource</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -101,8 +149,14 @@
     <ClCompile Include="RenderBase.cpp">
       <Filter>소스 파일\Renderer\RenderState\RenderBase</Filter>
     </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>소스 파일\Shader</Filter>
+    <ClCompile Include="ComputeShader.cpp">
+      <Filter>소스 파일\Shader\ShaderClass\ComputeShader</Filter>
+    </ClCompile>
+    <ClCompile Include="PixelShader.cpp">
+      <Filter>소스 파일\Shader\ShaderClass\PixelShader</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexShader.cpp">
+      <Filter>소스 파일\Shader\ShaderClass\VertexShader</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -26,6 +26,7 @@
 #include <d3d11.h>
 #include <wrl.h>
 #include <wrl/client.h>
+#include "../ShareData/SimpleMath.h"
 
 using namespace Microsoft::WRL;
 

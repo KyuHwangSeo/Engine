@@ -1,4 +1,5 @@
 #pragma once
+#include <typeinfo>
 /// <summary>
 /// Constant Buffer Struct
 /// </summary>
@@ -13,10 +14,22 @@
 // Forward Constant Buffer
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-struct cbPerObject
+template <typename T>
+struct CBuffer
 {
-	std::string GetName() { return "cbPerObject"; }
-	
+	std::string GetName()
+	{
+		std::string name = typeid(T).name();
+		size_t spacePosition = name.find_first_of(" ");
+		if (spacePosition != std::string::npos)
+			return name.substr(spacePosition + 1, name.length());
+		else
+			return name;
+	}
+};
+
+struct cbPerObject : public CBuffer<cbPerObject>
+{
 	DXMatrix4X4 gWorld;
 	DXMatrix4X4 gWorldInvTranspose;
 	DXMatrix4X4 gWorldViewProj;
@@ -25,40 +38,30 @@ struct cbPerObject
 	DXMatrix4X4 gWorldInvTransposeView;
 };
 
-struct cbLights
+struct cbLights : public CBuffer<cbLights>
 {
-	std::string GetName() { return "cbLights"; }
-	
 	DirectionalLight gDirLights[3];
 	PointLight gPointLights[4];
 	SpotLight gSpotLights[4];
 };
 
-struct cbCamera
+struct cbCamera : public CBuffer<cbCamera>
 {
-	std::string GetName() { return "cbCamera"; }
-	
 	DXVector3 gEyePosW;
 };
 
-struct cbShadow
+struct cbShadow : public CBuffer<cbShadow>
 {
-	std::string GetName() { return "cbShadow"; }
-	
 	DXMatrix4X4 gShadowTransform;
 };
 
-struct cbSkinned
+struct cbSkinned : public CBuffer<cbSkinned>
 {
-	std::string GetName() { return "cbSkinned"; }
-	
 	DXMatrix4X4 gBoneTransforms[96];
 };
 
-struct cbID
+struct cbID : public CBuffer<cbID>
 {
-	std::string GetName() { return "cbID"; }
-	
 	int gMatID = 0;
 };
 
@@ -66,10 +69,8 @@ struct cbID
 // Deferred Constant Buffer
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-struct cbLightList
+struct cbLightList : public CBuffer<cbLightList>
 {
-	std::string GetName() { return "cbLightList"; }
-
 	DirectionalLight gDirLights[3];
 	PointLight gPointLights[16];
 	SpotLight gSpotLights[16];
@@ -78,15 +79,13 @@ struct cbLightList
 	UINT gSpotLightCount;
 };
 
-struct cbMaterialList
+struct cbMaterialList : public CBuffer<cbMaterialList>
 {
-	std::string GetName() { return "cbMaterialList"; }
 	MaterialData gMaterials[20];
 };
 
-struct cbTexViewProj
+struct cbTexViewProj : public CBuffer<cbTexViewProj>
 {
-	std::string GetName() { return "cbTexViewProj"; }
 	DXMatrix4X4 gViewProjTex;
 };
 
@@ -94,15 +93,13 @@ struct cbTexViewProj
 // SSAO Constant Buffer
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-struct cbTexel
+struct cbTexel : public CBuffer<cbTexel>
 {
-	std::string GetName() { return "cbTexel"; }
 	float gTexelSize;
 };
 
-struct cbSsaoFrame
+struct cbSsaoFrame : public CBuffer<cbSsaoFrame>
 {
-	std::string GetName() { return "cbSsaoFrame"; }
 	DXMatrix4X4 gViewToTexSpace;
 	DXVector4   gOffsetVectors[14];
 	DXVector4   gFrustumCorners[4];
@@ -117,9 +114,8 @@ struct cbSsaoFrame
 // Full Screen Constant Buffer
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-struct cbFullScreen
+struct cbFullScreen : public CBuffer<cbFullScreen>
 {
-	std::string GetName() { return "cbFullScreen"; }
 	DXMatrix4X4 gNowViewProj;
 	DXMatrix4X4 gPrevViewProj;
 	float gDeltaTime;
@@ -129,14 +125,12 @@ struct cbFullScreen
 // UI Constant Buffer
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-struct cbPerUI
+struct cbPerUI : public CBuffer<cbPerUI>
 {
-	std::string GetName() { return "cbPerUI"; }
 	DXMatrix4X4 gWorldViewProj;
 };
 
-struct cbAlpha
+struct cbAlpha : public CBuffer<cbAlpha>
 {
-	std::string GetName() { return "cbAlpha"; }
 	float alpha = 0.0f;
-};
+}; 

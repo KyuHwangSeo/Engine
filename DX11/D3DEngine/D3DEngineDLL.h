@@ -117,7 +117,7 @@ namespace KH_ENGINE
 
 	template <typename T>
 	T* KH_STDCALL AddScene(const char* name) { T* scene = new T; AddNewScene(name, scene); return scene; }
-	extern "C" ENGINE_DLL void AddNewScene(const char*, Scene*);
+	extern "C" ENGINE_DLL void KH_STDCALL AddNewScene(const char*, Scene*);
 	extern "C" ENGINE_DLL Scene* KH_STDCALL FindScene(const char*);
 	extern "C" ENGINE_DLL void KH_STDCALL SelectScene(const char*);
 	extern "C" ENGINE_DLL void KH_STDCALL RemoveScene(const char*);

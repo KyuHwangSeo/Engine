@@ -143,19 +143,31 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BufferNameDefine.h" />
+    <ClInclude Include="ComputeShader.h" />
+    <ClInclude Include="ConstantBufferDefine.h" />
+    <ClInclude Include="SamplerStateDefine.h" />
+    <ClInclude Include="ShaderResourceBase.h" />
+    <ClInclude Include="ShaderResourceHash.h" />
     <ClInclude Include="D3D11Renderer.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="DirectDefine.h" />
+    <ClInclude Include="PixelShader.h" />
     <ClInclude Include="RenderBase.h" />
-    <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShaderBase.h" />
+    <ClInclude Include="ShaderResourceViewDefine.h" />
     <ClInclude Include="Shadow.h" />
+    <ClInclude Include="UnorderedAccessViewDefine.h" />
+    <ClInclude Include="VertexShader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ComputeShader.cpp" />
     <ClCompile Include="D3D11Renderer.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="RenderBase.cpp" />
-    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Shadow.cpp" />
+    <ClCompile Include="VertexShader.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

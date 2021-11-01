@@ -77,7 +77,7 @@ namespace KH_ENGINE
 		gEngine->GetScene()->SetSkyBox(mapName);
 	}
 
-	extern "C" ENGINE_DLL void AddNewScene(const char* name, Scene* scene)
+	extern "C" ENGINE_DLL void KH_STDCALL AddNewScene(const char* name, Scene* scene)
 	{
 		gEngine->AddScene(name, scene);
 	}

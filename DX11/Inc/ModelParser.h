@@ -1,6 +1,7 @@
 #pragma once
 #pragma warning(disable : 4251)
 
+#include <windows.h>
 #include "ParserDLL.h"
 #include "../ShareData/ParserData.h"
 

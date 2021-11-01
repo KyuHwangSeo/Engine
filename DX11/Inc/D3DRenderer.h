@@ -37,8 +37,6 @@ public:
 
 	vector<IRenderer*> m_RendererList;
 
-	Shader* m_MotionBlurShader;
-
 	VertexBuffer* m_QuadBuffer;
 public:
 	bool Is_Blur = false;

@@ -1,6 +1,10 @@
 #include "ImageParser.h"
 #include "CharImage.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_STATIC
+#include "stb_image.h"
+
 void CharImage::Initialize()
 {
 
@@ -16,7 +20,7 @@ ParserData::ImageData CharImage::LoadImagePixel(const char* fileName, unsigned i
 	std::string filePath = m_TextureRoute + fileName;
 
 	ParserData::ImageData imgData;
-	imgData.imgColor = LoadImage_Char(filePath.c_str(), &imgData.width, &imgData.height, nullptr, channels);
+	imgData.imgColor = stbi_load(filePath.c_str(), &imgData.width, &imgData.height, nullptr, channels);
 
 	return imgData;
 }

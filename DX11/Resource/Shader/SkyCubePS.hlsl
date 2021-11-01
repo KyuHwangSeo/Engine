@@ -13,7 +13,7 @@ struct PixelOut
     float4 NormalDepth  : SV_Target4;
 };
 
-TextureCube gCubeMap	: register(t3);
+TextureCube gCubeMap	: register(t0);
 
 SamplerState samWrapMinLinear : register(s3);
 

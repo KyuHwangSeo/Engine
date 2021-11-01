@@ -1,6 +1,10 @@
 #include "ImageParser.h"
 #include "FloatImage.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_STATIC
+#include "stb_image.h"
+
 void FloatImage::Initialize()
 {
 
@@ -16,7 +20,7 @@ ParserData::ImageData FloatImage::LoadImagePixel(const char* fileName, unsigned 
 	std::string filePath = m_TextureRoute + fileName;
 
 	ParserData::ImageData imgData;
-	imgData.imgColor = LoadImage_Float(filePath.c_str(), &imgData.width, &imgData.height, nullptr, channels);
+	imgData.imgColor = stbi_loadf(filePath.c_str(), &imgData.width, &imgData.height, nullptr, channels);
 
 	return imgData;
 }

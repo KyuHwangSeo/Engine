@@ -96,7 +96,7 @@
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>..\Inc;..\DXTK\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

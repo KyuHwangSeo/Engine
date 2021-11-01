@@ -25,10 +25,6 @@ public:
 		CHAR
 	};
 
-protected:
-	float* LoadImage_Float(const char* filename, int* x, int* y, int* comp, int req_comp);
-	unsigned char* LoadImage_Char(const char* filename, int* x, int* y, int* comp, int req_comp);
-
 public:
 	// Create 함수를 통해 ImageParser 생성..
 	static PARSER_DLL ImageParser* Create(Type type);

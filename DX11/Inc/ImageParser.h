@@ -1,6 +1,7 @@
 #pragma once
 #pragma warning(disable : 4251)
 
+#include <windows.h>
 #include "ParserDLL.h"
 #include "../ShareData/ParserData.h"
 
@@ -13,16 +14,16 @@
 class ImageParser
 {
 public:
+	ImageParser() = default;
+	virtual ~ImageParser() = default;
+
+public:
 	// 사용 할 Image Color 타입
 	enum Type
 	{
 		FLOAT,
 		CHAR
 	};
-
-protected:
-	float* LoadImage_Float(const char* filename, int* x, int* y, int* comp, int req_comp);
-	unsigned char* LoadImage_Char(const char* filename, int* x, int* y, int* comp, int req_comp);
 
 public:
 	// Create 함수를 통해 ImageParser 생성..
