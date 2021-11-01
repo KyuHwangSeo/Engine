@@ -8,7 +8,7 @@ using namespace Microsoft::WRL;
 
 ComputeShader::ComputeShader(const char* fileName)
 {
-	CreateShader(m_ShaderRoute + fileName);
+	LoadShader(m_ShaderRoute + fileName);
 }
 
 ComputeShader::~ComputeShader()
@@ -16,7 +16,7 @@ ComputeShader::~ComputeShader()
 
 }
 
-void ComputeShader::CreateShader(std::string fileName)
+void ComputeShader::LoadShader(std::string fileName)
 {
 	ID3D11ShaderReflection* pReflector = nullptr;
 

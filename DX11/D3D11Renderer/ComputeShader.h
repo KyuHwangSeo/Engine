@@ -15,7 +15,7 @@ public:
 	~ComputeShader();
 
 public:
-	void CreateShader(std::string fileName);
+	void LoadShader(std::string fileName);
 	void Update();
 
 	// ComputeShader ConstantBuffer Resource Update..

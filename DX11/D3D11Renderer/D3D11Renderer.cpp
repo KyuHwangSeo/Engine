@@ -1,5 +1,6 @@
 #include "DirectDefine.h"
 #include "D3D11Renderer.h"
+#include "ResourceManager.h"
 
 D3D11Renderer::D3D11Renderer()
 {
@@ -13,6 +14,20 @@ D3D11Renderer::~D3D11Renderer()
 
 bool D3D11Renderer::Initialize(HWND hwnd, int screenWidth, int screenHeight)
 {
+	m_ScreenSize = new POINT();
+	m_ScreenSize->x = screenWidth;
+	m_ScreenSize->y = screenHeight;
+
+	// Device 생성..
+	CreateDevice(hwnd);
+
+	// Resource Manager 생성 및 초기화..
+	m_RM = new ResourceManager();
+	m_RM->Initialize(m_Device, m_DeviceContext);
+}
+
+void D3D11Renderer::CreateDevice(HWND hwnd)
+{
 	// 스왑 체인 설정을 초기화..
 	DXGI_SWAP_CHAIN_DESC swapChainDesc;
 	ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
@@ -21,8 +36,8 @@ bool D3D11Renderer::Initialize(HWND hwnd, int screenWidth, int screenHeight)
 	swapChainDesc.BufferCount = 1;
 
 	// 백 버퍼의 너비와 높이를 설정..
-	swapChainDesc.BufferDesc.Width = screenWidth;
-	swapChainDesc.BufferDesc.Height = screenHeight;
+	swapChainDesc.BufferDesc.Width = m_ScreenSize->x;
+	swapChainDesc.BufferDesc.Height = m_ScreenSize->y;
 
 	// 백 버퍼에 일반 32 비트 표면을 설정..
 	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;

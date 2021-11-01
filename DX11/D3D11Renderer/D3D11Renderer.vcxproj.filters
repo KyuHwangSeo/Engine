@@ -85,6 +85,15 @@
     <Filter Include="소스 파일\Shader\Resource">
       <UniqueIdentifier>{5c707931-5597-4146-87cc-1b596dd5fd62}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Shader\ShaderClass\HashTable">
+      <UniqueIdentifier>{86f97bbf-2905-4f4c-a48c-93b282ae80ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Manager">
+      <UniqueIdentifier>{013f4444-86d5-49fb-b879-8b32349366ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Manager\Resource">
+      <UniqueIdentifier>{dda58a71-24db-4a27-9068-3a04298f1b1a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -103,9 +112,6 @@
       <Filter>소스 파일\Renderer\RenderState\RenderBase</Filter>
     </ClInclude>
     <ClInclude Include="ShaderBase.h">
-      <Filter>소스 파일\Shader\ShaderClass\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="ShaderResourceHash.h">
       <Filter>소스 파일\Shader\ShaderClass\Base</Filter>
     </ClInclude>
     <ClInclude Include="ComputeShader.h">
@@ -135,6 +141,12 @@
     <ClInclude Include="SamplerStateDefine.h">
       <Filter>소스 파일\Shader\Resource</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderResourceHash.h">
+      <Filter>소스 파일\Shader\ShaderClass\HashTable</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>소스 파일\Manager\Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -157,6 +169,12 @@
     </ClCompile>
     <ClCompile Include="VertexShader.cpp">
       <Filter>소스 파일\Shader\ShaderClass\VertexShader</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>소스 파일\Manager\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderBase.cpp">
+      <Filter>소스 파일\Shader\ShaderClass\Base</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

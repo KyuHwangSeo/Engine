@@ -15,7 +15,7 @@ public:
 	~PixelShader();
 
 public:
-	void CreateShader(std::string fileName);
+	void LoadShader(std::string fileName);
 	void Update();
 
 	// PixelShader ConstantBuffer Resource Update..

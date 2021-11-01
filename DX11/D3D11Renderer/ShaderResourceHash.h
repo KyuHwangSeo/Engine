@@ -5,6 +5,7 @@
 #include "ShaderResourceViewDefine.h"
 #include "UnorderedAccessViewDefine.h"
 
+typedef size_t Hash_Code;
 typedef std::unordered_map<std::string, Hash_Code>::iterator Hash_Pair;
 
 /// 
@@ -146,6 +147,10 @@ inline size_t ShaderResourceHashTable::FindHashCode(Type type, std::string cBufN
 	}
 		break;
 	default:
+	{
+		throw std::exception("ERROR: Can not find Resource Type.\n");
+		return 0;
+	}
 		break;
 	}
 

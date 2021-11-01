@@ -8,6 +8,8 @@ public:
 public:
 	bool Initialize(HWND hwnd, int screenWidth, int screenHeight);
 
+	void CreateDevice(HWND hwnd);
+
 	void CreateIndexBuffer();
 	void CreateVertexBuffer();
 	void CreateTextureBuffer();
@@ -26,6 +28,9 @@ private:
 	ComPtr<IDXGISwapChain> m_SwapChain = nullptr;
 
 private:
-	friend class RenderBase;
+	POINT* m_ScreenSize;
+
+private:
+	ResourceManager* m_RM;
 };
 

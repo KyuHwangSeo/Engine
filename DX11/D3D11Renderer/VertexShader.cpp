@@ -8,7 +8,7 @@ using namespace Microsoft::WRL;
 
 VertexShader::VertexShader(const char* fileName)
 {
-	CreateShader(m_ShaderRoute + fileName);
+	LoadShader(m_ShaderRoute + fileName);
 }
 
 VertexShader::~VertexShader()
@@ -16,7 +16,7 @@ VertexShader::~VertexShader()
 
 }
 
-void VertexShader::CreateShader(std::string fileName)
+void VertexShader::LoadShader(std::string fileName)
 {
 	ID3D11ShaderReflection* pReflector = nullptr;
 

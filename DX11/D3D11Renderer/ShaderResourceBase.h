@@ -1,4 +1,6 @@
 #pragma once
+#define RESET_COM(x) { if(x != nullptr) {x.Reset();} }
+
 typedef unsigned int register_slot;
 typedef size_t Hash_Code;
 
@@ -20,7 +22,7 @@ struct ShaderResourceBase
 struct ConstantBuffer : public ShaderResourceBase
 {
 	ConstantBuffer(std::string name, unsigned int rNum, Microsoft::WRL::ComPtr<ID3D11Buffer> cBuf = nullptr) : ShaderResourceBase(name, rNum), cbuffer(cBuf) {}
-	~ConstantBuffer() { cbuffer.Reset(); }
+	~ConstantBuffer() { RESET_COM(cbuffer); }
 
 	// Constant Buffer Resource
 	Microsoft::WRL::ComPtr<ID3D11Buffer> cbuffer;
@@ -30,7 +32,7 @@ struct ConstantBuffer : public ShaderResourceBase
 struct SamplerState : public ShaderResourceBase
 {
 	SamplerState(std::string name, unsigned int rNum) : ShaderResourceBase(name, rNum), sampler(nullptr) {}
-	~SamplerState() { sampler.Reset(); }
+	~SamplerState() { RESET_COM(sampler); }
 
 	// Sampler State Resource
 	Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler;
@@ -40,7 +42,7 @@ struct SamplerState : public ShaderResourceBase
 struct ShaderResourceView : public ShaderResourceBase
 {
 	ShaderResourceView(std::string name, unsigned int rNum) : ShaderResourceBase(name, rNum) {}
-	~ShaderResourceView() { srv.Reset(); }
+	~ShaderResourceView() { RESET_COM(srv); }
 
 	// Shader Resource View Resource
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv;
@@ -50,7 +52,7 @@ struct ShaderResourceView : public ShaderResourceBase
 struct UnorderedAccessView : public ShaderResourceBase
 {
 	UnorderedAccessView(std::string name, unsigned int rNum) : ShaderResourceBase(name, rNum) {}
-	~UnorderedAccessView() { uav.Reset(); }
+	~UnorderedAccessView() { RESET_COM(uav); }
 
 	// Unordered Access View Resource
 	Microsoft::WRL::ComPtr<ID3D11UnorderedAccessView> uav;

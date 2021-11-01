@@ -15,7 +15,7 @@ public:
 	~VertexShader();
 
 public:
-	void CreateShader(std::string fileName);
+	void LoadShader(std::string fileName);
 	void Update();
 
 	// VertexShader ConstantBuffer Resource Update..
