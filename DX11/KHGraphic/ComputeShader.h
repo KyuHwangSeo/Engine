@@ -1,5 +1,6 @@
 #pragma once
 #include "ShaderBase.h"
+#include "ShaderResourceBase.h"
 
 /// <summary>
 /// ComputeShader Class
@@ -7,7 +8,7 @@
 /// 
 /// - 한개의 ComputeShader를 관리하는 클래스
 
-class ComputeShader : public ShaderBase
+class ComputeShader : public IShader
 {
 public:
 	ComputeShader(const char* fileName);
@@ -25,6 +26,7 @@ public:
 	// ComputeShader SamplerState 설정..
 	template<typename T>
 	void SetSamplerState(Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler);
+	void SetSamplerState(Hash_Code hash_code, Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler);
 
 	// ComputeShader ShaderResourceView 설정..
 	template<typename T>
@@ -82,6 +84,22 @@ inline void ComputeShader::SetSamplerState(Microsoft::WRL::ComPtr<ID3D11SamplerS
 {
 	// 해당 Value 찾기..
 	std::unordered_map<Hash_Code, SamplerState>::iterator it = m_SamplerList.find(typeid(T).hash_code());
+
+	// 해당 Key에 대한 Value가 없다면..
+	if (it == m_SamplerList.end())
+		return throw std::exception("ERROR: Can not find SamplerState.\n");
+
+	// SamplerState 설정..
+	it->second.sampler = sampler;
+
+	// 해당 Register Slot에 삽입..
+	m_SamplerStates[it->second.register_number] = sampler;
+}
+
+inline void ComputeShader::SetSamplerState(Hash_Code hash_code, Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler)
+{
+	// 해당 Value 찾기..
+	std::unordered_map<Hash_Code, SamplerState>::iterator it = m_SamplerList.find(hash_code);
 
 	// 해당 Key에 대한 Value가 없다면..
 	if (it == m_SamplerList.end())

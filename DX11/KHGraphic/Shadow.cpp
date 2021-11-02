@@ -63,12 +63,12 @@ void Shadow::RenderFrame()
 
 	/// 실제 렌더링 추가
 
-	m_DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	m_DeviceContext->IASetVertexBuffers(0, 1, m_VB.GetAddressOf(), &m_Stride, &m_Offset);
-	m_DeviceContext->IASetIndexBuffer(m_IB.Get(), DXGI_FORMAT_R32_UINT, 0);
-
-	// Draw..
-	m_DeviceContext->DrawIndexed(m_IndexCount, 0, 0);
+	//m_DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//m_DeviceContext->IASetVertexBuffers(0, 1, m_VB.GetAddressOf(), &m_Stride, &m_Offset);
+	//m_DeviceContext->IASetIndexBuffer(m_IB.Get(), DXGI_FORMAT_R32_UINT, 0);
+	//
+	//// Draw..
+	//m_DeviceContext->DrawIndexed(m_IndexCount, 0, 0);
 
 	// 그리기만 할 것이므로 null Render Target 설정..
 	// 깊이 버퍼, null Rendering 대상을 설정하면 색상 쓰기가 비활성화 된다..

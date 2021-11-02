@@ -1,7 +1,7 @@
 #pragma once
-#include "../ShareData/SimpleMath.h"
-#include "../ShareData/LightHelper.h"
-#include "BufferNameDefine.h"
+#include "SimpleMath.h"
+#include "LightHelper.h"
+#include "ClassType.h"
 
 /// <summary>
 /// ConstantBuffer Resource Struct
@@ -19,7 +19,7 @@
 // Forward Constant Buffer
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-struct cbPerObject : public BufferName<cbPerObject>
+struct cbPerObject : public ClassType<cbPerObject>
 {
 	DirectX::SimpleMath::Matrix gWorld;
 	DirectX::SimpleMath::Matrix gWorldInvTranspose;
@@ -29,29 +29,29 @@ struct cbPerObject : public BufferName<cbPerObject>
 	DirectX::SimpleMath::Matrix gWorldInvTransposeView;
 };
 
-struct cbLights : public BufferName<cbLights>
+struct cbLights : public ClassType<cbLights>
 {
 	DirectionalLight gDirLights[3];
 	PointLight gPointLights[4];
 	SpotLight gSpotLights[4];
 };
 
-struct cbCamera : public BufferName<cbCamera>
+struct cbCamera : public ClassType<cbCamera>
 {
 	DirectX::SimpleMath::Vector3 gEyePosW;
 };
 
-struct cbShadow : public BufferName<cbShadow>
+struct cbShadow : public ClassType<cbShadow>
 {
 	DirectX::SimpleMath::Matrix gShadowTransform;
 };
 
-struct cbSkinned : public BufferName<cbSkinned>
+struct cbSkinned : public ClassType<cbSkinned>
 {
 	DirectX::SimpleMath::Matrix gBoneTransforms[96];
 };
 
-struct cbID : public BufferName<cbID>
+struct cbID : public ClassType<cbID>
 {
 	int gMatID = 0;
 };
@@ -60,7 +60,7 @@ struct cbID : public BufferName<cbID>
 // Deferred Constant Buffer
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-struct cbLightList : public BufferName<cbLightList>
+struct cbLightList : public ClassType<cbLightList>
 {
 	DirectionalLight gDirLights[3];
 	PointLight gPointLights[16];
@@ -70,12 +70,12 @@ struct cbLightList : public BufferName<cbLightList>
 	UINT gSpotLightCount;
 };
 
-struct cbMaterialList : public BufferName<cbMaterialList>
+struct cbMaterialList : public ClassType<cbMaterialList>
 {
 	MaterialData gMaterials[20];
 };
 
-struct cbTexViewProj : public BufferName<cbTexViewProj>
+struct cbTexViewProj : public ClassType<cbTexViewProj>
 {
 	DirectX::SimpleMath::Matrix gViewProjTex;
 };
@@ -84,12 +84,12 @@ struct cbTexViewProj : public BufferName<cbTexViewProj>
 // SSAO Constant Buffer
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-struct cbTexel : public BufferName<cbTexel>
+struct cbTexel : public ClassType<cbTexel>
 {
 	float gTexelSize;
 };
 
-struct cbSsaoFrame : public BufferName<cbSsaoFrame>
+struct cbSsaoFrame : public ClassType<cbSsaoFrame>
 {
 	DirectX::SimpleMath::Matrix  gViewToTexSpace;
 	DirectX::SimpleMath::Vector4 gOffsetVectors[14];
@@ -105,7 +105,7 @@ struct cbSsaoFrame : public BufferName<cbSsaoFrame>
 // Full Screen Constant Buffer
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-struct cbFullScreen : public BufferName<cbFullScreen>
+struct cbFullScreen : public ClassType<cbFullScreen>
 {
 	DirectX::SimpleMath::Matrix gNowViewProj;
 	DirectX::SimpleMath::Matrix gPrevViewProj;
@@ -116,12 +116,12 @@ struct cbFullScreen : public BufferName<cbFullScreen>
 // UI Constant Buffer
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-struct cbPerUI : public BufferName<cbPerUI>
+struct cbPerUI : public ClassType<cbPerUI>
 {
 	DirectX::SimpleMath::Matrix gWorldViewProj;
 };
 
-struct cbAlpha : public BufferName<cbAlpha>
+struct cbAlpha : public ClassType<cbAlpha>
 {
 	float alpha = 0.0f;
 };

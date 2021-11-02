@@ -7,6 +7,7 @@
 using namespace Microsoft::WRL;
 
 VertexShader::VertexShader(const char* fileName)
+	:IShader(ShaderType::VERTEX)
 {
 	LoadShader(m_ShaderRoute + fileName);
 }
@@ -113,7 +114,7 @@ void VertexShader::LoadShader(std::string fileName)
 			m_Device->CreateBuffer(&cBufferDesc, nullptr, constantBuffer.GetAddressOf());
 
 			// Constant Buffer Hash Code..
-			size_t hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::Type::CBUFFER, bufferDesc.Name);
+			size_t hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::ResourceType::CBUFFER, bufferDesc.Name);
 
 			// Key (Constant Buffer HashCode) && Value (Register Slot, Constant Buffer)
 			m_ConstantBuffers.push_back(constantBuffer);

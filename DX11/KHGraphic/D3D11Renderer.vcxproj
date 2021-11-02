@@ -147,9 +147,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="BufferNameDefine.h" />
+    <ClInclude Include="ClassType.h" />
     <ClInclude Include="ComputeShader.h" />
     <ClInclude Include="ConstantBufferDefine.h" />
+    <ClInclude Include="EnumDefine.h" />
+    <ClInclude Include="ResourceManagerBase.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="SamplerStateDefine.h" />
     <ClInclude Include="ShaderResourceBase.h" />
@@ -170,7 +172,6 @@
     <ClCompile Include="D3D11Renderer.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="PixelShader.cpp" />
-    <ClCompile Include="RenderBase.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="ShaderBase.cpp" />
     <ClCompile Include="Shadow.cpp" />

@@ -6,7 +6,6 @@
 #include "UnorderedAccessViewDefine.h"
 
 typedef size_t Hash_Code;
-typedef std::unordered_map<std::string, Hash_Code>::iterator Hash_Pair;
 
 /// 
 /// ConstantBufferHashTable Class
@@ -18,7 +17,7 @@ typedef std::unordered_map<std::string, Hash_Code>::iterator Hash_Pair;
 class ShaderResourceHashTable
 {
 public:
-	enum Type
+	enum ResourceType
 	{
 		CBUFFER,
 		SAMPLER,
@@ -38,7 +37,7 @@ public:
 	// Hash Table Reset ÇÔ¼ö..
 	static void Reset();
 
-	static size_t FindHashCode(Type type, std::string cBufName);
+	static size_t FindHashCode(ResourceType type, std::string cBufName);
 };
 
 inline void ShaderResourceHashTable::Initialize()
@@ -96,13 +95,13 @@ inline void ShaderResourceHashTable::Reset()
 	g_UAV_HashTable.clear();
 }
 
-inline size_t ShaderResourceHashTable::FindHashCode(Type type, std::string cBufName)
+inline size_t ShaderResourceHashTable::FindHashCode(ResourceType type, std::string cBufName)
 {
-	Hash_Pair cHash;
+	std::unordered_map<std::string, Hash_Code>::iterator cHash;
 
 	switch (type)
 	{
-	case ShaderResourceHashTable::CBUFFER:
+	case ResourceType::CBUFFER:
 	{
 		cHash = g_CBuffer_HashTable.find(cBufName);
 
@@ -113,7 +112,7 @@ inline size_t ShaderResourceHashTable::FindHashCode(Type type, std::string cBufN
 		}
 	}
 		break;
-	case ShaderResourceHashTable::SAMPLER:
+	case ResourceType::SAMPLER:
 	{
 		cHash = g_Sampler_HashTable.find(cBufName);
 
@@ -124,7 +123,7 @@ inline size_t ShaderResourceHashTable::FindHashCode(Type type, std::string cBufN
 		}
 	}
 	break;
-	case ShaderResourceHashTable::SRV:
+	case ResourceType::SRV:
 	{
 		cHash = g_SRV_HashTable.find(cBufName);
 
@@ -135,7 +134,7 @@ inline size_t ShaderResourceHashTable::FindHashCode(Type type, std::string cBufN
 		}
 	}
 		break;
-	case ShaderResourceHashTable::UAV:
+	case ResourceType::UAV:
 	{
 		cHash = g_UAV_HashTable.find(cBufName);
 

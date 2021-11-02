@@ -31,6 +31,6 @@ private:
 	POINT* m_ScreenSize;
 
 private:
-	ResourceManager* m_RM;
+	IResourceManager* m_RM;
 };
 

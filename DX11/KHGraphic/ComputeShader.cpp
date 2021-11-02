@@ -7,6 +7,7 @@
 using namespace Microsoft::WRL;
 
 ComputeShader::ComputeShader(const char* fileName)
+	:IShader(ShaderType::COMPUTE)
 {
 	LoadShader(m_ShaderRoute + fileName);
 }
@@ -64,7 +65,7 @@ void ComputeShader::LoadShader(std::string fileName)
 			m_Device->CreateBuffer(&cBufferDesc, nullptr, constantBuffer.GetAddressOf());
 
 			// Constant Buffer Hash Code..
-			size_t hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::Type::CBUFFER, bufferDesc.Name);
+			size_t hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::ResourceType::CBUFFER, bufferDesc.Name);
 
 			// Key (Constant Buffer HashCode) && Value (Register Slot, Constant Buffer)
 			m_ConstantBuffers.push_back(constantBuffer);
@@ -93,7 +94,7 @@ void ComputeShader::LoadShader(std::string fileName)
 		case D3D_SIT_TEXTURE:
 		{
 			// SRV Hash Code..
-			hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::Type::SRV, bindDesc.Name);
+			hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::ResourceType::SRV, bindDesc.Name);
 
 			m_SRVList.insert(std::make_pair(hash_key, ShaderResourceView(bindDesc.Name, bindDesc.BindPoint)));
 			srv_size = bindDesc.BindPoint;
@@ -102,7 +103,7 @@ void ComputeShader::LoadShader(std::string fileName)
 		case D3D_SIT_SAMPLER:
 		{
 			// Constant Buffer Hash Code..
-			hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::Type::SAMPLER, bindDesc.Name);
+			hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::ResourceType::SAMPLER, bindDesc.Name);
 
 			m_SamplerList.insert(std::make_pair(hash_key, SamplerState(bindDesc.Name, bindDesc.BindPoint)));
 			sampler_size = bindDesc.BindPoint;
@@ -111,7 +112,7 @@ void ComputeShader::LoadShader(std::string fileName)
 		case D3D_SIT_UAV_RWTYPED:
 		{
 			// UAV Hash Code..
-			hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::Type::UAV, bindDesc.Name);
+			hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::ResourceType::UAV, bindDesc.Name);
 
 			m_UAVList.insert(std::make_pair(hash_key, UnorderedAccessView(bindDesc.Name, bindDesc.BindPoint)));
 			uav_size = bindDesc.BindPoint;

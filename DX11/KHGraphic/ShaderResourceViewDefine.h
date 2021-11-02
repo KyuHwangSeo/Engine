@@ -1,5 +1,5 @@
 #pragma once
-#include "BufferNameDefine.h"
+#include "ClassType.h"
 
 /// <summary>
 /// ShaderResourceView Resource Struct
@@ -17,40 +17,40 @@
 // Global ShaderResourceView Resource
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-struct gDiffuseMap : public BufferName<gDiffuseMap> {};
-struct gNormalMap : public BufferName<gNormalMap> {};
-struct gCubeMap : public BufferName<gCubeMap> {};
-struct gShadowMap : public BufferName<gShadowMap> {};
-struct gSSAOMap : public BufferName<gSSAOMap> {};
+struct gDiffuseMap : public ClassType<gDiffuseMap> {};
+struct gNormalMap : public ClassType<gNormalMap> {};
+struct gCubeMap : public ClassType<gCubeMap> {};
+struct gShadowMap : public ClassType<gShadowMap> {};
+struct gSSAOMap : public ClassType<gSSAOMap> {};
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // SSAO ShaderResourceView Resource
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-struct gNormalDepthMap : public BufferName<gNormalDepthMap> {};
-struct gRandomVecMap : public BufferName<gRandomVecMap> {};
-struct gInputMap : public BufferName<gInputMap> {};
+struct gNormalDepthMap : public ClassType<gNormalDepthMap> {};
+struct gRandomVecMap : public ClassType<gRandomVecMap> {};
+struct gInputMap : public ClassType<gInputMap> {};
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // Deferred ShaderResourceView Resource
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-struct AlbedoSRV : public BufferName<AlbedoSRV> {};
-struct NormalSRV : public BufferName<NormalSRV> {};
-struct PositionSRV : public BufferName<PositionSRV> {};
-struct ShadowSRV : public BufferName<ShadowSRV> {};
-struct SsaoSRV : public BufferName<SsaoSRV> {};
+struct AlbedoSRV : public ClassType<AlbedoSRV> {};
+struct NormalSRV : public ClassType<NormalSRV> {};
+struct PositionSRV : public ClassType<PositionSRV> {};
+struct ShadowSRV : public ClassType<ShadowSRV> {};
+struct SsaoSRV : public ClassType<SsaoSRV> {};
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // Blur ShaderResourceView Resource
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-struct gInput : public BufferName<gInput> {};
+struct gInput : public ClassType<gInput> {};
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // MotionBlur ShaderResourceView Resource
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-struct gDepthMap : public BufferName<gDepthMap> {};
-struct gOrigin : public BufferName<gOrigin> {};
-struct gVelocity : public BufferName<gVelocity> {};
+struct gDepthMap : public ClassType<gDepthMap> {};
+struct gOrigin : public ClassType<gOrigin> {};
+struct gVelocity : public ClassType<gVelocity> {};

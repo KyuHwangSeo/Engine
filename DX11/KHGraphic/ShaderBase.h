@@ -3,25 +3,16 @@
 #include <wrl/client.h>
 #include <unordered_map>
 #include <variant>
-#include "d3d11.h"
+#include <d3d11.h>
+#include "EnumDefine.h"
 
-#include "ShaderResourceBase.h"
-
-class ShaderBase;
+class IShader;
 class VertexShader;
 class PixelShader;
 class ComputeShader;
 
 // 원본 Shader 변환을 위한 Return Type 지정.. (C++17)
-using OriginalShader = std::variant<ShaderBase*, VertexShader*, PixelShader*, ComputeShader*>;
-
-// Shader 생성을 위한 ShaderType Enum Class
-enum class ShaderType
-{
-	VERTEX,
-	PIXEL,
-	COMPUTE
-};
+using OriginalShader = std::variant<IShader*, VertexShader*, PixelShader*, ComputeShader*>;
 
 /// Shader Reflection MSDN
 /// https://docs.microsoft.com/ko-kr/windows/win32/api/d3d11shader/nn-d3d11shader-id3d11shaderreflection?f1url=%3FappId%3DDev16IDEF1%26l%3DKO-KR%26k%3Dk(D3D11SHADER%252FID3D11ShaderReflection);k(ID3D11ShaderReflection);k(DevLang-C%252B%252B);k(TargetOS-Windows)%26rd%3Dtrue
@@ -35,11 +26,11 @@ enum class ShaderType
 /// - 모든 Shader Class의 Base Class
 /// - 모든 Shader가 Resource 생성 및 복제시 Device & DeviceContext를 필요로 하여 전역 변수로 관리
 
-class ShaderBase
+class IShader
 {
 protected:
-	ShaderBase() = default;
-	virtual ~ShaderBase() = default;
+	IShader(ShaderType shaderType) : m_ShaderType(shaderType) {}
+	virtual ~IShader() = default;
 
 protected:
 	// Device & Context..
@@ -58,7 +49,7 @@ public:
 	static void Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, Microsoft::WRL::ComPtr<ID3D11DeviceContext> context);
 
 	// Shader Load 및 Create 함수..
-	static ShaderBase* CreateShader(ShaderType shaderType, const char* fileName);
+	static IShader* CreateShader(ShaderType shaderType, const char* fileName);
 
 	// Device & DeviceContext Reset 함수..
 	static void Reset();
@@ -67,13 +58,15 @@ public:
 	static void SetShaderRoute(std::string fileRoute);
 
 public:
-	// 해당 Shader 변환 함수..
+	// 현재 Shader Type 반환 함수..
+	ShaderType GetType();
+
+	// 현재 Shader 원형 변환 함수..
 	OriginalShader ConvertShader();
 
 	virtual void LoadShader(std::string fileName) abstract;
 	virtual void Update() abstract;
 };
-
 
 /// <summary>
 /// UpdateSubResource VS Map / UnMap

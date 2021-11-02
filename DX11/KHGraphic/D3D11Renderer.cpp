@@ -1,6 +1,7 @@
 #include "DirectDefine.h"
-#include "D3D11Renderer.h"
+#include "EnumDefine.h"
 #include "ResourceManager.h"
+#include "D3D11Renderer.h"
 
 D3D11Renderer::D3D11Renderer()
 {
@@ -24,6 +25,8 @@ bool D3D11Renderer::Initialize(HWND hwnd, int screenWidth, int screenHeight)
 	// Resource Manager 생성 및 초기화..
 	m_RM = new ResourceManager();
 	m_RM->Initialize(m_Device, m_DeviceContext);
+
+	return true;
 }
 
 void D3D11Renderer::CreateDevice(HWND hwnd)

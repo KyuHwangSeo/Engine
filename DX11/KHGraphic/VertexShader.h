@@ -1,5 +1,6 @@
 #pragma once
 #include "ShaderBase.h"
+#include "ShaderResourceBase.h"
 
 /// <summary>
 /// VetexShader Class
@@ -7,7 +8,7 @@
 /// 
 /// - 한개의 VertexShader를 관리하는 클래스
 
-class VertexShader : public ShaderBase
+class VertexShader : public IShader
 {
 public:
 	VertexShader(const char* fileName);

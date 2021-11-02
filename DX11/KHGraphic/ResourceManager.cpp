@@ -1,8 +1,11 @@
-#include "ResourceManager.h"
-#include "ShaderResourceHash.h"
+#include "DirectDefine.h"
+#include "ResourceManagerBase.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
 #include "ComputeShader.h"
+#include "ResourceManager.h"
+
+#include "ShaderResourceHash.h"
 
 using namespace Microsoft::WRL;
 
@@ -19,8 +22,8 @@ ResourceManager::~ResourceManager()
 void ResourceManager::Initialize(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> context)
 {
 	// Shader Global Initialize..
-	ShaderBase::Initialize(device, context);
-	ShaderBase::SetShaderRoute("../Resource/Shader/");
+	IShader::Initialize(device, context);
+	IShader::SetShaderRoute("../Resource/Shader/");
 
 	// Shader Hash Table Initialize..
 	ShaderResourceHashTable::Initialize();
@@ -30,6 +33,17 @@ void ResourceManager::Initialize(ComPtr<ID3D11Device> device, ComPtr<ID3D11Devic
 
 	// Global Shader Create..
 	CreateShader();
+}
+
+IShader* ResourceManager::GetShader(std::string shaderName)
+{
+	std::unordered_map<std::string, IShader*>::iterator shader = m_ShaderList.find(shaderName);
+
+	// 해당 Shader를 찾았을 경우..
+	if (shader != m_ShaderList.end()) 
+		return shader->second;
+
+	return nullptr;
 }
 
 void ResourceManager::CreateSampler(ComPtr<ID3D11Device> device)
@@ -48,7 +62,7 @@ void ResourceManager::CreateSampler(ComPtr<ID3D11Device> device)
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	device->CreateSamplerState(&samplerDesc, &samplerState);
-	m_SamplerList.insert(std::make_pair("samClampMinLinear", samplerState));
+	m_SamplerList.insert(std::make_pair(samClampMinLinear::GetHashCode(), samplerState));
 
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
@@ -60,7 +74,7 @@ void ResourceManager::CreateSampler(ComPtr<ID3D11Device> device)
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	device->CreateSamplerState(&samplerDesc, &samplerState);
-	m_SamplerList.insert(std::make_pair("samWrapAnisotropic", samplerState));
+	m_SamplerList.insert(std::make_pair(samWrapAnisotropic::GetHashCode(), samplerState));
 
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -73,7 +87,7 @@ void ResourceManager::CreateSampler(ComPtr<ID3D11Device> device)
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	device->CreateSamplerState(&samplerDesc, &samplerState);
-	m_SamplerList.insert(std::make_pair("samWrapMinLinear", samplerState));
+	m_SamplerList.insert(std::make_pair(samWrapMinLinear::GetHashCode(), samplerState));
 
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -85,7 +99,7 @@ void ResourceManager::CreateSampler(ComPtr<ID3D11Device> device)
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	device->CreateSamplerState(&samplerDesc, &samplerState);
-	m_SamplerList.insert(std::make_pair("samMirrorMinLinear", samplerState));
+	m_SamplerList.insert(std::make_pair(samMirrorMinLinear::GetHashCode(), samplerState));
 
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
@@ -97,7 +111,7 @@ void ResourceManager::CreateSampler(ComPtr<ID3D11Device> device)
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	device->CreateSamplerState(&samplerDesc, &samplerState);
-	m_SamplerList.insert(std::make_pair("samClampMinLinearPoint", samplerState));
+	m_SamplerList.insert(std::make_pair(samClampMinLinearPoint::GetHashCode(), samplerState));
 
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
@@ -110,7 +124,7 @@ void ResourceManager::CreateSampler(ComPtr<ID3D11Device> device)
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	device->CreateSamplerState(&samplerDesc, &samplerState);
-	m_SamplerList.insert(std::make_pair("samBorderLinerPoint", samplerState));
+	m_SamplerList.insert(std::make_pair(samBorderLinerPoint::GetHashCode(), samplerState));
 
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
@@ -121,7 +135,7 @@ void ResourceManager::CreateSampler(ComPtr<ID3D11Device> device)
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	device->CreateSamplerState(&samplerDesc, &samplerState);
-	m_SamplerList.insert(std::make_pair("samWrapLinerPoint", samplerState));
+	m_SamplerList.insert(std::make_pair(samWrapLinerPoint::GetHashCode(), samplerState));
 
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT;
@@ -133,7 +147,7 @@ void ResourceManager::CreateSampler(ComPtr<ID3D11Device> device)
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	device->CreateSamplerState(&samplerDesc, &samplerState);
-	m_SamplerList.insert(std::make_pair("gShadowSam", samplerState));
+	m_SamplerList.insert(std::make_pair(gShadowSam::GetHashCode(), samplerState));
 }
 
 void ResourceManager::CreateShader()
@@ -180,12 +194,17 @@ void ResourceManager::CreateShader()
 	// Screen Blur Shader
 	LoadShader(ShaderType::COMPUTE, "HorizonBlurCS.cso");
 	LoadShader(ShaderType::COMPUTE, "VerticalBlurCS.cso");
+
+	// Shader Sampler 설정..
+	SetSampler();
 }
 
 void ResourceManager::LoadShader(ShaderType shaderType, std::string shaderName)
 {
-	ShaderBase* newShader = ShaderBase::CreateShader(shaderType, shaderName.c_str());
+	// Shader Type에 맞는 Shader 생성..
+	IShader* newShader = IShader::CreateShader(shaderType, shaderName.c_str());
 
+	// 파일을 제대로 읽지 못하여 생성하지 못한경우 nullptr..
 	if (newShader == nullptr)
 		return throw std::exception("ERROR: Can not Create Shader.\n");
 
@@ -198,4 +217,36 @@ void ResourceManager::LoadShader(ShaderType shaderType, std::string shaderName)
 
 	// 새로 생성한 Shader 삽입..
 	m_ShaderList.insert(std::make_pair(shaderKey, newShader));
+}
+
+void ResourceManager::SetSampler()
+{
+	// Pixel & Compute Shader Sampler 설정..
+	for (std::pair<std::string, IShader*> shader : m_ShaderList)
+	{
+		// Shader Type에 따른 형은 보장이 되므로 강제 형변환 실행 후 Sampler 설정..
+		switch (shader.second->GetType())
+		{
+		case ShaderType::PIXEL:
+		{
+			PixelShader* pShader = reinterpret_cast<PixelShader*>(shader.second);
+			for (std::pair<Hash_Code, ComPtr<ID3D11SamplerState>> sampler : m_SamplerList)
+			{
+				pShader->SetSamplerState(sampler.first, sampler.second);
+			}
+		}
+		break;
+		case ShaderType::COMPUTE:
+		{
+			ComputeShader* cShader = reinterpret_cast<ComputeShader*>(shader.second);
+			for (std::pair<Hash_Code, ComPtr<ID3D11SamplerState>> sampler : m_SamplerList)
+			{
+				cShader->SetSamplerState(sampler.first, sampler.second);
+			}
+		}
+		break;
+		default:
+			break;
+		}
+	}
 }

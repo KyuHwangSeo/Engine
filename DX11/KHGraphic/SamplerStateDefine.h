@@ -1,5 +1,5 @@
 #pragma once
-#include "BufferNameDefine.h"
+#include "ClassType.h"
 
 /// <summary>
 /// SamplerState Resource Struct
@@ -17,7 +17,11 @@
 // Global SamplerState Resource
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-struct gShadowSam : public BufferName<gShadowSam> {};
-struct samWrapMinLinear : public BufferName<samWrapMinLinear> {};
-struct samWrapAnisotropic : public BufferName<samWrapAnisotropic> {};
-struct samClampMinLinear : public BufferName<samClampMinLinear> {};
+struct gShadowSam : public ClassType<gShadowSam> {};
+struct samWrapMinLinear : public ClassType<samWrapMinLinear> {};
+struct samWrapAnisotropic : public ClassType<samWrapAnisotropic> {};
+struct samClampMinLinear : public ClassType<samClampMinLinear> {};
+struct samWrapLinerPoint : public ClassType<samWrapLinerPoint> {};
+struct samBorderLinerPoint : public ClassType<samBorderLinerPoint> {};
+struct samClampMinLinearPoint : public ClassType<samClampMinLinearPoint> {};
+struct samMirrorMinLinear : public ClassType<samMirrorMinLinear> {};

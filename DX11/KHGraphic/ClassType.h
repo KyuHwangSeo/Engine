@@ -10,7 +10,7 @@
 ///
 
 template <typename T>
-struct BufferName
+struct ClassType
 {
 	static std::string GetName()
 	{

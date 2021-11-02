@@ -2,7 +2,6 @@
 #define RESET_COM(x) { if(x != nullptr) {x.Reset();} }
 
 typedef unsigned int register_slot;
-typedef size_t Hash_Code;
 
 // 모든 Shader Resource들의 Base Class..
 // 해당 Resource Buffer Name & Binding Register Index 보유..

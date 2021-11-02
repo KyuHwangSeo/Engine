@@ -1,5 +1,5 @@
 #pragma once
-#include "BufferNameDefine.h"
+#include "ClassType.h"
 
 /// <summary>
 /// UnorderedAccessView Resource Struct
@@ -17,4 +17,4 @@
 // Blur UnorderedAccessView Resource
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-struct gOutput : public BufferName<gOutput> {};
+struct gOutput : public ClassType<gOutput> {};
