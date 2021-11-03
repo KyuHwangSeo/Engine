@@ -1,17 +1,17 @@
 #pragma once
-#include "ResourceManagerBase.h"
+#include "ShaderManagerBase.h"
 
-class ResourceManager : public IResourceManager
+class ShaderManager : public IShaderManager
 {
 public:
-	ResourceManager();
-	~ResourceManager();
+	ShaderManager();
+	~ShaderManager();
 
 public:
-	void Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, Microsoft::WRL::ComPtr<ID3D11DeviceContext> context);
+	void Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, Microsoft::WRL::ComPtr<ID3D11DeviceContext> context) override;
 
 public:
-	IShader* GetShader(std::string shaderName);
+	IShader* GetShader(std::string shaderName) override;
 
 private:
 	void CreateShader();

@@ -1,20 +1,22 @@
 #pragma once
-class D3D11Renderer
+#include "GraphicsEngine.h"
+
+class D3D11Renderer : public GraphicEngine
 {
 public:
 	D3D11Renderer();
 	~D3D11Renderer();
 
 public:
-	bool Initialize(HWND hwnd, int screenWidth, int screenHeight);
+	void Initialize(HWND hwnd, int screenWidth, int screenHeight) override;
 
-	void CreateDevice(HWND hwnd);
+	void Render(std::queue<MeshData*>* meshList, GlobalData* global) override;
+	void OnReSize(int Change_Width, int Change_Height) override;			//리사이즈
+	void Delete() override;
 
-	void CreateIndexBuffer();
-	void CreateVertexBuffer();
-	void CreateTextureBuffer();
-
-	void Render();
+	Indexbuffer* CreateIndexBuffer(ParserData::Model* mModel) override;	//인덱스 버퍼를 만들어준다
+	Vertexbuffer* CreateVertexBuffer(ParserData::Model* mModel) override;	//버텍스 버퍼를 만들어준다
+	TextureBuffer* CreateTextureBuffer(std::string path) override;					//텍스쳐를 만들어준다
 
 	void ShadowRender();
 	void MainRender();
@@ -31,6 +33,7 @@ private:
 	POINT* m_ScreenSize;
 
 private:
-	IResourceManager* m_RM;
+	D3D11Graphic* m_Graphic;
+	IShaderManager* m_ShaderManager;
 };
 

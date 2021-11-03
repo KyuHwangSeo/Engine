@@ -1,11 +1,11 @@
 #pragma once
 
 class IShader;
-class IResourceManager
+class IShaderManager
 {
 public:
-	IResourceManager() = default;
-	virtual ~IResourceManager() = default;
+	IShaderManager() = default;
+	virtual ~IShaderManager() = default;
 
 public:
 	virtual void Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, Microsoft::WRL::ComPtr<ID3D11DeviceContext> context) abstract;

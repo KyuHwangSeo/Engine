@@ -6,7 +6,7 @@ public:
 	~Shadow();
 
 public:
-	void OnResize(int width, int height);
+	void OnResize(int width, int height) override;
 	void RenderFrame();
 
 private:

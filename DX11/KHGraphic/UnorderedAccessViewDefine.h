@@ -1,6 +1,8 @@
 #pragma once
 #include "ClassType.h"
 
+#define UNORDERED_ACCESS_VIEW(ClassName) CREATE_EMPTY_CLASS(ClassName)
+
 /// <summary>
 /// UnorderedAccessView Resource Struct
 /// </summary>
@@ -17,4 +19,4 @@
 // Blur UnorderedAccessView Resource
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-struct gOutput : public ClassType<gOutput> {};
+UNORDERED_ACCESS_VIEW(gOutput)

@@ -1,6 +1,8 @@
 #pragma once
 #include "ClassType.h"
 
+#define SAMPLER_STATE(ClassName) CREATE_EMPTY_CLASS(ClassName)
+
 /// <summary>
 /// SamplerState Resource Struct
 /// </summary>
@@ -17,11 +19,11 @@
 // Global SamplerState Resource
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-struct gShadowSam : public ClassType<gShadowSam> {};
-struct samWrapMinLinear : public ClassType<samWrapMinLinear> {};
-struct samWrapAnisotropic : public ClassType<samWrapAnisotropic> {};
-struct samClampMinLinear : public ClassType<samClampMinLinear> {};
-struct samWrapLinerPoint : public ClassType<samWrapLinerPoint> {};
-struct samBorderLinerPoint : public ClassType<samBorderLinerPoint> {};
-struct samClampMinLinearPoint : public ClassType<samClampMinLinearPoint> {};
-struct samMirrorMinLinear : public ClassType<samMirrorMinLinear> {};
+SAMPLER_STATE(gShadowSam)
+SAMPLER_STATE(samWrapMinLinear)
+SAMPLER_STATE(samWrapAnisotropic)
+SAMPLER_STATE(samClampMinLinear)
+SAMPLER_STATE(samWrapLinerPoint)
+SAMPLER_STATE(samBorderLinerPoint)
+SAMPLER_STATE(samClampMinLinearPoint)
+SAMPLER_STATE(samMirrorMinLinear)

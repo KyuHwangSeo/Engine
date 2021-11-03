@@ -52,7 +52,7 @@ void Shadow::OnResize(int width, int height)
 	srvDesc.Texture2D.MipLevels = texDesc.MipLevels;
 	srvDesc.Texture2D.MostDetailedMip = 0;
 	HR(m_Device->CreateShaderResourceView(depthMap.Get(), &srvDesc, m_ShadowSRV.GetAddressOf()));
-
+	
 	RESET_COM(depthMap);
 }
 

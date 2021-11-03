@@ -16,8 +16,8 @@ public:
 	~ComputeShader();
 
 public:
-	void LoadShader(std::string fileName);
-	void Update();
+	void LoadShader(std::string fileName) override;
+	void Update() override;
 
 	// ComputeShader ConstantBuffer Resource Update..
 	template<typename T>

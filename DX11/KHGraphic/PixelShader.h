@@ -16,8 +16,8 @@ public:
 	~PixelShader();
 
 public:
-	void LoadShader(std::string fileName);
-	void Update();
+	void LoadShader(std::string fileName) override;
+	void Update() override;
 
 	// PixelShader ConstantBuffer Resource Update..
 	template<typename T>

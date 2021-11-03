@@ -1,25 +1,25 @@
 #include "DirectDefine.h"
-#include "ResourceManagerBase.h"
+#include "ShaderManagerBase.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
 #include "ComputeShader.h"
-#include "ResourceManager.h"
+#include "ShaderManager.h"
 
 #include "ShaderResourceHash.h"
 
 using namespace Microsoft::WRL;
 
-ResourceManager::ResourceManager()
+ShaderManager::ShaderManager()
 {
 
 }
 
-ResourceManager::~ResourceManager()
+ShaderManager::~ShaderManager()
 {
 
 }
 
-void ResourceManager::Initialize(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> context)
+void ShaderManager::Initialize(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> context)
 {
 	// Shader Global Initialize..
 	IShader::Initialize(device, context);
@@ -33,9 +33,12 @@ void ResourceManager::Initialize(ComPtr<ID3D11Device> device, ComPtr<ID3D11Devic
 
 	// Global Shader Create..
 	CreateShader();
+
+	// Shader Hash Table Reset..
+	ShaderResourceHashTable::Reset();
 }
 
-IShader* ResourceManager::GetShader(std::string shaderName)
+IShader* ShaderManager::GetShader(std::string shaderName)
 {
 	std::unordered_map<std::string, IShader*>::iterator shader = m_ShaderList.find(shaderName);
 
@@ -46,7 +49,7 @@ IShader* ResourceManager::GetShader(std::string shaderName)
 	return nullptr;
 }
 
-void ResourceManager::CreateSampler(ComPtr<ID3D11Device> device)
+void ShaderManager::CreateSampler(ComPtr<ID3D11Device> device)
 {
 	// SamplerState 생성..
 	ComPtr<ID3D11SamplerState> samplerState;
@@ -150,7 +153,7 @@ void ResourceManager::CreateSampler(ComPtr<ID3D11Device> device)
 	m_SamplerList.insert(std::make_pair(gShadowSam::GetHashCode(), samplerState));
 }
 
-void ResourceManager::CreateShader()
+void ShaderManager::CreateShader()
 {
 	// Global Forward Shader
 	LoadShader(ShaderType::VERTEX, "FinalVS.cso");
@@ -199,7 +202,7 @@ void ResourceManager::CreateShader()
 	SetSampler();
 }
 
-void ResourceManager::LoadShader(ShaderType shaderType, std::string shaderName)
+void ShaderManager::LoadShader(ShaderType shaderType, std::string shaderName)
 {
 	// Shader Type에 맞는 Shader 생성..
 	IShader* newShader = IShader::CreateShader(shaderType, shaderName.c_str());
@@ -219,7 +222,7 @@ void ResourceManager::LoadShader(ShaderType shaderType, std::string shaderName)
 	m_ShaderList.insert(std::make_pair(shaderKey, newShader));
 }
 
-void ResourceManager::SetSampler()
+void ShaderManager::SetSampler()
 {
 	// Pixel & Compute Shader Sampler 설정..
 	for (std::pair<std::string, IShader*> shader : m_ShaderList)

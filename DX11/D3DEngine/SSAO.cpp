@@ -147,7 +147,7 @@ void SSAO::OnResize(int width, int height)
 	texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
 	texDesc.CPUAccessFlags = 0;
 	texDesc.MiscFlags = 0;
-
+	
 	ComPtr<ID3D11Texture2D> ambientTex0 = nullptr;
 	HR(m_Device->CreateTexture2D(&texDesc, nullptr, &ambientTex0));
 	m_AmbientRT->CreateSRV(ambientTex0.Get(), nullptr);

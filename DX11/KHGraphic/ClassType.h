@@ -1,6 +1,9 @@
 #pragma once
 #include <string>
 
+#define CREATE_CLASS(ClassName) struct ClassName : public ClassType<ClassName>
+#define CREATE_EMPTY_CLASS(ClassName) struct ClassName : public ClassType<ClassName> {};
+
 /// <summary>
 /// BufferName Struct
 /// </summary>

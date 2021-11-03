@@ -82,9 +82,6 @@
     <Filter Include="소스 파일\Manager">
       <UniqueIdentifier>{013f4444-86d5-49fb-b879-8b32349366ac}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Manager\Resource">
-      <UniqueIdentifier>{dda58a71-24db-4a27-9068-3a04298f1b1a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Shader\ShaderClass\ShaderBase">
       <UniqueIdentifier>{86089128-aa66-450d-96ea-3dd998a71cd5}</UniqueIdentifier>
     </Filter>
@@ -93,6 +90,12 @@
     </Filter>
     <Filter Include="소스 파일\Shader\HashTable">
       <UniqueIdentifier>{86f97bbf-2905-4f4c-a48c-93b282ae80ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Manager\Shader">
+      <UniqueIdentifier>{dda58a71-24db-4a27-9068-3a04298f1b1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Core">
+      <UniqueIdentifier>{6d4a1c8e-2ff0-43ea-8fb9-01e7e4b16b78}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -141,17 +144,23 @@
     <ClInclude Include="ShaderResourceHash.h">
       <Filter>소스 파일\Shader\HashTable</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceManager.h">
-      <Filter>소스 파일\Manager\Resource</Filter>
+    <ClInclude Include="ShaderManager.h">
+      <Filter>소스 파일\Manager\Shader</Filter>
     </ClInclude>
     <ClInclude Include="ClassType.h">
       <Filter>소스 파일\Renderer\Define</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceManagerBase.h">
-      <Filter>소스 파일\Manager\Resource</Filter>
+    <ClInclude Include="ShaderManagerBase.h">
+      <Filter>소스 파일\Manager\Shader</Filter>
     </ClInclude>
     <ClInclude Include="EnumDefine.h">
       <Filter>소스 파일\Renderer\Define</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11Graphic.h">
+      <Filter>소스 파일\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ID3D11Graphic.h">
+      <Filter>소스 파일\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -173,11 +182,14 @@
     <ClCompile Include="VertexShader.cpp">
       <Filter>소스 파일\Shader\ShaderClass\VertexShader</Filter>
     </ClCompile>
-    <ClCompile Include="ResourceManager.cpp">
-      <Filter>소스 파일\Manager\Resource</Filter>
+    <ClCompile Include="ShaderManager.cpp">
+      <Filter>소스 파일\Manager\Shader</Filter>
     </ClCompile>
     <ClCompile Include="ShaderBase.cpp">
       <Filter>소스 파일\Shader\ShaderClass\ShaderBase</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11Graphic.cpp">
+      <Filter>소스 파일\Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

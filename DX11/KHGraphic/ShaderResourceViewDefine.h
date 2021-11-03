@@ -1,6 +1,8 @@
 #pragma once
 #include "ClassType.h"
 
+#define SHADER_RESOURCE_VIEW(ClassName) CREATE_EMPTY_CLASS(ClassName)
+
 /// <summary>
 /// ShaderResourceView Resource Struct
 /// </summary>
@@ -17,40 +19,40 @@
 // Global ShaderResourceView Resource
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-struct gDiffuseMap : public ClassType<gDiffuseMap> {};
-struct gNormalMap : public ClassType<gNormalMap> {};
-struct gCubeMap : public ClassType<gCubeMap> {};
-struct gShadowMap : public ClassType<gShadowMap> {};
-struct gSSAOMap : public ClassType<gSSAOMap> {};
+SHADER_RESOURCE_VIEW(gDiffuseMap)
+SHADER_RESOURCE_VIEW(gNormalMap)
+SHADER_RESOURCE_VIEW(gCubeMap)
+SHADER_RESOURCE_VIEW(gShadowMap)
+SHADER_RESOURCE_VIEW(gSSAOMap)
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // SSAO ShaderResourceView Resource
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-struct gNormalDepthMap : public ClassType<gNormalDepthMap> {};
-struct gRandomVecMap : public ClassType<gRandomVecMap> {};
-struct gInputMap : public ClassType<gInputMap> {};
+SHADER_RESOURCE_VIEW(gNormalDepthMap)
+SHADER_RESOURCE_VIEW(gRandomVecMap)
+SHADER_RESOURCE_VIEW(gInputMap)
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // Deferred ShaderResourceView Resource
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-struct AlbedoSRV : public ClassType<AlbedoSRV> {};
-struct NormalSRV : public ClassType<NormalSRV> {};
-struct PositionSRV : public ClassType<PositionSRV> {};
-struct ShadowSRV : public ClassType<ShadowSRV> {};
-struct SsaoSRV : public ClassType<SsaoSRV> {};
+SHADER_RESOURCE_VIEW(AlbedoSRV)
+SHADER_RESOURCE_VIEW(NormalSRV)
+SHADER_RESOURCE_VIEW(PositionSRV)
+SHADER_RESOURCE_VIEW(ShadowSRV)
+SHADER_RESOURCE_VIEW(SsaoSRV)
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // Blur ShaderResourceView Resource
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-struct gInput : public ClassType<gInput> {};
+SHADER_RESOURCE_VIEW(gInput)
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // MotionBlur ShaderResourceView Resource
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-struct gDepthMap : public ClassType<gDepthMap> {};
-struct gOrigin : public ClassType<gOrigin> {};
-struct gVelocity : public ClassType<gVelocity> {};
+SHADER_RESOURCE_VIEW(gDepthMap)
+SHADER_RESOURCE_VIEW(gOrigin)
+SHADER_RESOURCE_VIEW(gVelocity)
