@@ -10,11 +10,11 @@ private:
 	std::string m_TextureRoute;
 
 public:
-	void Initialize();
-	void SetTextureRoute(std::string texRoute);
-	ParserData::ImageData LoadImagePixel(const char* fileName, unsigned int channels);
+	void Initialize() override;
+	void SetTextureRoute(std::string texRoute) override;
+	ParserData::ImageData LoadImagePixel(const char* fileName, unsigned int channels) override;
 
-	DirectX::SimpleMath::Vector4 GetPixelColor(ParserData::ImageData& img, int x, int y);
-	DirectX::SimpleMath::Vector4 GetPixelColor(ParserData::ImageData& img, float x, float y);
+	DirectX::SimpleMath::Vector4 GetPixelColor(ParserData::ImageData& img, int x, int y) override;
+	DirectX::SimpleMath::Vector4 GetPixelColor(ParserData::ImageData& img, float x, float y) override;
 };
 

@@ -8,38 +8,11 @@ public:
 	FBXParser() = default;
 	~FBXParser() = default;
 
-private:
-	fbxsdk::FbxManager* pManager;
-	fbxsdk::FbxImporter* pImporter;
-	fbxsdk::FbxScene* pScene;
-	fbxsdk::FbxGeometryConverter* pConverter;
-
-	fbxsdk::FbxMesh* pMesh;
-
-	std::string fbxFileName;
-	std::vector<fbxsdk::FbxSurfaceMaterial*> fbxMaterials;
-
-private:
-	ParserData::Model* m_Model;
-	std::vector<ParserData::Model*> m_ModelList;
-
-	ParserData::CMaterial* m_MaterialData;			// Material Data Struct
-
-	ParserData::Mesh* m_OneMesh;					// Mesh Data Struct
-
-	std::vector<BonePair> m_AllBoneList;			// Skinning Object Bone List
-
-	ParserData::OneAnimation* m_OneAnimation;		// Object One Animation Data
-	
-	bool m_OnlyAni = false;
-
-	std::string m_TextureRoute;
-
 public:
-	void Initialize();
-	void SetTextureRoute(std::string texRoute);
-	void Release();
-	ParserData::Model* LoadModel(std::string fileName, bool scaling, bool onlyAni = false);
+	void Initialize() override;
+	void SetTextureRoute(std::string texRoute) override;
+	void Release() override;
+	ParserData::Model* LoadModel(std::string fileName, bool scaling, bool onlyAni = false) override;
 	
 	void SceneSetting(std::string fileName, bool scaling, bool onlyAni);
 	void CreateModel();
@@ -63,11 +36,8 @@ public:
 	DirectX::SimpleMath::Vector2 ConvertVector2(fbxsdk::FbxVector2 v2);
 	DirectX::SimpleMath::Vector2 ConvertVector2(fbxsdk::FbxVector4 v4);
 	DirectX::SimpleMath::Vector3 ConvertVector3(fbxsdk::FbxVector4 v4);
-	DirectX::SimpleMath::Vector3 NoConvertVector3(fbxsdk::FbxVector4 v4);
 	DirectX::SimpleMath::Vector4 ConvertVector4(fbxsdk::FbxVector4 v4);
-	DirectX::SimpleMath::Vector4 NoConvertVector4(fbxsdk::FbxVector4 v4);
 	DirectX::SimpleMath::Matrix ConvertMatrix(fbxsdk::FbxMatrix matrix);
-	DirectX::SimpleMath::Matrix NoConvertMatrix(fbxsdk::FbxMatrix matrix);
 	std::string ConvertFileRoute(const char* fileName);
 
 	DirectX::SimpleMath::Vector3 GetPos(fbxsdk::FbxMesh* mesh, int vertexIndex);
@@ -76,7 +46,6 @@ public:
 	void LinkMaterialByPolygon(fbxsdk::FbxMesh* mesh, int polygonIndex, int vertexIndex);
 
 	void SetTransform(fbxsdk::FbxNode* node);
-	DirectX::SimpleMath::Matrix GetGlobalAnimationTransform(fbxsdk::FbxNode* node, fbxsdk::FbxTime time);
 
 	int GetMaterialIndex(fbxsdk::FbxSurfaceMaterial* material);
 	void SetMaterial(fbxsdk::FbxSurfaceMaterial* material);
@@ -84,12 +53,36 @@ public:
 
 	void CreateVertex(fbxsdk::FbxMesh* mesh, std::vector<BoneWeights>& boneWeights, int vertexCount);
 	void CreateMesh();
-	void CreateBone();
 
 	int FindBoneIndex(std::string boneName);
 	ParserData::Mesh* FindMesh(std::string meshName);
 
-	PARSER_DLL ParserData::Model* GetModel() { return m_Model; }
+private:
+	fbxsdk::FbxManager* pManager;
+	fbxsdk::FbxImporter* pImporter;
+	fbxsdk::FbxScene* pScene;
+	fbxsdk::FbxGeometryConverter* pConverter;
+
+	fbxsdk::FbxMesh* pMesh;
+
+	std::string fbxFileName;
+	std::vector<fbxsdk::FbxSurfaceMaterial*> fbxMaterials;
+
+private:
+	ParserData::Model* m_Model;
+	std::vector<ParserData::Model*> m_ModelList;
+
+	ParserData::CMaterial* m_MaterialData;			// Material Data Struct
+
+	ParserData::Mesh* m_OneMesh;					// Mesh Data Struct
+
+	std::vector<BonePair> m_AllBoneList;			// Skinning Object Bone List
+
+	ParserData::OneAnimation* m_OneAnimation;		// Object One Animation Data
+
+	bool m_OnlyAni = false;
+
+	std::string m_TextureRoute;
 };
 
 inline DirectX::SimpleMath::Vector2 FBXParser::ConvertVector2(fbxsdk::FbxVector2 v2)
@@ -121,17 +114,6 @@ inline DirectX::SimpleMath::Vector3 FBXParser::ConvertVector3(fbxsdk::FbxVector4
 	);
 }
 
-inline DirectX::SimpleMath::Vector3 FBXParser::NoConvertVector3(fbxsdk::FbxVector4 v4)
-{
-	// xyz -> xzy
-	return DirectX::SimpleMath::Vector3
-	(
-		static_cast<float>(v4.mData[0]),
-		static_cast<float>(v4.mData[1]),
-		static_cast<float>(v4.mData[2])
-	);
-}
-
 inline DirectX::SimpleMath::Vector4 FBXParser::ConvertVector4(fbxsdk::FbxVector4 v4)
 {
 	// xyzw -> xzyw
@@ -140,18 +122,6 @@ inline DirectX::SimpleMath::Vector4 FBXParser::ConvertVector4(fbxsdk::FbxVector4
 		static_cast<float>(v4.mData[0]),
 		static_cast<float>(v4.mData[2]),
 		static_cast<float>(v4.mData[1]),
-		static_cast<float>(v4.mData[3])
-	);
-}
-
-inline DirectX::SimpleMath::Vector4 FBXParser::NoConvertVector4(fbxsdk::FbxVector4 v4)
-{
-	// xyzw -> xzyw
-	return DirectX::SimpleMath::Vector4
-	(
-		static_cast<float>(v4.mData[0]),
-		static_cast<float>(v4.mData[1]),
-		static_cast<float>(v4.mData[2]),
 		static_cast<float>(v4.mData[3])
 	);
 }
@@ -170,23 +140,6 @@ inline DirectX::SimpleMath::Matrix FBXParser::ConvertMatrix(fbxsdk::FbxMatrix ma
 		ConvertVector4(r3),
 		ConvertVector4(r2),
 		ConvertVector4(r4)
-	);
-}
-
-inline DirectX::SimpleMath::Matrix FBXParser::NoConvertMatrix(fbxsdk::FbxMatrix matrix)
-{
-	FbxVector4 r1 = matrix.GetRow(0);
-	FbxVector4 r2 = matrix.GetRow(1);
-	FbxVector4 r3 = matrix.GetRow(2);
-	FbxVector4 r4 = matrix.GetRow(3);
-
-	// 2행, 3행 변경..
-	return DirectX::SimpleMath::Matrix
-	(
-		ConvertVector4(r1),
-		ConvertVector4(r3),
-		ConvertVector4(r2),
-		NoConvertVector4(r4)
 	);
 }
 

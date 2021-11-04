@@ -16,10 +16,10 @@ public:
 	~ASEParser();
 
 public:
-	void Initialize();
-	void SetTextureRoute(std::string texRoute);
-	void Release();
-	ParserData::Model* LoadModel(std::string fileName);
+	void Initialize() override;
+	void SetTextureRoute(std::string texRoute) override;
+	void Release() override;
+	ParserData::Model* LoadModel(std::string fileName) override;
 
 	void OptimizeVertex(ParserData::ASEMesh* pMesh);		// 버텍스(노말), 텍스쳐 값으로 최적화를 해 준다.
 	void RecombinationTM(ParserData::ASEMesh* pMesh);
@@ -28,8 +28,10 @@ public:
 
 	void CreateModel();
 	void ResetData();
-public:
+
+private:
 	ParserData::Model* m_Model;
+	std::vector<ParserData::Model*> m_ModelList;
 
 private:
 	// 토큰을 구별해내기 위한 스트링
@@ -89,31 +91,3 @@ private:
 	void Create_OneVertex_to_list();
 	void Create_BoneData_to_list();
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

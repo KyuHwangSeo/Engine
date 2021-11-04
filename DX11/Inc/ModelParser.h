@@ -13,7 +13,7 @@
 
 class ModelParser
 {
-public:
+protected:
 	ModelParser() = default;
 	virtual ~ModelParser() = default;
 

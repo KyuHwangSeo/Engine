@@ -34,6 +34,38 @@ void ASEParser::SetTextureRoute(std::string texRoute)
 void ASEParser::Release()
 {
 	SAFE_DELETE(m_lexer);
+
+	for (Model* model : m_ModelList)
+	{
+		for (Mesh* mesh : model->m_MeshList)
+		{
+			ASEMesh* aseMesh = static_cast<ASEMesh*>(mesh);
+
+			for (TVertex* tvertex : aseMesh->m_Mesh_TVertex)
+			{
+				SAFE_DELETE(tvertex);
+			}
+			for (Bone* bone : aseMesh->m_BoneList)
+			{
+				SAFE_DELETE(bone);
+			}
+			for (Face* face : aseMesh->m_MeshFace)
+			{
+				SAFE_DELETE(face);
+			}
+			for (Vertex* vertex : aseMesh->m_VertexList)
+			{
+				SAFE_DELETE(vertex);
+			}
+			for (IndexList* index : aseMesh->m_IndexList)
+			{
+				SAFE_DELETE(index);
+			}
+			aseMesh->m_MeshFace.clear();
+			aseMesh->m_VertexList.clear();
+			aseMesh->m_IndexList.clear();
+		}
+	}
 }
 
 ParserData::Model* ASEParser::LoadModel(std::string fileName)
@@ -63,7 +95,7 @@ ParserData::Model* ASEParser::LoadModel(std::string fileName)
 void ASEParser::OptimizeVertex(ASEMesh* pMesh)
 {
 	bool new_VertexSet = true;
-	unsigned int resize_VertexIndex = pMesh->m_VertexList.size();
+	size_t resize_VertexIndex = pMesh->m_VertexList.size();
 
 	// 각각 Face마다 존재하는 3개의 Vertex 비교..
 	for (unsigned int i = 0; i < pMesh->m_MeshFace.size(); i++)
@@ -109,7 +141,7 @@ void ASEParser::OptimizeVertex(ASEMesh* pMesh)
 				// 추가된 Vertex가 있다면 체크..
 				if (resize_VertexIndex > pMesh->m_VertexList.size())
 				{
-					for (unsigned int k = pMesh->m_VertexList.size(); k < resize_VertexIndex; k++)
+					for (size_t k = pMesh->m_VertexList.size(); k < resize_VertexIndex; k++)
 					{
 						// 새로 추가한 Vertex와 동일한 데이터를 갖고있는 Face 내의 Vertex Index 수정..
 						if ((pMesh->m_VertexList[k]->m_Indices == pMesh->m_MeshFace[i]->m_VertexIndex[j]) &&
@@ -154,7 +186,7 @@ void ASEParser::OptimizeVertex(ASEMesh* pMesh)
 					}
 
 					pMesh->m_VertexList.push_back(newVertex);
-					pMesh->m_MeshFace[i]->m_VertexIndex[j] = resize_VertexIndex;
+					pMesh->m_MeshFace[i]->m_VertexIndex[j] = (int)resize_VertexIndex;
 					resize_VertexIndex++;
 				}
 			}
@@ -344,6 +376,7 @@ void ASEParser::CreateModel()
 {
 	m_Model = nullptr; 
 	m_Model = new Model();
+	m_ModelList.push_back(m_Model);
 }
 
 void ASEParser::ResetData()

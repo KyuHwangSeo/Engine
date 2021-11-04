@@ -13,7 +13,7 @@
 
 class ImageParser
 {
-public:
+protected:
 	ImageParser() = default;
 	virtual ~ImageParser() = default;
 
