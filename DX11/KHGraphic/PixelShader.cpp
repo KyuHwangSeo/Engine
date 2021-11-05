@@ -1,5 +1,5 @@
 #include "PixelShader.h"
-#include "ShaderResourceHash.h"
+#include "ResourceBufferHashTable.h"
 #include <d3dcompiler.h>
 #include <sstream>
 #include <fstream>
@@ -65,7 +65,7 @@ void PixelShader::LoadShader(std::string fileName)
 			m_Device->CreateBuffer(&cBufferDesc, nullptr, constantBuffer.GetAddressOf());
 
 			// Constant Buffer Hash Code..
-			size_t hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::ResourceType::CBUFFER, bufferDesc.Name);
+			size_t hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::BufferType::CBUFFER, bufferDesc.Name);
 
 			// Key (Constant Buffer HashCode) && Value (Register Slot, Constant Buffer)
 			m_ConstantBuffers.push_back(constantBuffer);
@@ -93,16 +93,16 @@ void PixelShader::LoadShader(std::string fileName)
 		case D3D_SIT_TEXTURE:
 		{
 			// SRV Hash Code..
-			hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::ResourceType::SRV, bindDesc.Name);
+			hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::BufferType::SRV, bindDesc.Name);
 
-			m_SRVList.insert(std::make_pair(hash_key, ShaderResourceView(bindDesc.Name, bindDesc.BindPoint)));
+			m_SRVList.insert(std::make_pair(hash_key, ShaderResourceBuffer(bindDesc.Name, bindDesc.BindPoint)));
 			srv_size = bindDesc.BindPoint;
 		}
 			break;
 		case D3D_SIT_SAMPLER:
 		{
 			// Constant Buffer Hash Code..
-			hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::ResourceType::SAMPLER, bindDesc.Name);
+			hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::BufferType::SAMPLER, bindDesc.Name);
 
 			m_SamplerList.insert(std::make_pair(hash_key, SamplerState(bindDesc.Name, bindDesc.BindPoint)));
 			sampler_size = bindDesc.BindPoint;

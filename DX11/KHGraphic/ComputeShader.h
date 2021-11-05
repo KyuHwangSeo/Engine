@@ -59,10 +59,10 @@ private:
 	std::unordered_map<Hash_Code, SamplerState> m_SamplerList;
 
 	// ComputeShader ShaderResourceView List..
-	std::unordered_map<Hash_Code, ShaderResourceView> m_SRVList;
+	std::unordered_map<Hash_Code, ShaderResourceBuffer> m_SRVList;
 
 	// ComputeShader UnorderedAccessView List..
-	std::unordered_map<Hash_Code, UnorderedAccessView> m_UAVList;
+	std::unordered_map<Hash_Code, UnorderedAccessBuffer> m_UAVList;
 };
 
 template<typename T>
@@ -116,7 +116,7 @@ template<typename T>
 void ComputeShader::SetShaderResourceView(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv)
 {
 	// 해당 Value 찾기..
-	std::unordered_map<Hash_Code, ShaderResourceView>::iterator it = m_SRVList.find(typeid(T).hash_code());
+	std::unordered_map<Hash_Code, ShaderResourceBuffer>::iterator it = m_SRVList.find(typeid(T).hash_code());
 
 	// 해당 Key에 대한 Value가 없다면..
 	if (it == m_SRVList.end())
@@ -133,7 +133,7 @@ template<typename T>
 void ComputeShader::SetUnorderedAccessView(Microsoft::WRL::ComPtr<ID3D11UnorderedAccessView> uav)
 {
 	// 해당 Value 찾기..
-	std::unordered_map<Hash_Code, UnorderedAccessView>::iterator it = m_UAVList.find(typeid(T).hash_code());
+	std::unordered_map<Hash_Code, UnorderedAccessBuffer>::iterator it = m_UAVList.find(typeid(T).hash_code());
 
 	// 해당 Key에 대한 Value가 없다면..
 	if (it == m_UAVList.end())

@@ -1,46 +1,11 @@
-#pragma once
-#include <unordered_map>
-#include "ConstantBufferDefine.h"
-#include "SamplerStateDefine.h"
-#include "ShaderResourceViewDefine.h"
-#include "UnorderedAccessViewDefine.h"
+#include "ResourceBufferHashTable.h"
 
-typedef size_t Hash_Code;
+std::unordered_map<std::string, Hash_Code> ShaderResourceHashTable::g_CBuffer_HashTable;
+std::unordered_map<std::string, Hash_Code> ShaderResourceHashTable::g_Sampler_HashTable;
+std::unordered_map<std::string, Hash_Code> ShaderResourceHashTable::g_SRV_HashTable;
+std::unordered_map<std::string, Hash_Code> ShaderResourceHashTable::g_UAV_HashTable;
 
-/// 
-/// ConstantBufferHashTable Class
-/// 
-/// - ConstantBuffer Struct 기준 Hash Code 키값으로 설정하기 위한 Class
-/// - Shader Reflect Load 시 Description과 비교하기 위해 필요하므로 Shader Load 전에 초기화 필수
-///
-
-class ShaderResourceHashTable
-{
-public:
-	enum ResourceType
-	{
-		CBUFFER,
-		SAMPLER,
-		SRV,
-		UAV
-	};
-
-public:
-	static std::unordered_map<std::string, Hash_Code> g_CBuffer_HashTable;
-	static std::unordered_map<std::string, Hash_Code> g_Sampler_HashTable;
-	static std::unordered_map<std::string, Hash_Code> g_SRV_HashTable;
-	static std::unordered_map<std::string, Hash_Code> g_UAV_HashTable;
-
-	// 해당 Resource Hash Table 생성 함수..
-	static void Initialize();
-
-	// Hash Table Reset 함수..
-	static void Reset();
-
-	static size_t FindHashCode(ResourceType type, std::string cBufName);
-};
-
-inline void ShaderResourceHashTable::Initialize()
+void ShaderResourceHashTable::Initialize()
 {
 	// Constant Buffer Hash Table Create..
 	g_CBuffer_HashTable.insert(std::make_pair(cbPerObject::GetName(), cbPerObject::GetHashCode()));
@@ -63,7 +28,7 @@ inline void ShaderResourceHashTable::Initialize()
 	g_Sampler_HashTable.insert(std::make_pair(samWrapMinLinear::GetName(), samWrapMinLinear::GetHashCode()));
 	g_Sampler_HashTable.insert(std::make_pair(samWrapAnisotropic::GetName(), samWrapAnisotropic::GetHashCode()));
 	g_Sampler_HashTable.insert(std::make_pair(samClampMinLinear::GetName(), samClampMinLinear::GetHashCode()));
-	
+
 	// Shader Resource View Hash Table Create..
 	g_SRV_HashTable.insert(std::make_pair(gDiffuseMap::GetName(), gDiffuseMap::GetHashCode()));
 	g_SRV_HashTable.insert(std::make_pair(gNormalMap::GetName(), gNormalMap::GetHashCode()));
@@ -87,7 +52,7 @@ inline void ShaderResourceHashTable::Initialize()
 	g_UAV_HashTable.insert(std::make_pair(gOutput::GetName(), gOutput::GetHashCode()));
 }
 
-inline void ShaderResourceHashTable::Reset()
+void ShaderResourceHashTable::Reset()
 {
 	g_CBuffer_HashTable.clear();
 	g_Sampler_HashTable.clear();
@@ -95,13 +60,13 @@ inline void ShaderResourceHashTable::Reset()
 	g_UAV_HashTable.clear();
 }
 
-inline size_t ShaderResourceHashTable::FindHashCode(ResourceType type, std::string cBufName)
+size_t ShaderResourceHashTable::FindHashCode(BufferType type, std::string cBufName)
 {
 	std::unordered_map<std::string, Hash_Code>::iterator cHash;
 
 	switch (type)
 	{
-	case ResourceType::CBUFFER:
+	case BufferType::CBUFFER:
 	{
 		cHash = g_CBuffer_HashTable.find(cBufName);
 
@@ -111,8 +76,8 @@ inline size_t ShaderResourceHashTable::FindHashCode(ResourceType type, std::stri
 			return 0;
 		}
 	}
-		break;
-	case ResourceType::SAMPLER:
+	break;
+	case BufferType::SAMPLER:
 	{
 		cHash = g_Sampler_HashTable.find(cBufName);
 
@@ -123,7 +88,7 @@ inline size_t ShaderResourceHashTable::FindHashCode(ResourceType type, std::stri
 		}
 	}
 	break;
-	case ResourceType::SRV:
+	case BufferType::SRV:
 	{
 		cHash = g_SRV_HashTable.find(cBufName);
 
@@ -133,8 +98,8 @@ inline size_t ShaderResourceHashTable::FindHashCode(ResourceType type, std::stri
 			return 0;
 		}
 	}
-		break;
-	case ResourceType::UAV:
+	break;
+	case BufferType::UAV:
 	{
 		cHash = g_UAV_HashTable.find(cBufName);
 
@@ -144,13 +109,13 @@ inline size_t ShaderResourceHashTable::FindHashCode(ResourceType type, std::stri
 			return 0;
 		}
 	}
-		break;
+	break;
 	default:
 	{
 		throw std::exception("ERROR: Can not find Resource Type.\n");
 		return 0;
 	}
-		break;
+	break;
 	}
 
 

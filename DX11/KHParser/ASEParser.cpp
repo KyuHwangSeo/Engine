@@ -914,6 +914,7 @@ void ASEParser::DataParsing()
 			break;
 		case TOKENR_CONTROL_SCALE_SAMPLE:
 		{
+			m_Animation->m_AniData.back()->m_Scale = Parsing_ChangeNumberVector3();
 			//m_animation->m_scale.push_back(new CAnimation_scl);
 			//m_animation->m_scale.back()->m_time = (Parsing_NumberFloat() / m_OneMesh->m_scenedata.m_ticksperframe) - m_OneMesh->m_scenedata.m_firstframe;
 			//m_animation->m_scale.back()->m_scale = Parsing_ChangeNumberVector3();
@@ -954,8 +955,6 @@ void ASEParser::DataParsing()
 		i++;
 		if (i > 1000000)
 		{
-			// 루프를 1000000번이상이나 돌 이유가 없다. (데이터가 100000개가 아닌이상)
-			// 만약 1000000이상 돌았다면 확실히 뭔가 문제가 있는 것이므로
 			TRACE("루프를 백만번 돌았습니다!");
 			return;
 		}

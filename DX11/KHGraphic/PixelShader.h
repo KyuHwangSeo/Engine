@@ -45,14 +45,14 @@ private:
 	// 연속된 메모리 공간에 있는 ShaderResourceView List..
 	std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> m_ShaderResourceViews;
 
-	// PixelShader ConstantBuffer List..
-	std::unordered_map<Hash_Code, ConstantBuffer> m_ConstantBufferList;
-
 	// PixelShader SamplerState List..
 	std::unordered_map<Hash_Code, SamplerState> m_SamplerList;
 
+	// PixelShader ConstantBuffer List..
+	std::unordered_map<Hash_Code, ConstantBuffer> m_ConstantBufferList;
+
 	// PixelShader ShaderResourceView List..
-	std::unordered_map<Hash_Code, ShaderResourceView> m_SRVList;
+	std::unordered_map<Hash_Code, ShaderResourceBuffer> m_SRVList;
 };
 
 template<typename T>
@@ -106,7 +106,7 @@ template<typename T>
 void PixelShader::SetShaderResourceView(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv)
 {
 	// 해당 Value 찾기..
-	std::unordered_map<Hash_Code, ShaderResourceView>::iterator it = m_SRVList.find(typeid(T).hash_code());
+	std::unordered_map<Hash_Code, ShaderResourceBuffer>::iterator it = m_SRVList.find(typeid(T).hash_code());
 
 	// 해당 Key에 대한 Value가 없다면..
 	if (it == m_SRVList.end())

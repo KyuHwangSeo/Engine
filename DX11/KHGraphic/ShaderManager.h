@@ -1,5 +1,6 @@
 #pragma once
 #include "ShaderManagerBase.h"
+#include "ShaderBase.h"
 
 class ShaderManager : public IShaderManager
 {

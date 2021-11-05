@@ -38,20 +38,20 @@ struct SamplerState : public ShaderResourceBase
 };
 
 // ShaderResourceView Resource Data Class
-struct ShaderResourceView : public ShaderResourceBase
+struct ShaderResourceBuffer : public ShaderResourceBase
 {
-	ShaderResourceView(std::string name, unsigned int rNum) : ShaderResourceBase(name, rNum) {}
-	~ShaderResourceView() { RESET_COM(srv); }
+	ShaderResourceBuffer(std::string name, unsigned int rNum) : ShaderResourceBase(name, rNum) {}
+	~ShaderResourceBuffer() { RESET_COM(srv); }
 
 	// Shader Resource View Resource
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv;
 };
 
 // UnorderedAccessView Resource Data Class
-struct UnorderedAccessView : public ShaderResourceBase
+struct UnorderedAccessBuffer : public ShaderResourceBase
 {
-	UnorderedAccessView(std::string name, unsigned int rNum) : ShaderResourceBase(name, rNum) {}
-	~UnorderedAccessView() { RESET_COM(uav); }
+	UnorderedAccessBuffer(std::string name, unsigned int rNum) : ShaderResourceBase(name, rNum) {}
+	~UnorderedAccessBuffer() { RESET_COM(uav); }
 
 	// Unordered Access View Resource
 	Microsoft::WRL::ComPtr<ID3D11UnorderedAccessView> uav;

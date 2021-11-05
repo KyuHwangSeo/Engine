@@ -1,10 +1,18 @@
 #pragma once
 #include <wrl.h>
-#include <wrl/client.h>
+#include <d3d11.h>
 #include <unordered_map>
 #include <variant>
-#include <d3d11.h>
-#include "EnumDefine.h"
+
+typedef size_t Hash_Code;
+
+// Shader Type Enum Class..
+enum class ShaderType
+{
+	VERTEX,
+	PIXEL,
+	COMPUTE
+};
 
 class IShader;
 class VertexShader;
@@ -32,7 +40,7 @@ protected:
 	IShader(ShaderType shaderType) : m_ShaderType(shaderType) {}
 	virtual ~IShader() = default;
 
-protected:
+public:
 	// Device & Context..
 	static Microsoft::WRL::ComPtr<ID3D11Device> m_Device;
 	static Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_DeviceContext;

@@ -5,7 +5,7 @@
 #include "ComputeShader.h"
 #include "ShaderManager.h"
 
-#include "ShaderResourceHash.h"
+#include "ResourceBufferHashTable.h"
 
 using namespace Microsoft::WRL;
 

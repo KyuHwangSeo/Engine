@@ -1,5 +1,5 @@
 #include "VertexShader.h"
-#include "ShaderResourceHash.h"
+#include "ResourceBufferHashTable.h"
 #include <d3dcompiler.h>
 #include <sstream>
 #include <fstream>
@@ -114,7 +114,7 @@ void VertexShader::LoadShader(std::string fileName)
 			m_Device->CreateBuffer(&cBufferDesc, nullptr, constantBuffer.GetAddressOf());
 
 			// Constant Buffer Hash Code..
-			size_t hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::ResourceType::CBUFFER, bufferDesc.Name);
+			size_t hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::BufferType::CBUFFER, bufferDesc.Name);
 
 			// Key (Constant Buffer HashCode) && Value (Register Slot, Constant Buffer)
 			m_ConstantBuffers.push_back(constantBuffer);

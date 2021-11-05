@@ -4,6 +4,10 @@
 #include "PixelShader.h"
 #include "ComputeShader.h"
 
+Microsoft::WRL::ComPtr<ID3D11Device> IShader::m_Device = nullptr;
+Microsoft::WRL::ComPtr<ID3D11DeviceContext> IShader::m_DeviceContext = nullptr;
+std::string IShader::m_ShaderRoute;
+
 void IShader::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, Microsoft::WRL::ComPtr<ID3D11DeviceContext> context)
 {
 	m_Device = device;
