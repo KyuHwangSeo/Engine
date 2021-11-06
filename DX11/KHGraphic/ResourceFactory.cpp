@@ -1,6 +1,7 @@
 #include <wrl.h>
 #include <d3d11.h>
 #include <vector>
+#include "DirectDefine.h"
 #include "ResourceFactory.h"
 #include "MacroDefine.h"
 #include "Texture2D.h"
@@ -9,11 +10,14 @@
 #include "UnorderedAccessView.h"
 #include "DepthStecilView.h"
 #include "ResourceManager.h"
- 
-GraphicResourceFactory::GraphicResourceFactory(GraphicResourceManager* manager)
-	:m_ResourceManager(manager)
+#include "VertexDefine.h"
+#include "DDSTextureLoader.h"
+#include "WICTextureLoader.h"
+
+GraphicResourceFactory::GraphicResourceFactory(IGraphicResourceManager* manager)
 {
-	m_Device = m_ResourceManager->GetDevie();
+	m_ResourceManager = reinterpret_cast<GraphicResourceManager*>(manager);
+	m_Device = m_ResourceManager->GetDevice();
 	m_SwapChain = m_ResourceManager->GetSwapChain();
 }
 
@@ -22,10 +26,10 @@ GraphicResourceFactory::~GraphicResourceFactory()
 
 }
 
-Microsoft::WRL::ComPtr<ID3D11Texture2D> GraphicResourceFactory::CreateBackBuffer(UINT width, UINT height, DXGI_FORMAT format, UINT swapchainflags)
+Microsoft::WRL::ComPtr<ID3D11Texture2D> GraphicResourceFactory::CreateBackBuffer(UINT width, UINT height)
 {
 	// Swap Chain, Render Target View Resize
-	HR(m_SwapChain->ResizeBuffers(1, (UINT)width, (UINT)height, format, swapchainflags));
+	HR(m_SwapChain->ResizeBuffers(1, (UINT)width, (UINT)height, DXGI_FORMAT_R8G8B8A8_UNORM, 0));
 
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer = nullptr;
 
@@ -111,15 +115,140 @@ Microsoft::WRL::ComPtr<ID3D11DepthStencilState> GraphicResourceFactory::CreateDS
 	// DepthStencilState 생성..
 	HR(m_Device->CreateDepthStencilState(dssDesc, dss.GetAddressOf()));
 
+	m_ResourceManager->AddResource(dss);
+
 	return dss;
 }
 
-Microsoft::WRL::ComPtr<ID3D11RasterizerState> GraphicResourceFactory::CreateRSS(D3D11_RASTERIZER_DESC* rssDesc)
+Microsoft::WRL::ComPtr<ID3D11RasterizerState> GraphicResourceFactory::CreateRS(D3D11_RASTERIZER_DESC* rsDesc)
 {
-	Microsoft::WRL::ComPtr<ID3D11RasterizerState> rss = nullptr;
+	Microsoft::WRL::ComPtr<ID3D11RasterizerState> rs = nullptr;
 
-	// DepthStencilState 생성..
-	HR(m_Device->CreateRasterizerState(rssDesc, rss.GetAddressOf()));
+	// RasterizerState 생성..
+	HR(m_Device->CreateRasterizerState(rsDesc, rs.GetAddressOf()));
 
-	return rss;
+	m_ResourceManager->AddResource(rs);
+	
+	return rs;
+}
+
+Microsoft::WRL::ComPtr<ID3D11BlendState> GraphicResourceFactory::CreateBS(D3D11_BLEND_DESC* bsDesc)
+{
+	Microsoft::WRL::ComPtr<ID3D11BlendState> bs = nullptr;
+
+	// BlendState 생성..
+	HR(m_Device->CreateBlendState(bsDesc, bs.GetAddressOf()));
+
+	m_ResourceManager->AddResource(bs);
+	
+	return bs;
+}
+
+Indexbuffer* GraphicResourceFactory::CreateIndexBuffer(ParserData::Mesh* mesh)
+{
+	// 새로운 IndexBufferData 생성..
+	Indexbuffer* iBuffer = new Indexbuffer();
+
+	ID3D11Buffer* IB = nullptr;
+
+	// Face Count..
+	size_t iCount = mesh->m_IndexList.size();
+
+	std::vector<UINT> indices(iCount * 3);
+	for (UINT i = 0; i < iCount; ++i)
+	{
+		indices[i * 3 + 0] = mesh->m_IndexList[i]->m_Index[0];
+		indices[i * 3 + 1] = mesh->m_IndexList[i]->m_Index[1];
+		indices[i * 3 + 2] = mesh->m_IndexList[i]->m_Index[2];
+	}
+
+	// 새로운 IndexBuffer 생성..
+	D3D11_BUFFER_DESC ibd;
+	ibd.Usage = D3D11_USAGE_IMMUTABLE;
+	ibd.ByteWidth = sizeof(UINT) * iCount * 3;
+	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	ibd.CPUAccessFlags = 0;
+	ibd.MiscFlags = 0;
+	D3D11_SUBRESOURCE_DATA iinitData;
+	iinitData.pSysMem = &indices[0];
+	HR(m_Device->CreateBuffer(&ibd, &iinitData, &IB));
+
+	// 넘겨줘야할 IndexBufferData 삽입..
+	iBuffer->Count = iCount * 3;
+	iBuffer->IndexBufferPointer = IB;
+	iBuffer->size = sizeof(ID3D11Buffer);
+	
+	return iBuffer;
+}
+
+Vertexbuffer* GraphicResourceFactory::CreateVertexBuffer(ParserData::Mesh* mesh)
+{
+	// 새로운 VertexBufferData 생성..
+	Vertexbuffer* vBuffer = new Vertexbuffer();
+
+	ID3D11Buffer* VB = nullptr;
+
+	// Vertex Count..
+	int vCount = mesh->m_VertexList.size();
+
+	std::vector<NormalMapVertex> vertices(vCount);
+	for (UINT i = 0; i < vCount; i++)
+	{
+		vertices[i].Pos = mesh->m_VertexList[i]->m_Pos;
+
+		vertices[i].Normal = mesh->m_VertexList[i]->m_Normal;
+
+		vertices[i].Tex.x = mesh->m_VertexList[i]->m_U;
+		vertices[i].Tex.y = mesh->m_VertexList[i]->m_V;
+
+		vertices[i].Tangent = mesh->m_VertexList[i]->m_Tanget;
+	}
+
+	// 새로운 VertexBuffer 생성..
+	D3D11_BUFFER_DESC ibd;
+	ibd.Usage = D3D11_USAGE_IMMUTABLE;
+	ibd.ByteWidth = sizeof(UINT) * vCount;
+	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	ibd.CPUAccessFlags = 0;
+	ibd.MiscFlags = 0;
+	D3D11_SUBRESOURCE_DATA iinitData;
+	iinitData.pSysMem = &vertices[0];
+	HR(m_Device->CreateBuffer(&ibd, &iinitData, &VB));
+
+	// 넘겨줘야할 VertexBufferData 삽입..
+	vBuffer->Count = vCount;
+	vBuffer->VertexbufferPointer = VB;
+	vBuffer->size = sizeof(ID3D11Buffer);
+
+	return vBuffer;
+}
+
+TextureBuffer* GraphicResourceFactory::CreateTextureBuffer(std::string path)
+{
+	TextureBuffer* tBuffer = new TextureBuffer();
+	
+	ID3D11Resource* texResource = nullptr;
+	ID3D11ShaderResourceView* newTex = nullptr;
+	
+	std::wstring wPath(path.begin(), path.end());
+	std::wstring file_extension(wPath);
+	size_t dotIndex = path.rfind(".");
+	file_extension = file_extension.substr(dotIndex, path.size() - dotIndex);
+
+	// 확장자에 따른 텍스처 파일 로드 방식..
+	if (file_extension.compare(L".dds") == 0)
+	{
+		//HR(CreateDDSTextureFromFile(m_Device.Get(), wPath.c_str(), &texResource, &newTex));
+	}
+	else
+	{
+		//HR(CreateWICTextureFromFile(m_Device.Get(), wPath.c_str(), &texResource, &newTex));
+	}
+
+	// 넘겨줘야할 TextureBufferData 삽입..
+	tBuffer->TextureBufferPointer = newTex;
+	tBuffer->size = sizeof(ID3D11ShaderResourceView);
+	texResource->Release();
+
+	return tBuffer;
 }

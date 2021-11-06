@@ -5,10 +5,13 @@ class IResource
 public:
 	enum class ResourceType
 	{
-		RTV,
-		SRV,
-		UAV,
-		DSV
+		RTV,	// RenderTargetView
+		SRV,	// ShaderResourceView
+		UAV,	// UnorderedResourceView
+		DSV,	// DepthStencilView
+		DSS,	// DepthStencilState
+		RS,		// RasterizerState
+		BS		// BlendState
 	};
 
 public:

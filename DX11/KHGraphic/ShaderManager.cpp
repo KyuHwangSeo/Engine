@@ -7,11 +7,18 @@
 
 #include "ResourceBufferHashTable.h"
 
+#include "Texture2D.h"
+#include "RenderTargetView.h"
+#include "ShaderResourceView.h"
+#include "UnorderedAccessView.h"
+#include "DepthStecilView.h"
+#include "ResourceManager.h"
+
 using namespace Microsoft::WRL;
 
-ShaderManager::ShaderManager()
+ShaderManager::ShaderManager(IGraphicResourceManager* manager)
 {
-
+	m_ResourceManager = reinterpret_cast<GraphicResourceManager*>(manager);
 }
 
 ShaderManager::~ShaderManager()
@@ -19,7 +26,7 @@ ShaderManager::~ShaderManager()
 
 }
 
-void ShaderManager::Initialize(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> context)
+void ShaderManager::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, Microsoft::WRL::ComPtr<ID3D11DeviceContext> context)
 {
 	// Shader Global Initialize..
 	IShader::Initialize(device, context);
@@ -64,8 +71,9 @@ void ShaderManager::CreateSampler(ComPtr<ID3D11Device> device)
 	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-	device->CreateSamplerState(&samplerDesc, &samplerState);
-	m_SamplerList.insert(std::make_pair(samClampMinLinear::GetHashCode(), samplerState));
+	HR(device->CreateSamplerState(&samplerDesc, &samplerState));
+	m_SamplerHashList.push_back(samClampMinLinear::GetHashCode());
+	m_ResourceManager->AddResource(samplerState);
 
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
@@ -76,8 +84,9 @@ void ShaderManager::CreateSampler(ComPtr<ID3D11Device> device)
 	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-	device->CreateSamplerState(&samplerDesc, &samplerState);
-	m_SamplerList.insert(std::make_pair(samWrapAnisotropic::GetHashCode(), samplerState));
+	HR(device->CreateSamplerState(&samplerDesc, &samplerState));
+	m_SamplerHashList.push_back(samWrapAnisotropic::GetHashCode());
+	m_ResourceManager->AddResource(samplerState);
 
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -89,8 +98,9 @@ void ShaderManager::CreateSampler(ComPtr<ID3D11Device> device)
 	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-	device->CreateSamplerState(&samplerDesc, &samplerState);
-	m_SamplerList.insert(std::make_pair(samWrapMinLinear::GetHashCode(), samplerState));
+	HR(device->CreateSamplerState(&samplerDesc, &samplerState));
+	m_SamplerHashList.push_back(samWrapMinLinear::GetHashCode());
+	m_ResourceManager->AddResource(samplerState);
 
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -101,8 +111,9 @@ void ShaderManager::CreateSampler(ComPtr<ID3D11Device> device)
 	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-	device->CreateSamplerState(&samplerDesc, &samplerState);
-	m_SamplerList.insert(std::make_pair(samMirrorMinLinear::GetHashCode(), samplerState));
+	HR(device->CreateSamplerState(&samplerDesc, &samplerState));
+	m_SamplerHashList.push_back(samMirrorMinLinear::GetHashCode());
+	m_ResourceManager->AddResource(samplerState);
 
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
@@ -113,8 +124,9 @@ void ShaderManager::CreateSampler(ComPtr<ID3D11Device> device)
 	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-	device->CreateSamplerState(&samplerDesc, &samplerState);
-	m_SamplerList.insert(std::make_pair(samClampMinLinearPoint::GetHashCode(), samplerState));
+	HR(device->CreateSamplerState(&samplerDesc, &samplerState));
+	m_SamplerHashList.push_back(samClampMinLinearPoint::GetHashCode());
+	m_ResourceManager->AddResource(samplerState);
 
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
@@ -126,8 +138,9 @@ void ShaderManager::CreateSampler(ComPtr<ID3D11Device> device)
 	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-	device->CreateSamplerState(&samplerDesc, &samplerState);
-	m_SamplerList.insert(std::make_pair(samBorderLinerPoint::GetHashCode(), samplerState));
+	HR(device->CreateSamplerState(&samplerDesc, &samplerState));
+	m_SamplerHashList.push_back(samBorderLinerPoint::GetHashCode());
+	m_ResourceManager->AddResource(samplerState);
 
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
@@ -137,8 +150,9 @@ void ShaderManager::CreateSampler(ComPtr<ID3D11Device> device)
 	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-	device->CreateSamplerState(&samplerDesc, &samplerState);
-	m_SamplerList.insert(std::make_pair(samWrapLinerPoint::GetHashCode(), samplerState));
+	HR(device->CreateSamplerState(&samplerDesc, &samplerState));
+	m_SamplerHashList.push_back(samWrapLinerPoint::GetHashCode());
+	m_ResourceManager->AddResource(samplerState);
 
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT;
@@ -149,8 +163,9 @@ void ShaderManager::CreateSampler(ComPtr<ID3D11Device> device)
 	samplerDesc.ComparisonFunc = D3D11_COMPARISON_LESS;
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-	device->CreateSamplerState(&samplerDesc, &samplerState);
-	m_SamplerList.insert(std::make_pair(gShadowSam::GetHashCode(), samplerState));
+	HR(device->CreateSamplerState(&samplerDesc, &samplerState));
+	m_SamplerHashList.push_back(gShadowSam::GetHashCode());
+	m_ResourceManager->AddResource(samplerState);
 }
 
 void ShaderManager::CreateShader()
@@ -233,18 +248,18 @@ void ShaderManager::SetSampler()
 		case ShaderType::PIXEL:
 		{
 			PixelShader* pShader = reinterpret_cast<PixelShader*>(shader.second);
-			for (std::pair<Hash_Code, ComPtr<ID3D11SamplerState>> sampler : m_SamplerList)
+			for (size_t index = 0; index < m_SamplerHashList.size(); index++)
 			{
-				pShader->SetSamplerState(sampler.first, sampler.second);
+				pShader->SetSamplerState(m_SamplerHashList[index], m_ResourceManager->m_SSList[index]);
 			}
 		}
 		break;
 		case ShaderType::COMPUTE:
 		{
 			ComputeShader* cShader = reinterpret_cast<ComputeShader*>(shader.second);
-			for (std::pair<Hash_Code, ComPtr<ID3D11SamplerState>> sampler : m_SamplerList)
+			for (size_t index = 0; index < m_SamplerHashList.size(); index++)
 			{
-				cShader->SetSamplerState(sampler.first, sampler.second);
+				cShader->SetSamplerState(m_SamplerHashList[index], m_ResourceManager->m_SSList[index]);
 			}
 		}
 		break;

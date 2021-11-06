@@ -21,9 +21,12 @@ public:
 	void AddResource(T resource);
 
 	void AddBackBufferRTV(RenderTargetView* rtv) { m_BackBuffer = rtv; }
+	
+public:
+	friend class ShaderManager;
 
 public:
-	Microsoft::WRL::ComPtr<ID3D11Device> GetDevie() { return m_Device; }
+	Microsoft::WRL::ComPtr<ID3D11Device> GetDevice() { return m_Device; }
 	Microsoft::WRL::ComPtr<IDXGISwapChain> GetSwapChain() { return m_SwapChain; }
 
 private:
@@ -33,14 +36,23 @@ private:
 	// BackBuffer Àü¿ë RenderTargetView..
 	RenderTargetView* m_BackBuffer;
 
-	// RenderTargetView List..
+	/////////////////////////////////////////////////////////////////////////////////////////
+	// View Resource List
+	/////////////////////////////////////////////////////////////////////////////////////////
+
 	std::vector<RenderTargetView*> m_RTVList;
-	// ShaderResourceView List..
 	std::vector<ShaderResourceView*> m_SRVList;
-	// UnorderedAccessView List..
 	std::vector<UnorderedAccessView*> m_UAVList;
-	// DepthStecilView List..
-	std::vector<DepthStecilView*> m_DSVList;
+	std::vector<DepthStecilView*> m_DSVList; 
+
+	/////////////////////////////////////////////////////////////////////////////////////////
+	// State Resource List
+	/////////////////////////////////////////////////////////////////////////////////////////
+
+	std::vector<Microsoft::WRL::ComPtr<ID3D11DepthStencilState>> m_DSSList;
+	std::vector<Microsoft::WRL::ComPtr<ID3D11RasterizerState>> m_RSList;
+	std::vector<Microsoft::WRL::ComPtr<ID3D11BlendState>> m_BSList;
+	std::vector<Microsoft::WRL::ComPtr<ID3D11SamplerState>> m_SSList;
 };
 
 template<typename T>
@@ -57,3 +69,15 @@ inline void GraphicResourceManager::AddResource(UnorderedAccessView* resource)	{
 
 template<>
 inline void GraphicResourceManager::AddResource(DepthStecilView* resource)		{ m_DSVList.push_back(resource); }
+
+template<>
+inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11DepthStencilState> resource)		{ m_DSSList.push_back(resource); }
+
+template<>
+inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11RasterizerState> resource)			{ m_RSList.push_back(resource); }
+
+template<>
+inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11BlendState> resource)				{ m_BSList.push_back(resource); }
+
+template<>
+inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11SamplerState> resource)			{ m_SSList.push_back(resource); }

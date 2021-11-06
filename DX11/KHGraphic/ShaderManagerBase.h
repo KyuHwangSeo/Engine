@@ -1,4 +1,5 @@
 #pragma once
+#include "GraphicDLL.h"
 
 class IShader;
 class IShaderManager

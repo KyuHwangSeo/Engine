@@ -100,6 +100,12 @@
     <Filter Include="소스 파일\Resource\Base">
       <UniqueIdentifier>{956d33e9-ac39-4030-83ae-af2b8a8a8b93}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Resource\View">
+      <UniqueIdentifier>{b41d77db-812d-4ee8-8bb9-885c8256ee21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Resource\DepthStencil">
+      <UniqueIdentifier>{dbc4ffb5-c151-4b45-89fd-27241d9570e9}</UniqueIdentifier>
+    </Filter>
     <Filter Include="소스 파일\Resource\RenderTarget">
       <UniqueIdentifier>{2cfc6906-592c-4161-875c-fe18f83b81ae}</UniqueIdentifier>
     </Filter>
@@ -109,11 +115,11 @@
     <Filter Include="소스 파일\Resource\UnorderedAccess">
       <UniqueIdentifier>{36c9e475-2739-4328-9682-4e0e41cb697e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Resource\DepthStencil">
-      <UniqueIdentifier>{dbc4ffb5-c151-4b45-89fd-27241d9570e9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Resource\Texture2D">
       <UniqueIdentifier>{90ae1125-d012-4b28-88bf-256966469bce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Engine">
+      <UniqueIdentifier>{05d1b672-0e21-4ea7-bc78-b86be73fda33}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -168,9 +174,6 @@
     <ClInclude Include="RenderBase.h">
       <Filter>소스 파일\Renderer\Render\Base</Filter>
     </ClInclude>
-    <ClInclude Include="KHGraphic.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
     <ClInclude Include="DirectDefine.h">
       <Filter>소스 파일\Define</Filter>
     </ClInclude>
@@ -222,6 +225,18 @@
     <ClInclude Include="ResourceManagerBase.h">
       <Filter>소스 파일\Manager\Resource</Filter>
     </ClInclude>
+    <ClInclude Include="RenderManagerBase.h">
+      <Filter>소스 파일\Manager\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexDefine.h">
+      <Filter>소스 파일\Define</Filter>
+    </ClInclude>
+    <ClInclude Include="KHGraphic.h">
+      <Filter>소스 파일\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="KHGraphicBase.h">
+      <Filter>소스 파일\Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="D3D11Graphic.cpp">
@@ -244,9 +259,6 @@
     </ClCompile>
     <ClCompile Include="PixelShader.cpp">
       <Filter>소스 파일\Shader\ShaderClass\PixelShader</Filter>
-    </ClCompile>
-    <ClCompile Include="KHGraphic.cpp">
-      <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="dllmain.cpp">
       <Filter>헤더 파일</Filter>
@@ -277,6 +289,9 @@
     </ClCompile>
     <ClCompile Include="ResourceBufferHashTable.cpp">
       <Filter>소스 파일\Shader\HashTable</Filter>
+    </ClCompile>
+    <ClCompile Include="KHGraphic.cpp">
+      <Filter>소스 파일\Engine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

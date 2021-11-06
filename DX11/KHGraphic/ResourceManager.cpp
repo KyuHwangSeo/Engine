@@ -34,14 +34,22 @@ void GraphicResourceManager::OnResize(int width, int height)
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
 	ZeroMemory(&dsvDesc, sizeof(dsvDesc));
 
+	// Swap Chain, Render Target View Resize
+	HR(m_SwapChain->ResizeBuffers(1, (UINT)width, (UINT)height, DXGI_FORMAT_R8G8B8A8_UNORM, 0));
+
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer = m_BackBuffer->m_Resource;
+
+	// Get Swap Chain Back Buffer Pointer..
+	HR(m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(backBuffer.GetAddressOf())));
+
 	// BackBuffer Resize..
 	texDesc = m_BackBuffer->GetTextureDesc();
 	texDesc.Width = width;
 	texDesc.Width = height;
-	HR(m_Device->CreateTexture2D(&texDesc, 0, m_BackBuffer->m_Resource.GetAddressOf()));
+	HR(m_Device->CreateTexture2D(&texDesc, 0, backBuffer.GetAddressOf()));
 
 	rtvDesc = m_BackBuffer->GetDesc();
-	HR(m_Device->CreateRenderTargetView(m_BackBuffer->m_Resource.Get(), &rtvDesc, m_BackBuffer->m_RTV.GetAddressOf()));
+	HR(m_Device->CreateRenderTargetView(backBuffer.Get(), &rtvDesc, m_BackBuffer->m_RTV.GetAddressOf()));
 
 	// RenderTargetView Resize..
 	for (RenderTargetView* rtv : m_RTVList)

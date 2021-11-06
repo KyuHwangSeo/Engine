@@ -10,8 +10,13 @@ public:
 public:
 	void Initialize(HWND hwnd, int screenWidth, int screenHeight) override;
 
+public:
+	Microsoft::WRL::ComPtr<ID3D11Device> GetDevice()			{ return m_Device; }
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext> GetContext()	{ return m_DeviceContext; }
+	Microsoft::WRL::ComPtr<IDXGISwapChain> GetSwapChain()		{ return m_SwapChain; }
+
 private:
-	ComPtr<ID3D11Device> m_Device;
-	ComPtr<ID3D11DeviceContext> m_DeviceContext;
-	ComPtr<IDXGISwapChain> m_SwapChain;
+	Microsoft::WRL::ComPtr<ID3D11Device> m_Device;
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_DeviceContext;
+	Microsoft::WRL::ComPtr<IDXGISwapChain> m_SwapChain;
 };

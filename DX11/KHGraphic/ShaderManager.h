@@ -2,10 +2,12 @@
 #include "ShaderManagerBase.h"
 #include "ShaderBase.h"
 
+class IGraphicResourceManager;
+class GraphicResourceManager;
 class ShaderManager : public IShaderManager
 {
 public:
-	ShaderManager();
+	ShaderManager(IGraphicResourceManager* manager);
 	~ShaderManager();
 
 public:
@@ -22,8 +24,10 @@ private:
 	void SetSampler();
 
 private:
+	GraphicResourceManager* m_ResourceManager;
+
 	// SamplerState List
-	std::unordered_map<Hash_Code, Microsoft::WRL::ComPtr<ID3D11SamplerState>> m_SamplerList;
+	std::vector<Hash_Code> m_SamplerHashList;
 
 	// Shader List
 	std::unordered_map<std::string, IShader*> m_ShaderList;
