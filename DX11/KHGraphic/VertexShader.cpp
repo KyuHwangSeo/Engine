@@ -1,15 +1,17 @@
+#include "DirectDefine.h"
+#include "ShaderBase.h"
+#include "ShaderResourceBase.h"
 #include "VertexShader.h"
+
 #include "ResourceBufferHashTable.h"
-#include <d3dcompiler.h>
+#include "CompilerDefine.h"
 #include <sstream>
 #include <fstream>
-
-using namespace Microsoft::WRL;
 
 VertexShader::VertexShader(const char* fileName)
 	:IShader(ShaderType::VERTEX)
 {
-	LoadShader(m_ShaderRoute + fileName);
+	LoadShader(g_ShaderRoute + fileName);
 }
 
 VertexShader::~VertexShader()
@@ -31,7 +33,7 @@ void VertexShader::LoadShader(std::string fileName)
 	fin.read(&vS[0], size);
 	fin.close();
 
-	m_Device->CreateVertexShader(&vS[0], size, nullptr, &m_VS);
+	HR(g_Device->CreateVertexShader(&vS[0], size, nullptr, &m_VS));
 
 	D3DReflect(&vS[0], size, IID_ID3D11ShaderReflection, (void**)&pReflector);
 
@@ -85,7 +87,7 @@ void VertexShader::LoadShader(std::string fileName)
 		inputLayoutDesc.push_back(elementDesc);
 	}
 
-	m_Device->CreateInputLayout(&inputLayoutDesc[0], (UINT)inputLayoutDesc.size(), &vS[0], size, &m_InputLayout);
+	HR(g_Device->CreateInputLayout(&inputLayoutDesc[0], (UINT)inputLayoutDesc.size(), &vS[0], size, &m_InputLayout));
 
 	/// ConstantBuffer Reflection
 	// Vertex Shader ConstantBuffer..
@@ -111,7 +113,7 @@ void VertexShader::LoadShader(std::string fileName)
 			if (FAILED(register_slot))	break;
 
 			// 해당 Constant Buffer 생성..
-			m_Device->CreateBuffer(&cBufferDesc, nullptr, constantBuffer.GetAddressOf());
+			HR(g_Device->CreateBuffer(&cBufferDesc, nullptr, constantBuffer.GetAddressOf()));
 
 			// Constant Buffer Hash Code..
 			size_t hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::BufferType::CBUFFER, bufferDesc.Name);
@@ -128,11 +130,11 @@ void VertexShader::LoadShader(std::string fileName)
 void VertexShader::Update()
 {
 	// Vertex Shader 설정..
-	m_DeviceContext->VSSetShader(m_VS.Get(), nullptr, 0);
+	g_DeviceContext->VSSetShader(m_VS.Get(), nullptr, 0);
 
 	// Vertex Shader ConstantBuffer 설정..
-	m_DeviceContext->VSSetConstantBuffers(0, (UINT)m_ConstantBuffers.size(), m_ConstantBuffers[0].GetAddressOf());
+	g_DeviceContext->VSSetConstantBuffers(0, (UINT)m_ConstantBuffers.size(), m_ConstantBuffers[0].GetAddressOf());
 
 	// Shader InputLayout 설정.. 
-	m_DeviceContext->IASetInputLayout(m_InputLayout.Get());
+	g_DeviceContext->IASetInputLayout(m_InputLayout.Get());
 }

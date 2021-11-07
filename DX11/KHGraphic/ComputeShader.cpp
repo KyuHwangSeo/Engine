@@ -1,15 +1,17 @@
+#include "DirectDefine.h"
+#include "ShaderBase.h"
+#include "ShaderResourceBase.h"
 #include "ComputeShader.h"
+
 #include "ResourceBufferHashTable.h"
-#include <d3dcompiler.h>
+#include "CompilerDefine.h"
 #include <sstream>
 #include <fstream>
-
-using namespace Microsoft::WRL;
 
 ComputeShader::ComputeShader(const char* fileName)
 	:IShader(ShaderType::COMPUTE)
 {
-	LoadShader(m_ShaderRoute + fileName);
+	LoadShader(g_ShaderRoute + fileName);
 }
 
 ComputeShader::~ComputeShader()
@@ -31,7 +33,7 @@ void ComputeShader::LoadShader(std::string fileName)
 	fin.read(&cS[0], size);
 	fin.close();
 
-	m_Device->CreateComputeShader(&cS[0], size, nullptr, &m_CS);
+	HR(g_Device->CreateComputeShader(&cS[0], size, nullptr, &m_CS));
 
 	D3DReflect(&cS[0], size, IID_ID3D11ShaderReflection, (void**)&pReflector);
 
@@ -62,7 +64,7 @@ void ComputeShader::LoadShader(std::string fileName)
 			if (FAILED(register_slot))	break;
 
 			// 해당 Constant Buffer 생성..
-			m_Device->CreateBuffer(&cBufferDesc, nullptr, constantBuffer.GetAddressOf());
+			HR(g_Device->CreateBuffer(&cBufferDesc, nullptr, constantBuffer.GetAddressOf()));
 
 			// Constant Buffer Hash Code..
 			size_t hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::BufferType::CBUFFER, bufferDesc.Name);
@@ -134,17 +136,17 @@ void ComputeShader::LoadShader(std::string fileName)
 void ComputeShader::Update()
 {
 	// Compute Shader 연결..
-	m_DeviceContext->CSSetShader(m_CS.Get(), nullptr, 0);
+	g_DeviceContext->CSSetShader(m_CS.Get(), nullptr, 0);
 
 	// Compute Shader ShaderSampler 설정..
-	m_DeviceContext->CSSetSamplers(0, (UINT)m_SamplerStates.size(), m_SamplerStates[0].GetAddressOf());
+	g_DeviceContext->CSSetSamplers(0, (UINT)m_SamplerStates.size(), m_SamplerStates[0].GetAddressOf());
 
 	// Compute Shader ConstantBuffer 설정..
-	m_DeviceContext->CSSetConstantBuffers(0, (UINT)m_ConstantBuffers.size(), m_ConstantBuffers[0].GetAddressOf());
+	g_DeviceContext->CSSetConstantBuffers(0, (UINT)m_ConstantBuffers.size(), m_ConstantBuffers[0].GetAddressOf());
 
 	// Compute Shader ShaderResourceView 설정..
-	m_DeviceContext->CSSetShaderResources(0, (UINT)m_ShaderResourceViews.size(), m_ShaderResourceViews[0].GetAddressOf());
+	g_DeviceContext->CSSetShaderResources(0, (UINT)m_ShaderResourceViews.size(), m_ShaderResourceViews[0].GetAddressOf());
 
 	// Compute Shader UnorderedAccessView 설정..
-	m_DeviceContext->CSSetUnorderedAccessViews(0, (UINT)m_UnorderedAccessViews.size(), m_UnorderedAccessViews[0].GetAddressOf(), 0);
+	g_DeviceContext->CSSetUnorderedAccessViews(0, (UINT)m_UnorderedAccessViews.size(), m_UnorderedAccessViews[0].GetAddressOf(), 0);
 }

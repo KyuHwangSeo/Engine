@@ -160,12 +160,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ClassType.h" />
+    <ClInclude Include="CompilerDefine.h" />
     <ClInclude Include="ComputeShader.h" />
     <ClInclude Include="ConstantBufferDefine.h" />
     <ClInclude Include="D3D11Graphic.h" />
-    <ClInclude Include="Deferred.h" />
+    <ClInclude Include="DeferredRender.h" />
     <ClInclude Include="DepthStecilView.h" />
     <ClInclude Include="GraphicDLL.h" />
+    <ClInclude Include="LightRender.h" />
     <ClInclude Include="ResourceFactoryBase.h" />
     <ClInclude Include="RenderManagerBase.h" />
     <ClInclude Include="ResourceManagerBase.h" />
@@ -191,20 +193,24 @@
     <ClInclude Include="ShaderResourceBase.h" />
     <ClInclude Include="ResourceBufferHashTable.h" />
     <ClInclude Include="ShaderResourceViewDefine.h" />
-    <ClInclude Include="Shadow.h" />
+    <ClInclude Include="ShadowRender.h" />
+    <ClInclude Include="ToolKitDefine.h" />
     <ClInclude Include="UnorderedAccessView.h" />
     <ClInclude Include="UnorderedAccessViewDefine.h" />
     <ClInclude Include="VertexDefine.h" />
     <ClInclude Include="VertexShader.h" />
+    <ClInclude Include="ViewPort.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ComputeShader.cpp" />
     <ClCompile Include="D3D11Graphic.cpp" />
-    <ClCompile Include="Deferred.cpp" />
+    <ClCompile Include="DeferredRender.cpp" />
     <ClCompile Include="DepthStecilView.cpp" />
     <ClCompile Include="KHGraphic.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="LightRender.cpp" />
     <ClCompile Include="PixelShader.cpp" />
+    <ClCompile Include="RenderBase.cpp" />
     <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="RenderTargetView.cpp" />
     <ClCompile Include="ResourceFactory.cpp" />
@@ -213,9 +219,10 @@
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="ResourceBufferHashTable.cpp" />
     <ClCompile Include="ShaderResourceView.cpp" />
-    <ClCompile Include="Shadow.cpp" />
+    <ClCompile Include="ShadowRender.cpp" />
     <ClCompile Include="UnorderedAccessView.cpp" />
     <ClCompile Include="VertexShader.cpp" />
+    <ClCompile Include="ViewPort.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

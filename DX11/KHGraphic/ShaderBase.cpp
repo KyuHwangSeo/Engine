@@ -1,17 +1,19 @@
+#include "DirectDefine.h"
 #include "ShaderBase.h"
+#include "ShaderResourceBase.h"
 
 #include "VertexShader.h"
 #include "PixelShader.h"
 #include "ComputeShader.h"
 
-Microsoft::WRL::ComPtr<ID3D11Device> IShader::m_Device = nullptr;
-Microsoft::WRL::ComPtr<ID3D11DeviceContext> IShader::m_DeviceContext = nullptr;
-std::string IShader::m_ShaderRoute;
+Microsoft::WRL::ComPtr<ID3D11Device> IShader::g_Device = nullptr;
+Microsoft::WRL::ComPtr<ID3D11DeviceContext> IShader::g_DeviceContext = nullptr;
+std::string IShader::g_ShaderRoute;
 
 void IShader::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, Microsoft::WRL::ComPtr<ID3D11DeviceContext> context)
 {
-	m_Device = device;
-	m_DeviceContext = context;
+	g_Device = device;
+	g_DeviceContext = context;
 }
 
 IShader* IShader::CreateShader(ShaderType shaderType, const char* fileName)
@@ -40,13 +42,13 @@ IShader* IShader::CreateShader(ShaderType shaderType, const char* fileName)
 
 void IShader::Reset()
 {
-	m_Device.Reset();
-	m_DeviceContext.Reset();
+	g_Device.Reset();
+	g_DeviceContext.Reset();
 }
 
 void IShader::SetShaderRoute(std::string fileRoute)
 {
-	m_ShaderRoute = fileRoute;
+	g_ShaderRoute = fileRoute;
 }
 
 ShaderType IShader::GetType()

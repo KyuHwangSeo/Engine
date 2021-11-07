@@ -1,7 +1,5 @@
 #pragma once
 #include "ResourceBase.h"
-#include <wrl.h>
-#include <d3d11.h>
 
 class Texture2D : public IResource
 {

@@ -2,7 +2,6 @@
 #include "GraphicsEngine.h"
 #include "GraphicDLL.h"
 
-class D3D11Graphic;
 interface IRenderManager;
 interface IGraphicResourceManager;
 interface IGraphicResourceFactory;
@@ -25,8 +24,6 @@ public:
 	GRAPHIC_DLL TextureBuffer* CreateTextureBuffer(std::string path) override;
 
 private:
-	D3D11Graphic* m_Graphic;
-
 	IGraphicResourceFactory* m_ResourceFactory;
 
 	IGraphicResourceManager* m_ResourceMananger;

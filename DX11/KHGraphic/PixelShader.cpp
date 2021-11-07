@@ -1,15 +1,17 @@
+#include "DirectDefine.h"
+#include "ShaderBase.h"
+#include "ShaderResourceBase.h"
 #include "PixelShader.h"
+
 #include "ResourceBufferHashTable.h"
-#include <d3dcompiler.h>
+#include "CompilerDefine.h"
 #include <sstream>
 #include <fstream>
-
-using namespace Microsoft::WRL;
 
 PixelShader::PixelShader(const char* fileName)
 	:IShader(ShaderType::PIXEL)
 {
-	LoadShader(m_ShaderRoute + fileName);
+	LoadShader(g_ShaderRoute + fileName);
 }
 
 PixelShader::~PixelShader()
@@ -31,7 +33,7 @@ void PixelShader::LoadShader(std::string fileName)
 	fin.read(&pS[0], size);
 	fin.close();
 
-	m_Device->CreatePixelShader(&pS[0], size, nullptr, &m_PS);
+	HR(g_Device->CreatePixelShader(&pS[0], size, nullptr, &m_PS));
 
 	D3DReflect(&pS[0], size, IID_ID3D11ShaderReflection, (void**)&pReflector);
 
@@ -62,7 +64,7 @@ void PixelShader::LoadShader(std::string fileName)
 			if (FAILED(register_slot))	break;
 
 			// 해당 Constant Buffer 생성..
-			m_Device->CreateBuffer(&cBufferDesc, nullptr, constantBuffer.GetAddressOf());
+			HR(g_Device->CreateBuffer(&cBufferDesc, nullptr, constantBuffer.GetAddressOf()));
 
 			// Constant Buffer Hash Code..
 			size_t hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::BufferType::CBUFFER, bufferDesc.Name);
@@ -123,14 +125,14 @@ void PixelShader::LoadShader(std::string fileName)
 void PixelShader::Update()
 {
 	// Pixel Shader 연결..
-	m_DeviceContext->PSSetShader(m_PS.Get(), nullptr, 0);
+	g_DeviceContext->PSSetShader(m_PS.Get(), nullptr, 0);
 
 	// Pixel Shader SamplerState 설정..
-	m_DeviceContext->PSSetSamplers(0, (UINT)m_SamplerStates.size(), m_SamplerStates[0].GetAddressOf());
+	g_DeviceContext->PSSetSamplers(0, (UINT)m_SamplerStates.size(), m_SamplerStates[0].GetAddressOf());
 
 	// Pixel Shader ConstantBuffer 설정..
-	m_DeviceContext->PSSetConstantBuffers(0, (UINT)m_ConstantBuffers.size(), m_ConstantBuffers[0].GetAddressOf());
+	g_DeviceContext->PSSetConstantBuffers(0, (UINT)m_ConstantBuffers.size(), m_ConstantBuffers[0].GetAddressOf());
 
 	// Pixel Shader ShaderResourceView 설정..
-	m_DeviceContext->PSSetShaderResources(0, (UINT)m_ShaderResourceViews.size(), m_ShaderResourceViews[0].GetAddressOf());
+	g_DeviceContext->PSSetShaderResources(0, (UINT)m_ShaderResourceViews.size(), m_ShaderResourceViews[0].GetAddressOf());
 }

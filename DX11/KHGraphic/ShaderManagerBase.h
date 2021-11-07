@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 ///
 /// 2021/11/07 23:00
 /// SeoKyuHwang

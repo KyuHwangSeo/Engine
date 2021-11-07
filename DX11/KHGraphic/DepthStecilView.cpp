@@ -1,3 +1,4 @@
+#include "DirectDefine.h"
 #include "Texture2D.h"
 #include "DepthStecilView.h"
 #include "MacroDefine.h"

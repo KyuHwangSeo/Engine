@@ -17,7 +17,8 @@ public:
 	virtual void OnResize(int width, int height) abstract;
 
 public:
-	virtual Microsoft::WRL::ComPtr<ID3D11DepthStencilState> GetDepthStencilState(eDSState state) abstract;
-	virtual Microsoft::WRL::ComPtr<ID3D11RasterizerState> GetRasterizerState(eRState state) abstract;
-	virtual Microsoft::WRL::ComPtr<ID3D11BlendState> GetBlendState(eBState state) abstract;
+	virtual Microsoft::WRL::ComPtr<ID3D11DepthStencilState> GetDepthStencilState(eDepthStencilState state) abstract;
+	virtual Microsoft::WRL::ComPtr<ID3D11RasterizerState> GetRasterizerState(eRasterizerState state) abstract;
+	virtual Microsoft::WRL::ComPtr<ID3D11BlendState> GetBlendState(eBlendState state) abstract;
+	virtual D3D11_VIEWPORT* GetViewPort(eViewPort state) abstract;
 };

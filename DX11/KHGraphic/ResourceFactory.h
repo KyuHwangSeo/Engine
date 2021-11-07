@@ -12,6 +12,7 @@ public:
 
 public:
 	void Initialize() override;
+	void Release() override;
 
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> CreateBackBuffer(UINT width, UINT height) override;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> CreateBackBufferRTV(Microsoft::WRL::ComPtr<ID3D11Texture2D> tex2D) override;
@@ -26,6 +27,8 @@ public:
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> CreateRS(D3D11_RASTERIZER_DESC* rsDesc) override;
 	Microsoft::WRL::ComPtr<ID3D11BlendState> CreateBS(D3D11_BLEND_DESC* bsDesc) override;
 	Microsoft::WRL::ComPtr<ID3D11SamplerState> CreateSS(D3D11_SAMPLER_DESC* ssDesc) override;
+
+	D3D11_VIEWPORT* CreateViewPort(float width, float height, float width_ratio = 1.0f, float height_ratio = 1.0f) override;
 
 	Indexbuffer* CreateIndexBuffer(ParserData::Mesh* mesh) override;
 	Vertexbuffer* CreateVertexBuffer(ParserData::Mesh* mesh) override;

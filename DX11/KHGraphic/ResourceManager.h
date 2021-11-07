@@ -1,11 +1,11 @@
 #pragma once
-#include <vector>
 #include "ResourceManagerBase.h"
 
 class RenderTargetView;
 class ShaderResourceView;
 class UnorderedAccessView;
 class DepthStecilView;
+class ViewPort;
 
 class GraphicResourceManager : public IGraphicResourceManager
 {
@@ -18,9 +18,10 @@ public:
 	void OnResize(int width, int height) override;
 	
 public:
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> GetDepthStencilState(eDSState state) override;
-	Microsoft::WRL::ComPtr<ID3D11RasterizerState> GetRasterizerState(eRState state) override;
-	Microsoft::WRL::ComPtr<ID3D11BlendState> GetBlendState(eBState state) override;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> GetDepthStencilState(eDepthStencilState state) override;
+	Microsoft::WRL::ComPtr<ID3D11RasterizerState> GetRasterizerState(eRasterizerState state) override;
+	Microsoft::WRL::ComPtr<ID3D11BlendState> GetBlendState(eBlendState state) override;
+	D3D11_VIEWPORT* GetViewPort(eViewPort state) override;
 
 public:
 	template<typename T>
@@ -42,6 +43,7 @@ private:
 	std::vector<ShaderResourceView*> m_SRVList;
 	std::vector<UnorderedAccessView*> m_UAVList;
 	std::vector<DepthStecilView*> m_DSVList; 
+	std::vector<ViewPort*> m_ViewPortList;
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	// State Resource List

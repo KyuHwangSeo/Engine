@@ -1,10 +1,11 @@
 #include "DirectDefine.h"
 #include "ShaderManagerBase.h"
+#include "ShaderBase.h"
+#include "ShaderResourceBase.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
 #include "ComputeShader.h"
 #include "ShaderManager.h"
-
 #include "ResourceBufferHashTable.h"
 
 #include "Texture2D.h"

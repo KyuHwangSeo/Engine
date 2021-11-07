@@ -1,3 +1,4 @@
+#include "DirectDefine.h"
 #include "Texture2D.h"
 #include "UnorderedAccessView.h"
 #include "MacroDefine.h"

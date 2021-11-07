@@ -1,6 +1,4 @@
 #pragma once
-#include "ShaderBase.h"
-#include "ShaderResourceBase.h"
 
 /// <summary>
 /// ComputeShader Class
@@ -90,7 +88,7 @@ inline void ComputeShader::SetConstantBuffer(T cBuffer)
 		return throw std::exception("ERROR: Can not find ConstantBuffer.\n");
 
 	// Resource º¹Á¦..
-	m_DeviceContext->UpdateSubresource(it->second.cbuffer.Get(), 0, nullptr, &cBuffer, 0, 0);
+	g_DeviceContext->UpdateSubresource(it->second.cbuffer.Get(), 0, nullptr, &cBuffer, 0, 0);
 }
 
 template<typename T>

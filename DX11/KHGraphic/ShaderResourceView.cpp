@@ -1,3 +1,4 @@
+#include "DirectDefine.h"
 #include "Texture2D.h"
 #include "ShaderResourceView.h"
 #include "MacroDefine.h"

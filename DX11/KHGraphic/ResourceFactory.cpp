@@ -1,23 +1,20 @@
-#include <wrl.h>
-#include <d3d11.h>
 #include <vector>
+#include "DirectDefine.h"
 #include "D3D11Graphic.h"
 #include "Texture2D.h"
 #include "RenderTargetView.h"
 #include "ShaderResourceView.h"
 #include "UnorderedAccessView.h"
 #include "DepthStecilView.h"
+#include "ViewPort.h"
 #include "ResourceManager.h"
 #include "ShaderBase.h"
-#include "ShaderResourceBase.h"
 #include "ShaderManager.h"
 #include "ResourceFactory.h"
 
-#include "MacroDefine.h"
 #include "VertexDefine.h"
 #include "SamplerStateDefine.h"
-#include "DDSTextureLoader.h"
-#include "WICTextureLoader.h"
+#include "ToolKitDefine.h"
 
 GraphicResourceFactory::GraphicResourceFactory(D3D11Graphic* graphic)
 {
@@ -48,6 +45,16 @@ void GraphicResourceFactory::Initialize()
 	m_ShaderManager->Initialize(m_Device, m_Context);
 }
 
+void GraphicResourceFactory::Release()
+{
+	RESET_COM(m_Device);
+	RESET_COM(m_Context);
+	RESET_COM(m_SwapChain);
+
+	SAFE_DELETE(m_ShaderManager);
+	SAFE_DELETE(m_ResourceManager);
+}
+
 Microsoft::WRL::ComPtr<ID3D11Texture2D> GraphicResourceFactory::CreateBackBuffer(UINT width, UINT height)
 {
 	// Swap Chain, Render Target View Resize
@@ -68,6 +75,7 @@ Microsoft::WRL::ComPtr<ID3D11RenderTargetView> GraphicResourceFactory::CreateBac
 	// RenderTargetView 积己..
 	HR(m_Device->CreateRenderTargetView(tex2D.Get(), nullptr, rtv.GetAddressOf()));
 
+	// Resoure 殿废..
 	m_ResourceManager->AddBackBufferRTV(new RenderTargetView(tex2D, rtv));
 
 	return rtv;
@@ -77,6 +85,7 @@ Microsoft::WRL::ComPtr<ID3D11Texture2D> GraphicResourceFactory::CreateTexture2D(
 {
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> tex2D = nullptr;
 
+	// Texture2D 积己..
 	HR(m_Device->CreateTexture2D(texDesc, 0, tex2D.GetAddressOf()));
 
 	return tex2D;
@@ -89,6 +98,7 @@ Microsoft::WRL::ComPtr<ID3D11RenderTargetView> GraphicResourceFactory::CreateRTV
 	// RenderTargetView 积己..
 	HR(m_Device->CreateRenderTargetView(tex2D.Get(), rtvDesc, rtv.GetAddressOf()));
 
+	// Resoure 殿废..
 	m_ResourceManager->AddResource(new RenderTargetView(tex2D, rtv));
 
 	return rtv;
@@ -101,6 +111,7 @@ Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GraphicResourceFactory::CreateS
 	// ShaderResourceView 积己..
 	HR(m_Device->CreateShaderResourceView(tex2D.Get(), srvDesc, srv.GetAddressOf()));
 
+	// Resoure 殿废..
 	m_ResourceManager->AddResource(new ShaderResourceView(tex2D, srv));
 
 	return srv;
@@ -113,6 +124,7 @@ Microsoft::WRL::ComPtr<ID3D11UnorderedAccessView> GraphicResourceFactory::Create
 	// UnorderedAccessView 积己..
 	HR(m_Device->CreateUnorderedAccessView(tex2D.Get(), uavDesc, uav.GetAddressOf()));
 
+	// Resoure 殿废..
 	m_ResourceManager->AddResource(new UnorderedAccessView(tex2D, uav));
 
 	return uav;
@@ -125,6 +137,7 @@ Microsoft::WRL::ComPtr<ID3D11DepthStencilView> GraphicResourceFactory::CreateDSV
 	// DepthStencilView 积己..
 	HR(m_Device->CreateDepthStencilView(tex2D.Get(), dsvDesc, dsv.GetAddressOf()));
 
+	// Resoure 殿废..
 	m_ResourceManager->AddResource(new DepthStecilView(tex2D, dsv));
 
 	return dsv;
@@ -137,6 +150,7 @@ Microsoft::WRL::ComPtr<ID3D11DepthStencilState> GraphicResourceFactory::CreateDS
 	// DepthStencilState 积己..
 	HR(m_Device->CreateDepthStencilState(dssDesc, dss.GetAddressOf()));
 
+	// Resoure 殿废..
 	m_ResourceManager->AddResource(dss);
 
 	return dss;
@@ -149,6 +163,7 @@ Microsoft::WRL::ComPtr<ID3D11RasterizerState> GraphicResourceFactory::CreateRS(D
 	// RasterizerState 积己..
 	HR(m_Device->CreateRasterizerState(rsDesc, rs.GetAddressOf()));
 
+	// Resoure 殿废..
 	m_ResourceManager->AddResource(rs);
 	
 	return rs;
@@ -161,6 +176,7 @@ Microsoft::WRL::ComPtr<ID3D11BlendState> GraphicResourceFactory::CreateBS(D3D11_
 	// BlendState 积己..
 	HR(m_Device->CreateBlendState(bsDesc, bs.GetAddressOf()));
 
+	// Resoure 殿废..
 	m_ResourceManager->AddResource(bs);
 	
 	return bs;
@@ -173,9 +189,21 @@ Microsoft::WRL::ComPtr<ID3D11SamplerState> GraphicResourceFactory::CreateSS(D3D1
 	// SamplerState 积己..
 	HR(m_Device->CreateSamplerState(ssDesc, ss.GetAddressOf()));
 
+	// Resoure 殿废..
 	m_ResourceManager->AddResource(ss);
 
 	return ss;
+}
+
+D3D11_VIEWPORT* GraphicResourceFactory::CreateViewPort(float width, float height, float width_ratio, float height_ratio)
+{
+	// ViewPort 积己..
+	ViewPort* viewPort = new ViewPort(width, height, width_ratio, height_ratio);
+
+	// Resoure 殿废..
+	m_ResourceManager->AddResource(viewPort);
+
+	return viewPort->GetViewPort();
 }
 
 Indexbuffer* GraphicResourceFactory::CreateIndexBuffer(ParserData::Mesh* mesh)

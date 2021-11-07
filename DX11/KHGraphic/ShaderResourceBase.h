@@ -1,6 +1,4 @@
 #pragma once
-#define RESET_COM(x) { if(x != nullptr) {x.Reset();} }
-
 typedef unsigned int register_slot;
 
 // 모든 Shader Resource들의 Base Class..

@@ -1,6 +1,4 @@
 #pragma once
-#include <wrl.h>
-#include <d3d11.h>
 #include <unordered_map>
 #include <variant>
 
@@ -42,11 +40,11 @@ protected:
 
 public:
 	// Device & Context..
-	static Microsoft::WRL::ComPtr<ID3D11Device> m_Device;
-	static Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_DeviceContext;
+	static Microsoft::WRL::ComPtr<ID3D11Device> g_Device;
+	static Microsoft::WRL::ComPtr<ID3D11DeviceContext> g_DeviceContext;
 
 	// Shader File Route..
-	static std::string m_ShaderRoute;
+	static std::string g_ShaderRoute;
 
 private:
 	// ÇöÀç Shader Type..

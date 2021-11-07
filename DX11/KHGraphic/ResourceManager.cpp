@@ -1,10 +1,12 @@
+#include <vector>
+#include "DirectDefine.h"
 #include "Texture2D.h"
 #include "RenderTargetView.h"
 #include "ShaderResourceView.h"
 #include "UnorderedAccessView.h"
 #include "DepthStecilView.h"
+#include "ViewPort.h"
 #include "ResourceManager.h"
-#include "MacroDefine.h"
 #include "EnumDefine.h"
 
 GraphicResourceManager::GraphicResourceManager()
@@ -106,21 +108,32 @@ void GraphicResourceManager::OnResize(int width, int height)
 		HR(m_Device->CreateDepthStencilView(dsv->m_Resource.Get(), &dsvDesc, dsv->m_DSV.GetAddressOf()));
 	}
 
+	// ViewPort Resize..
+	for (ViewPort* viewport : m_ViewPortList)
+	{
+		viewport->OnResize(width, height);
+	}
+
 }
 
-Microsoft::WRL::ComPtr<ID3D11DepthStencilState> GraphicResourceManager::GetDepthStencilState(eDSState state)
+Microsoft::WRL::ComPtr<ID3D11DepthStencilState> GraphicResourceManager::GetDepthStencilState(eDepthStencilState state)
 {
 	return m_DSSList[(int)state];
 }
 
-Microsoft::WRL::ComPtr<ID3D11RasterizerState> GraphicResourceManager::GetRasterizerState(eRState state)
+Microsoft::WRL::ComPtr<ID3D11RasterizerState> GraphicResourceManager::GetRasterizerState(eRasterizerState state)
 {
 	return m_RSList[(int)state];
 }
 
-Microsoft::WRL::ComPtr<ID3D11BlendState> GraphicResourceManager::GetBlendState(eBState state)
+Microsoft::WRL::ComPtr<ID3D11BlendState> GraphicResourceManager::GetBlendState(eBlendState state)
 {
 	return m_BSList[(int)state];
+}
+
+D3D11_VIEWPORT* GraphicResourceManager::GetViewPort(eViewPort state)
+{
+	return m_ViewPortList[(int)state]->GetViewPort();
 }
 
 // AddResource
@@ -135,6 +148,9 @@ inline void GraphicResourceManager::AddResource(UnorderedAccessView* resource) {
 
 template<>
 inline void GraphicResourceManager::AddResource(DepthStecilView* resource) { m_DSVList.push_back(resource); }
+
+template<>
+inline void GraphicResourceManager::AddResource(ViewPort* resource) { m_ViewPortList.push_back(resource); }
 
 template<>
 inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11DepthStencilState> resource) { m_DSSList.push_back(resource); }

@@ -1,12 +1,23 @@
-#include <vector>
+#include "DirectDefine.h"
+#include "D3D11Graphic.h"
 #include "ResourceFactoryBase.h"
 #include "ShaderManagerBase.h"
 #include "ResourceManagerBase.h"
+#include "RenderBase.h"
 #include "RenderManager.h"
 
-RenderManager::RenderManager(IGraphicResourceFactory* factory, IGraphicResourceManager* resourceManager, IShaderManager* shaderManager)
-	:m_Factory(factory), m_Resource(resourceManager), m_Shader(shaderManager)
+#include "ShaderBase.h"
+#include "ShaderResourceBase.h"
+#include "VertexShader.h"
+#include "PixelShader.h"
+#include "ComputeShader.h"
+#include "ShadowRender.h"
+#include "DeferredRender.h"
+#include "LightRender.h"
+
+RenderManager::RenderManager()
 {
+
 }
 
 RenderManager::~RenderManager()

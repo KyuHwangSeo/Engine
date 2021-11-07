@@ -1,12 +1,12 @@
 #pragma once
 
-enum class eDSState
+enum class eDepthStencilState
 {
 	DEFALT = 0,
 	NODEPTH
 };
 
-enum class eRState
+enum class eRasterizerState
 {
 	SOLID = 0,
 	WIRE,
@@ -14,7 +14,12 @@ enum class eRState
 	DEPTH
 };
 
-enum class eBState : int
+enum class eBlendState
+{
+	BLEND_ONE = 0
+};
+
+enum class eViewPort
 {
 	BLEND_ONE = 0
 };

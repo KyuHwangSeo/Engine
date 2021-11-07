@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
-#include <wrl.h>
-#include <d3d11.h>
+#include <vector>
 #include "ResourcesData.h"
 #include "ParserData.h"
 
@@ -18,6 +17,7 @@ interface IGraphicResourceFactory
 {
 public:
 	virtual void Initialize() abstract;
+	virtual void Release() abstract;
 
 	virtual Microsoft::WRL::ComPtr<ID3D11Texture2D> CreateBackBuffer(UINT width, UINT height) abstract;
 	virtual Microsoft::WRL::ComPtr<ID3D11RenderTargetView> CreateBackBufferRTV(Microsoft::WRL::ComPtr<ID3D11Texture2D> tex2D) abstract;
@@ -32,6 +32,8 @@ public:
 	virtual Microsoft::WRL::ComPtr<ID3D11RasterizerState> CreateRS(D3D11_RASTERIZER_DESC* rsDesc) abstract;
 	virtual Microsoft::WRL::ComPtr<ID3D11BlendState> CreateBS(D3D11_BLEND_DESC* bsDesc) abstract;
 	virtual Microsoft::WRL::ComPtr<ID3D11SamplerState> CreateSS(D3D11_SAMPLER_DESC* ssDesc) abstract;
+	
+	virtual D3D11_VIEWPORT* CreateViewPort(float width, float height, float width_ratio = 1.0f, float height_ratio = 1.0f) abstract;
 
 	virtual Indexbuffer* CreateIndexBuffer(ParserData::Mesh* mesh) abstract;
 	virtual Vertexbuffer* CreateVertexBuffer(ParserData::Mesh* mesh) abstract;

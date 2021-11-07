@@ -1,14 +1,13 @@
 #pragma once
 #include "RenderManagerBase.h"
 
-interface IShaderManager;
-interface IGraphicResourceManager;
-interface IGraphicResourceFactory;
-
+class ShadowRender;
+class DeferredRender;
+class LightRender;
 class RenderManager : public IRenderManager
 {
 public:
-	RenderManager(IGraphicResourceFactory* factory, IGraphicResourceManager* resourceManager, IShaderManager* shaderManager);
+	RenderManager();
 	~RenderManager();
 
 public:
@@ -16,8 +15,8 @@ public:
 	void Render(std::queue<MeshData*>* meshList, GlobalData* global) override;
 
 private:
-	IGraphicResourceFactory* m_Factory;
-	IGraphicResourceManager* m_Resource;
-	IShaderManager* m_Shader;
+	ShadowRender* m_Shadow;
+	DeferredRender* m_Deferred;
+	LightRender* m_Light;
 };
 
