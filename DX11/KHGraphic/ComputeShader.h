@@ -19,14 +19,12 @@ public:
 	void LoadShader(std::string fileName) override;
 	void Update() override;
 
+	// ComputeShader SamplerState 설정..
+	void SetSamplerState(Hash_Code hash_code, Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler);
+
 	// ComputeShader ConstantBuffer Resource Update..
 	template<typename T>
-	void UpdateConstantBuffer(T cBuffer);
-
-	// ComputeShader SamplerState 설정..
-	template<typename T>
-	void SetSamplerState(Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler);
-	void SetSamplerState(Hash_Code hash_code, Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler);
+	void SetConstantBuffer(T cBuffer);
 
 	// ComputeShader ShaderResourceView 설정..
 	template<typename T>
@@ -52,11 +50,11 @@ private:
 	// 연속된 메모리 공간에 있는 UnorderedAccessView List..
 	std::vector<Microsoft::WRL::ComPtr<ID3D11UnorderedAccessView>> m_UnorderedAccessViews;
 
-	// ComputeShader ConstantBuffer List..
-	std::unordered_map<Hash_Code, ConstantBuffer> m_ConstantBufferList;
-	
 	// ComputeShader SamplerState List..
 	std::unordered_map<Hash_Code, SamplerState> m_SamplerList;
+
+	// ComputeShader ConstantBuffer List..
+	std::unordered_map<Hash_Code, ConstantBuffer> m_ConstantBufferList;
 
 	// ComputeShader ShaderResourceView List..
 	std::unordered_map<Hash_Code, ShaderResourceBuffer> m_SRVList;
@@ -64,37 +62,6 @@ private:
 	// ComputeShader UnorderedAccessView List..
 	std::unordered_map<Hash_Code, UnorderedAccessBuffer> m_UAVList;
 };
-
-template<typename T>
-inline void ComputeShader::UpdateConstantBuffer(T cBuffer)
-{
-	// 해당 Value 찾기..
-	std::unordered_map<Hash_Code, ConstantBuffer>::iterator it = m_ConstantBufferList.find(typeid(T).hash_code());
-
-	// 해당 Key에 대한 Value가 없다면..
-	if (it == m_ConstantBufferList.end())
-		return throw std::exception("ERROR: Can not find ConstantBuffer.\n");
-
-	// Resource 복제..
-	m_DeviceContext->UpdateSubresource(it->second.cbuffer.Get(), 0, nullptr, &cBuffer, 0, 0);
-}
-
-template<typename T>
-inline void ComputeShader::SetSamplerState(Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler)
-{
-	// 해당 Value 찾기..
-	std::unordered_map<Hash_Code, SamplerState>::iterator it = m_SamplerList.find(typeid(T).hash_code());
-
-	// 해당 Key에 대한 Value가 없다면..
-	if (it == m_SamplerList.end())
-		return throw std::exception("ERROR: Can not find SamplerState.\n");
-
-	// SamplerState 설정..
-	it->second.sampler = sampler;
-
-	// 해당 Register Slot에 삽입..
-	m_SamplerStates[it->second.register_number] = sampler;
-}
 
 inline void ComputeShader::SetSamplerState(Hash_Code hash_code, Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler)
 {
@@ -110,6 +77,20 @@ inline void ComputeShader::SetSamplerState(Hash_Code hash_code, Microsoft::WRL::
 
 	// 해당 Register Slot에 삽입..
 	m_SamplerStates[it->second.register_number] = sampler;
+}
+
+template<typename T>
+inline void ComputeShader::SetConstantBuffer(T cBuffer)
+{
+	// 해당 Value 찾기..
+	std::unordered_map<Hash_Code, ConstantBuffer>::iterator it = m_ConstantBufferList.find(typeid(T).hash_code());
+
+	// 해당 Key에 대한 Value가 없다면..
+	if (it == m_ConstantBufferList.end())
+		return throw std::exception("ERROR: Can not find ConstantBuffer.\n");
+
+	// Resource 복제..
+	m_DeviceContext->UpdateSubresource(it->second.cbuffer.Get(), 0, nullptr, &cBuffer, 0, 0);
 }
 
 template<typename T>

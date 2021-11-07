@@ -166,8 +166,7 @@
     <ClInclude Include="Deferred.h" />
     <ClInclude Include="DepthStecilView.h" />
     <ClInclude Include="GraphicDLL.h" />
-    <ClInclude Include="KHGraphicBase.h" />
-    <ClInclude Include="IResourceFactory.h" />
+    <ClInclude Include="ResourceFactoryBase.h" />
     <ClInclude Include="RenderManagerBase.h" />
     <ClInclude Include="ResourceManagerBase.h" />
     <ClInclude Include="KHGraphic.h" />

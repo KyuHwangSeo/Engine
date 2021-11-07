@@ -210,9 +210,6 @@
     <ClInclude Include="UnorderedAccessView.h">
       <Filter>소스 파일\Resource\UnorderedAccess</Filter>
     </ClInclude>
-    <ClInclude Include="IResourceFactory.h">
-      <Filter>소스 파일\Factory\Resource</Filter>
-    </ClInclude>
     <ClInclude Include="ResourceBase.h">
       <Filter>소스 파일\Resource\Base</Filter>
     </ClInclude>
@@ -234,8 +231,8 @@
     <ClInclude Include="KHGraphic.h">
       <Filter>소스 파일\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="KHGraphicBase.h">
-      <Filter>소스 파일\Engine</Filter>
+    <ClInclude Include="ResourceFactoryBase.h">
+      <Filter>소스 파일\Factory\Resource</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

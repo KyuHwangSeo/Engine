@@ -21,7 +21,7 @@ public:
 
 	// VertexShader ConstantBuffer Resource Update..
 	template<typename T>
-	void UpdateConstantBuffer(T cBuffer);
+	void SetConstantBuffer(T cBuffer);
 
 private:
 	// Vertex Shader
@@ -38,7 +38,7 @@ private:
 };
 
 template<typename T>
-inline void VertexShader::UpdateConstantBuffer(T cBuffer)
+inline void VertexShader::SetConstantBuffer(T cBuffer)
 {
 	// 해당 Value 찾기..
 	std::unordered_map<Hash_Code, ConstantBuffer>::iterator it = m_ConstantBufferList.find(typeid(T).hash_code());

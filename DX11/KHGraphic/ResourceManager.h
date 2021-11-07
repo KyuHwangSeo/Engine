@@ -2,7 +2,6 @@
 #include <vector>
 #include "ResourceManagerBase.h"
 
-class IResource;
 class RenderTargetView;
 class ShaderResourceView;
 class UnorderedAccessView;
@@ -11,23 +10,22 @@ class DepthStecilView;
 class GraphicResourceManager : public IGraphicResourceManager
 {
 public:
-	GraphicResourceManager(Microsoft::WRL::ComPtr<ID3D11Device> device, Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain);
+	GraphicResourceManager();
 	~GraphicResourceManager();
 
 public:
+	void Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain) override;
 	void OnResize(int width, int height) override;
 	
+public:
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> GetDepthStencilState(eDSState state) override;
+	Microsoft::WRL::ComPtr<ID3D11RasterizerState> GetRasterizerState(eRState state) override;
+	Microsoft::WRL::ComPtr<ID3D11BlendState> GetBlendState(eBState state) override;
+
+public:
 	template<typename T>
 	void AddResource(T resource);
-
 	void AddBackBufferRTV(RenderTargetView* rtv) { m_BackBuffer = rtv; }
-	
-public:
-	friend class ShaderManager;
-
-public:
-	Microsoft::WRL::ComPtr<ID3D11Device> GetDevice() { return m_Device; }
-	Microsoft::WRL::ComPtr<IDXGISwapChain> GetSwapChain() { return m_SwapChain; }
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11Device> m_Device;
@@ -57,27 +55,3 @@ private:
 
 template<typename T>
 inline void GraphicResourceManager::AddResource(T resource) {}
-
-template<>
-inline void GraphicResourceManager::AddResource(RenderTargetView* resource)		{ m_RTVList.push_back(resource); }
-
-template<>
-inline void GraphicResourceManager::AddResource(ShaderResourceView* resource)	{ m_SRVList.push_back(resource); }
-
-template<>
-inline void GraphicResourceManager::AddResource(UnorderedAccessView* resource)	{ m_UAVList.push_back(resource); }
-
-template<>
-inline void GraphicResourceManager::AddResource(DepthStecilView* resource)		{ m_DSVList.push_back(resource); }
-
-template<>
-inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11DepthStencilState> resource)		{ m_DSSList.push_back(resource); }
-
-template<>
-inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11RasterizerState> resource)			{ m_RSList.push_back(resource); }
-
-template<>
-inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11BlendState> resource)				{ m_BSList.push_back(resource); }
-
-template<>
-inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11SamplerState> resource)			{ m_SSList.push_back(resource); }

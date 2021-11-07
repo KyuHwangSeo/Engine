@@ -19,15 +19,13 @@ public:
 	void LoadShader(std::string fileName) override;
 	void Update() override;
 
+	// PixelShader SamplerState 설정..
+	void SetSamplerState(Hash_Code hash_code, Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler);
+
 	// PixelShader ConstantBuffer Resource Update..
 	template<typename T>
-	void UpdateConstantBuffer(T cBuffer);
+	void SetConstantBuffer(T cBuffer);
 
-	// PixelShader SamplerState 설정..
-	template<typename T>
-	void SetSamplerState(Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler);
-	void SetSamplerState(Hash_Code hash_code,Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler);
-	
 	// PixelShader ShaderResourceView 설정..
 	template<typename T>
 	void SetShaderResourceView(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv);
@@ -55,37 +53,6 @@ private:
 	std::unordered_map<Hash_Code, ShaderResourceBuffer> m_SRVList;
 };
 
-template<typename T>
-inline void PixelShader::UpdateConstantBuffer(T cBuffer)
-{
-	// 해당 Value 찾기..
-	std::unordered_map<Hash_Code, ConstantBuffer>::iterator it = m_ConstantBufferList.find(typeid(T).hash_code());
-
-	// 해당 Key에 대한 Value가 없다면..
-	if (it == m_ConstantBufferList.end())
-		return throw std::exception("ERROR: Can not find ConstantBuffer.\n");
-
-	// Resource 복제..
-	m_DeviceContext->UpdateSubresource(it->second.cbuffer.Get(), 0, nullptr, &cBuffer, 0, 0);
-}
-
-template<typename T>
-inline void PixelShader::SetSamplerState(Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler)
-{
-	// 해당 Value 찾기..
-	std::unordered_map<Hash_Code, SamplerState>::iterator it = m_SamplerList.find(typeid(T).hash_code());
-
-	// 해당 Key에 대한 Value가 없다면..
-	if (it == m_SamplerList.end())
-		return throw std::exception("ERROR: Can not find SamplerState.\n");
-
-	// SamplerState 설정..
-	it->second.sampler = sampler;
-
-	// 해당 Register Slot에 삽입..
-	m_SamplerStates[it->second.register_number] = sampler;
-}
-
 inline void PixelShader::SetSamplerState(Hash_Code hash_code, Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler)
 {
 	// 해당 Value 찾기..
@@ -100,6 +67,20 @@ inline void PixelShader::SetSamplerState(Hash_Code hash_code, Microsoft::WRL::Co
 
 	// 해당 Register Slot에 삽입..
 	m_SamplerStates[it->second.register_number] = sampler;
+}
+
+template<typename T>
+inline void PixelShader::SetConstantBuffer(T cBuffer)
+{
+	// 해당 Value 찾기..
+	std::unordered_map<Hash_Code, ConstantBuffer>::iterator it = m_ConstantBufferList.find(typeid(T).hash_code());
+
+	// 해당 Key에 대한 Value가 없다면..
+	if (it == m_ConstantBufferList.end())
+		return throw std::exception("ERROR: Can not find ConstantBuffer.\n");
+
+	// Resource 복제..
+	m_DeviceContext->UpdateSubresource(it->second.cbuffer.Get(), 0, nullptr, &cBuffer, 0, 0);
 }
 
 template<typename T>

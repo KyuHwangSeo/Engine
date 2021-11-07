@@ -74,11 +74,11 @@ void PixelShader::LoadShader(std::string fileName)
 	}
 
 	// Resource 검색할 Hash Code..
-	size_t hash_key;
+	size_t hash_key = 0;
 
 	// Resource 최대 사이즈..
-	size_t sampler_size;
-	size_t srv_size;
+	size_t sampler_size = 0;
+	size_t srv_size = 0;
 
 	/// Shader Resource Reflection
 	// Shader Resource..
@@ -101,7 +101,7 @@ void PixelShader::LoadShader(std::string fileName)
 			break;
 		case D3D_SIT_SAMPLER:
 		{
-			// Constant Buffer Hash Code..
+			// Sampler Hash Code..
 			hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::BufferType::SAMPLER, bindDesc.Name);
 
 			m_SamplerList.insert(std::make_pair(hash_key, SamplerState(bindDesc.Name, bindDesc.BindPoint)));

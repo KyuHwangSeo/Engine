@@ -16,9 +16,9 @@
 
 using namespace Microsoft::WRL;
 
-ShaderManager::ShaderManager(IGraphicResourceManager* manager)
+ShaderManager::ShaderManager()
 {
-	m_ResourceManager = reinterpret_cast<GraphicResourceManager*>(manager);
+
 }
 
 ShaderManager::~ShaderManager()
@@ -35,14 +35,16 @@ void ShaderManager::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, Micr
 	// Shader Hash Table Initialize..
 	ShaderResourceHashTable::Initialize();
 
-	// SamplerState Create..
-	CreateSampler(device);
-
 	// Global Shader Create..
 	CreateShader();
 
 	// Shader Hash Table Reset..
 	ShaderResourceHashTable::Reset();
+}
+
+void ShaderManager::AddSampler(Hash_Code hash_code, Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler)
+{
+	m_SamplerList.insert(std::make_pair(hash_code, sampler));
 }
 
 IShader* ShaderManager::GetShader(std::string shaderName)
@@ -54,118 +56,6 @@ IShader* ShaderManager::GetShader(std::string shaderName)
 		return shader->second;
 
 	return nullptr;
-}
-
-void ShaderManager::CreateSampler(ComPtr<ID3D11Device> device)
-{
-	// SamplerState 생성..
-	ComPtr<ID3D11SamplerState> samplerState;
-
-	D3D11_SAMPLER_DESC samplerDesc;
-	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
-	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	samplerDesc.MaxAnisotropy = 4;
-	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
-	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
-	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
-	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
-
-	HR(device->CreateSamplerState(&samplerDesc, &samplerState));
-	m_SamplerHashList.push_back(samClampMinLinear::GetHashCode());
-	m_ResourceManager->AddResource(samplerState);
-
-	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
-	samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
-	samplerDesc.MaxAnisotropy = 4;
-	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
-
-	HR(device->CreateSamplerState(&samplerDesc, &samplerState));
-	m_SamplerHashList.push_back(samWrapAnisotropic::GetHashCode());
-	m_ResourceManager->AddResource(samplerState);
-
-	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
-	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	samplerDesc.MaxAnisotropy = 1;
-	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.BorderColor[0] = samplerDesc.BorderColor[1] = samplerDesc.BorderColor[2] = samplerDesc.BorderColor[3] = 0.0f;
-	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
-
-	HR(device->CreateSamplerState(&samplerDesc, &samplerState));
-	m_SamplerHashList.push_back(samWrapMinLinear::GetHashCode());
-	m_ResourceManager->AddResource(samplerState);
-
-	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
-	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	samplerDesc.MaxAnisotropy = 1;
-	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_MIRROR;
-	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_MIRROR;
-	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_MIRROR;
-	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
-
-	HR(device->CreateSamplerState(&samplerDesc, &samplerState));
-	m_SamplerHashList.push_back(samMirrorMinLinear::GetHashCode());
-	m_ResourceManager->AddResource(samplerState);
-
-	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
-	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
-	samplerDesc.MaxAnisotropy = 1;
-	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
-	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
-	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
-	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
-
-	HR(device->CreateSamplerState(&samplerDesc, &samplerState));
-	m_SamplerHashList.push_back(samClampMinLinearPoint::GetHashCode());
-	m_ResourceManager->AddResource(samplerState);
-
-	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
-	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
-	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
-	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
-	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
-	samplerDesc.BorderColor[0] = samplerDesc.BorderColor[1] = samplerDesc.BorderColor[2] = 0.0f;
-	samplerDesc.BorderColor[3] = 1e5f;
-	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
-
-	HR(device->CreateSamplerState(&samplerDesc, &samplerState));
-	m_SamplerHashList.push_back(samBorderLinerPoint::GetHashCode());
-	m_ResourceManager->AddResource(samplerState);
-
-	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
-	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
-	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
-
-	HR(device->CreateSamplerState(&samplerDesc, &samplerState));
-	m_SamplerHashList.push_back(samWrapLinerPoint::GetHashCode());
-	m_ResourceManager->AddResource(samplerState);
-
-	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
-	samplerDesc.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT;
-	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
-	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
-	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
-	samplerDesc.BorderColor[0] = samplerDesc.BorderColor[1] = samplerDesc.BorderColor[2] = samplerDesc.BorderColor[3] = 0.0f;
-	samplerDesc.ComparisonFunc = D3D11_COMPARISON_LESS;
-	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
-
-	HR(device->CreateSamplerState(&samplerDesc, &samplerState));
-	m_SamplerHashList.push_back(gShadowSam::GetHashCode());
-	m_ResourceManager->AddResource(samplerState);
 }
 
 void ShaderManager::CreateShader()
@@ -248,18 +138,18 @@ void ShaderManager::SetSampler()
 		case ShaderType::PIXEL:
 		{
 			PixelShader* pShader = reinterpret_cast<PixelShader*>(shader.second);
-			for (size_t index = 0; index < m_SamplerHashList.size(); index++)
+			for (std::pair<Hash_Code, ComPtr<ID3D11SamplerState>> sampler : m_SamplerList)
 			{
-				pShader->SetSamplerState(m_SamplerHashList[index], m_ResourceManager->m_SSList[index]);
+				pShader->SetSamplerState(sampler.first, sampler.second);
 			}
 		}
 		break;
 		case ShaderType::COMPUTE:
 		{
 			ComputeShader* cShader = reinterpret_cast<ComputeShader*>(shader.second);
-			for (size_t index = 0; index < m_SamplerHashList.size(); index++)
+			for (std::pair<Hash_Code, ComPtr<ID3D11SamplerState>> sampler : m_SamplerList)
 			{
-				cShader->SetSamplerState(m_SamplerHashList[index], m_ResourceManager->m_SSList[index]);
+				cShader->SetSamplerState(sampler.first, sampler.second);
 			}
 		}
 		break;
@@ -267,4 +157,12 @@ void ShaderManager::SetSampler()
 			break;
 		}
 	}
+
+	// Sampler 설정 후 리스트 초기화..
+	for (std::pair<Hash_Code, ComPtr<ID3D11SamplerState>> sampler : m_SamplerList)
+	{
+		RESET_COM(sampler.second);
+	}
+
+	m_SamplerList.clear();
 }

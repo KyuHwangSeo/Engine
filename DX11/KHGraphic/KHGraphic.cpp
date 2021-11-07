@@ -2,12 +2,13 @@
 #include "D3D11Graphic.h"
 #include "KHGraphic.h"
 
-#include "ShaderManager.h"
-#include "ResourceManager.h"
+#include "ShaderManagerBase.h"
+#include "ResourceManagerBase.h"
 #include "ResourceFactory.h"
 #include "RenderManager.h"
 
 KHGraphic::KHGraphic()
+	:m_Graphic(nullptr), m_ResourceFactory(nullptr), m_ResourceMananger(nullptr), m_RenderManager(nullptr)
 {
 
 }
@@ -19,23 +20,27 @@ KHGraphic::~KHGraphic()
 
 void KHGraphic::Initialize(HWND hwnd, int screenWidth, int screenHeight)
 {
-	// Device 생성..
+	// DirectX11 Device 생성..
 	m_Graphic = new D3D11Graphic();
 	m_Graphic->Initialize(hwnd, screenWidth, screenHeight);
 
-	// Resource Manager 생성 및 초기화..
-	m_ResourceMananger = new GraphicResourceManager(m_Graphic->GetDevice(), m_Graphic->GetSwapChain());
-
-	// Shader Manager 생성 및 초기화..
-	m_ShaderManager = new ShaderManager(m_ResourceMananger);
-	m_ShaderManager->Initialize(m_Graphic->GetDevice(), m_Graphic->GetContext());
-
 	// Resource Factory 생성 및 초기화..
-	m_ResourceFactory = new GraphicResourceFactory(m_ResourceMananger);
+	GraphicResourceFactory* resourceFactory = new GraphicResourceFactory(m_Graphic);
+	resourceFactory->Initialize();
+
+	// Resource Manager Pointer..
+	IGraphicResourceManager* resourceManager = resourceFactory->GetResourceManager();
+
+	// Shader Manager Pointer..
+	IShaderManager* shaderManager = resourceFactory->GetShaderManager();
 
 	// Render Manager 생성 및 초기화..
-	m_RenderManager = new RenderManager();
+	m_RenderManager = new RenderManager(resourceFactory, resourceManager, shaderManager);
 	m_RenderManager->Initialize();
+
+	// Set InterFace Pointer..
+	m_ResourceFactory = resourceFactory;
+	m_ResourceMananger = resourceManager;
 }
 
 void KHGraphic::Render(std::queue<MeshData*>* meshList, GlobalData* global)

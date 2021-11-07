@@ -5,9 +5,20 @@
 #include "ResourcesData.h"
 #include "ParserData.h"
 
+///
+/// 2021/11/07 22:59
+/// SeoKyuHwang
+///
+/// GraphicResourceFactory Interface Class
+///
+/// - GraphicResource를 생성해주는 Factory Class
+/// - 내부적으로 Resource Manager에서 Resource 관리
+
 interface IGraphicResourceFactory
 {
 public:
+	virtual void Initialize() abstract;
+
 	virtual Microsoft::WRL::ComPtr<ID3D11Texture2D> CreateBackBuffer(UINT width, UINT height) abstract;
 	virtual Microsoft::WRL::ComPtr<ID3D11RenderTargetView> CreateBackBufferRTV(Microsoft::WRL::ComPtr<ID3D11Texture2D> tex2D) abstract;
 
@@ -20,6 +31,7 @@ public:
 	virtual Microsoft::WRL::ComPtr<ID3D11DepthStencilState> CreateDSS(D3D11_DEPTH_STENCIL_DESC* dssDesc) abstract;
 	virtual Microsoft::WRL::ComPtr<ID3D11RasterizerState> CreateRS(D3D11_RASTERIZER_DESC* rsDesc) abstract;
 	virtual Microsoft::WRL::ComPtr<ID3D11BlendState> CreateBS(D3D11_BLEND_DESC* bsDesc) abstract;
+	virtual Microsoft::WRL::ComPtr<ID3D11SamplerState> CreateSS(D3D11_SAMPLER_DESC* ssDesc) abstract;
 
 	virtual Indexbuffer* CreateIndexBuffer(ParserData::Mesh* mesh) abstract;
 	virtual Vertexbuffer* CreateVertexBuffer(ParserData::Mesh* mesh) abstract;

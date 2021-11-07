@@ -1,29 +1,51 @@
 #include <wrl.h>
 #include <d3d11.h>
 #include <vector>
-#include "DirectDefine.h"
-#include "ResourceFactory.h"
-#include "MacroDefine.h"
+#include "D3D11Graphic.h"
 #include "Texture2D.h"
 #include "RenderTargetView.h"
 #include "ShaderResourceView.h"
 #include "UnorderedAccessView.h"
 #include "DepthStecilView.h"
 #include "ResourceManager.h"
+#include "ShaderBase.h"
+#include "ShaderResourceBase.h"
+#include "ShaderManager.h"
+#include "ResourceFactory.h"
+
+#include "MacroDefine.h"
 #include "VertexDefine.h"
+#include "SamplerStateDefine.h"
 #include "DDSTextureLoader.h"
 #include "WICTextureLoader.h"
 
-GraphicResourceFactory::GraphicResourceFactory(IGraphicResourceManager* manager)
+GraphicResourceFactory::GraphicResourceFactory(D3D11Graphic* graphic)
 {
-	m_ResourceManager = reinterpret_cast<GraphicResourceManager*>(manager);
-	m_Device = m_ResourceManager->GetDevice();
-	m_SwapChain = m_ResourceManager->GetSwapChain();
+	// Graphic Resource & Shader Manager 积己..
+	m_ShaderManager = new ShaderManager();
+	m_ResourceManager = new GraphicResourceManager();
+
+	m_Device = graphic->GetDevice();
+	m_Context = graphic->GetContext();
+	m_SwapChain = graphic->GetSwapChain();
 }
 
 GraphicResourceFactory::~GraphicResourceFactory()
 {
 
+}
+
+void GraphicResourceFactory::Initialize()
+{
+	/// Global Resource 积己..
+	CreateDepthStencilState();
+	CreateRasterizerState();
+	CreateSamplerState();
+	CreateBlendState();
+
+	// Graphic Resource & Shader Manager 檬扁拳..
+	m_ResourceManager->Initialize(m_Device, m_SwapChain);
+	m_ShaderManager->Initialize(m_Device, m_Context);
 }
 
 Microsoft::WRL::ComPtr<ID3D11Texture2D> GraphicResourceFactory::CreateBackBuffer(UINT width, UINT height)
@@ -144,6 +166,18 @@ Microsoft::WRL::ComPtr<ID3D11BlendState> GraphicResourceFactory::CreateBS(D3D11_
 	return bs;
 }
 
+Microsoft::WRL::ComPtr<ID3D11SamplerState> GraphicResourceFactory::CreateSS(D3D11_SAMPLER_DESC* ssDesc)
+{
+	Microsoft::WRL::ComPtr<ID3D11SamplerState> ss = nullptr;
+
+	// SamplerState 积己..
+	HR(m_Device->CreateSamplerState(ssDesc, ss.GetAddressOf()));
+
+	m_ResourceManager->AddResource(ss);
+
+	return ss;
+}
+
 Indexbuffer* GraphicResourceFactory::CreateIndexBuffer(ParserData::Mesh* mesh)
 {
 	// 货肺款 IndexBufferData 积己..
@@ -152,7 +186,7 @@ Indexbuffer* GraphicResourceFactory::CreateIndexBuffer(ParserData::Mesh* mesh)
 	ID3D11Buffer* IB = nullptr;
 
 	// Face Count..
-	size_t iCount = mesh->m_IndexList.size();
+	UINT iCount = (UINT)mesh->m_IndexList.size();
 
 	std::vector<UINT> indices(iCount * 3);
 	for (UINT i = 0; i < iCount; ++i)
@@ -189,7 +223,7 @@ Vertexbuffer* GraphicResourceFactory::CreateVertexBuffer(ParserData::Mesh* mesh)
 	ID3D11Buffer* VB = nullptr;
 
 	// Vertex Count..
-	int vCount = mesh->m_VertexList.size();
+	UINT vCount = (UINT)mesh->m_VertexList.size();
 
 	std::vector<NormalMapVertex> vertices(vCount);
 	for (UINT i = 0; i < vCount; i++)
@@ -238,11 +272,11 @@ TextureBuffer* GraphicResourceFactory::CreateTextureBuffer(std::string path)
 	// 犬厘磊俊 蝶弗 咆胶贸 颇老 肺靛 规侥..
 	if (file_extension.compare(L".dds") == 0)
 	{
-		//HR(CreateDDSTextureFromFile(m_Device.Get(), wPath.c_str(), &texResource, &newTex));
+		HR(DirectX::CreateDDSTextureFromFile(m_Device.Get(), wPath.c_str(), &texResource, &newTex));
 	}
 	else
 	{
-		//HR(CreateWICTextureFromFile(m_Device.Get(), wPath.c_str(), &texResource, &newTex));
+		HR(DirectX::CreateWICTextureFromFile(m_Device.Get(), wPath.c_str(), &texResource, &newTex));
 	}
 
 	// 逞败拎具且 TextureBufferData 火涝..
@@ -251,4 +285,241 @@ TextureBuffer* GraphicResourceFactory::CreateTextureBuffer(std::string path)
 	texResource->Release();
 
 	return tBuffer;
+}
+
+IShaderManager* GraphicResourceFactory::GetShaderManager()
+{
+	return m_ShaderManager;
+}
+
+IGraphicResourceManager* GraphicResourceFactory::GetResourceManager()
+{
+	return m_ResourceManager;
+}
+
+void GraphicResourceFactory::CreateDepthStencilState()
+{
+	D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
+	ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
+
+	depthStencilDesc.DepthEnable = true;
+	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
+
+	depthStencilDesc.StencilEnable = true;
+	depthStencilDesc.StencilReadMask = 0xFF;
+	depthStencilDesc.StencilWriteMask = 0xFF;
+
+	depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+	depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+	depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+	// Defalt DepthStencilState 积己..
+	CreateDSS(&depthStencilDesc);
+
+	ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
+
+	depthStencilDesc.DepthEnable = false;
+	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
+
+	depthStencilDesc.StencilEnable = true;
+	depthStencilDesc.StencilReadMask = 0xFF;
+	depthStencilDesc.StencilWriteMask = 0xFF;
+
+	depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+	depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+	depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+	// NoDepth DepthStencilState 积己..
+	CreateDSS(&depthStencilDesc);
+}
+
+void GraphicResourceFactory::CreateRasterizerState()
+{
+	D3D11_RASTERIZER_DESC rasterizerDesc;
+	ZeroMemory(&rasterizerDesc, sizeof(D3D11_RASTERIZER_DESC));
+	rasterizerDesc.FillMode = D3D11_FILL_SOLID;
+	rasterizerDesc.CullMode = D3D11_CULL_BACK;
+	rasterizerDesc.FrontCounterClockwise = false;
+	rasterizerDesc.DepthClipEnable = true;
+
+	rasterizerDesc.DepthBias = 0;
+	rasterizerDesc.DepthBiasClamp = 0.0f;
+	rasterizerDesc.SlopeScaledDepthBias = 0.0f;
+	rasterizerDesc.AntialiasedLineEnable = false;
+	rasterizerDesc.MultisampleEnable = true;
+	rasterizerDesc.ScissorEnable = false;
+
+	// Solid RasterizerState 积己..
+	CreateRS(&rasterizerDesc);
+
+	ZeroMemory(&rasterizerDesc, sizeof(D3D11_RASTERIZER_DESC));
+	rasterizerDesc.FillMode = D3D11_FILL_WIREFRAME;
+	rasterizerDesc.CullMode = D3D11_CULL_BACK;
+	rasterizerDesc.FrontCounterClockwise = false;
+	rasterizerDesc.DepthClipEnable = true;
+
+	rasterizerDesc.DepthBias = 0;
+	rasterizerDesc.DepthBiasClamp = 0.0f;
+	rasterizerDesc.SlopeScaledDepthBias = 0.0f;
+	rasterizerDesc.AntialiasedLineEnable = true;
+	rasterizerDesc.MultisampleEnable = false;
+	rasterizerDesc.ScissorEnable = false;
+
+	// WireFrame RasterizerState 积己..
+	CreateRS(&rasterizerDesc);
+
+	ZeroMemory(&rasterizerDesc, sizeof(D3D11_RASTERIZER_DESC));
+	rasterizerDesc.FillMode = D3D11_FILL_SOLID;
+	rasterizerDesc.CullMode = D3D11_CULL_NONE;
+	rasterizerDesc.FrontCounterClockwise = false;
+	rasterizerDesc.DepthClipEnable = true;
+
+	// NoCull RasterizerState 积己..
+	CreateRS(&rasterizerDesc);
+
+	ZeroMemory(&rasterizerDesc, sizeof(D3D11_RASTERIZER_DESC));
+	rasterizerDesc.FillMode = D3D11_FILL_SOLID;
+	rasterizerDesc.CullMode = D3D11_CULL_BACK;
+	rasterizerDesc.FrontCounterClockwise = false;
+	rasterizerDesc.DepthClipEnable = true;
+	rasterizerDesc.DepthBias = 100000;
+	rasterizerDesc.DepthBiasClamp = 0.0f;
+	rasterizerDesc.SlopeScaledDepthBias = 0.005f;
+
+	// Depth RasterizerState 积己..
+	CreateRS(&rasterizerDesc);
+}
+
+void GraphicResourceFactory::CreateSamplerState()
+{
+	D3D11_SAMPLER_DESC samplerDesc;
+	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.MaxAnisotropy = 4;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	// samClampMinLinear SamplerState 积己..
+	m_ShaderManager->AddSampler(samClampMinLinear::GetHashCode(), CreateSS(&samplerDesc));
+
+	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
+	samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
+	samplerDesc.MaxAnisotropy = 4;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	// samWrapAnisotropic SamplerState 积己..
+	m_ShaderManager->AddSampler(samWrapAnisotropic::GetHashCode(), CreateSS(&samplerDesc));
+
+	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.MaxAnisotropy = 1;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.BorderColor[0] = samplerDesc.BorderColor[1] = samplerDesc.BorderColor[2] = samplerDesc.BorderColor[3] = 0.0f;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	// samWrapMinLinear SamplerState 积己..
+	m_ShaderManager->AddSampler(samWrapMinLinear::GetHashCode(), CreateSS(&samplerDesc));
+
+	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.MaxAnisotropy = 1;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_MIRROR;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_MIRROR;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_MIRROR;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	// samMirrorMinLinear SamplerState 积己..
+	m_ShaderManager->AddSampler(samMirrorMinLinear::GetHashCode(), CreateSS(&samplerDesc));
+
+	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
+	samplerDesc.MaxAnisotropy = 1;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	// samClampMinLinearPoint SamplerState 积己..
+	m_ShaderManager->AddSampler(samClampMinLinearPoint::GetHashCode(), CreateSS(&samplerDesc));
+	
+	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
+	samplerDesc.BorderColor[0] = samplerDesc.BorderColor[1] = samplerDesc.BorderColor[2] = 0.0f;
+	samplerDesc.BorderColor[3] = 1e5f;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	// samBorderLinerPoint SamplerState 积己..
+	m_ShaderManager->AddSampler(samBorderLinerPoint::GetHashCode(), CreateSS(&samplerDesc));
+
+	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	// samWrapLinerPoint SamplerState 积己..
+	m_ShaderManager->AddSampler(samWrapLinerPoint::GetHashCode(), CreateSS(&samplerDesc));
+
+	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
+	samplerDesc.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
+	samplerDesc.BorderColor[0] = samplerDesc.BorderColor[1] = samplerDesc.BorderColor[2] = samplerDesc.BorderColor[3] = 0.0f;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_LESS;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	// gShadowSam SamplerState 积己..
+	m_ShaderManager->AddSampler(gShadowSam::GetHashCode(), CreateSS(&samplerDesc));
+}
+
+void GraphicResourceFactory::CreateBlendState()
+{
+	D3D11_BLEND_DESC blendDesc;
+	ZeroMemory(&blendDesc, sizeof(blendDesc));
+	blendDesc.AlphaToCoverageEnable = TRUE;
+	blendDesc.IndependentBlendEnable = TRUE;
+	blendDesc.RenderTarget[0].BlendEnable = TRUE;
+	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	// Blending First RenderTarget BlendState 积己..
+	CreateBS(&blendDesc);
 }
