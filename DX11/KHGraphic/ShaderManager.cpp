@@ -8,13 +8,6 @@
 #include "ShaderManager.h"
 #include "ResourceBufferHashTable.h"
 
-#include "Texture2D.h"
-#include "RenderTargetView.h"
-#include "ShaderResourceView.h"
-#include "UnorderedAccessView.h"
-#include "DepthStecilView.h"
-#include "ResourceManager.h"
-
 using namespace Microsoft::WRL;
 
 ShaderManager::ShaderManager()
@@ -62,53 +55,53 @@ IShader* ShaderManager::GetShader(std::string shaderName)
 void ShaderManager::CreateShader()
 {
 	// Global Forward Shader
-	LoadShader(ShaderType::VERTEX, "FinalVS.cso");
-	LoadShader(ShaderType::PIXEL, "FinalPS.cso");
+	LoadShader(eShaderType::VERTEX, "FinalVS.cso");
+	LoadShader(eShaderType::PIXEL, "FinalPS.cso");
 
 	// Global Deferred Shader
-	LoadShader(ShaderType::VERTEX, "FullScreenVS.cso");
-	LoadShader(ShaderType::PIXEL, "LightPS.cso");
+	LoadShader(eShaderType::VERTEX, "FullScreenVS.cso");
+	LoadShader(eShaderType::PIXEL, "LightPS.cso");
 
-	LoadShader(ShaderType::VERTEX, "ColorVS.cso");
-	LoadShader(ShaderType::PIXEL, "ColorPS.cso");
+	LoadShader(eShaderType::VERTEX, "ColorVS.cso");
+	LoadShader(eShaderType::PIXEL, "ColorPS.cso");
 
-	LoadShader(ShaderType::VERTEX, "SkyCubeVS.cso");
-	LoadShader(ShaderType::PIXEL, "SkyCubePS.cso");
+	LoadShader(eShaderType::VERTEX, "SkyCubeVS.cso");
+	LoadShader(eShaderType::PIXEL, "SkyCubePS.cso");
 
-	LoadShader(ShaderType::VERTEX, "NormalShadowVS.cso");
-	LoadShader(ShaderType::VERTEX, "SkinShadowVS.cso");
+	LoadShader(eShaderType::VERTEX, "NormalShadowVS.cso");
+	LoadShader(eShaderType::VERTEX, "SkinShadowVS.cso");
 
-	LoadShader(ShaderType::VERTEX, "TextureVS.cso");
-	LoadShader(ShaderType::VERTEX, "SkinVS.cso");
-	LoadShader(ShaderType::PIXEL, "TextureDeferredPS.cso");
+	LoadShader(eShaderType::VERTEX, "TextureVS.cso");
+	LoadShader(eShaderType::VERTEX, "SkinVS.cso");
+	LoadShader(eShaderType::PIXEL, "TextureDeferredPS.cso");
 
-	LoadShader(ShaderType::VERTEX, "NormalTextureVS.cso");
-	LoadShader(ShaderType::PIXEL, "NormalTextureDeferredPS.cso");
+	LoadShader(eShaderType::VERTEX, "NormalTextureVS.cso");
+	LoadShader(eShaderType::PIXEL, "NormalTextureDeferredPS.cso");
 
-	LoadShader(ShaderType::VERTEX, "NormalSkinVS.cso");
-	LoadShader(ShaderType::PIXEL, "NormalTextureDeferredPS.cso");
+	LoadShader(eShaderType::VERTEX, "NormalSkinVS.cso");
+	LoadShader(eShaderType::PIXEL, "NormalTextureDeferredPS.cso");
 
 	// SSAO Shader
-	LoadShader(ShaderType::VERTEX, "SSAOVS.cso");
-	LoadShader(ShaderType::PIXEL, "SSAOPS.cso");
+	LoadShader(eShaderType::VERTEX, "SSAOVS.cso");
+	LoadShader(eShaderType::PIXEL, "SSAOPS.cso");
 
-	LoadShader(ShaderType::VERTEX, "SSAOBlurVS.cso");
-	LoadShader(ShaderType::PIXEL, "SSAOHorizonBlurPS.cso");
-	LoadShader(ShaderType::PIXEL, "SSAOVerticalBlurPS.cso");
+	LoadShader(eShaderType::VERTEX, "SSAOBlurVS.cso");
+	LoadShader(eShaderType::PIXEL, "SSAOHorizonBlurPS.cso");
+	LoadShader(eShaderType::PIXEL, "SSAOVerticalBlurPS.cso");
 
 	// Terrain Shader
-	LoadShader(ShaderType::VERTEX, "TerrainVS.cso");
-	LoadShader(ShaderType::PIXEL, "TerrainPS.cso");
+	LoadShader(eShaderType::VERTEX, "TerrainVS.cso");
+	LoadShader(eShaderType::PIXEL, "TerrainPS.cso");
 
 	// Screen Blur Shader
-	LoadShader(ShaderType::COMPUTE, "HorizonBlurCS.cso");
-	LoadShader(ShaderType::COMPUTE, "VerticalBlurCS.cso");
+	LoadShader(eShaderType::COMPUTE, "HorizonBlurCS.cso");
+	LoadShader(eShaderType::COMPUTE, "VerticalBlurCS.cso");
 
 	// Shader Sampler 설정..
 	SetSampler();
 }
 
-void ShaderManager::LoadShader(ShaderType shaderType, std::string shaderName)
+void ShaderManager::LoadShader(eShaderType shaderType, std::string shaderName)
 {
 	// Shader Type에 맞는 Shader 생성..
 	IShader* newShader = IShader::CreateShader(shaderType, shaderName.c_str());
@@ -136,7 +129,7 @@ void ShaderManager::SetSampler()
 		// Shader Type에 따른 형은 보장이 되므로 강제 형변환 실행 후 Sampler 설정..
 		switch (shader.second->GetType())
 		{
-		case ShaderType::PIXEL:
+		case eShaderType::PIXEL:
 		{
 			PixelShader* pShader = reinterpret_cast<PixelShader*>(shader.second);
 			for (std::pair<Hash_Code, ComPtr<ID3D11SamplerState>> sampler : m_SamplerList)
@@ -145,7 +138,7 @@ void ShaderManager::SetSampler()
 			}
 		}
 		break;
-		case ShaderType::COMPUTE:
+		case eShaderType::COMPUTE:
 		{
 			ComputeShader* cShader = reinterpret_cast<ComputeShader*>(shader.second);
 			for (std::pair<Hash_Code, ComPtr<ID3D11SamplerState>> sampler : m_SamplerList)
@@ -159,7 +152,7 @@ void ShaderManager::SetSampler()
 		}
 	}
 
-	// Sampler 설정 후 리스트 초기화..
+	// Sampler 설정 후 SamplerList 초기화..
 	for (std::pair<Hash_Code, ComPtr<ID3D11SamplerState>> sampler : m_SamplerList)
 	{
 		RESET_COM(sampler.second);

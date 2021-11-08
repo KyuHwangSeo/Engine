@@ -17,7 +17,7 @@ public:
 
 private:
 	void CreateShader();
-	void LoadShader(ShaderType shaderType, std::string shaderName);
+	void LoadShader(eShaderType shaderType, std::string shaderName);
 	
 	void SetSampler();
 

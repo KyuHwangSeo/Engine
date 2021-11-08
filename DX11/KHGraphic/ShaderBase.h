@@ -1,29 +1,15 @@
 #pragma once
 #include <unordered_map>
-#include <variant>
 
 typedef size_t Hash_Code;
 
 // Shader Type Enum Class..
-enum class ShaderType
+enum class eShaderType
 {
 	VERTEX,
 	PIXEL,
 	COMPUTE
 };
-
-class IShader;
-class VertexShader;
-class PixelShader;
-class ComputeShader;
-
-// 원본 Shader 변환을 위한 Return Type 지정.. (C++17)
-using OriginalShader = std::variant<IShader*, VertexShader*, PixelShader*, ComputeShader*>;
-
-/// Shader Reflection MSDN
-/// https://docs.microsoft.com/ko-kr/windows/win32/api/d3d11shader/nn-d3d11shader-id3d11shaderreflection?f1url=%3FappId%3DDev16IDEF1%26l%3DKO-KR%26k%3Dk(D3D11SHADER%252FID3D11ShaderReflection);k(ID3D11ShaderReflection);k(DevLang-C%252B%252B);k(TargetOS-Windows)%26rd%3Dtrue
-/// Shader Desc MSDN
-/// https://docs.microsoft.com/ko-kr/windows/win32/api/d3d11shader/ns-d3d11shader-d3d11_shader_desc?f1url=%3FappId%3DDev16IDEF1%26l%3DKO-KR%26k%3Dk(D3D11SHADER%252FD3D11_SHADER_DESC);k(D3D11_SHADER_DESC);k(DevLang-C%252B%252B);k(TargetOS-Windows)%26rd%3Dtrue
 
 /// <summary>
 /// Shader Base Class
@@ -31,12 +17,32 @@ using OriginalShader = std::variant<IShader*, VertexShader*, PixelShader*, Compu
 /// 
 /// - 모든 Shader Class의 Base Class
 /// - 모든 Shader가 Resource 생성 및 복제시 Device & DeviceContext를 필요로 하여 전역 변수로 관리
-
+/// 
 class IShader
 {
 protected:
-	IShader(ShaderType shaderType) : m_ShaderType(shaderType) {}
+	IShader(eShaderType shaderType) : m_ShaderType(shaderType) {}
 	virtual ~IShader() = default;
+
+public:
+	// Shader Load 전에 필수로 해주어야 하는 작업..
+	static void Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, Microsoft::WRL::ComPtr<ID3D11DeviceContext> context);
+
+	// Shader Load 및 Create 함수..
+	static IShader* CreateShader(eShaderType shaderType, const char* fileName);
+
+	// Device & DeviceContext Reset 함수..
+	static void Reset();
+
+	// 기본 Shader 경로 설정 함수..
+	static void SetShaderRoute(std::string fileRoute);
+
+public:
+	// 현재 Shader Type 반환 함수..
+	eShaderType GetType();
+
+	virtual void LoadShader(std::string fileName) abstract;
+	virtual void Update() abstract;
 
 public:
 	// Device & Context..
@@ -48,31 +54,13 @@ public:
 
 private:
 	// 현재 Shader Type..
-	ShaderType m_ShaderType;
-
-public:
-	// Shader Load 전에 필수로 해주어야 하는 작업..
-	static void Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, Microsoft::WRL::ComPtr<ID3D11DeviceContext> context);
-
-	// Shader Load 및 Create 함수..
-	static IShader* CreateShader(ShaderType shaderType, const char* fileName);
-
-	// Device & DeviceContext Reset 함수..
-	static void Reset();
-
-	// 기본 Shader 경로 설정 함수..
-	static void SetShaderRoute(std::string fileRoute);
-
-public:
-	// 현재 Shader Type 반환 함수..
-	ShaderType GetType();
-
-	// 현재 Shader 원형 변환 함수..
-	OriginalShader ConvertShader();
-
-	virtual void LoadShader(std::string fileName) abstract;
-	virtual void Update() abstract;
+	eShaderType m_ShaderType;
 };
+
+/// Shader Reflection MSDN
+/// https://docs.microsoft.com/ko-kr/windows/win32/api/d3d11shader/nn-d3d11shader-id3d11shaderreflection?f1url=%3FappId%3DDev16IDEF1%26l%3DKO-KR%26k%3Dk(D3D11SHADER%252FID3D11ShaderReflection);k(ID3D11ShaderReflection);k(DevLang-C%252B%252B);k(TargetOS-Windows)%26rd%3Dtrue
+/// Shader Desc MSDN
+/// https://docs.microsoft.com/ko-kr/windows/win32/api/d3d11shader/ns-d3d11shader-d3d11_shader_desc?f1url=%3FappId%3DDev16IDEF1%26l%3DKO-KR%26k%3Dk(D3D11SHADER%252FD3D11_SHADER_DESC);k(D3D11_SHADER_DESC);k(DevLang-C%252B%252B);k(TargetOS-Windows)%26rd%3Dtrue
 
 /// <summary>
 /// UpdateSubResource VS Map / UnMap

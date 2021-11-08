@@ -15,7 +15,7 @@ ShadowRender::~ShadowRender()
 
 }
 
-void ShadowRender::Initialize()
+void ShadowRender::Initialize(int width, int height)
 {
 
 }

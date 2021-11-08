@@ -9,7 +9,7 @@
 #include <fstream>
 
 VertexShader::VertexShader(const char* fileName)
-	:IShader(ShaderType::VERTEX)
+	:IShader(eShaderType::VERTEX)
 {
 	LoadShader(g_ShaderRoute + fileName);
 }
@@ -47,7 +47,7 @@ void VertexShader::LoadShader(std::string fileName)
 	{
 		D3D11_SIGNATURE_PARAMETER_DESC paramDesc;
 		pReflector->GetInputParameterDesc(inputIndex, &paramDesc);
-
+		
 		// Shader Input Data를 기반으로 생성..
 		D3D11_INPUT_ELEMENT_DESC elementDesc;
 		elementDesc.SemanticName = paramDesc.SemanticName;

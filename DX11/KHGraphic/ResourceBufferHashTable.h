@@ -1,9 +1,5 @@
 #pragma once
 #include <unordered_map>
-#include "ConstantBufferDefine.h"
-#include "SamplerStateDefine.h"
-#include "ShaderResourceViewDefine.h"
-#include "UnorderedAccessViewDefine.h"
 
 typedef size_t Hash_Code;
 

@@ -21,5 +21,18 @@ enum class eBlendState
 
 enum class eViewPort
 {
-	BLEND_ONE = 0
+	SCREEN = 0,
+	SHADOW,
+	SSAO,
+};
+
+enum class eRenderTarget
+{
+	BACK_BUFFER,
+
+};
+
+enum class eDepthStencilView
+{
+	DEFALT,
 };

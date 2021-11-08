@@ -9,7 +9,7 @@
 #include <fstream>
 
 ComputeShader::ComputeShader(const char* fileName)
-	:IShader(ShaderType::COMPUTE)
+	:IShader(eShaderType::COMPUTE)
 {
 	LoadShader(g_ShaderRoute + fileName);
 }

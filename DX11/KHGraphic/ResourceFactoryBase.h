@@ -13,14 +13,18 @@
 /// - GraphicResource를 생성해주는 Factory Class
 /// - 내부적으로 Resource Manager에서 Resource 관리
 
+class BasicRenderTarget;
+class ComputeRenderTarget;
+class ViewPort;
+
 interface IGraphicResourceFactory
 {
 public:
 	virtual void Initialize() abstract;
 	virtual void Release() abstract;
 
+public:
 	virtual Microsoft::WRL::ComPtr<ID3D11Texture2D> CreateBackBuffer(UINT width, UINT height) abstract;
-	virtual Microsoft::WRL::ComPtr<ID3D11RenderTargetView> CreateBackBufferRTV(Microsoft::WRL::ComPtr<ID3D11Texture2D> tex2D) abstract;
 
 	virtual Microsoft::WRL::ComPtr<ID3D11Texture2D> CreateTexture2D(D3D11_TEXTURE2D_DESC* texDesc) abstract;
 	virtual Microsoft::WRL::ComPtr<ID3D11RenderTargetView> CreateRTV(Microsoft::WRL::ComPtr<ID3D11Texture2D> tex2D, D3D11_RENDER_TARGET_VIEW_DESC* rtvDesc) abstract;
@@ -33,7 +37,12 @@ public:
 	virtual Microsoft::WRL::ComPtr<ID3D11BlendState> CreateBS(D3D11_BLEND_DESC* bsDesc) abstract;
 	virtual Microsoft::WRL::ComPtr<ID3D11SamplerState> CreateSS(D3D11_SAMPLER_DESC* ssDesc) abstract;
 	
-	virtual D3D11_VIEWPORT* CreateViewPort(float width, float height, float width_ratio = 1.0f, float height_ratio = 1.0f) abstract;
+public:
+	virtual BasicRenderTarget* CreateMainRenderTarget(Microsoft::WRL::ComPtr<ID3D11RenderTargetView> rtv, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv) abstract;
+	virtual BasicRenderTarget* CreateBasicRenderTarget(Microsoft::WRL::ComPtr<ID3D11RenderTargetView> rtv, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv) abstract;
+	virtual ComputeRenderTarget* CreateComputeRenderTarget(Microsoft::WRL::ComPtr<ID3D11RenderTargetView> rtv, Microsoft::WRL::ComPtr<ID3D11UnorderedAccessView> uav) abstract;
+
+	virtual ViewPort* CreateViewPort(float width, float height, float width_ratio = 1.0f, float height_ratio = 1.0f) abstract;
 
 	virtual Indexbuffer* CreateIndexBuffer(ParserData::Mesh* mesh) abstract;
 	virtual Vertexbuffer* CreateVertexBuffer(ParserData::Mesh* mesh) abstract;

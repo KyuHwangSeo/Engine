@@ -35,12 +35,9 @@ void KHGraphic::Initialize(HWND hwnd, int screenWidth, int screenHeight)
 	// Shader Manager Pointer..
 	IShaderManager* shaderManager = resourceFactory->GetShaderManager();
 
-	// Rendering Initialize..
-	RenderBase::Initialize(graphic->GetContext(), resourceFactory, resourceManager, shaderManager);
-
 	// Render Manager 생성 및 초기화..
-	m_RenderManager = new RenderManager();
-	m_RenderManager->Initialize();
+	m_RenderManager = new RenderManager(graphic, resourceFactory, resourceManager, shaderManager);
+	m_RenderManager->Initialize(screenWidth, screenHeight);
 
 	// Set InterFace Pointer..
 	m_ResourceFactory = resourceFactory;

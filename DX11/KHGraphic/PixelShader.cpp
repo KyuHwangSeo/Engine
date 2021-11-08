@@ -9,7 +9,7 @@
 #include <fstream>
 
 PixelShader::PixelShader(const char* fileName)
-	:IShader(ShaderType::PIXEL)
+	:IShader(eShaderType::PIXEL)
 {
 	LoadShader(g_ShaderRoute + fileName);
 }
@@ -105,7 +105,7 @@ void PixelShader::LoadShader(std::string fileName)
 		{
 			// Sampler Hash Code..
 			hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::BufferType::SAMPLER, bindDesc.Name);
-
+			
 			m_SamplerList.insert(std::make_pair(hash_key, SamplerState(bindDesc.Name, bindDesc.BindPoint)));
 			sampler_size = bindDesc.BindPoint;
 		}

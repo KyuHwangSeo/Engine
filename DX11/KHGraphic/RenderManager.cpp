@@ -15,9 +15,10 @@
 #include "DeferredRender.h"
 #include "LightRender.h"
 
-RenderManager::RenderManager()
+RenderManager::RenderManager(D3D11Graphic* graphic, IGraphicResourceFactory* factory, IGraphicResourceManager* resource, IShaderManager* shader)
 {
-
+	// Rendering Initialize..
+	RenderBase::Initialize(graphic->GetContext(), factory, resource, shader);
 }
 
 RenderManager::~RenderManager()
@@ -25,7 +26,7 @@ RenderManager::~RenderManager()
 
 }
 
-void RenderManager::Initialize()
+void RenderManager::Initialize(int width, int height)
 {
 
 }

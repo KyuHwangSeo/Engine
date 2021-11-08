@@ -1,24 +1,9 @@
 #pragma once
-#include "ResourceBase.h"
 
-class Texture2D : public IResource
+class Texture2D
 {
 public:
-	Texture2D(ResourceType type, Microsoft::WRL::ComPtr<ID3D11Texture2D> tex2D) : IResource(type), m_Resource(tex2D) {}
-	virtual ~Texture2D() { if (m_Resource != nullptr) { m_Resource.Reset(); } }
-
-public:
-	D3D11_TEXTURE2D_DESC GetTextureDesc();
-
-protected:
-	Microsoft::WRL::ComPtr<ID3D11Texture2D> m_Resource;
+	virtual ID3D11Texture2D* GetTexture2D() abstract;
+	virtual ID3D11Texture2D** GetAddressTexture2D() abstract;
+	virtual D3D11_TEXTURE2D_DESC GetTextureDesc() abstract;
 };
-
-inline D3D11_TEXTURE2D_DESC Texture2D::GetTextureDesc()
-{
-	D3D11_TEXTURE2D_DESC texDesc;
-
-	m_Resource->GetDesc(&texDesc);
-
-	return texDesc;
-}

@@ -1,16 +1,16 @@
 #include <vector>
 #include "DirectDefine.h"
-#include "Texture2D.h"
-#include "RenderTargetView.h"
-#include "ShaderResourceView.h"
-#include "UnorderedAccessView.h"
-#include "DepthStecilView.h"
 #include "ViewPort.h"
+#include "Texture2D.h"
+#include "DepthStencilView.h"
+#include "RenderTargetBase.h"
+#include "BasicRenderTarget.h"
+#include "ComputeRenderTarget.h"
 #include "ResourceManager.h"
 #include "EnumDefine.h"
 
 GraphicResourceManager::GraphicResourceManager()
-	:m_BackBuffer(nullptr)
+	:m_Device(nullptr), m_SwapChain(nullptr),m_BackBuffer(nullptr)
 {
 
 }
@@ -28,6 +28,8 @@ void GraphicResourceManager::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> dev
 
 void GraphicResourceManager::OnResize(int width, int height)
 {
+	ComPtr<ID3D11Texture2D> tex2D = nullptr;
+
 	D3D11_TEXTURE2D_DESC texDesc;
 	ZeroMemory(&texDesc, sizeof(texDesc));
 
@@ -46,7 +48,7 @@ void GraphicResourceManager::OnResize(int width, int height)
 	// Swap Chain, Render Target View Resize
 	HR(m_SwapChain->ResizeBuffers(1, (UINT)width, (UINT)height, DXGI_FORMAT_R8G8B8A8_UNORM, 0));
 
-	Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer = m_BackBuffer->m_Resource;
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer = nullptr;
 
 	// Get Swap Chain Back Buffer Pointer..
 	HR(m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(backBuffer.GetAddressOf())));
@@ -57,55 +59,65 @@ void GraphicResourceManager::OnResize(int width, int height)
 	texDesc.Width = height;
 	HR(m_Device->CreateTexture2D(&texDesc, 0, backBuffer.GetAddressOf()));
 
-	rtvDesc = m_BackBuffer->GetDesc();
-	HR(m_Device->CreateRenderTargetView(backBuffer.Get(), &rtvDesc, m_BackBuffer->m_RTV.GetAddressOf()));
-
-	// RenderTargetView Resize..
-	for (RenderTargetView* rtv : m_RTVList)
+	rtvDesc = m_BackBuffer->GetRTVDesc();
+	HR(m_Device->CreateRenderTargetView(backBuffer.Get(), &rtvDesc, m_BackBuffer->GetAddressRTV()));
+	
+	// RenderTarget Resize..
+	for (RenderTarget* rt : m_RenderTargetList)
 	{
-		texDesc = rtv->GetTextureDesc();
+		// Texture2D Description 추출..
+		texDesc = rt->GetTextureDesc();
 		texDesc.Width = width;
 		texDesc.Width = height;
-		HR(m_Device->CreateTexture2D(&texDesc, 0, rtv->m_Resource.GetAddressOf()));
 
-		rtvDesc = rtv->GetDesc();
-		HR(m_Device->CreateRenderTargetView(rtv->m_Resource.Get(), &rtvDesc, rtv->m_RTV.GetAddressOf()));
-	}
+		// Texture2D Resize..
+		HR(m_Device->CreateTexture2D(&texDesc, 0, tex2D.GetAddressOf()));
 
-	// ShaderResourceView Resize..
-	for (ShaderResourceView* srv : m_SRVList)
-	{
-		texDesc = srv->GetTextureDesc();
-		texDesc.Width = width;
-		texDesc.Width = height;
-		HR(m_Device->CreateTexture2D(&texDesc, 0, srv->m_Resource.GetAddressOf()));
+		// RenderTargetView Description 추출..
+		rtvDesc = rt->GetRTVDesc();
+		
+		// RenderTargetView Resize..
+		HR(m_Device->CreateRenderTargetView(tex2D.Get(), &rtvDesc, rt->GetAddressRTV()));
 
-		srvDesc = srv->GetDesc();
-		HR(m_Device->CreateShaderResourceView(srv->m_Resource.Get(), &srvDesc, srv->m_SRV.GetAddressOf()));
-	}
+		switch (rt->GetType())
+		{
+		case eRenderTargetType::BASIC:
+		{
+			BasicRenderTarget* bRenderTarget = reinterpret_cast<BasicRenderTarget*>(rt);
 
-	// UnorderedAccessView Resize..
-	for (UnorderedAccessView* uav : m_UAVList)
-	{
-		texDesc = uav->GetTextureDesc();
-		texDesc.Width = width;
-		texDesc.Width = height;
-		HR(m_Device->CreateTexture2D(&texDesc, 0, uav->m_Resource.GetAddressOf()));
+			// ShaderResourceView Description 추출..
+			srvDesc = bRenderTarget->GetSRVDesc();
 
-		uavDesc = uav->GetDesc();
-		HR(m_Device->CreateUnorderedAccessView(uav->m_Resource.Get(), &uavDesc, uav->m_UAV.GetAddressOf()));
+			// ShaderResourceView Resize..
+			HR(m_Device->CreateShaderResourceView(tex2D.Get(), &srvDesc, bRenderTarget->GetAddressSRV()));
+		}
+			break;
+		case eRenderTargetType::COMPUTE:
+		{
+			ComputeRenderTarget* cRenderTarget = reinterpret_cast<ComputeRenderTarget*>(rt);
+			
+			// UnorderedAccessView Description 추출..
+			uavDesc = cRenderTarget->GetUAVDesc();
+
+			// UnorderedAccessView Resize..
+			HR(m_Device->CreateUnorderedAccessView(tex2D.Get(), &uavDesc, cRenderTarget->GetAddressUAV()));
+		}
+			break;
+		default:
+			break;
+		}
 	}
 
 	// DepthStecilView Resize..
-	for (DepthStecilView* dsv : m_DSVList)
+	for (DepthStencilView* dsv : m_DepthStencilViewList)
 	{
 		texDesc = dsv->GetTextureDesc();
 		texDesc.Width = width;
 		texDesc.Width = height;
-		HR(m_Device->CreateTexture2D(&texDesc, 0, dsv->m_Resource.GetAddressOf()));
+		HR(m_Device->CreateTexture2D(&texDesc, 0, tex2D.GetAddressOf()));
 
-		dsvDesc = dsv->GetDesc();
-		HR(m_Device->CreateDepthStencilView(dsv->m_Resource.Get(), &dsvDesc, dsv->m_DSV.GetAddressOf()));
+		dsvDesc = dsv->GetDSVDesc();
+		HR(m_Device->CreateDepthStencilView(tex2D.Get(), &dsvDesc, dsv->GetAddressDSV()));
 	}
 
 	// ViewPort Resize..
@@ -114,21 +126,37 @@ void GraphicResourceManager::OnResize(int width, int height)
 		viewport->OnResize(width, height);
 	}
 
+	RESET_COM(tex2D);
 }
 
-Microsoft::WRL::ComPtr<ID3D11DepthStencilState> GraphicResourceManager::GetDepthStencilState(eDepthStencilState state)
+RenderTarget* GraphicResourceManager::GetMainRenderTarget()
 {
-	return m_DSSList[(int)state];
+	return m_BackBuffer;
 }
 
-Microsoft::WRL::ComPtr<ID3D11RasterizerState> GraphicResourceManager::GetRasterizerState(eRasterizerState state)
+RenderTarget* GraphicResourceManager::GetRenderTarget(eRenderTarget state)
 {
-	return m_RSList[(int)state];
+	return m_RenderTargetList[(int)state];
 }
 
-Microsoft::WRL::ComPtr<ID3D11BlendState> GraphicResourceManager::GetBlendState(eBlendState state)
+DepthStencilView* GraphicResourceManager::GetDepthStencilView(eDepthStencilView state)
 {
-	return m_BSList[(int)state];
+	return m_DepthStencilViewList[(int)state];
+}
+
+ID3D11BlendState* GraphicResourceManager::GetBlendState(eBlendState state)
+{
+	return m_BlendStateList[(int)state].Get();
+}
+
+ID3D11RasterizerState* GraphicResourceManager::GetRasterizerState(eRasterizerState state)
+{
+	return m_RasterizerStateList[(int)state].Get();
+}
+
+ID3D11DepthStencilState* GraphicResourceManager::GetDepthStencilState(eDepthStencilState state)
+{
+	return m_DepthStencilStateList[(int)state].Get();
 }
 
 D3D11_VIEWPORT* GraphicResourceManager::GetViewPort(eViewPort state)
@@ -138,28 +166,19 @@ D3D11_VIEWPORT* GraphicResourceManager::GetViewPort(eViewPort state)
 
 // AddResource
 template<>
-inline void GraphicResourceManager::AddResource(RenderTargetView* resource) { m_RTVList.push_back(resource); }
-
-template<>
-inline void GraphicResourceManager::AddResource(ShaderResourceView* resource) { m_SRVList.push_back(resource); }
-
-template<>
-inline void GraphicResourceManager::AddResource(UnorderedAccessView* resource) { m_UAVList.push_back(resource); }
-
-template<>
-inline void GraphicResourceManager::AddResource(DepthStecilView* resource) { m_DSVList.push_back(resource); }
-
-template<>
 inline void GraphicResourceManager::AddResource(ViewPort* resource) { m_ViewPortList.push_back(resource); }
 
 template<>
-inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11DepthStencilState> resource) { m_DSSList.push_back(resource); }
+inline void GraphicResourceManager::AddResource(RenderTarget* resource) { m_RenderTargetList.push_back(resource); }
 
 template<>
-inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11RasterizerState> resource) { m_RSList.push_back(resource); }
+inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11DepthStencilState> resource) { m_DepthStencilStateList.push_back(resource); }
 
 template<>
-inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11BlendState> resource) { m_BSList.push_back(resource); }
+inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11RasterizerState> resource) { m_RasterizerStateList.push_back(resource); }
 
 template<>
-inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11SamplerState> resource) { m_SSList.push_back(resource); }
+inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11BlendState> resource) { m_BlendStateList.push_back(resource); }
+
+template<>
+inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11SamplerState> resource) { m_SamplerStateList.push_back(resource); }

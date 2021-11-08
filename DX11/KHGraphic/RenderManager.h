@@ -7,11 +7,11 @@ class LightRender;
 class RenderManager : public IRenderManager
 {
 public:
-	RenderManager();
+	RenderManager(D3D11Graphic* graphic, IGraphicResourceFactory* factory, IGraphicResourceManager* resource, IShaderManager* shader);
 	~RenderManager();
 
 public:
-	void Initialize() override;
+	void Initialize(int width, int height) override;
 	void Render(std::queue<MeshData*>* meshList, GlobalData* global) override;
 
 private:

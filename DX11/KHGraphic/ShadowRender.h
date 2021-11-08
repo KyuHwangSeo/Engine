@@ -6,7 +6,7 @@ public:
 	~ShadowRender();
 
 public:
-	void Initialize() override;
+	void Initialize(int width, int height) override;
 	void RenderFrame();
 
 private:

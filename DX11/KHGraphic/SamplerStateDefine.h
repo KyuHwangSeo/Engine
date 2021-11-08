@@ -1,7 +1,12 @@
 #pragma once
 #include "ClassType.h"
+//#include "ResourceBufferHashTable.h"
+
+//#define ADD_TABLE(ClassName) ShaderResourceHashTable::g_Sampler_HashTable.insert(std::make_pair(ClassName::GetName(), ClassName::GetHashCode()));
 
 #define SAMPLER_STATE(ClassName) CREATE_EMPTY_CLASS(ClassName)
+//ADD_TABLE(ClassName)
+
 
 /// <summary>
 /// SamplerState Resource Struct

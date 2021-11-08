@@ -1,4 +1,8 @@
 #include "ResourceBufferHashTable.h"
+#include "ConstantBufferDefine.h"
+#include "SamplerStateDefine.h"
+#include "ShaderResourceViewDefine.h"
+#include "UnorderedAccessViewDefine.h"
 
 std::unordered_map<std::string, Hash_Code> ShaderResourceHashTable::g_CBuffer_HashTable;
 std::unordered_map<std::string, Hash_Code> ShaderResourceHashTable::g_Sampler_HashTable;

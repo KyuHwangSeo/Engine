@@ -57,8 +57,7 @@ inline void PixelShader::SetSamplerState(Hash_Code hash_code, Microsoft::WRL::Co
 	std::unordered_map<Hash_Code, SamplerState>::iterator it = m_SamplerList.find(hash_code);
 
 	// 해당 Key에 대한 Value가 없다면..
-	if (it == m_SamplerList.end())
-		return throw std::exception("ERROR: Can not find SamplerState.\n");
+	if (it == m_SamplerList.end()) return;
 
 	// SamplerState 설정..
 	it->second.sampler = sampler;
@@ -74,8 +73,7 @@ inline void PixelShader::SetConstantBuffer(T cBuffer)
 	std::unordered_map<Hash_Code, ConstantBuffer>::iterator it = m_ConstantBufferList.find(typeid(T).hash_code());
 
 	// 해당 Key에 대한 Value가 없다면..
-	if (it == m_ConstantBufferList.end())
-		return throw std::exception("ERROR: Can not find ConstantBuffer.\n");
+	if (it == m_ConstantBufferList.end()) return;
 
 	// Resource 복제..
 	g_DeviceContext->UpdateSubresource(it->second.cbuffer.Get(), 0, nullptr, &cBuffer, 0, 0);
@@ -88,8 +86,7 @@ void PixelShader::SetShaderResourceView(Microsoft::WRL::ComPtr<ID3D11ShaderResou
 	std::unordered_map<Hash_Code, ShaderResourceBuffer>::iterator it = m_SRVList.find(typeid(T).hash_code());
 
 	// 해당 Key에 대한 Value가 없다면..
-	if (it == m_SRVList.end())
-		return throw std::exception("ERROR: Can not find ShaderResourceView.\n");
+	if (it == m_SRVList.end()) return;
 
 	// ShaderResourceView 설정..
 	it->second.srv = srv;
