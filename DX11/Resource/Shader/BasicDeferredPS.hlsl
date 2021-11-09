@@ -7,12 +7,12 @@ cbuffer cbID : register(b0)
 
 struct VertexIn
 {
-    float4 PosH			 : SV_POSITION;
+    float4 PosH			 : SV_POSITION; //
     float3 PosW			 : POSITIONW;
     float3 PosV			 : POSITIONV;
 	float3 NormalW		 : NORMALW;
     float3 NormalV		 : NORMALV;
-	float3 ViewDirection : VIEWDIR;
+	float3 ViewDirection : VIEWDIR; //
 
 	float4 ShadowPosH	 : POS_SHADOW;
 };

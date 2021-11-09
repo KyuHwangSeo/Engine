@@ -27,7 +27,7 @@ void KHGraphic::Initialize(HWND hwnd, int screenWidth, int screenHeight)
 
 	// Resource Factory 생성 및 초기화..
 	GraphicResourceFactory* resourceFactory = new GraphicResourceFactory(graphic);
-	resourceFactory->Initialize();
+	resourceFactory->Initialize(screenWidth, screenHeight);
 
 	// Resource Manager Pointer..
 	IGraphicResourceManager* resourceManager = resourceFactory->GetResourceManager();

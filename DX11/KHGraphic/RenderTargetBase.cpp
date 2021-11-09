@@ -4,8 +4,8 @@
 #include "BasicRenderTarget.h"
 #include "ComputeRenderTarget.h"
 
-RenderTarget::RenderTarget(eRenderTargetType type, Microsoft::WRL::ComPtr<ID3D11RenderTargetView> rtv)
-	:m_RenderTargetType(type), m_RTV(rtv)
+RenderTarget::RenderTarget(eRenderTargetType type, ID3D11RenderTargetView** rtv)
+	:m_RenderTargetType(type), m_RTV(*rtv)
 {
 
 }

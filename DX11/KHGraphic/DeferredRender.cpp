@@ -10,9 +10,11 @@
 #include "BasicRenderTarget.h"
 #include "DeferredRender.h"
 
+#include "MathDefine.h"
 #include "ResourceFactoryBase.h"
 #include "ResourceManagerBase.h"
 #include "ShaderManagerBase.h"
+#include "ConstantBufferDefine.h"
 
 DeferredRender::DeferredRender()
 {
@@ -32,10 +34,15 @@ void DeferredRender::Initialize(int width, int height)
 	m_DeferredPS = reinterpret_cast<PixelShader*>(g_Shader->GetShader("NormalTextureDeferredPS"));
 	
 	// DepthStencilView 설정..
-	m_DepthStencilView = g_Resource->GetDepthStencilView(eDepthStencilView::DEFALT);
-	
+	m_DSV = g_Resource->GetDepthStencilView(eDepthStencilView::DEFALT);
+	m_DepthStencilView = m_DSV->GetDSV();
+
+	m_DepthStencilState = g_Resource->GetDepthStencilState(eDepthStencilState::DEFALT);
+	m_RasterizerState = g_Resource->GetRasterizerState(eRasterizerState::SOLID);
+	m_BlendState = g_Resource->GetBlendState(eBlendState::BLEND_ONE);
+
 	// ViewPort 설정..
-	m_ScreenViewport = g_Resource->GetViewPort(eViewPort::SCREEN);
+	m_ScreenViewport = g_Resource->GetViewPort(eViewPort::DEFALT);
 
 	///////////////////////////////////////////////////////////////////////////
 	// Texture 2D
@@ -68,14 +75,13 @@ void DeferredRender::Initialize(int width, int height)
 	texDescPosNormal.CPUAccessFlags = 0;
 	texDescPosNormal.MiscFlags = 0;
 
-	ComPtr<ID3D11Texture2D> tex2D[5] = { nullptr, };
-
 	// Texture 2D 생성..
-	tex2D[0] = g_Factory->CreateTexture2D(&texDescDiffuse);
-	tex2D[1] = g_Factory->CreateTexture2D(&texDescPosNormal);
-	tex2D[2] = g_Factory->CreateTexture2D(&texDescPosNormal);
-	tex2D[3] = g_Factory->CreateTexture2D(&texDescPosNormal);
-	tex2D[4] = g_Factory->CreateTexture2D(&texDescPosNormal);
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> tex2D[5] = { nullptr, };
+	g_Factory->CreateTexture2D(&texDescDiffuse, tex2D[0].GetAddressOf());
+	g_Factory->CreateTexture2D(&texDescPosNormal, tex2D[1].GetAddressOf());
+	g_Factory->CreateTexture2D(&texDescPosNormal, tex2D[2].GetAddressOf());
+	g_Factory->CreateTexture2D(&texDescPosNormal, tex2D[3].GetAddressOf());
+	g_Factory->CreateTexture2D(&texDescPosNormal, tex2D[4].GetAddressOf());
 
 	///////////////////////////////////////////////////////////////////////////
 	// RenderTargetView 2D
@@ -93,12 +99,12 @@ void DeferredRender::Initialize(int width, int height)
 	rtvDescPosNormal.Texture2D.MipSlice = 0;
 
 	// RenderTargetView 생성..
-	std::vector<ID3D11RenderTargetView*> rtvList(5);
-	rtvList[0] = g_Factory->CreateRTV(tex2D[0], &rtvDescDiffuse).Get();
-	rtvList[1] = g_Factory->CreateRTV(tex2D[1], &rtvDescPosNormal).Get();
-	rtvList[2] = g_Factory->CreateRTV(tex2D[2], &rtvDescPosNormal).Get();
-	rtvList[3] = g_Factory->CreateRTV(tex2D[3], &rtvDescPosNormal).Get();
-	rtvList[4] = g_Factory->CreateRTV(tex2D[4], &rtvDescPosNormal).Get();
+	m_RTVList.resize(5);
+	g_Factory->CreateRTV(tex2D[0].Get(), &rtvDescDiffuse, &m_RTVList[0]);
+	g_Factory->CreateRTV(tex2D[1].Get(), &rtvDescPosNormal, &m_RTVList[1]);
+	g_Factory->CreateRTV(tex2D[2].Get(), &rtvDescPosNormal, &m_RTVList[2]);
+	g_Factory->CreateRTV(tex2D[3].Get(), &rtvDescPosNormal, &m_RTVList[3]);
+	g_Factory->CreateRTV(tex2D[4].Get(), &rtvDescPosNormal, &m_RTVList[4]);
 
 	///////////////////////////////////////////////////////////////////////////
 	// ShaderResourceView 2D
@@ -118,16 +124,19 @@ void DeferredRender::Initialize(int width, int height)
 	srvDescPosNormal.Texture2D.MipLevels = 1;
 
 	// ShaderResourceView 생성..
-	std::vector<ID3D11ShaderResourceView*> srvList(5);
-	srvList[0] = g_Factory->CreateSRV(tex2D[0], &srvDescDiffuse).Get();
-	srvList[1] = g_Factory->CreateSRV(tex2D[1], &srvDescPosNormal).Get();
-	srvList[2] = g_Factory->CreateSRV(tex2D[2], &srvDescPosNormal).Get();
-	srvList[3] = g_Factory->CreateSRV(tex2D[3], &srvDescPosNormal).Get();
-	srvList[4] = g_Factory->CreateSRV(tex2D[4], &srvDescPosNormal).Get();
+	m_SRVList.resize(5);
+	g_Factory->CreateSRV(tex2D[0].Get(), &srvDescDiffuse, &m_SRVList[0]);
+	g_Factory->CreateSRV(tex2D[1].Get(), &srvDescPosNormal, &m_SRVList[1]);
+	g_Factory->CreateSRV(tex2D[2].Get(), &srvDescPosNormal, &m_SRVList[2]);
+	g_Factory->CreateSRV(tex2D[3].Get(), &srvDescPosNormal, &m_SRVList[3]);
+	g_Factory->CreateSRV(tex2D[4].Get(), &srvDescPosNormal, &m_SRVList[4]);
 
-	// Graphic Resource 설정..
-	m_SRVList.swap(srvList);
-	m_RTVList.swap(rtvList);
+	// RenderTarget 생성..
+	m_AlbedoRT		= g_Factory->CreateBasicRenderTarget(&m_RTVList[0], &m_SRVList[0]);
+	m_NormalRT		= g_Factory->CreateBasicRenderTarget(&m_RTVList[1], &m_SRVList[1]);
+	m_PositionRT	= g_Factory->CreateBasicRenderTarget(&m_RTVList[2], &m_SRVList[2]);
+	m_ShadowRT		= g_Factory->CreateBasicRenderTarget(&m_RTVList[3], &m_SRVList[3]);
+	m_NormalDepthRT = g_Factory->CreateBasicRenderTarget(&m_RTVList[4], &m_SRVList[4]);
 
 	// Texture2D Resource Reset..
 	RESET_COM(tex2D[0]);
@@ -139,5 +148,55 @@ void DeferredRender::Initialize(int width, int height)
 
 void DeferredRender::OnResize(int width, int height)
 {
+	// DepthStencilView 재설성..
+	m_DepthStencilView = m_DSV->GetDSV();
+	
+	// ShaderResourceView List 재설정..
+	m_SRVList[0] = m_AlbedoRT->GetSRV();
+	m_SRVList[1] = m_NormalRT->GetSRV();
+	m_SRVList[2] = m_PositionRT->GetSRV();
+	m_SRVList[3] = m_ShadowRT->GetSRV();
+	m_SRVList[4] = m_NormalDepthRT->GetSRV();
 
+	// RenderTargetView List 재설정..
+	m_RTVList[0] = m_AlbedoRT->GetRTV();
+	m_RTVList[1] = m_NormalRT->GetRTV();
+	m_RTVList[2] = m_PositionRT->GetRTV();
+	m_RTVList[3] = m_ShadowRT->GetRTV();
+	m_RTVList[4] = m_NormalDepthRT->GetRTV();
+}
+
+void DeferredRender::Render(DirectX::XMMATRIX view, DirectX::XMMATRIX proj, DirectX::XMMATRIX world, ID3D11Buffer* vb, ID3D11Buffer* ib, const UINT size, const UINT offset, UINT indexCount)
+{
+	g_Context->OMSetRenderTargets(5, &m_RTVList[0], m_DepthStencilView);
+
+	// RenderTarget 초기화..
+	g_Context->ClearRenderTargetView(m_RTVList[0], reinterpret_cast<const float*>(&DXColors::DeepDarkGray));
+	g_Context->ClearRenderTargetView(m_RTVList[1], reinterpret_cast<const float*>(&DXColors::DeepDarkGray));
+	g_Context->ClearRenderTargetView(m_RTVList[2], reinterpret_cast<const float*>(&DXColors::DeepDarkGray));
+	g_Context->ClearRenderTargetView(m_RTVList[3], reinterpret_cast<const float*>(&DXColors::DeepDarkGray));
+	g_Context->ClearRenderTargetView(m_RTVList[4], reinterpret_cast<const float*>(&DXColors::DeepDarkGray));
+
+	g_Context->RSSetViewports(1, m_ScreenViewport);
+
+	g_Context->ClearDepthStencilView(m_DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	
+	g_Context->OMSetDepthStencilState(m_DepthStencilState, 0);
+	
+	g_Context->OMSetBlendState(m_BlendState, 0, 0xffffffff);
+
+	g_Context->RSSetState(m_RasterizerState);
+
+	// Shader Update
+	cbPerObject objData;
+	objData.gWorld = world;
+
+
+	g_Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	g_Context->IASetVertexBuffers(0, 1, &vb, &size, &offset);
+	g_Context->IASetIndexBuffer(ib, DXGI_FORMAT_R32_UINT, 0);
+
+	// Draw..
+	g_Context->DrawIndexed(indexCount, 0, 0);
 }

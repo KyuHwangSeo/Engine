@@ -2,8 +2,8 @@
 #include "Texture2D.h"
 #include "DepthStencilView.h"
 
-DepthStencilView::DepthStencilView(Microsoft::WRL::ComPtr<ID3D11DepthStencilView> dsv)
-	:m_DSV(dsv)
+DepthStencilView::DepthStencilView(ID3D11DepthStencilView** dsv)
+	:m_DSV(*dsv)
 {
 
 }

@@ -10,3 +10,4 @@
 using namespace Microsoft::WRL;
 
 #include "MacroDefine.h"
+

@@ -2,8 +2,13 @@
 class BasicRenderTarget : public RenderTarget
 {
 public:
-	BasicRenderTarget(Microsoft::WRL::ComPtr<ID3D11RenderTargetView> rtv, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv);
+	BasicRenderTarget(ID3D11RenderTargetView** rtv, ID3D11ShaderResourceView** srv);
 	~BasicRenderTarget();
+
+public:
+	ID3D11Texture2D* GetTexture2D() override;
+	ID3D11Texture2D** GetAddressTexture2D() override;
+	D3D11_TEXTURE2D_DESC GetTextureDesc() override;
 
 public:
 	D3D11_SHADER_RESOURCE_VIEW_DESC GetSRVDesc();

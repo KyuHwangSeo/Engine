@@ -2,7 +2,7 @@
 class DepthStencilView : public Texture2D
 {
 public:
-	DepthStencilView(Microsoft::WRL::ComPtr<ID3D11DepthStencilView> dsv);
+	DepthStencilView(ID3D11DepthStencilView** dsv);
 	~DepthStencilView();
 
 public:

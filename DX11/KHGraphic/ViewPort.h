@@ -12,7 +12,7 @@
 class ViewPort
 {
 public:
-	ViewPort(float width, float height, float width_ratio = 1.0f, float height_ratio = 1.0f);
+	ViewPort(float topX, float topY, float width, float height, float width_ratio = 1.0f, float height_ratio = 1.0f);
 	~ViewPort();
 
 public:

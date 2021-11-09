@@ -9,8 +9,8 @@ enum class eRenderTargetType
 
 class RenderTarget : public Texture2D
 {
-public:
-	RenderTarget(eRenderTargetType type, Microsoft::WRL::ComPtr<ID3D11RenderTargetView> rtv);
+public: 
+	RenderTarget(eRenderTargetType type, ID3D11RenderTargetView** rtv);
 	virtual ~RenderTarget();
 
 public:

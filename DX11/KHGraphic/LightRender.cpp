@@ -31,25 +31,35 @@ void LightRender::Initialize(int width, int height)
 	m_ScreenPS = reinterpret_cast<PixelShader*>(g_Shader->GetShader("LightPS"));
 
 	// DepthStencilView 설정..
-	m_DepthStencilView = g_Resource->GetDepthStencilView(eDepthStencilView::DEFALT);
+	m_DSV = g_Resource->GetDepthStencilView(eDepthStencilView::DEFALT);
+	m_DepthStencilView = m_DSV->GetDSV();
+
+	m_DepthStencilState = g_Resource->GetDepthStencilState(eDepthStencilState::DEFALT);
+	m_RasterizerState = g_Resource->GetRasterizerState(eRasterizerState::SOLID);
+	m_BlendState = g_Resource->GetBlendState(eBlendState::BLEND_ONE);
 
 	// ViewPort 설정..
-	m_ScreenViewport = g_Resource->GetViewPort(eViewPort::SCREEN);
+	m_ScreenViewport = g_Resource->GetViewPort(eViewPort::DEFALT);
 
 	// BackBuffer 생성..
-	ComPtr<ID3D11Texture2D> tex2D = nullptr;
-	tex2D = g_Factory->CreateBackBuffer(width, height);
-
-	// BackBuffer RTV 생성..
-	m_BackBufferRTV = g_Factory->CreateRTV(tex2D, nullptr);
-	m_BackBufferSRV = g_Factory->CreateSRV(tex2D, nullptr);
-	g_Factory->CreateMainRenderTarget(m_BackBufferRTV, m_BackBufferSRV);
-
-	// Texture2D Resource Reset..
-	RESET_COM(tex2D);
+	m_BackBuffer = g_Factory->CreateMainRenderTarget(width, height);
+	m_BackBufferRTV = m_BackBuffer->GetRTV();
+	m_BackBufferSRV = m_BackBuffer->GetSRV();
 }
 
 void LightRender::OnResize(int width, int height)
+{
+	// BackBuffer RenderTargetView 재설정..
+	m_BackBufferRTV = m_BackBuffer->GetRTV();
+
+	// BackBuffer ShaderResourceView 재설정..
+	m_BackBufferSRV = m_BackBuffer->GetSRV();
+
+	// DepthStencilView 재설성..
+	m_DepthStencilView = m_DSV->GetDSV();
+}
+
+void LightRender::Render()
 {
 
 }

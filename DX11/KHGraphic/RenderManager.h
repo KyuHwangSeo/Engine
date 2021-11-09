@@ -15,8 +15,23 @@ public:
 	void Render(std::queue<MeshData*>* meshList, GlobalData* global) override;
 
 private:
+	Microsoft::WRL::ComPtr<IDXGISwapChain> m_SwapChain;
+
 	ShadowRender* m_Shadow;
 	DeferredRender* m_Deferred;
 	LightRender* m_Light;
 };
 
+//struct RenderData
+//{
+//	DirectX::XMMATRIX view;
+//	DirectX::XMMATRIX proj;
+//	DirectX::XMMATRIX world;
+//
+//	ID3D11Buffer* vb;
+//	ID3D11Buffer* ib;
+//
+//	const UINT size;
+//	const UINT offset;
+//	UINT indexCount;
+//};

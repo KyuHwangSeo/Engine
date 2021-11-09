@@ -33,13 +33,16 @@ GraphicResourceFactory::~GraphicResourceFactory()
 
 }
 
-void GraphicResourceFactory::Initialize()
+void GraphicResourceFactory::Initialize(int width, int height)
 {
 	/// Global Resource 积己..
 	CreateDepthStencilState();
 	CreateRasterizerState();
 	CreateSamplerState();
 	CreateBlendState();
+
+	CreateDepthStencilView();
+	CreateViewPort(width, height);
 
 	// Graphic Resource & Shader Manager 檬扁拳..
 	m_ResourceManager->Initialize(m_Device, m_SwapChain);
@@ -56,133 +59,153 @@ void GraphicResourceFactory::Release()
 	SAFE_DELETE(m_ResourceManager);
 }
 
-Microsoft::WRL::ComPtr<ID3D11Texture2D> GraphicResourceFactory::CreateBackBuffer(UINT width, UINT height)
+void GraphicResourceFactory::CreateTexture2D(D3D11_TEXTURE2D_DESC* texDesc, ID3D11Texture2D** tex2D)
 {
-	// Swap Chain, Render Target View Resize
-	HR(m_SwapChain->ResizeBuffers(1, (UINT)width, (UINT)height, DXGI_FORMAT_R8G8B8A8_UNORM, 0));
-
-	Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer = nullptr;
-
-	// Get Swap Chain Back Buffer Pointer..
-	HR(m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(backBuffer.GetAddressOf())));
-
-	return backBuffer;
+	// Texture2D Resource 积己..
+	HR(m_Device->CreateTexture2D(texDesc, 0, tex2D));
 }
 
-Microsoft::WRL::ComPtr<ID3D11Texture2D> GraphicResourceFactory::CreateTexture2D(D3D11_TEXTURE2D_DESC* texDesc)
+void GraphicResourceFactory::CreateRTV(ID3D11Texture2D* tex2D, D3D11_RENDER_TARGET_VIEW_DESC* rtvDesc, ID3D11RenderTargetView** rtv)
 {
-	Microsoft::WRL::ComPtr<ID3D11Texture2D> tex2D = nullptr;
-
-	// Texture2D 积己..
-	HR(m_Device->CreateTexture2D(texDesc, 0, tex2D.GetAddressOf()));
-
-	return tex2D;
+	// RenderTargetView Resource 积己..
+	HR(m_Device->CreateRenderTargetView(tex2D, rtvDesc, rtv));
 }
 
-Microsoft::WRL::ComPtr<ID3D11RenderTargetView> GraphicResourceFactory::CreateRTV(Microsoft::WRL::ComPtr<ID3D11Texture2D> tex2D, D3D11_RENDER_TARGET_VIEW_DESC* rtvDesc)
+void GraphicResourceFactory::CreateSRV(ID3D11Texture2D* tex2D, D3D11_SHADER_RESOURCE_VIEW_DESC* srvDesc, ID3D11ShaderResourceView** srv)
 {
-	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> rtv = nullptr;
-
-	// RenderTargetView 积己..
-	HR(m_Device->CreateRenderTargetView(tex2D.Get(), rtvDesc, rtv.GetAddressOf()));
-
-	return rtv;
+	// ShaderResourceView Resource 积己..
+	HR(m_Device->CreateShaderResourceView(tex2D, srvDesc, srv));
 }
 
-Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GraphicResourceFactory::CreateSRV(Microsoft::WRL::ComPtr<ID3D11Texture2D> tex2D, D3D11_SHADER_RESOURCE_VIEW_DESC* srvDesc)
+void GraphicResourceFactory::CreateUAV(ID3D11Texture2D* tex2D, D3D11_UNORDERED_ACCESS_VIEW_DESC* uavDesc, ID3D11UnorderedAccessView** uav)
 {
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv = nullptr;
-
-	// ShaderResourceView 积己..
-	HR(m_Device->CreateShaderResourceView(tex2D.Get(), srvDesc, srv.GetAddressOf()));
-
-	return srv;
+	// UnorderedAccessView Resource 积己..
+	HR(m_Device->CreateUnorderedAccessView(tex2D, uavDesc, uav));
 }
 
-Microsoft::WRL::ComPtr<ID3D11UnorderedAccessView> GraphicResourceFactory::CreateUAV(Microsoft::WRL::ComPtr<ID3D11Texture2D> tex2D, D3D11_UNORDERED_ACCESS_VIEW_DESC* uavDesc)
+void GraphicResourceFactory::CreateDSV(ID3D11Texture2D* tex2D, D3D11_DEPTH_STENCIL_VIEW_DESC* dsvDesc, ID3D11DepthStencilView** dsv)
 {
-	Microsoft::WRL::ComPtr<ID3D11UnorderedAccessView> uav = nullptr;
+	// 货肺款 Resource Pointer 积己..
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> newResource = nullptr;
 
-	// UnorderedAccessView 积己..
-	HR(m_Device->CreateUnorderedAccessView(tex2D.Get(), uavDesc, uav.GetAddressOf()));
+	if (dsv != nullptr)
+	{
+		// DepthStencilView Resource 积己..
+		HR(m_Device->CreateDepthStencilView(tex2D, dsvDesc, dsv));
 
-	return uav;
-}
-
-Microsoft::WRL::ComPtr<ID3D11DepthStencilView> GraphicResourceFactory::CreateDSV(Microsoft::WRL::ComPtr<ID3D11Texture2D> tex2D, D3D11_DEPTH_STENCIL_VIEW_DESC* dsvDesc)
-{
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> dsv = nullptr;
+		// Resource Point Copy..
+		newResource = *dsv;
+	}
+	else
+	{
+		// DepthStencilView Resource 积己..
+		HR(m_Device->CreateDepthStencilView(tex2D, dsvDesc, newResource.GetAddressOf()));
+	}
 
 	// DepthStencilView 积己..
-	HR(m_Device->CreateDepthStencilView(tex2D.Get(), dsvDesc, dsv.GetAddressOf()));
+	DepthStencilView* depthStencilView = new DepthStencilView(newResource.GetAddressOf());
 
-	return dsv;
+	// Resoure 殿废..
+	m_ResourceManager->AddResource(depthStencilView);
 }
 
 Microsoft::WRL::ComPtr<ID3D11DepthStencilState> GraphicResourceFactory::CreateDSS(D3D11_DEPTH_STENCIL_DESC* dssDesc)
 {
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> dss = nullptr;
-
-	// DepthStencilState 积己..
-	HR(m_Device->CreateDepthStencilState(dssDesc, dss.GetAddressOf()));
+	// 货肺款 Resource Pointer 积己..
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> newResource = nullptr;
+	
+	// DepthStencilState Resource 积己..
+	HR(m_Device->CreateDepthStencilState(dssDesc, newResource.GetAddressOf()));
 
 	// Resoure 殿废..
-	m_ResourceManager->AddResource(dss);
+	m_ResourceManager->AddResource(newResource);
 
-	return dss;
+	return newResource;
 }
 
 Microsoft::WRL::ComPtr<ID3D11RasterizerState> GraphicResourceFactory::CreateRS(D3D11_RASTERIZER_DESC* rsDesc)
 {
-	Microsoft::WRL::ComPtr<ID3D11RasterizerState> rs = nullptr;
-
-	// RasterizerState 积己..
-	HR(m_Device->CreateRasterizerState(rsDesc, rs.GetAddressOf()));
+	// 货肺款 Resource Pointer 积己..
+	Microsoft::WRL::ComPtr<ID3D11RasterizerState> newResource = nullptr;
+	
+	// RasterizerState Resource 积己..
+	HR(m_Device->CreateRasterizerState(rsDesc, newResource.GetAddressOf()));
 
 	// Resoure 殿废..
-	m_ResourceManager->AddResource(rs);
-	
-	return rs;
+	m_ResourceManager->AddResource(newResource);
+
+	return newResource;
 }
 
 Microsoft::WRL::ComPtr<ID3D11BlendState> GraphicResourceFactory::CreateBS(D3D11_BLEND_DESC* bsDesc)
 {
-	Microsoft::WRL::ComPtr<ID3D11BlendState> bs = nullptr;
-
-	// BlendState 积己..
-	HR(m_Device->CreateBlendState(bsDesc, bs.GetAddressOf()));
+	// 货肺款 Resource Pointer 积己..
+	Microsoft::WRL::ComPtr<ID3D11BlendState> newResource = nullptr;
+	
+	// BlendState Resource 积己..
+	HR(m_Device->CreateBlendState(bsDesc, newResource.GetAddressOf()));
 
 	// Resoure 殿废..
-	m_ResourceManager->AddResource(bs);
-	
-	return bs;
+	m_ResourceManager->AddResource(newResource);
+
+	return newResource;
 }
 
 Microsoft::WRL::ComPtr<ID3D11SamplerState> GraphicResourceFactory::CreateSS(D3D11_SAMPLER_DESC* ssDesc)
 {
-	Microsoft::WRL::ComPtr<ID3D11SamplerState> ss = nullptr;
+	// 货肺款 Resource Pointer 积己..
+	Microsoft::WRL::ComPtr<ID3D11SamplerState> newResource = nullptr;
 
-	// SamplerState 积己..
-	HR(m_Device->CreateSamplerState(ssDesc, ss.GetAddressOf()));
+	// SamplerState Resource 积己..
+	HR(m_Device->CreateSamplerState(ssDesc, newResource.GetAddressOf()));
 
 	// Resoure 殿废..
-	m_ResourceManager->AddResource(ss);
+	m_ResourceManager->AddResource(newResource);
 
-	return ss;
+	return newResource;
 }
 
-BasicRenderTarget* GraphicResourceFactory::CreateMainRenderTarget(Microsoft::WRL::ComPtr<ID3D11RenderTargetView> rtv, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv)
+D3D11_VIEWPORT* GraphicResourceFactory::CreateViewPort(float topX, float topY, float width, float height, float width_ratio, float height_ratio)
 {
+	// ViewPort 积己..
+	ViewPort* viewPort = new ViewPort(topX, topY, width, height, width_ratio, height_ratio);
+
+	// Resoure 殿废..
+	m_ResourceManager->AddResource(viewPort);
+
+	return viewPort->GetViewPort();
+}
+
+BasicRenderTarget* GraphicResourceFactory::CreateMainRenderTarget(UINT width, UINT height)
+{
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> tex2D = nullptr;
+	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> rtv = nullptr;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv = nullptr;
+
+	// Swap Chain, Render Target View Resize
+	HR(m_SwapChain->ResizeBuffers(1, (UINT)width, (UINT)height, DXGI_FORMAT_R8G8B8A8_UNORM, 0));
+
+	// Get Swap Chain Back Buffer Pointer..
+	HR(m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(tex2D.GetAddressOf())));
+
+	CreateRTV(tex2D.Get(), nullptr, rtv.GetAddressOf());
+	CreateSRV(tex2D.Get(), nullptr, srv.GetAddressOf());
+
 	// Main RenderTarget 积己..
-	BasicRenderTarget* mainRenderTarget = new BasicRenderTarget(rtv, srv);
+	BasicRenderTarget* mainRenderTarget = new BasicRenderTarget(rtv.GetAddressOf(), srv.GetAddressOf());
 
 	// Resource 殿废..
 	m_ResourceManager->AddMainRenderTarget(mainRenderTarget);
 
+	// Reset Pointer..
+	RESET_COM(tex2D);
+	RESET_COM(rtv);
+	RESET_COM(srv);
+
 	return mainRenderTarget;
 }
 
-BasicRenderTarget* GraphicResourceFactory::CreateBasicRenderTarget(Microsoft::WRL::ComPtr<ID3D11RenderTargetView> rtv, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv)
+BasicRenderTarget* GraphicResourceFactory::CreateBasicRenderTarget(ID3D11RenderTargetView** rtv, ID3D11ShaderResourceView** srv)
 {
 	// Basic RenderTarget 积己..
 	BasicRenderTarget* basicRenderTarget = new BasicRenderTarget(rtv, srv);
@@ -193,7 +216,24 @@ BasicRenderTarget* GraphicResourceFactory::CreateBasicRenderTarget(Microsoft::WR
 	return basicRenderTarget;
 }
 
-ComputeRenderTarget* GraphicResourceFactory::CreateComputeRenderTarget(Microsoft::WRL::ComPtr<ID3D11RenderTargetView> rtv, Microsoft::WRL::ComPtr<ID3D11UnorderedAccessView> uav)
+BasicRenderTarget* GraphicResourceFactory::CreateBasicRenderTarget(ID3D11Texture2D* tex2D, D3D11_RENDER_TARGET_VIEW_DESC* rtvDesc, D3D11_SHADER_RESOURCE_VIEW_DESC* srvDesc)
+{
+	ComPtr<ID3D11RenderTargetView> rtv = nullptr;
+	ComPtr<ID3D11ShaderResourceView> srv = nullptr;
+
+	CreateRTV(tex2D, rtvDesc, rtv.GetAddressOf());
+	CreateSRV(tex2D, srvDesc, srv.GetAddressOf());
+
+	// Basic RenderTarget 积己..
+	BasicRenderTarget* basicRenderTarget = new BasicRenderTarget(rtv.GetAddressOf(), srv.GetAddressOf());
+
+	// Resource 殿废..
+	m_ResourceManager->AddResource(basicRenderTarget);
+
+	return basicRenderTarget;
+}
+
+ComputeRenderTarget* GraphicResourceFactory::CreateComputeRenderTarget(ID3D11RenderTargetView** rtv, ID3D11UnorderedAccessView** uav)
 {
 	// Compute RenderTarget 积己..
 	ComputeRenderTarget* computeRenderTarget = new ComputeRenderTarget(rtv, uav);
@@ -204,15 +244,21 @@ ComputeRenderTarget* GraphicResourceFactory::CreateComputeRenderTarget(Microsoft
 	return computeRenderTarget;
 }
 
-ViewPort* GraphicResourceFactory::CreateViewPort(float width, float height, float width_ratio, float height_ratio)
+ComputeRenderTarget* GraphicResourceFactory::CreateComputeRenderTarget(ID3D11Texture2D* tex2D, D3D11_RENDER_TARGET_VIEW_DESC* rtvDesc, D3D11_UNORDERED_ACCESS_VIEW_DESC* uavDesc)
 {
-	// ViewPort 积己..
-	ViewPort* viewPort = new ViewPort(width, height, width_ratio, height_ratio);
+	ComPtr<ID3D11RenderTargetView> rtv = nullptr;
+	ComPtr<ID3D11UnorderedAccessView> uav = nullptr;
 
-	// Resoure 殿废..
-	m_ResourceManager->AddResource(viewPort);
+	CreateRTV(tex2D, rtvDesc, rtv.GetAddressOf());
+	CreateUAV(tex2D, uavDesc, uav.GetAddressOf());
 
-	return viewPort;
+	// Compute RenderTarget 积己..
+	ComputeRenderTarget* computeRenderTarget = new ComputeRenderTarget(rtv.GetAddressOf(), uav.GetAddressOf());
+
+	// Resource 殿废..
+	m_ResourceManager->AddResource(computeRenderTarget);
+
+	return computeRenderTarget;
 }
 
 Indexbuffer* GraphicResourceFactory::CreateIndexBuffer(ParserData::Mesh* mesh)
@@ -559,4 +605,39 @@ void GraphicResourceFactory::CreateBlendState()
 
 	// Blending First RenderTarget BlendState 积己..
 	CreateBS(&blendDesc);
+}
+
+void GraphicResourceFactory::CreateDepthStencilView()
+{
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> tex2D = nullptr;
+
+	D3D11_TEXTURE2D_DESC texDesc;
+	ZeroMemory(&texDesc, sizeof(texDesc));
+	texDesc.MipLevels = 1;
+	texDesc.ArraySize = 1;
+	texDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
+	texDesc.SampleDesc.Count = 1;
+	texDesc.SampleDesc.Quality = 0;
+	texDesc.Usage = D3D11_USAGE_DEFAULT;
+	texDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	texDesc.CPUAccessFlags = 0;
+	texDesc.MiscFlags = 0;
+
+	CreateTexture2D(&texDesc, tex2D.GetAddressOf());
+
+	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+	ZeroMemory(&dsvDesc, sizeof(dsvDesc));
+	//dsvDesc.Format = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
+	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	dsvDesc.Texture2D.MipSlice = 0;
+
+	// Defalt DepthStencilView 积己..
+	CreateDSV(tex2D.Get(), &dsvDesc, nullptr);
+}
+
+void GraphicResourceFactory::CreateViewPort(int width, int height)
+{
+	// Defalt ViewPort 积己..
+	CreateViewPort(0.0f, 0.0f, width, height);
 }

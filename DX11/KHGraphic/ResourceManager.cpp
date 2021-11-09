@@ -48,19 +48,13 @@ void GraphicResourceManager::OnResize(int width, int height)
 	// Swap Chain, Render Target View Resize
 	HR(m_SwapChain->ResizeBuffers(1, (UINT)width, (UINT)height, DXGI_FORMAT_R8G8B8A8_UNORM, 0));
 
-	Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer = nullptr;
-
 	// Get Swap Chain Back Buffer Pointer..
-	HR(m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(backBuffer.GetAddressOf())));
+	HR(m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(tex2D.GetAddressOf())));
 
 	// BackBuffer Resize..
-	texDesc = m_BackBuffer->GetTextureDesc();
-	texDesc.Width = width;
-	texDesc.Width = height;
-	HR(m_Device->CreateTexture2D(&texDesc, 0, backBuffer.GetAddressOf()));
-
-	rtvDesc = m_BackBuffer->GetRTVDesc();
-	HR(m_Device->CreateRenderTargetView(backBuffer.Get(), &rtvDesc, m_BackBuffer->GetAddressRTV()));
+	BasicRenderTarget* bRenderTarget = reinterpret_cast<BasicRenderTarget*>(m_BackBuffer);
+	HR(m_Device->CreateRenderTargetView(tex2D.Get(), nullptr, bRenderTarget->GetAddressRTV()));
+	HR(m_Device->CreateShaderResourceView(tex2D.Get(), nullptr, bRenderTarget->GetAddressSRV()));
 	
 	// RenderTarget Resize..
 	for (RenderTarget* rt : m_RenderTargetList)
@@ -71,7 +65,7 @@ void GraphicResourceManager::OnResize(int width, int height)
 		texDesc.Width = height;
 
 		// Texture2D Resize..
-		HR(m_Device->CreateTexture2D(&texDesc, 0, tex2D.GetAddressOf()));
+		HR(m_Device->CreateTexture2D(&texDesc, 0, tex2D.ReleaseAndGetAddressOf()));
 
 		// RenderTargetView Description ÃßÃâ..
 		rtvDesc = rt->GetRTVDesc();
@@ -114,7 +108,7 @@ void GraphicResourceManager::OnResize(int width, int height)
 		texDesc = dsv->GetTextureDesc();
 		texDesc.Width = width;
 		texDesc.Width = height;
-		HR(m_Device->CreateTexture2D(&texDesc, 0, tex2D.GetAddressOf()));
+		HR(m_Device->CreateTexture2D(&texDesc, 0, tex2D.ReleaseAndGetAddressOf()));
 
 		dsvDesc = dsv->GetDSVDesc();
 		HR(m_Device->CreateDepthStencilView(tex2D.Get(), &dsvDesc, dsv->GetAddressDSV()));

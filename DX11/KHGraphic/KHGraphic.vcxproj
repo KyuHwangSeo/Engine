@@ -170,6 +170,7 @@
     <ClInclude Include="GraphicDLL.h" />
     <ClInclude Include="LightRender.h" />
     <ClInclude Include="BasicRenderTarget.h" />
+    <ClInclude Include="MathDefine.h" />
     <ClInclude Include="ResourceFactoryBase.h" />
     <ClInclude Include="RenderManagerBase.h" />
     <ClInclude Include="ResourceManagerBase.h" />

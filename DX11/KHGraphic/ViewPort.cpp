@@ -1,14 +1,14 @@
 #include "DirectDefine.h"
 #include "ViewPort.h"
 
-ViewPort::ViewPort(float width, float height, float width_ratio, float height_ratio)
+ViewPort::ViewPort(float topX, float topY, float width, float height, float width_ratio, float height_ratio)
 	:m_Width_Ratio(width_ratio), m_Height_Ratio(height_ratio)
 {
 	m_ViewPort = new D3D11_VIEWPORT();
 	m_ViewPort->Width = width * width_ratio;
 	m_ViewPort->Height = height * height_ratio;
-	m_ViewPort->TopLeftX = 0.0f;
-	m_ViewPort->TopLeftY = 0.0f;
+	m_ViewPort->TopLeftX = topX;
+	m_ViewPort->TopLeftY = topY;
 	m_ViewPort->MinDepth = 0.0f;
 	m_ViewPort->MaxDepth = 1.0f;
 }

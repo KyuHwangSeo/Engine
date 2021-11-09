@@ -32,10 +32,30 @@ void RenderTarget::CreateRenderTarget(ID3D11Texture2D* texture2D, D3D11_RENDER_T
 
 void RenderTarget::CreateRTV(ID3D11Texture2D* texture2D, D3D11_RENDER_TARGET_VIEW_DESC* rtvDesc)
 {
-	RESET_COM(m_RTV);
+	ComPtr<ID3D11RenderTargetView> rtv0 = nullptr;
+	ID3D11RenderTargetView** pprtv0 = rtv0.GetAddressOf();
+	ComPtr<ID3D11RenderTargetView> rtv1 = nullptr;
+	ID3D11RenderTargetView** pprtv2 = nullptr;
+
+	if (pprtv0 == nullptr)
+	{
+		// RenderTargetView 持失..
+		HR(m_Device->CreateRenderTargetView(texture2D, rtvDesc, rtv1.GetAddressOf()));
+	}
+	else
+	{
+		// RenderTargetView 持失..
+		HR(m_Device->CreateRenderTargetView(texture2D, rtvDesc, pprtv0));
+		rtv1 = *pprtv0;
+	}
+	ID3D11RenderTargetView** pprtv1 = rtv1.GetAddressOf();
 
 	// RenderTargetView 持失..
-	HR(m_Device->CreateRenderTargetView(texture2D, rtvDesc, m_RTV.GetAddressOf()));
+	HR(m_Device->CreateRenderTargetView(texture2D, rtvDesc, rtv1.GetAddressOf()));
+
+
+	RESET_COM(m_RTV);
+
 }
 
 void RenderTarget::CreateSRV(ID3D11Texture2D* texture2D, D3D11_SHADER_RESOURCE_VIEW_DESC* srvDesc)

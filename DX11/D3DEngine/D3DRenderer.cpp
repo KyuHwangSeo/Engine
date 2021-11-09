@@ -25,6 +25,7 @@ D3DRenderer::D3DRenderer(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext
 	:m_Device(device), m_DeviceContext(context), m_SwapChain(swapchain)
 {
 	m_DSManger = new DepthStencilManager();
+	DepthStencilManager* depth = new DepthStencilManager();
 	m_DSManger->Initialize();
 
 	m_Forward = new Forward(device, context, swapchain);
