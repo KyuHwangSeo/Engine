@@ -19,7 +19,7 @@ void DepthStencilManager::Initialize()
 	ZeroMemory(&texDesc, sizeof(texDesc));
 	texDesc.MipLevels = 1;
 	texDesc.ArraySize = 1;
-	texDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
+	texDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	texDesc.SampleDesc.Count = 1;
 	texDesc.SampleDesc.Quality = 0;
 	texDesc.Usage = D3D11_USAGE_DEFAULT;

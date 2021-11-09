@@ -8,13 +8,14 @@
 #include "DepthStencilView.h"
 #include "RenderTargetBase.h"
 #include "BasicRenderTarget.h"
+#include "MathDefine.h"
 #include "DeferredRender.h"
 
-#include "MathDefine.h"
 #include "ResourceFactoryBase.h"
 #include "ResourceManagerBase.h"
 #include "ShaderManagerBase.h"
 #include "ConstantBufferDefine.h"
+#include "ShaderResourceViewDefine.h"
 
 DeferredRender::DeferredRender()
 {
@@ -166,7 +167,7 @@ void DeferredRender::OnResize(int width, int height)
 	m_RTVList[4] = m_NormalDepthRT->GetRTV();
 }
 
-void DeferredRender::Render(DirectX::XMMATRIX view, DirectX::XMMATRIX proj, DirectX::XMMATRIX world, ID3D11Buffer* vb, ID3D11Buffer* ib, const UINT size, const UINT offset, UINT indexCount)
+void DeferredRender::BeginRender()
 {
 	g_Context->OMSetRenderTargets(5, &m_RTVList[0], m_DepthStencilView);
 
@@ -180,16 +181,22 @@ void DeferredRender::Render(DirectX::XMMATRIX view, DirectX::XMMATRIX proj, Dire
 	g_Context->RSSetViewports(1, m_ScreenViewport);
 
 	g_Context->ClearDepthStencilView(m_DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-	
+
 	g_Context->OMSetDepthStencilState(m_DepthStencilState, 0);
-	
+
 	g_Context->OMSetBlendState(m_BlendState, 0, 0xffffffff);
 
 	g_Context->RSSetState(m_RasterizerState);
+}
 
+void DeferredRender::Render(DirectX::XMMATRIX view, DirectX::XMMATRIX proj, DirectX::XMMATRIX world, ID3D11Buffer* vb, ID3D11Buffer* ib, const UINT size, const UINT offset, UINT indexCount)
+{
 	// Shader Update
 	cbPerObject objData;
 	objData.gWorld = world;
+
+	m_MeshVS->SetConstantBuffer(objData);
+	m_MeshVS->Update();
 
 
 	g_Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

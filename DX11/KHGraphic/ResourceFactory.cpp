@@ -41,7 +41,7 @@ void GraphicResourceFactory::Initialize(int width, int height)
 	CreateSamplerState();
 	CreateBlendState();
 
-	CreateDepthStencilView();
+	CreateDepthStencilView(width, height);
 	CreateViewPort(width, height);
 
 	// Graphic Resource & Shader Manager 段奄鉢..
@@ -607,7 +607,7 @@ void GraphicResourceFactory::CreateBlendState()
 	CreateBS(&blendDesc);
 }
 
-void GraphicResourceFactory::CreateDepthStencilView()
+void GraphicResourceFactory::CreateDepthStencilView(int width, int height)
 {
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> tex2D = nullptr;
 
@@ -615,7 +615,8 @@ void GraphicResourceFactory::CreateDepthStencilView()
 	ZeroMemory(&texDesc, sizeof(texDesc));
 	texDesc.MipLevels = 1;
 	texDesc.ArraySize = 1;
-	texDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
+	//texDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
+	texDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	texDesc.SampleDesc.Count = 1;
 	texDesc.SampleDesc.Quality = 0;
 	texDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -625,19 +626,36 @@ void GraphicResourceFactory::CreateDepthStencilView()
 
 	CreateTexture2D(&texDesc, tex2D.GetAddressOf());
 
+	// Defalt DepthStencilView 持失..
+	CreateDSV(tex2D.Get(), nullptr, nullptr);
+
+	ZeroMemory(&texDesc, sizeof(texDesc));
+	texDesc.Width = width * 4;
+	texDesc.Height = height * 4;
+	texDesc.MipLevels = 1;
+	texDesc.ArraySize = 1;
+	//texDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+	texDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
+	texDesc.SampleDesc.Count = 1;
+	texDesc.SampleDesc.Quality = 0;
+	texDesc.Usage = D3D11_USAGE_DEFAULT;
+	texDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+	texDesc.CPUAccessFlags = 0;
+	texDesc.MiscFlags = 0;
+	CreateTexture2D(&texDesc, tex2D.GetAddressOf());
+
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
-	ZeroMemory(&dsvDesc, sizeof(dsvDesc));
-	//dsvDesc.Format = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
+	dsvDesc.Flags = 0;
 	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	dsvDesc.Texture2D.MipSlice = 0;
 
-	// Defalt DepthStencilView 持失..
+	// Shadow DepthStencilView 持失..
 	CreateDSV(tex2D.Get(), &dsvDesc, nullptr);
 }
 
 void GraphicResourceFactory::CreateViewPort(int width, int height)
 {
 	// Defalt ViewPort 持失..
-	CreateViewPort(0.0f, 0.0f, width, height);
+	CreateViewPort(0.0f, 0.0f, (float)width, (float)height);
 }

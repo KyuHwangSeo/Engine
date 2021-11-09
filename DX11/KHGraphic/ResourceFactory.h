@@ -52,7 +52,7 @@ private:
 	void CreateSamplerState();
 	void CreateBlendState();
 
-	void CreateDepthStencilView();
+	void CreateDepthStencilView(int width, int height);
 	void CreateViewPort(int width, int height);
 
 private:

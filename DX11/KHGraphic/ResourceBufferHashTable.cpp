@@ -1,3 +1,8 @@
+#define ADD_CONSTANT_BUFFER(ClassName) g_CBuffer_HashTable.insert(std::make_pair(ClassName::GetName(), ClassName::GetHashCode()));
+#define ADD_SAMPLER_STATE(ClassName) g_Sampler_HashTable.insert(std::make_pair(ClassName::GetName(), ClassName::GetHashCode()));
+#define ADD_SHADER_RESOURCE_VIEW(ClassName) g_SRV_HashTable.insert(std::make_pair(ClassName::GetName(), ClassName::GetHashCode()));
+#define ADD_UNORDERED_ACCESS_VIEW(ClassName) g_UAV_HashTable.insert(std::make_pair(ClassName::GetName(), ClassName::GetHashCode()));
+
 #include "ResourceBufferHashTable.h"
 #include "ConstantBufferDefine.h"
 #include "SamplerStateDefine.h"
@@ -12,48 +17,48 @@ std::unordered_map<std::string, Hash_Code> ShaderResourceHashTable::g_UAV_HashTa
 void ShaderResourceHashTable::Initialize()
 {
 	// Constant Buffer Hash Table Create..
-	g_CBuffer_HashTable.insert(std::make_pair(cbPerObject::GetName(), cbPerObject::GetHashCode()));
-	g_CBuffer_HashTable.insert(std::make_pair(cbLights::GetName(), cbLights::GetHashCode()));
-	g_CBuffer_HashTable.insert(std::make_pair(cbCamera::GetName(), cbCamera::GetHashCode()));
-	g_CBuffer_HashTable.insert(std::make_pair(cbShadow::GetName(), cbShadow::GetHashCode()));
-	g_CBuffer_HashTable.insert(std::make_pair(cbSkinned::GetName(), cbSkinned::GetHashCode()));
-	g_CBuffer_HashTable.insert(std::make_pair(cbID::GetName(), cbID::GetHashCode()));
-	g_CBuffer_HashTable.insert(std::make_pair(cbLightList::GetName(), cbLightList::GetHashCode()));
-	g_CBuffer_HashTable.insert(std::make_pair(cbMaterialList::GetName(), cbMaterialList::GetHashCode()));
-	g_CBuffer_HashTable.insert(std::make_pair(cbTexViewProj::GetName(), cbTexViewProj::GetHashCode()));
-	g_CBuffer_HashTable.insert(std::make_pair(cbTexel::GetName(), cbTexel::GetHashCode()));
-	g_CBuffer_HashTable.insert(std::make_pair(cbSsaoFrame::GetName(), cbSsaoFrame::GetHashCode()));
-	g_CBuffer_HashTable.insert(std::make_pair(cbFullScreen::GetName(), cbFullScreen::GetHashCode()));
-	g_CBuffer_HashTable.insert(std::make_pair(cbPerUI::GetName(), cbPerUI::GetHashCode()));
-	g_CBuffer_HashTable.insert(std::make_pair(cbAlpha::GetName(), cbAlpha::GetHashCode()));
+	ADD_CONSTANT_BUFFER(cbPerObject)
+	ADD_CONSTANT_BUFFER(cbLights)
+	ADD_CONSTANT_BUFFER(cbCamera)
+	ADD_CONSTANT_BUFFER(cbShadow)
+	ADD_CONSTANT_BUFFER(cbSkinned)
+	ADD_CONSTANT_BUFFER(cbID)
+	ADD_CONSTANT_BUFFER(cbLightList)
+	ADD_CONSTANT_BUFFER(cbMaterialList)
+	ADD_CONSTANT_BUFFER(cbTexViewProj)
+	ADD_CONSTANT_BUFFER(cbTexel)
+	ADD_CONSTANT_BUFFER(cbSsaoFrame)
+	ADD_CONSTANT_BUFFER(cbFullScreen)
+	ADD_CONSTANT_BUFFER(cbPerUI)
+	ADD_CONSTANT_BUFFER(cbAlpha)
 
 	// Sampler State Hash Table Create..
-	g_Sampler_HashTable.insert(std::make_pair(gShadowSam::GetName(), gShadowSam::GetHashCode()));
-	g_Sampler_HashTable.insert(std::make_pair(samWrapMinLinear::GetName(), samWrapMinLinear::GetHashCode()));
-	g_Sampler_HashTable.insert(std::make_pair(samWrapAnisotropic::GetName(), samWrapAnisotropic::GetHashCode()));
-	g_Sampler_HashTable.insert(std::make_pair(samClampMinLinear::GetName(), samClampMinLinear::GetHashCode()));
+	ADD_SAMPLER_STATE(gShadowSam)
+	ADD_SAMPLER_STATE(samWrapMinLinear)
+	ADD_SAMPLER_STATE(samWrapAnisotropic)
+	ADD_SAMPLER_STATE(samClampMinLinear)
 
 	// Shader Resource View Hash Table Create..
-	g_SRV_HashTable.insert(std::make_pair(gDiffuseMap::GetName(), gDiffuseMap::GetHashCode()));
-	g_SRV_HashTable.insert(std::make_pair(gNormalMap::GetName(), gNormalMap::GetHashCode()));
-	g_SRV_HashTable.insert(std::make_pair(gCubeMap::GetName(), gCubeMap::GetHashCode()));
-	g_SRV_HashTable.insert(std::make_pair(gShadowMap::GetName(), gShadowMap::GetHashCode()));
-	g_SRV_HashTable.insert(std::make_pair(gSSAOMap::GetName(), gSSAOMap::GetHashCode()));
-	g_SRV_HashTable.insert(std::make_pair(gNormalDepthMap::GetName(), gNormalDepthMap::GetHashCode()));
-	g_SRV_HashTable.insert(std::make_pair(gRandomVecMap::GetName(), gRandomVecMap::GetHashCode()));
-	g_SRV_HashTable.insert(std::make_pair(gInputMap::GetName(), gInputMap::GetHashCode()));
-	g_SRV_HashTable.insert(std::make_pair(AlbedoSRV::GetName(), AlbedoSRV::GetHashCode()));
-	g_SRV_HashTable.insert(std::make_pair(NormalSRV::GetName(), NormalSRV::GetHashCode()));
-	g_SRV_HashTable.insert(std::make_pair(PositionSRV::GetName(), PositionSRV::GetHashCode()));
-	g_SRV_HashTable.insert(std::make_pair(ShadowSRV::GetName(), ShadowSRV::GetHashCode()));
-	g_SRV_HashTable.insert(std::make_pair(SsaoSRV::GetName(), SsaoSRV::GetHashCode()));
-	g_SRV_HashTable.insert(std::make_pair(gInput::GetName(), gInput::GetHashCode()));
-	g_SRV_HashTable.insert(std::make_pair(gDepthMap::GetName(), gDepthMap::GetHashCode()));
-	g_SRV_HashTable.insert(std::make_pair(gOrigin::GetName(), gOrigin::GetHashCode()));
-	g_SRV_HashTable.insert(std::make_pair(gVelocity::GetName(), gVelocity::GetHashCode()));
+	ADD_SHADER_RESOURCE_VIEW(gDiffuseMap)
+	ADD_SHADER_RESOURCE_VIEW(gNormalMap)
+	ADD_SHADER_RESOURCE_VIEW(gCubeMap)
+	ADD_SHADER_RESOURCE_VIEW(gShadowMap)
+	ADD_SHADER_RESOURCE_VIEW(gSSAOMap)
+	ADD_SHADER_RESOURCE_VIEW(gNormalDepthMap)
+	ADD_SHADER_RESOURCE_VIEW(gRandomVecMap)
+	ADD_SHADER_RESOURCE_VIEW(gInputMap)
+	ADD_SHADER_RESOURCE_VIEW(AlbedoSRV)
+	ADD_SHADER_RESOURCE_VIEW(NormalSRV)
+	ADD_SHADER_RESOURCE_VIEW(PositionSRV)
+	ADD_SHADER_RESOURCE_VIEW(ShadowSRV)
+	ADD_SHADER_RESOURCE_VIEW(SsaoSRV)
+	ADD_SHADER_RESOURCE_VIEW(gInput)
+	ADD_SHADER_RESOURCE_VIEW(gDepthMap)
+	ADD_SHADER_RESOURCE_VIEW(gOrigin)
+	ADD_SHADER_RESOURCE_VIEW(gVelocity)
 
 	// Unordered Access View Hash Table Create..
-	g_UAV_HashTable.insert(std::make_pair(gOutput::GetName(), gOutput::GetHashCode()));
+	ADD_UNORDERED_ACCESS_VIEW(gOutput)
 }
 
 void ShaderResourceHashTable::Reset()

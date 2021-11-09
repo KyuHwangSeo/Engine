@@ -11,6 +11,8 @@
 #include "VertexShader.h"
 #include "PixelShader.h"
 #include "ComputeShader.h"
+
+#include "MathDefine.h"
 #include "ShadowRender.h"
 #include "DeferredRender.h"
 #include "LightRender.h"

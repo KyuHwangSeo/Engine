@@ -10,9 +10,12 @@
 #include "BasicRenderTarget.h"
 #include "LightRender.h"
 
+#include "MathDefine.h"
 #include "ResourceFactoryBase.h"
 #include "ResourceManagerBase.h"
 #include "ShaderManagerBase.h"
+#include "ConstantBufferDefine.h"
+#include "ShaderResourceViewDefine.h"
 
 LightRender::LightRender()
 {
@@ -57,6 +60,13 @@ void LightRender::OnResize(int width, int height)
 
 	// DepthStencilView 재설성..
 	m_DepthStencilView = m_DSV->GetDSV();
+
+	// ShaderResource 재설정..
+	m_ScreenPS->SetShaderResourceView<AlbedoSRV>(m_AlbedoSRV);
+	m_ScreenPS->SetShaderResourceView<NormalSRV>(m_NormalSRV);
+	m_ScreenPS->SetShaderResourceView<PositionSRV>(m_PositionSRV);
+	m_ScreenPS->SetShaderResourceView<NormalSRV>(m_ShadowSRV);
+	m_ScreenPS->SetShaderResourceView<SsaoSRV>(m_SSAOSRV);
 }
 
 void LightRender::Render()

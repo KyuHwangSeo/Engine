@@ -33,6 +33,6 @@ void DepthStencilView::OnResize(int width, int height)
 	HR(m_Device->CreateTexture2D(&m_DescTex, 0, m_DSB.GetAddressOf()));
 
 	/// 리소스 데이터에 액세스하기 위한 DepthStencilView 생성..
-	HR(m_Device->CreateDepthStencilView(m_DSB.Get(), &m_DescDSV, m_DSV.GetAddressOf()));
+	HR(m_Device->CreateDepthStencilView(m_DSB.Get(), nullptr, m_DSV.GetAddressOf()));
 
 }
