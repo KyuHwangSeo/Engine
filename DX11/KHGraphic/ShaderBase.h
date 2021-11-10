@@ -28,9 +28,6 @@ public:
 	// Shader Load 전에 필수로 해주어야 하는 작업..
 	static void Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, Microsoft::WRL::ComPtr<ID3D11DeviceContext> context);
 
-	// Shader Load 및 Create 함수..
-	static IShader* CreateShader(eShaderType shaderType, const char* fileName);
-
 	// Device & DeviceContext Reset 함수..
 	static void Reset();
 
@@ -38,11 +35,11 @@ public:
 	static void SetShaderRoute(std::string fileRoute);
 
 public:
-	// 현재 Shader Type 반환 함수..
-	eShaderType GetType();
-
 	virtual void LoadShader(std::string fileName) abstract;
 	virtual void Update() abstract;
+
+	// 현재 Shader Type 반환 함수..
+	eShaderType GetType();
 
 public:
 	// Device & Context..

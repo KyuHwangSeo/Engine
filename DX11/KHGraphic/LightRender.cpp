@@ -30,8 +30,8 @@ LightRender::~LightRender()
 void LightRender::Initialize(int width, int height)
 {
 	// Shader 설정..
-	m_ScreenVS = reinterpret_cast<VertexShader*>(g_Shader->GetShader("FullScreenVS"));
-	m_ScreenPS = reinterpret_cast<PixelShader*>(g_Shader->GetShader("LightPS"));
+	m_ScreenVS = g_Shader->GetShader("FullScreenVS");
+	m_ScreenPS = g_Shader->GetShader("LightPS");
 
 	// DepthStencilView 설정..
 	m_DSV = g_Resource->GetDepthStencilView(eDepthStencilView::DEFALT);
@@ -62,11 +62,11 @@ void LightRender::OnResize(int width, int height)
 	m_DepthStencilView = m_DSV->GetDSV();
 
 	// ShaderResource 재설정..
-	m_ScreenPS->SetShaderResourceView<AlbedoSRV>(m_AlbedoSRV);
-	m_ScreenPS->SetShaderResourceView<NormalSRV>(m_NormalSRV);
-	m_ScreenPS->SetShaderResourceView<PositionSRV>(m_PositionSRV);
-	m_ScreenPS->SetShaderResourceView<NormalSRV>(m_ShadowSRV);
-	m_ScreenPS->SetShaderResourceView<SsaoSRV>(m_SSAOSRV);
+	m_ScreenPS->SetShaderResourceView<AlbedoSRV>(&m_AlbedoSRV);
+	m_ScreenPS->SetShaderResourceView<NormalSRV>(&m_NormalSRV);
+	m_ScreenPS->SetShaderResourceView<PositionSRV>(&m_PositionSRV);
+	m_ScreenPS->SetShaderResourceView<NormalSRV>(&m_ShadowSRV);
+	m_ScreenPS->SetShaderResourceView<SsaoSRV>(&m_SSAOSRV);
 }
 
 void LightRender::Render()

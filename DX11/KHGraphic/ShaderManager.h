@@ -13,7 +13,9 @@ public:
 	void AddSampler(Hash_Code hash_code, Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler) override;
 
 public:
-	IShader* GetShader(std::string shaderName) override;
+	VertexShader* GetVertexShader(std::string shaderName) override;
+	PixelShader* GetPixelShader(std::string shaderName) override;
+	ComputeShader* GetComputeShader(std::string shaderName) override;
 
 private:
 	void CreateShader();

@@ -44,6 +44,9 @@ void GraphicResourceFactory::Initialize(int width, int height)
 	CreateDepthStencilView(width, height);
 	CreateViewPort(width, height);
 
+	// FullScreen Buffer..
+	CreateScreenBuffer();
+
 	// Graphic Resource & Shader Manager 초기화..
 	m_ResourceManager->Initialize(m_Device, m_SwapChain);
 	m_ShaderManager->Initialize(m_Device, m_Context);
@@ -658,4 +661,9 @@ void GraphicResourceFactory::CreateViewPort(int width, int height)
 {
 	// Defalt ViewPort 생성..
 	CreateViewPort(0.0f, 0.0f, (float)width, (float)height);
+}
+
+void GraphicResourceFactory::CreateScreenBuffer()
+{
+
 }

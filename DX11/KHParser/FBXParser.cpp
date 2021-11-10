@@ -293,8 +293,16 @@ void FBXParser::ProcessSkeleton(fbxsdk::FbxNode* node)
 	Mesh* parentMesh = FindMesh(parentName);
 	m_OneMesh->m_ParentName = parentName;
 
+	// 부모의 Mesh가 존재한다면 ChildList에 추가..
 	if (parentMesh == nullptr)
+	{
 		m_OneMesh->m_TopNode = true;
+	}
+	else
+	{
+		m_OneMesh->m_Parent = parentMesh;
+		parentMesh->m_ChildList.push_back(m_OneMesh);
+	}
 
 	// Node TRS 설정..
 	SetTransform(node);
@@ -344,7 +352,14 @@ void FBXParser::ProcessMesh(fbxsdk::FbxNode* node)
 
 	// 부모의 Mesh가 존재한다면 ChildList에 추가..
 	if (parentMesh == nullptr)
+	{
 		m_OneMesh->m_TopNode = true;
+	}
+	else
+	{
+		m_OneMesh->m_Parent = parentMesh;
+		parentMesh->m_ChildList.push_back(m_OneMesh);
+	}
 
 	// Node TRS 설정..
 	SetTransform(node);

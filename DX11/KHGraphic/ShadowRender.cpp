@@ -27,11 +27,11 @@ ShadowRender::~ShadowRender()
 void ShadowRender::Initialize(int width, int height)
 {
 	// Shader 설정..
-	m_MeshShadowVS = reinterpret_cast<VertexShader*>(g_Shader->GetShader("NormalShadowVS"));
-	m_SkinShadowVS = reinterpret_cast<VertexShader*>(g_Shader->GetShader("SkinShadowVS"));
+	m_MeshShadowVS = g_Shader->GetShader("NormalShadowVS");
+	m_SkinShadowVS = g_Shader->GetShader("SkinShadowVS");
 
 	// ViewPort 설정..
-	m_ShadowViewport = g_Factory->CreateViewPort(0.0f, 0.0f, width, height, 4.0f, 4.0f);
+	m_ShadowViewport = g_Factory->CreateViewPort(0.0f, 0.0f, (float)width, (float)height, 4.0f, 4.0f);
 
 	// DepthStencilView 설정..
 	m_ShadowDepthStencilView = g_Resource->GetDepthStencilView(eDepthStencilView::SHADOW);

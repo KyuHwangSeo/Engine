@@ -11,9 +11,9 @@ using namespace DirectX;
 using namespace SimpleMath;
 
 ASEParser::ASEParser()
-	: m_Token(0), m_parsingmode(eNone), m_data_asciiexport(0), m_materialcount(0),
-	m_MaterialData(nullptr), m_materialmap(nullptr), m_OneMesh(nullptr), m_IsAnimation(false), m_Animation(nullptr), m_lexer(nullptr)
+	: m_MaterialData(nullptr), m_materialmap(nullptr), m_OneMesh(nullptr), m_IsAnimation(false), m_Animation(nullptr), m_lexer(nullptr)
 {
+
 }
 
 ASEParser::~ASEParser()
@@ -338,7 +338,7 @@ void ASEParser::OptimizeData()
 	m_Model->m_MaterialList = m_MaterialList;
 	m_Model->m_MeshList.resize(m_MeshList.size());
 
-	for (unsigned int i = 0; i< m_MeshList.size(); i++)
+	for (unsigned int i = 0; i < m_MeshList.size(); i++)
 	{
 		m_Model->m_MeshList[i] = m_MeshList[i];
 	}
@@ -374,7 +374,7 @@ void ASEParser::SetBoneTM(ParserData::ASEMesh* pMesh)
 
 void ASEParser::CreateModel()
 {
-	m_Model = nullptr; 
+	m_Model = nullptr;
 	m_Model = new Model();
 	m_ModelList.push_back(m_Model);
 }
@@ -419,7 +419,7 @@ void ASEParser::DataParsing()
 			//--------------------
 
 		case TOKENR_3DSMAX_ASCIIEXPORT:
-			m_data_asciiexport = Parsing_NumberInt();
+			Parsing_NumberInt();
 			break;
 
 			//--------------------
@@ -494,7 +494,7 @@ void ASEParser::DataParsing()
 			///----------------------------------
 
 		case TOKENR_MATERIAL_COUNT:
-			m_materialcount = Parsing_NumberInt();
+			Parsing_NumberInt();
 			break;
 		case TOKENR_MATERIAL_NAME:
 		{
@@ -1009,8 +1009,8 @@ int ASEParser::Parsing_NumberInt() {
 
 Vector3 ASEParser::Parsing_ChangeNumberVector3()
 {
-	LONG				token;
-	Vector3			tempVector3;
+	LONG	token;
+	Vector3	tempVector3;
 
 	token = m_lexer->GetToken(m_TokenString);
 	tempVector3.x = (float)atof(m_TokenString);
@@ -1019,22 +1019,7 @@ Vector3 ASEParser::Parsing_ChangeNumberVector3()
 	token = m_lexer->GetToken(m_TokenString);
 	tempVector3.y = (float)atof(m_TokenString);
 
-	return			tempVector3;		// 스태틱 변수의 레퍼런스보다는 값 전달을 하자.
-}
-
-Vector3 ASEParser::Parsing_NormalNumberVector3()
-{
-	LONG				token;
-	Vector3			tempVector3;
-
-	token = m_lexer->GetToken(m_TokenString);
-	tempVector3.x = (float)atof(m_TokenString);
-	token = m_lexer->GetToken(m_TokenString);
-	tempVector3.y = (float)atof(m_TokenString);
-	token = m_lexer->GetToken(m_TokenString);
-	tempVector3.z = (float)atof(m_TokenString);
-
-	return			tempVector3;
+	return tempVector3;
 }
 
 void ASEParser::Create_OneMesh_to_list()
@@ -1096,13 +1081,6 @@ void ASEParser::Create_AnimationData_to_mesh(Mesh* nowMesh)
 	m_Animation->m_EndFrame = m_scenedata.m_LastFrame;
 	nowMesh->m_Animation = m_Animation;
 	m_IsAnimation = true;
-}
-
-// 정점 하나를..
-void ASEParser::Create_OneVertex_to_list()
-{
-	Vertex* temp = new Vertex;
-	m_OneMesh->m_VertexList.push_back(temp);
 }
 
 void ASEParser::Create_BoneData_to_list()

@@ -10,7 +10,6 @@ class PixelShader : public IShader
 {
 public:
 	PixelShader(const char* fileName);
-	PixelShader() = default;
 	~PixelShader();
 
 public:
@@ -18,7 +17,7 @@ public:
 	void Update() override;
 
 	// PixelShader SamplerState 설정..
-	void SetSamplerState(Hash_Code hash_code, Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler);
+	void SetSamplerState(Hash_Code hash_code, ID3D11SamplerState** sampler);
 
 	// PixelShader ConstantBuffer Resource Update..
 	template<typename T>
@@ -26,7 +25,7 @@ public:
 
 	// PixelShader ShaderResourceView 설정..
 	template<typename T>
-	void SetShaderResourceView(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv);
+	void SetShaderResourceView(ID3D11ShaderResourceView** srv);
 
 private:
 	// Pixel Shader
@@ -51,7 +50,7 @@ private:
 	std::unordered_map<Hash_Code, ShaderResourceBuffer> m_SRVList;
 };
 
-inline void PixelShader::SetSamplerState(Hash_Code hash_code, Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler)
+inline void PixelShader::SetSamplerState(Hash_Code hash_code, ID3D11SamplerState** sampler)
 {
 	// 해당 Value 찾기..
 	std::unordered_map<Hash_Code, SamplerState>::iterator it = m_SamplerList.find(hash_code);
@@ -60,10 +59,10 @@ inline void PixelShader::SetSamplerState(Hash_Code hash_code, Microsoft::WRL::Co
 	if (it == m_SamplerList.end()) return;
 
 	// SamplerState 설정..
-	it->second.sampler = sampler;
+	it->second.sampler = *sampler;
 
 	// 해당 Register Slot에 삽입..
-	m_SamplerStates[it->second.register_number] = sampler;
+	m_SamplerStates[it->second.register_number] = *sampler;
 }
 
 template<typename T>
@@ -80,7 +79,7 @@ inline void PixelShader::SetConstantBuffer(T cBuffer)
 }
 
 template<typename T>
-void PixelShader::SetShaderResourceView(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv)
+void PixelShader::SetShaderResourceView(ID3D11ShaderResourceView** srv)
 {
 	// 해당 Value 찾기..
 	std::unordered_map<Hash_Code, ShaderResourceBuffer>::iterator it = m_SRVList.find(typeid(T).hash_code());
@@ -89,8 +88,8 @@ void PixelShader::SetShaderResourceView(Microsoft::WRL::ComPtr<ID3D11ShaderResou
 	if (it == m_SRVList.end()) return;
 
 	// ShaderResourceView 설정..
-	it->second.srv = srv;
+	it->second.srv = *srv;
 
 	// 해당 Register Slot에 삽입..
-	m_ShaderResourceViews[it->second.register_number] = srv;
+	m_ShaderResourceViews[it->second.register_number] = *srv;
 }

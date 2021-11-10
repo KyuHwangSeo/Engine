@@ -220,6 +220,7 @@
     <ClCompile Include="ShaderBase.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="ResourceBufferHashTable.cpp" />
+    <ClCompile Include="ShaderManagerBase.cpp" />
     <ClCompile Include="ShadowRender.cpp" />
     <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="ViewPort.cpp" />

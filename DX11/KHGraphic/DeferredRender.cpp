@@ -30,9 +30,9 @@ DeferredRender::~DeferredRender()
 void DeferredRender::Initialize(int width, int height)
 {
 	// Shader 설정..
-	m_MeshVS = reinterpret_cast<VertexShader*>(g_Shader->GetShader("NormalSkinVS"));
-	m_SkinVS = reinterpret_cast<VertexShader*>(g_Shader->GetShader("NormalTextureVS"));
-	m_DeferredPS = reinterpret_cast<PixelShader*>(g_Shader->GetShader("NormalTextureDeferredPS"));
+	m_MeshVS = g_Shader->GetShader("NormalSkinVS");
+	m_SkinVS = g_Shader->GetShader("NormalTextureVS");
+	m_DeferredPS = g_Shader->GetShader("NormalTextureDeferredPS");
 	
 	// DepthStencilView 설정..
 	m_DSV = g_Resource->GetDepthStencilView(eDepthStencilView::DEFALT);

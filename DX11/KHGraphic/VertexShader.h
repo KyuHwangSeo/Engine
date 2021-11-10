@@ -10,7 +10,6 @@ class VertexShader : public IShader
 {
 public:
 	VertexShader(const char* fileName);
-	VertexShader() = default;
 	~VertexShader();
 
 public:
@@ -42,8 +41,7 @@ inline void VertexShader::SetConstantBuffer(T cBuffer)
 	std::unordered_map<Hash_Code, ConstantBuffer>::iterator it = m_ConstantBufferList.find(typeid(T).hash_code());
 
 	// 해당 Key에 대한 Value가 없다면..
-	if (it == m_ConstantBufferList.end())
-		return throw std::exception("ERROR: Can not find ConstantBuffer.\n");
+	if (it == m_ConstantBufferList.end()) return;
 
 	// Resource 복제..
 	g_DeviceContext->UpdateSubresource(it->second.cbuffer.Get(), 0, nullptr, &cBuffer, 0, 0);
