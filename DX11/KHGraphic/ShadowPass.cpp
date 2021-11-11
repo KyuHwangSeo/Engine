@@ -1,5 +1,5 @@
 #include "DirectDefine.h"
-#include "RenderBase.h"
+#include "RenderPassBase.h"
 #include "ShaderBase.h"
 #include "ShaderResourceBase.h"
 #include "VertexShader.h"
@@ -8,30 +8,31 @@
 #include "DepthStencilView.h"
 #include "RenderTargetBase.h"
 #include "BasicRenderTarget.h"
-#include "ShadowRender.h"
+#include "MathDefine.h"
+#include "ShadowPass.h"
 
 #include "ResourceFactoryBase.h"
 #include "ResourceManagerBase.h"
 #include "ShaderManagerBase.h"
 
-ShadowRender::ShadowRender()
+ShadowPass::ShadowPass()
 	:m_ShadowDSV(nullptr), m_ShadowSRV(nullptr)
 {
 }
 
-ShadowRender::~ShadowRender()
+ShadowPass::~ShadowPass()
 {
 
 }
 
-void ShadowRender::Initialize(int width, int height)
+void ShadowPass::Initialize(int width, int height)
 {
 	// Shader 설정..
-	m_MeshShadowVS = reinterpret_cast<VertexShader*>(g_Shader->GetShader("NormalShadowVS"));
-	m_SkinShadowVS = reinterpret_cast<VertexShader*>(g_Shader->GetShader("SkinShadowVS"));
+	m_MeshShadowVS = g_Shader->GetShader("NormalShadowVS");
+	m_SkinShadowVS = g_Shader->GetShader("SkinShadowVS");
 
 	// ViewPort 설정..
-	m_ShadowViewport = g_Factory->CreateViewPort(0.0f, 0.0f, width, height, 4.0f, 4.0f);
+	m_ShadowViewport = g_Factory->CreateViewPort(0.0f, 0.0f, (float)width, (float)height, 4.0f, 4.0f);
 
 	// DepthStencilView 설정..
 	m_ShadowDepthStencilView = g_Resource->GetDepthStencilView(eDepthStencilView::SHADOW);
@@ -71,7 +72,7 @@ void ShadowRender::Initialize(int width, int height)
 	RESET_COM(tex2D);
 }
 
-void ShadowRender::OnResize(int width, int height)
+void ShadowPass::OnResize(int width, int height)
 {
 	// Shadow DepthStencilView 재설성..
 	m_ShadowDSV = m_ShadowDepthStencilView->GetDSV();
@@ -80,11 +81,24 @@ void ShadowRender::OnResize(int width, int height)
 	m_ShadowSRV = m_ShadowRT->GetSRV();
 }
 
-void ShadowRender::Render()
+void ShadowPass::Release()
+{
+
+}
+
+void ShadowPass::BeginRender()
 {
 	g_Context->OMSetBlendState(0, 0, 0xffffffff);
 	g_Context->RSSetViewports(1, m_ShadowViewport);
 
+	// 그리기만 할 것이므로 null Render Target 설정..
+	// 깊이 버퍼, null Rendering 대상을 설정하면 색상 쓰기가 비활성화 된다..
+	g_Context->OMSetRenderTargets(0, nullptr, m_ShadowDSV);
+	g_Context->ClearDepthStencilView(m_ShadowDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);
+}
+
+void ShadowPass::Render(DirectX::XMMATRIX view, DirectX::XMMATRIX proj, DirectX::XMMATRIX world, ID3D11Buffer* vb, ID3D11Buffer* ib, UINT size, UINT offset, UINT indexCount)
+{
 	/// 실제 렌더링 추가
 
 	//g_Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -93,9 +107,4 @@ void ShadowRender::Render()
 	//
 	//// Draw..
 	//g_Context->DrawIndexed(m_IndexCount, 0, 0);
-
-	// 그리기만 할 것이므로 null Render Target 설정..
-	// 깊이 버퍼, null Rendering 대상을 설정하면 색상 쓰기가 비활성화 된다..
-	g_Context->OMSetRenderTargets(0, nullptr, m_ShadowDSV);
-	g_Context->ClearDepthStencilView(m_ShadowDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }

@@ -24,7 +24,7 @@ void ShaderManager::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, Micr
 {
 	// Shader Global Initialize..
 	IShader::Initialize(device, context);
-	IShader::SetShaderRoute("../Resource/Shader/");
+	IShader::SetShaderRoute("../Resource/Shader/SKH/");
 
 	// Shader Hash Table Initialize..
 	ShaderResourceHashTable::Initialize();
@@ -41,15 +41,64 @@ void ShaderManager::AddSampler(Hash_Code hash_code, Microsoft::WRL::ComPtr<ID3D1
 	m_SamplerList.insert(std::make_pair(hash_code, sampler));
 }
 
-IShader* ShaderManager::GetShader(std::string shaderName)
+void ShaderManager::Release()
+{
+	IShader::Reset();
+
+	for (std::pair<std::string, IShader*> shader : m_ShaderList)
+	{
+		RELEASE_COM(shader.second);
+	}
+
+	m_ShaderList.clear();
+}
+
+VertexShader* ShaderManager::GetVertexShader(std::string shaderName)
 {
 	std::unordered_map<std::string, IShader*>::iterator shader = m_ShaderList.find(shaderName);
 
-	// 해당 Shader를 찾았을 경우..
-	if (shader != m_ShaderList.end()) 
-		return shader->second;
+	// 해당 Shader가 없을 경우..
+	if (shader == m_ShaderList.end()) return nullptr;
 
-	return nullptr;
+	switch (shader->second->GetType())
+	{
+	case eShaderType::VERTEX:
+		return reinterpret_cast<VertexShader*>(shader->second);
+	default:
+		return nullptr;
+	}
+}
+
+PixelShader* ShaderManager::GetPixelShader(std::string shaderName)
+{
+	std::unordered_map<std::string, IShader*>::iterator shader = m_ShaderList.find(shaderName);
+
+	// 해당 Shader가 없을 경우..
+	if (shader == m_ShaderList.end()) return nullptr;
+
+	switch (shader->second->GetType())
+	{
+	case eShaderType::PIXEL:
+		return reinterpret_cast<PixelShader*>(shader->second);
+	default:
+		return nullptr;
+	}
+}
+
+ComputeShader* ShaderManager::GetComputeShader(std::string shaderName)
+{
+	std::unordered_map<std::string, IShader*>::iterator shader = m_ShaderList.find(shaderName);
+
+	// 해당 Shader가 없을 경우..
+	if (shader == m_ShaderList.end()) return nullptr;
+
+	switch (shader->second->GetType())
+	{
+	case eShaderType::COMPUTE:
+		return reinterpret_cast<ComputeShader*>(shader->second);
+	default:
+		return nullptr;
+	}
 }
 
 void ShaderManager::CreateShader()
@@ -104,7 +153,23 @@ void ShaderManager::CreateShader()
 void ShaderManager::LoadShader(eShaderType shaderType, std::string shaderName)
 {
 	// Shader Type에 맞는 Shader 생성..
-	IShader* newShader = IShader::CreateShader(shaderType, shaderName.c_str());
+	IShader* newShader = nullptr;
+
+	switch (shaderType)
+	{
+	case eShaderType::VERTEX:
+		newShader = new VertexShader(shaderName.c_str());
+		break;
+	case eShaderType::PIXEL:
+		newShader = new PixelShader(shaderName.c_str());
+		break;
+	case eShaderType::COMPUTE:
+		newShader = new ComputeShader(shaderName.c_str());
+		break;
+	default:
+		return throw std::exception("ERROR: None Shader Type.\n"); 
+		break;
+	}
 
 	// 파일을 제대로 읽지 못하여 생성하지 못한경우 nullptr..
 	if (newShader == nullptr)
@@ -132,18 +197,22 @@ void ShaderManager::SetSampler()
 		case eShaderType::PIXEL:
 		{
 			PixelShader* pShader = reinterpret_cast<PixelShader*>(shader.second);
+
+			// 해당 Shader에 바인딩된 Sampler 설정..
 			for (std::pair<Hash_Code, ComPtr<ID3D11SamplerState>> sampler : m_SamplerList)
 			{
-				pShader->SetSamplerState(sampler.first, sampler.second);
+				pShader->SetSamplerState(sampler.first, sampler.second.GetAddressOf());
 			}
 		}
 		break;
 		case eShaderType::COMPUTE:
 		{
 			ComputeShader* cShader = reinterpret_cast<ComputeShader*>(shader.second);
+			
+			// 해당 Shader에 바인딩된 Sampler 설정..
 			for (std::pair<Hash_Code, ComPtr<ID3D11SamplerState>> sampler : m_SamplerList)
 			{
-				cShader->SetSamplerState(sampler.first, sampler.second);
+				cShader->SetSamplerState(sampler.first, sampler.second.GetAddressOf());
 			}
 		}
 		break;

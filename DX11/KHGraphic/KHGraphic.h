@@ -16,6 +16,9 @@ public:
 	GRAPHIC_DLL void Initialize(HWND hwnd, int screenWidth, int screenHeight) override;
 
 	GRAPHIC_DLL void Render(std::queue<MeshData*>* meshList, GlobalData* global) override;
+	GRAPHIC_DLL void ShadowRender(std::queue<MeshData*>* meshList, GlobalData* global) override;
+	GRAPHIC_DLL void SSAORender() override;
+	GRAPHIC_DLL void UIRender(std::queue<MeshData*>* meshList, GlobalData* global) override;
 	GRAPHIC_DLL void OnReSize(int screenWidth, int screenheight) override;
 	GRAPHIC_DLL void Delete() override;
 
@@ -25,8 +28,6 @@ public:
 
 private:
 	IGraphicResourceFactory* m_ResourceFactory;
-
-	IGraphicResourceManager* m_ResourceMananger;
 
 	IRenderManager* m_RenderManager;
 };

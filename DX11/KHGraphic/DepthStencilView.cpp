@@ -23,16 +23,6 @@ ID3D11Texture2D* DepthStencilView::GetTexture2D()
 	return (ID3D11Texture2D*)resource;
 }
 
-ID3D11Texture2D** DepthStencilView::GetAddressTexture2D()
-{
-	ID3D11Resource* resource = nullptr;
-
-	// ÇöÀç ViewÀÇ Texture 2D Resource..
-	m_DSV->GetResource(&resource);
-
-	return (ID3D11Texture2D**)(&resource);
-}
-
 D3D11_TEXTURE2D_DESC DepthStencilView::GetTextureDesc()
 {
 	ID3D11Resource* resource = nullptr;

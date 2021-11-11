@@ -3,11 +3,12 @@ typedef unsigned int register_slot;
 
 // 모든 Shader Resource들의 Base Class..
 // 해당 Resource Buffer Name & Binding Register Index 보유..
-struct ShaderResourceBase
+class ShaderResourceBase
 {
+public:
 	ShaderResourceBase(std::string name, register_slot rNum) : buffer_name(name), register_number(rNum) {}
-	virtual ~ShaderResourceBase() = default;
 
+public:
 	// Buffer Name
 	std::string buffer_name;
 
@@ -16,41 +17,32 @@ struct ShaderResourceBase
 };
 
 // ConstantBuffer Resource Data Class
-struct ConstantBuffer : public ShaderResourceBase
+class ConstantBuffer : public ShaderResourceBase
 {
-	ConstantBuffer(std::string name, unsigned int rNum, Microsoft::WRL::ComPtr<ID3D11Buffer> cBuf = nullptr) : ShaderResourceBase(name, rNum), cbuffer(cBuf) {}
-	~ConstantBuffer() { RESET_COM(cbuffer); }
+public:
+	ConstantBuffer(std::string name, unsigned int rNum, Microsoft::WRL::ComPtr<ID3D11Buffer> cbuf) : ShaderResourceBase(name, rNum), cBuffer(cbuf) {}
 
-	// Constant Buffer Resource
-	Microsoft::WRL::ComPtr<ID3D11Buffer> cbuffer;
+public:
+	Microsoft::WRL::ComPtr<ID3D11Buffer> cBuffer;
 };
 
 // SamplerState Resource Data Class
-struct SamplerState : public ShaderResourceBase
+class SamplerState : public ShaderResourceBase
 {
-	SamplerState(std::string name, unsigned int rNum) : ShaderResourceBase(name, rNum), sampler(nullptr) {}
-	~SamplerState() { RESET_COM(sampler); }
-
-	// Sampler State Resource
-	Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler;
+public:
+	SamplerState(std::string name, unsigned int rNum) : ShaderResourceBase(name, rNum) {}
 };
 
 // ShaderResourceView Resource Data Class
-struct ShaderResourceBuffer : public ShaderResourceBase
+class ShaderResourceBuffer : public ShaderResourceBase
 {
+public:
 	ShaderResourceBuffer(std::string name, unsigned int rNum) : ShaderResourceBase(name, rNum) {}
-	~ShaderResourceBuffer() { RESET_COM(srv); }
-
-	// Shader Resource View Resource
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv;
 };
 
 // UnorderedAccessView Resource Data Class
-struct UnorderedAccessBuffer : public ShaderResourceBase
+class UnorderedAccessBuffer : public ShaderResourceBase
 {
+public:
 	UnorderedAccessBuffer(std::string name, unsigned int rNum) : ShaderResourceBase(name, rNum) {}
-	~UnorderedAccessBuffer() { RESET_COM(uav); }
-
-	// Unordered Access View Resource
-	Microsoft::WRL::ComPtr<ID3D11UnorderedAccessView> uav;
 };

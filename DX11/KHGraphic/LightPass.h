@@ -1,17 +1,23 @@
 #pragma once
-class LightRender : public RenderBase
+class BufferData;
+
+class LightPass : public RenderPassBase
 {
 public:
-	LightRender();
-	~LightRender();
+	LightPass();
+	~LightPass();
 
 public:
 	void Initialize(int width, int height) override;
 	void OnResize(int width, int height) override;
+	void Release() override;
 
+	void BeginRender();
 	void Render();
 
 private:
+	BufferData* m_ScreenBuffer;
+
 	VertexShader* m_ScreenVS;
 	PixelShader* m_ScreenPS; 
 	

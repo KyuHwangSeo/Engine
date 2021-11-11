@@ -8,6 +8,7 @@
 #include "ComputeRenderTarget.h"
 #include "ResourceManager.h"
 #include "EnumDefine.h"
+#include "VertexDefine.h"
 
 GraphicResourceManager::GraphicResourceManager()
 	:m_Device(nullptr), m_SwapChain(nullptr),m_BackBuffer(nullptr)
@@ -123,6 +124,63 @@ void GraphicResourceManager::OnResize(int width, int height)
 	RESET_COM(tex2D);
 }
 
+void GraphicResourceManager::Release()
+{
+	RESET_COM(m_Device);
+	RESET_COM(m_SwapChain);
+
+	SAFE_DELETE(m_BackBuffer);
+
+	for (RenderTarget* rt : m_RenderTargetList)
+	{
+		SAFE_DELETE(rt);
+	}
+
+	for (DepthStencilView* dsv : m_DepthStencilViewList)
+	{
+		SAFE_DELETE(dsv);
+	}
+
+	for (ViewPort* viewport : m_ViewPortList)
+	{
+		SAFE_DELETE(viewport);
+	}
+
+	for (ComPtr<ID3D11DepthStencilState> dss : m_DepthStencilStateList)
+	{
+		RESET_COM(dss);
+	}
+
+	for (ComPtr<ID3D11RasterizerState> rs : m_RasterizerStateList)
+	{
+		RESET_COM(rs);
+	}
+
+	for (ComPtr<ID3D11BlendState> bs : m_BlendStateList)
+	{
+		RESET_COM(bs);
+	}
+
+	for (ComPtr<ID3D11SamplerState> ss : m_SamplerStateList)
+	{
+		RESET_COM(ss);
+	}
+
+	for (BufferData* buffer : m_BufferList)
+	{
+		SAFE_DELETE(buffer);
+	}
+	
+	m_RenderTargetList.clear();
+	m_DepthStencilViewList.clear();
+	m_ViewPortList.clear();
+	m_DepthStencilStateList.clear();
+	m_RasterizerStateList.clear();
+	m_BlendStateList.clear();
+	m_SamplerStateList.clear();
+	m_BufferList.clear();
+}
+
 RenderTarget* GraphicResourceManager::GetMainRenderTarget()
 {
 	return m_BackBuffer;
@@ -158,21 +216,7 @@ D3D11_VIEWPORT* GraphicResourceManager::GetViewPort(eViewPort state)
 	return m_ViewPortList[(int)state]->GetViewPort();
 }
 
-// AddResource
-template<>
-inline void GraphicResourceManager::AddResource(ViewPort* resource) { m_ViewPortList.push_back(resource); }
-
-template<>
-inline void GraphicResourceManager::AddResource(RenderTarget* resource) { m_RenderTargetList.push_back(resource); }
-
-template<>
-inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11DepthStencilState> resource) { m_DepthStencilStateList.push_back(resource); }
-
-template<>
-inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11RasterizerState> resource) { m_RasterizerStateList.push_back(resource); }
-
-template<>
-inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11BlendState> resource) { m_BlendStateList.push_back(resource); }
-
-template<>
-inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11SamplerState> resource) { m_SamplerStateList.push_back(resource); }
+BufferData* GraphicResourceManager::GetBuffer(eBuffer state)
+{
+	return m_BufferList[(int)state];
+}

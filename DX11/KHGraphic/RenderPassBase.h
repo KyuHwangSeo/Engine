@@ -13,19 +13,23 @@ interface IShaderManager;
 interface IGraphicResourceManager;
 interface IGraphicResourceFactory;
 
-class RenderBase
+class RenderPassBase
 {
 public:
-	RenderBase() = default;
-	virtual ~RenderBase() = default;
+	RenderPassBase() = default;
+	virtual ~RenderPassBase() = default;
 
 public:
 	virtual void Initialize(int width, int height) abstract;
 	virtual void OnResize(int width, int height) abstract;
+	virtual void Release() abstract;
 
 public:
 	static void Initialize(Microsoft::WRL::ComPtr<ID3D11DeviceContext> context, IGraphicResourceFactory* factory, IGraphicResourceManager* resourceManager, IShaderManager* shaderManager);
 	static void Reset();
+
+public:
+	friend class RenderManager;
 
 protected:
 	static Microsoft::WRL::ComPtr<ID3D11DeviceContext> g_Context;

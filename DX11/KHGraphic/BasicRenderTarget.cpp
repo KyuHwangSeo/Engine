@@ -24,16 +24,6 @@ ID3D11Texture2D* BasicRenderTarget::GetTexture2D()
 	return (ID3D11Texture2D*)resource;
 }
 
-ID3D11Texture2D** BasicRenderTarget::GetAddressTexture2D()
-{
-	ID3D11Resource* resource = nullptr;
-
-	// ÇöÀç ViewÀÇ Texture 2D Resource..
-	m_SRV->GetResource(&resource);
-
-	return (ID3D11Texture2D**)(&resource);
-}
-
 D3D11_TEXTURE2D_DESC BasicRenderTarget::GetTextureDesc()
 {
 	ID3D11Resource* resource = nullptr;

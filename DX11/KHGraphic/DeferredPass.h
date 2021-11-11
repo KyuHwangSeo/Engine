@@ -1,16 +1,17 @@
 #pragma once
-class DeferredRender : public RenderBase
+class DeferredPass : public RenderPassBase
 {
 public:
-	DeferredRender();
-	~DeferredRender();
+	DeferredPass();
+	~DeferredPass();
 
 public:
 	void Initialize(int width, int height) override;
 	void OnResize(int width, int height) override;
+	void Release() override;
 
 	void BeginRender();
-	void Render(DirectX::XMMATRIX view, DirectX::XMMATRIX proj, DirectX::XMMATRIX world, ID3D11Buffer* vb, ID3D11Buffer* ib, const UINT size, const UINT offset, UINT indexCount);
+	void Render(DirectX::XMMATRIX view, DirectX::XMMATRIX proj, DirectX::XMMATRIX world, ID3D11Buffer* vb, ID3D11Buffer* ib, UINT size, UINT offset, UINT indexCount);
 
 private:
 	VertexShader* m_MeshVS;

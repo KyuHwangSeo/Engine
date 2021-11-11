@@ -71,7 +71,7 @@ void ComputeShader::LoadShader(std::string fileName)
 
 			// Key (Constant Buffer HashCode) && Value (Register Slot, Constant Buffer)
 			m_ConstantBuffers.push_back(constantBuffer);
-			m_ConstantBufferList.insert(std::make_pair(hash_key, ConstantBuffer(bindDesc.Name, register_slot, constantBuffer)));
+			m_ConstantBufferList.insert(std::make_pair(hash_key, new ConstantBuffer(bindDesc.Name, register_slot, constantBuffer)));
 		}
 	}
 
@@ -98,7 +98,7 @@ void ComputeShader::LoadShader(std::string fileName)
 			// SRV Hash Code..
 			hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::BufferType::SRV, bindDesc.Name);
 
-			m_SRVList.insert(std::make_pair(hash_key, ShaderResourceBuffer(bindDesc.Name, bindDesc.BindPoint)));
+			m_SRVList.insert(std::make_pair(hash_key, new ShaderResourceBuffer(bindDesc.Name, bindDesc.BindPoint)));
 			srv_size = bindDesc.BindPoint;
 		}
 		break;
@@ -107,7 +107,7 @@ void ComputeShader::LoadShader(std::string fileName)
 			// Sampler Hash Code..
 			hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::BufferType::SAMPLER, bindDesc.Name);
 
-			m_SamplerList.insert(std::make_pair(hash_key, SamplerState(bindDesc.Name, bindDesc.BindPoint)));
+			m_SamplerList.insert(std::make_pair(hash_key, new SamplerState(bindDesc.Name, bindDesc.BindPoint)));
 			sampler_size = bindDesc.BindPoint;
 		}
 		break;
@@ -116,7 +116,7 @@ void ComputeShader::LoadShader(std::string fileName)
 			// UAV Hash Code..
 			hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::BufferType::UAV, bindDesc.Name);
 
-			m_UAVList.insert(std::make_pair(hash_key, UnorderedAccessBuffer(bindDesc.Name, bindDesc.BindPoint)));
+			m_UAVList.insert(std::make_pair(hash_key, new UnorderedAccessBuffer(bindDesc.Name, bindDesc.BindPoint)));
 			uav_size = bindDesc.BindPoint;
 		}
 		break;
@@ -149,4 +149,58 @@ void ComputeShader::Update()
 
 	// Compute Shader UnorderedAccessView ¼³Á¤..
 	g_DeviceContext->CSSetUnorderedAccessViews(0, (UINT)m_UnorderedAccessViews.size(), m_UnorderedAccessViews[0].GetAddressOf(), 0);
+}
+
+void ComputeShader::Release()
+{
+	RESET_COM(m_CS);
+
+	for (Microsoft::WRL::ComPtr<ID3D11Buffer> cBuffer : m_ConstantBuffers)
+	{
+		RESET_COM(cBuffer);
+	}
+
+	for (Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler : m_SamplerStates)
+	{
+		RESET_COM(sampler);
+	}
+
+	for (Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv : m_ShaderResourceViews)
+	{
+		RESET_COM(srv);
+	}
+
+	for (Microsoft::WRL::ComPtr<ID3D11UnorderedAccessView> uav : m_UnorderedAccessViews)
+	{
+		RESET_COM(uav);
+	}
+
+	for (std::pair<Hash_Code, ConstantBuffer*> cBuffer : m_ConstantBufferList)
+	{
+		SAFE_DELETE(cBuffer.second);
+	}
+
+	for (std::pair<Hash_Code, SamplerState*> sampler : m_SamplerList)
+	{
+		SAFE_DELETE(sampler.second);
+	}
+
+	for (std::pair<Hash_Code, ShaderResourceBuffer*> srv : m_SRVList)
+	{
+		SAFE_DELETE(srv.second);
+	}
+
+	for (std::pair<Hash_Code, UnorderedAccessBuffer*> uav : m_UAVList)
+	{
+		SAFE_DELETE(uav.second);
+	}
+
+	m_ConstantBuffers.clear();
+	m_SamplerStates.clear();
+	m_ShaderResourceViews.clear();
+	m_UnorderedAccessViews.clear();
+	m_SamplerList.clear();
+	m_ConstantBufferList.clear();
+	m_SRVList.clear();
+	m_UAVList.clear();
 }

@@ -1,14 +1,15 @@
-#define ADD_CONSTANT_BUFFER(ClassName) g_CBuffer_HashTable.insert(std::make_pair(ClassName::GetName(), ClassName::GetHashCode()));
-#define ADD_SAMPLER_STATE(ClassName) g_Sampler_HashTable.insert(std::make_pair(ClassName::GetName(), ClassName::GetHashCode()));
-#define ADD_SHADER_RESOURCE_VIEW(ClassName) g_SRV_HashTable.insert(std::make_pair(ClassName::GetName(), ClassName::GetHashCode()));
-#define ADD_UNORDERED_ACCESS_VIEW(ClassName) g_UAV_HashTable.insert(std::make_pair(ClassName::GetName(), ClassName::GetHashCode()));
-
 #include "ResourceBufferHashTable.h"
 #include "ConstantBufferDefine.h"
 #include "SamplerStateDefine.h"
 #include "ShaderResourceViewDefine.h"
 #include "UnorderedAccessViewDefine.h"
 
+#define ADD_CONSTANT_BUFFER(ClassName) g_CBuffer_HashTable.insert(std::make_pair(ClassName::GetName(), ClassName::GetHashCode()));
+#define ADD_SAMPLER_STATE(ClassName) g_Sampler_HashTable.insert(std::make_pair(ClassName::GetName(), ClassName::GetHashCode()));
+#define ADD_SHADER_RESOURCE_VIEW(ClassName) g_SRV_HashTable.insert(std::make_pair(ClassName::GetName(), ClassName::GetHashCode()));
+#define ADD_UNORDERED_ACCESS_VIEW(ClassName) g_UAV_HashTable.insert(std::make_pair(ClassName::GetName(), ClassName::GetHashCode()));
+
+// ShaderResource Hash Table..
 std::unordered_map<std::string, Hash_Code> ShaderResourceHashTable::g_CBuffer_HashTable;
 std::unordered_map<std::string, Hash_Code> ShaderResourceHashTable::g_Sampler_HashTable;
 std::unordered_map<std::string, Hash_Code> ShaderResourceHashTable::g_SRV_HashTable;

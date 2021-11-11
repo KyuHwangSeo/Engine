@@ -6,10 +6,10 @@
 #include "ResourceManagerBase.h"
 #include "ResourceFactory.h"
 #include "RenderManager.h"
-#include "RenderBase.h"
+#include "RenderPassBase.h"
 
 KHGraphic::KHGraphic()
-	:m_ResourceFactory(nullptr), m_ResourceMananger(nullptr), m_RenderManager(nullptr)
+	:m_ResourceFactory(nullptr), m_RenderManager(nullptr)
 {
 
 }
@@ -26,22 +26,12 @@ void KHGraphic::Initialize(HWND hwnd, int screenWidth, int screenHeight)
 	graphic->Initialize(hwnd, screenWidth, screenHeight);
 
 	// Resource Factory 생성 및 초기화..
-	GraphicResourceFactory* resourceFactory = new GraphicResourceFactory(graphic);
-	resourceFactory->Initialize(screenWidth, screenHeight);
-
-	// Resource Manager Pointer..
-	IGraphicResourceManager* resourceManager = resourceFactory->GetResourceManager();
-
-	// Shader Manager Pointer..
-	IShaderManager* shaderManager = resourceFactory->GetShaderManager();
+	m_ResourceFactory = new GraphicResourceFactory(graphic);
+	m_ResourceFactory->Initialize(screenWidth, screenHeight);
 
 	// Render Manager 생성 및 초기화..
-	m_RenderManager = new RenderManager(graphic, resourceFactory, resourceManager, shaderManager);
+	m_RenderManager = new RenderManager(graphic, m_ResourceFactory);
 	m_RenderManager->Initialize(screenWidth, screenHeight);
-
-	// Set InterFace Pointer..
-	m_ResourceFactory = resourceFactory;
-	m_ResourceMananger = resourceManager;
 }
 
 void KHGraphic::Render(std::queue<MeshData*>* meshList, GlobalData* global)
@@ -49,9 +39,24 @@ void KHGraphic::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 	m_RenderManager->Render(meshList, global);
 }
 
+void KHGraphic::ShadowRender(std::queue<MeshData*>* meshList, GlobalData* global)
+{
+	m_RenderManager->ShadowRender(meshList, global);
+}
+
+void KHGraphic::SSAORender()
+{
+
+}
+
+void KHGraphic::UIRender(std::queue<MeshData*>* meshList, GlobalData* global)
+{
+
+}
+
 void KHGraphic::OnReSize(int screenWidth, int screenheight)
 {
-	m_ResourceMananger->OnResize(screenWidth, screenheight);
+	m_RenderManager->OnResize(screenWidth, screenheight);
 }
 
 void KHGraphic::Delete()

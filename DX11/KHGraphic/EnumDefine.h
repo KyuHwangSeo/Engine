@@ -22,7 +22,7 @@ enum class eBlendState
 
 enum class eViewPort
 {
-	DEFALT = 0,
+	SCREEN = 0,
 	SHADOW,
 	SSAO,
 };
@@ -37,4 +37,10 @@ enum class eRenderTarget
 {
 	BACK_BUFFER,
 
+};
+
+enum class eBuffer
+{
+	SCREEN,
+	SSAO
 };

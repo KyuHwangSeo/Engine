@@ -1,5 +1,5 @@
 #include "DirectDefine.h"
-#include "RenderBase.h"
+#include "RenderPassBase.h"
 #include "ShaderBase.h"
 #include "ShaderResourceBase.h"
 #include "VertexShader.h"
@@ -9,7 +9,7 @@
 #include "RenderTargetBase.h"
 #include "BasicRenderTarget.h"
 #include "MathDefine.h"
-#include "DeferredRender.h"
+#include "DeferredPass.h"
 
 #include "ResourceFactoryBase.h"
 #include "ResourceManagerBase.h"
@@ -17,22 +17,22 @@
 #include "ConstantBufferDefine.h"
 #include "ShaderResourceViewDefine.h"
 
-DeferredRender::DeferredRender()
+DeferredPass::DeferredPass()
 {
 
 }
 
-DeferredRender::~DeferredRender()
+DeferredPass::~DeferredPass()
 {
 
 }
 
-void DeferredRender::Initialize(int width, int height)
+void DeferredPass::Initialize(int width, int height)
 {
 	// Shader 설정..
-	m_MeshVS = reinterpret_cast<VertexShader*>(g_Shader->GetShader("NormalSkinVS"));
-	m_SkinVS = reinterpret_cast<VertexShader*>(g_Shader->GetShader("NormalTextureVS"));
-	m_DeferredPS = reinterpret_cast<PixelShader*>(g_Shader->GetShader("NormalTextureDeferredPS"));
+	m_MeshVS = g_Shader->GetShader("NormalSkinVS");
+	m_SkinVS = g_Shader->GetShader("NormalTextureVS");
+	m_DeferredPS = g_Shader->GetShader("NormalTextureDeferredPS");
 	
 	// DepthStencilView 설정..
 	m_DSV = g_Resource->GetDepthStencilView(eDepthStencilView::DEFALT);
@@ -43,7 +43,7 @@ void DeferredRender::Initialize(int width, int height)
 	m_BlendState = g_Resource->GetBlendState(eBlendState::BLEND_ONE);
 
 	// ViewPort 설정..
-	m_ScreenViewport = g_Resource->GetViewPort(eViewPort::DEFALT);
+	m_ScreenViewport = g_Resource->GetViewPort(eViewPort::SCREEN);
 
 	///////////////////////////////////////////////////////////////////////////
 	// Texture 2D
@@ -147,7 +147,7 @@ void DeferredRender::Initialize(int width, int height)
 	RESET_COM(tex2D[4]);
 }
 
-void DeferredRender::OnResize(int width, int height)
+void DeferredPass::OnResize(int width, int height)
 {
 	// DepthStencilView 재설성..
 	m_DepthStencilView = m_DSV->GetDSV();
@@ -167,7 +167,12 @@ void DeferredRender::OnResize(int width, int height)
 	m_RTVList[4] = m_NormalDepthRT->GetRTV();
 }
 
-void DeferredRender::BeginRender()
+void DeferredPass::Release()
+{
+
+}
+
+void DeferredPass::BeginRender()
 {
 	g_Context->OMSetRenderTargets(5, &m_RTVList[0], m_DepthStencilView);
 
@@ -189,15 +194,24 @@ void DeferredRender::BeginRender()
 	g_Context->RSSetState(m_RasterizerState);
 }
 
-void DeferredRender::Render(DirectX::XMMATRIX view, DirectX::XMMATRIX proj, DirectX::XMMATRIX world, ID3D11Buffer* vb, ID3D11Buffer* ib, const UINT size, const UINT offset, UINT indexCount)
+void DeferredPass::Render(DirectX::XMMATRIX view, DirectX::XMMATRIX proj, DirectX::XMMATRIX world, ID3D11Buffer* vb, ID3D11Buffer* ib, UINT size, UINT offset, UINT indexCount)
 {
 	// Shader Update
 	cbPerObject objData;
 	objData.gWorld = world;
 
 	m_MeshVS->SetConstantBuffer(objData);
+
+	// Vertex Shader Update..
 	m_MeshVS->Update();
 
+	// 
+	//m_DeferredPS->SetShaderResourceView<gDiffuseMap>(nullptr);
+	//m_DeferredPS->SetShaderResourceView<gNormalMap>(nullptr);
+	//m_DeferredPS->SetShaderResourceView<gCubeMap>(nullptr);
+
+	// Pixel Shader Update..
+	m_DeferredPS->Update();
 
 	g_Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 

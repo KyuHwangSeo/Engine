@@ -1,15 +1,17 @@
 #pragma once
-class ShadowRender : public RenderBase
+class ShadowPass : public RenderPassBase
 {
 public:
-	ShadowRender();
-	~ShadowRender();
+	ShadowPass();
+	~ShadowPass();
 
 public:
 	void Initialize(int width, int height) override;
 	void OnResize(int width, int height) override;
+	void Release() override;
 
-	void Render();
+	void BeginRender();
+	void Render(DirectX::XMMATRIX view, DirectX::XMMATRIX proj, DirectX::XMMATRIX world, ID3D11Buffer* vb, ID3D11Buffer* ib, UINT size, UINT offset, UINT indexCount);
 
 private:
 	VertexShader* m_MeshShadowVS;
