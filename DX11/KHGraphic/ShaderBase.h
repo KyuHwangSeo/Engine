@@ -37,6 +37,7 @@ public:
 public:
 	virtual void LoadShader(std::string fileName) abstract;
 	virtual void Update() abstract;
+	virtual void Release() abstract;
 
 	// 현재 Shader Type 반환 함수..
 	eShaderType GetType();

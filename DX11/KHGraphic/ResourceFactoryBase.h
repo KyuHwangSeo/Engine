@@ -15,6 +15,8 @@
 
 class BasicRenderTarget;
 class ComputeRenderTarget;
+interface IShaderManager;
+interface IGraphicResourceManager;
 
 interface IGraphicResourceFactory
 {
@@ -48,4 +50,8 @@ public:
 	virtual Indexbuffer* CreateIndexBuffer(ParserData::Mesh* mesh) abstract;
 	virtual Vertexbuffer* CreateVertexBuffer(ParserData::Mesh* mesh) abstract;
 	virtual TextureBuffer* CreateTextureBuffer(std::string path) abstract;
+
+public:
+	virtual IShaderManager* GetShaderManager() abstract;
+	virtual IGraphicResourceManager* GetResourceManager() abstract;
 };

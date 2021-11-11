@@ -167,6 +167,9 @@ inline void Shader::SetVertexConstantBuffer(T cBuffer)
 	// 해당 Key에 대한 Value가 없다면..
 	if (it == m_VSConstantBuffers.end()) return;
 
+	ID3D11Buffer** buf1 = m_VSBuffers[0].GetAddressOf();
+	ID3D11Buffer** buf2 = it->second.cbuffer.GetAddressOf();
+
 	// Resource 복제..
 	m_DeviceContext->UpdateSubresource(it->second.cbuffer.Get(), 0, nullptr, &cBuffer, 0, 0);
 }

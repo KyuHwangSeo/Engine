@@ -17,6 +17,8 @@
 #include "SamplerStateDefine.h"
 #include "ToolKitDefine.h"
 
+using namespace DirectX::SimpleMath;
+
 GraphicResourceFactory::GraphicResourceFactory(D3D11Graphic* graphic)
 {
 	// Graphic Resource & Shader Manager »ý¼º..
@@ -45,7 +47,8 @@ void GraphicResourceFactory::Initialize(int width, int height)
 	CreateViewPort(width, height);
 
 	// FullScreen Buffer..
-	CreateScreenBuffer();
+	CreateQuadBuffer();
+	CreateSSAOQuadBuffer();
 
 	// Graphic Resource & Shader Manager ÃÊ±âÈ­..
 	m_ResourceManager->Initialize(m_Device, m_SwapChain);
@@ -58,8 +61,8 @@ void GraphicResourceFactory::Release()
 	RESET_COM(m_Context);
 	RESET_COM(m_SwapChain);
 
-	SAFE_DELETE(m_ShaderManager);
-	SAFE_DELETE(m_ResourceManager);
+	SAFE_RELEASE(m_ShaderManager);
+	SAFE_RELEASE(m_ResourceManager);
 }
 
 void GraphicResourceFactory::CreateTexture2D(D3D11_TEXTURE2D_DESC* texDesc, ID3D11Texture2D** tex2D)
@@ -296,7 +299,6 @@ Indexbuffer* GraphicResourceFactory::CreateIndexBuffer(ParserData::Mesh* mesh)
 	// ³Ñ°ÜÁà¾ßÇÒ IndexBufferData »ðÀÔ..
 	iBuffer->Count = iCount * 3;
 	iBuffer->IndexBufferPointer = IB;
-	iBuffer->size = sizeof(ID3D11Buffer);
 	
 	return iBuffer;
 }
@@ -338,7 +340,7 @@ Vertexbuffer* GraphicResourceFactory::CreateVertexBuffer(ParserData::Mesh* mesh)
 	// ³Ñ°ÜÁà¾ßÇÒ VertexBufferData »ðÀÔ..
 	vBuffer->Count = vCount;
 	vBuffer->VertexbufferPointer = VB;
-	vBuffer->size = sizeof(ID3D11Buffer);
+	vBuffer->VertexDataSize = sizeof(NormalMapVertex);
 
 	return vBuffer;
 }
@@ -367,7 +369,6 @@ TextureBuffer* GraphicResourceFactory::CreateTextureBuffer(std::string path)
 
 	// ³Ñ°ÜÁà¾ßÇÒ TextureBufferData »ðÀÔ..
 	tBuffer->TextureBufferPointer = newTex;
-	tBuffer->size = sizeof(ID3D11ShaderResourceView);
 	texResource->Release();
 
 	return tBuffer;
@@ -663,7 +664,118 @@ void GraphicResourceFactory::CreateViewPort(int width, int height)
 	CreateViewPort(0.0f, 0.0f, (float)width, (float)height);
 }
 
-void GraphicResourceFactory::CreateScreenBuffer()
+void GraphicResourceFactory::CreateQuadBuffer()
 {
+	BufferData* newBuf = new BufferData();
+
+	PosTexVertex v[4];
+	v[0].Pos = Vector3(-1.0f, -1.0f, 0.0f);
+	v[1].Pos = Vector3(-1.0f, +1.0f, 0.0f);
+	v[2].Pos = Vector3(+1.0f, +1.0f, 0.0f);
+	v[3].Pos = Vector3(+1.0f, -1.0f, 0.0f);
+
+	v[0].Tex = Vector2(0.0f, 1.0f);
+	v[1].Tex = Vector2(0.0f, 0.0f);
+	v[2].Tex = Vector2(1.0f, 0.0f);
+	v[3].Tex = Vector2(1.0f, 1.0f);
+
+	UINT indices[6] =
+	{
+		0, 1, 2,
+		0, 2, 3
+	};
+
+	newBuf->Stride = sizeof(PosTexVertex);
+	newBuf->IndexCount = 6;
+
+	D3D11_BUFFER_DESC vbd;
+	vbd.Usage = D3D11_USAGE_IMMUTABLE;
+	vbd.ByteWidth = sizeof(PosTexVertex) * 4;
+	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vbd.CPUAccessFlags = 0;
+	vbd.MiscFlags = 0;
+	vbd.StructureByteStride = 0;
+
+	D3D11_SUBRESOURCE_DATA vinitData;
+	vinitData.pSysMem = v;
+
+	HR(m_Device->CreateBuffer(&vbd, &vinitData, &newBuf->VB));
+
+	D3D11_BUFFER_DESC ibd;
+	ibd.Usage = D3D11_USAGE_IMMUTABLE;
+	ibd.ByteWidth = sizeof(UINT) * 6;
+	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	ibd.CPUAccessFlags = 0;
+	ibd.StructureByteStride = 0;
+	ibd.MiscFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA iinitData;
+	iinitData.pSysMem = indices;
+
+	HR(m_Device->CreateBuffer(&ibd, &iinitData, &newBuf->IB));
+
+	// Resource µî·Ï..
+	m_ResourceManager->AddResource(newBuf);
+}
+
+void GraphicResourceFactory::CreateSSAOQuadBuffer()
+{
+	BufferData* newBuf = new BufferData();
+
+	PosNormalTexVertex v[4];
+
+	v[0].Pos = Vector3(-1.0f, -1.0f, 0.0f);
+	v[1].Pos = Vector3(-1.0f, +1.0f, 0.0f);
+	v[2].Pos = Vector3(+1.0f, +1.0f, 0.0f);
+	v[3].Pos = Vector3(+1.0f, -1.0f, 0.0f);
+
+	// Store far plane frustum corner indices in Normal.x slot.
+	v[0].Normal = Vector3(0.0f, 0.0f, 0.0f);
+	v[1].Normal = Vector3(1.0f, 0.0f, 0.0f);
+	v[2].Normal = Vector3(2.0f, 0.0f, 0.0f);
+	v[3].Normal = Vector3(3.0f, 0.0f, 0.0f);
+
+	v[0].Tex = Vector2(0.0f, 1.0f);
+	v[1].Tex = Vector2(0.0f, 0.0f);
+	v[2].Tex = Vector2(1.0f, 0.0f);
+	v[3].Tex = Vector2(1.0f, 1.0f);
+
+	UINT indices[6] =
+	{
+		0, 1, 2,
+		0, 2, 3
+	};
+
+	newBuf->Stride = sizeof(PosNormalTexVertex);
+	newBuf->IndexCount = 6;
+
+	D3D11_BUFFER_DESC vbd;
+	vbd.Usage = D3D11_USAGE_IMMUTABLE;
+	vbd.ByteWidth = sizeof(PosNormalTexVertex) * 4;
+	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vbd.CPUAccessFlags = 0;
+	vbd.MiscFlags = 0;
+	vbd.StructureByteStride = 0;
+
+	D3D11_SUBRESOURCE_DATA vinitData;
+	vinitData.pSysMem = v;
+
+	HR(m_Device->CreateBuffer(&vbd, &vinitData, &newBuf->VB));
+
+	D3D11_BUFFER_DESC ibd;
+	ibd.Usage = D3D11_USAGE_IMMUTABLE;
+	ibd.ByteWidth = sizeof(UINT) * 6;
+	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	ibd.CPUAccessFlags = 0;
+	ibd.StructureByteStride = 0;
+	ibd.MiscFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA iinitData;
+	iinitData.pSysMem = indices;
+
+	HR(m_Device->CreateBuffer(&ibd, &iinitData, &newBuf->IB));
+
+	// Resource µî·Ï..
+	m_ResourceManager->AddResource(newBuf);
 
 }

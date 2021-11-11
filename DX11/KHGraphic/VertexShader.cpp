@@ -120,7 +120,7 @@ void VertexShader::LoadShader(std::string fileName)
 
 			// Key (Constant Buffer HashCode) && Value (Register Slot, Constant Buffer)
 			m_ConstantBuffers.push_back(constantBuffer);
-			m_ConstantBufferList.insert(std::make_pair(hash_key, ConstantBuffer(bindDesc.Name, register_slot, constantBuffer)));
+			m_ConstantBufferList.insert(std::make_pair(hash_key, new ConstantBuffer(bindDesc.Name, register_slot, constantBuffer)));
 		}
 	}
 
@@ -137,4 +137,23 @@ void VertexShader::Update()
 
 	// Shader InputLayout ¼³Á¤.. 
 	g_DeviceContext->IASetInputLayout(m_InputLayout.Get());
+}
+
+void VertexShader::Release()
+{
+	RESET_COM(m_VS);
+	RESET_COM(m_InputLayout);
+
+	for (Microsoft::WRL::ComPtr<ID3D11Buffer> cBuffer : m_ConstantBuffers)
+	{
+		RESET_COM(cBuffer);
+	}
+
+	for (std::pair<Hash_Code, ConstantBuffer*> cBuffer : m_ConstantBufferList)
+	{
+		SAFE_DELETE(cBuffer.second);
+	}
+
+	m_ConstantBuffers.clear();
+	m_ConstantBufferList.clear();
 }

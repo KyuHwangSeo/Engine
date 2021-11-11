@@ -19,9 +19,6 @@
     <Filter Include="소스 파일\Graphic\DirectX11">
       <UniqueIdentifier>{7236e5e6-6b6b-4071-a6dd-4c9ed54838d3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Renderer">
-      <UniqueIdentifier>{751d4d6e-f5d6-40cf-a24b-01981c9a850e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Manager">
       <UniqueIdentifier>{7f4da657-b1b8-4a5e-815f-23118f1e31d7}</UniqueIdentifier>
     </Filter>
@@ -76,30 +73,6 @@
     <Filter Include="소스 파일\Engine">
       <UniqueIdentifier>{05d1b672-0e21-4ea7-bc78-b86be73fda33}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Renderer\Base">
-      <UniqueIdentifier>{6f11c158-7488-45e9-a1b8-624ff9f94f04}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Renderer\Deferred">
-      <UniqueIdentifier>{965a92c6-dd48-4fac-b40f-033073c3b748}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Renderer\Light">
-      <UniqueIdentifier>{f66ff3f8-dac8-4760-b0cc-867c27749ddb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Renderer\PostProcessing">
-      <UniqueIdentifier>{355f4dff-ead4-4281-b107-e8d8811e2a9e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Renderer\PostProcessing\Blur">
-      <UniqueIdentifier>{d6eebb98-9590-4c3b-aa9a-464bed02831b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Renderer\PostProcessing\MotionBlur">
-      <UniqueIdentifier>{64040a7f-a51f-44c6-bf50-59c2a7f36de1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Renderer\Shadow">
-      <UniqueIdentifier>{23e71a1a-8109-40ca-8e35-61cbd7e179ba}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Renderer\SSAO">
-      <UniqueIdentifier>{a173f9c4-166e-411a-ae8f-b20337bd50c8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Resource\RenderTarget\Base">
       <UniqueIdentifier>{3c520278-a6aa-4a2b-be04-fd06f30144ec}</UniqueIdentifier>
     </Filter>
@@ -117,6 +90,36 @@
     </Filter>
     <Filter Include="소스 파일\Resource\ViewPort">
       <UniqueIdentifier>{b41d77db-812d-4ee8-8bb9-885c8256ee21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\RendererPass">
+      <UniqueIdentifier>{751d4d6e-f5d6-40cf-a24b-01981c9a850e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\RendererPass\Base">
+      <UniqueIdentifier>{6f11c158-7488-45e9-a1b8-624ff9f94f04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\RendererPass\Deferred">
+      <UniqueIdentifier>{965a92c6-dd48-4fac-b40f-033073c3b748}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\RendererPass\Light">
+      <UniqueIdentifier>{f66ff3f8-dac8-4760-b0cc-867c27749ddb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\RendererPass\PostProcessing">
+      <UniqueIdentifier>{355f4dff-ead4-4281-b107-e8d8811e2a9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\RendererPass\PostProcessing\Blur">
+      <UniqueIdentifier>{d6eebb98-9590-4c3b-aa9a-464bed02831b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\RendererPass\PostProcessing\MotionBlur">
+      <UniqueIdentifier>{64040a7f-a51f-44c6-bf50-59c2a7f36de1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\RendererPass\Shadow">
+      <UniqueIdentifier>{23e71a1a-8109-40ca-8e35-61cbd7e179ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\RendererPass\SSAO">
+      <UniqueIdentifier>{a173f9c4-166e-411a-ae8f-b20337bd50c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Shader\HLSL">
+      <UniqueIdentifier>{49208fd3-d4b8-4bb3-8fe8-5a692a5b46d8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -165,8 +168,8 @@
     <ClInclude Include="PixelShader.h">
       <Filter>소스 파일\Shader\ShaderClass\PixelShader</Filter>
     </ClInclude>
-    <ClInclude Include="RenderBase.h">
-      <Filter>소스 파일\Renderer\Base</Filter>
+    <ClInclude Include="RenderPassBase.h">
+      <Filter>소스 파일\RendererPass\Base</Filter>
     </ClInclude>
     <ClInclude Include="DirectDefine.h">
       <Filter>소스 파일\Define</Filter>
@@ -213,17 +216,17 @@
     <ClInclude Include="ToolKitDefine.h">
       <Filter>소스 파일\Define</Filter>
     </ClInclude>
-    <ClInclude Include="ShadowRender.h">
-      <Filter>소스 파일\Renderer\Shadow</Filter>
+    <ClInclude Include="ShadowPass.h">
+      <Filter>소스 파일\RendererPass\Shadow</Filter>
     </ClInclude>
-    <ClInclude Include="LightRender.h">
-      <Filter>소스 파일\Renderer\Light</Filter>
+    <ClInclude Include="LightPass.h">
+      <Filter>소스 파일\RendererPass\Light</Filter>
     </ClInclude>
     <ClInclude Include="ViewPort.h">
       <Filter>소스 파일\Resource\ViewPort</Filter>
     </ClInclude>
-    <ClInclude Include="DeferredRender.h">
-      <Filter>소스 파일\Renderer\Deferred</Filter>
+    <ClInclude Include="DeferredPass.h">
+      <Filter>소스 파일\RendererPass\Deferred</Filter>
     </ClInclude>
     <ClInclude Include="RenderTargetBase.h">
       <Filter>소스 파일\Resource\RenderTarget\Base</Filter>
@@ -281,20 +284,20 @@
     <ClCompile Include="KHGraphic.cpp">
       <Filter>소스 파일\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="ShadowRender.cpp">
-      <Filter>소스 파일\Renderer\Shadow</Filter>
+    <ClCompile Include="ShadowPass.cpp">
+      <Filter>소스 파일\RendererPass\Shadow</Filter>
     </ClCompile>
-    <ClCompile Include="LightRender.cpp">
-      <Filter>소스 파일\Renderer\Light</Filter>
+    <ClCompile Include="LightPass.cpp">
+      <Filter>소스 파일\RendererPass\Light</Filter>
     </ClCompile>
     <ClCompile Include="ViewPort.cpp">
       <Filter>소스 파일\Resource\ViewPort</Filter>
     </ClCompile>
-    <ClCompile Include="RenderBase.cpp">
-      <Filter>소스 파일\Renderer\Base</Filter>
+    <ClCompile Include="RenderPassBase.cpp">
+      <Filter>소스 파일\RendererPass\Base</Filter>
     </ClCompile>
-    <ClCompile Include="DeferredRender.cpp">
-      <Filter>소스 파일\Renderer\Deferred</Filter>
+    <ClCompile Include="DeferredPass.cpp">
+      <Filter>소스 파일\RendererPass\Deferred</Filter>
     </ClCompile>
     <ClCompile Include="RenderTargetBase.cpp">
       <Filter>소스 파일\Resource\RenderTarget\Base</Filter>
@@ -311,5 +314,13 @@
     <ClCompile Include="ShaderManagerBase.cpp">
       <Filter>소스 파일\Manager\Shader</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="MeshVS.hlsl">
+      <Filter>소스 파일\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="ForwardPS.hlsl">
+      <Filter>소스 파일\Shader\HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

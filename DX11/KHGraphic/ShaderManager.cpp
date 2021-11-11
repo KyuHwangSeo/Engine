@@ -24,7 +24,7 @@ void ShaderManager::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, Micr
 {
 	// Shader Global Initialize..
 	IShader::Initialize(device, context);
-	IShader::SetShaderRoute("../Resource/Shader/");
+	IShader::SetShaderRoute("../Resource/Shader/SKH/");
 
 	// Shader Hash Table Initialize..
 	ShaderResourceHashTable::Initialize();
@@ -39,6 +39,18 @@ void ShaderManager::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, Micr
 void ShaderManager::AddSampler(Hash_Code hash_code, Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler)
 {
 	m_SamplerList.insert(std::make_pair(hash_code, sampler));
+}
+
+void ShaderManager::Release()
+{
+	IShader::Reset();
+
+	for (std::pair<std::string, IShader*> shader : m_ShaderList)
+	{
+		RELEASE_COM(shader.second);
+	}
+
+	m_ShaderList.clear();
 }
 
 VertexShader* ShaderManager::GetVertexShader(std::string shaderName)

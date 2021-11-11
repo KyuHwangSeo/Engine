@@ -3,7 +3,7 @@
 #include "ResourceFactoryBase.h"
 #include "ShaderManagerBase.h"
 #include "ResourceManagerBase.h"
-#include "RenderBase.h"
+#include "RenderPassBase.h"
 #include "RenderManager.h"
 
 #include "ShaderBase.h"
@@ -13,21 +13,21 @@
 #include "ComputeShader.h"
 
 #include "MathDefine.h"
-#include "ShadowRender.h"
-#include "DeferredRender.h"
-#include "LightRender.h"
+#include "ShadowPass.h"
+#include "DeferredPass.h"
+#include "LightPass.h"
 #include "VertexDefine.h"
 
-RenderManager::RenderManager(D3D11Graphic* graphic, IGraphicResourceFactory* factory, IGraphicResourceManager* resource, IShaderManager* shader)
+RenderManager::RenderManager(D3D11Graphic* graphic, IGraphicResourceFactory* factory)
 {
 	// Rendering Initialize..
-	RenderBase::Initialize(graphic->GetContext(), factory, resource, shader);
+	RenderPassBase::Initialize(graphic->GetContext(), factory, factory->GetResourceManager(), factory->GetShaderManager());
 
 	m_SwapChain = graphic->GetSwapChain();
 
-	m_Deferred = new DeferredRender();
-	m_Light = new LightRender();
-	m_Shadow = new ShadowRender();
+	m_Deferred = new DeferredPass();
+	m_Light = new LightPass();
+	m_Shadow = new ShadowPass();
 }
 
 RenderManager::~RenderManager()
@@ -48,10 +48,12 @@ void RenderManager::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 	ID3D11Buffer* iBuffer = nullptr;
 	ID3D11Buffer* vBuffer = nullptr;
 	UINT indexCount = 0;
-	const UINT size = sizeof(NormalMapVertex);
-	const UINT offset = 0;
+	UINT size = 0;
+	UINT offset = 0;
 
 	DirectX::XMMATRIX world;
+
+	m_Deferred->BeginRender();
 
 	while (meshList->size() != 0)
 	{
@@ -77,15 +79,41 @@ void RenderManager::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 		iBuffer = reinterpret_cast<ID3D11Buffer*>(mesh->IB->IndexBufferPointer);
 		vBuffer = reinterpret_cast<ID3D11Buffer*>(mesh->VB->VertexbufferPointer);
 
-		indexCount = mesh->indexCount;
+		indexCount = mesh->IB->Count;
+		size = mesh->VB->VertexDataSize;
 
 		m_Deferred->Render(view, proj, world, vBuffer, iBuffer, size, offset, indexCount);
-		
-
-
-
 	}
+
+	// LightPass..
+	m_Light->Render();
 
 	// 최종 출력..
 	m_SwapChain->Present(0, 0);
+}
+
+void RenderManager::ShadowRender(std::queue<MeshData*>* meshList, GlobalData* global)
+{
+
+}
+
+void RenderManager::SSAORender()
+{
+
+}
+
+void RenderManager::UIRender(std::queue<MeshData*>* meshList, GlobalData* global)
+{
+
+}
+
+void RenderManager::OnResize(int width, int height)
+{
+	RenderPassBase::g_Resource->OnResize(width, height);
+
+}
+
+void RenderManager::Release()
+{
+
 }

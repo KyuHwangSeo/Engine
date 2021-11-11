@@ -38,3 +38,9 @@ enum class eRenderTarget
 	BACK_BUFFER,
 
 };
+
+enum class eBuffer
+{
+	SCREEN,
+	SSAO
+};

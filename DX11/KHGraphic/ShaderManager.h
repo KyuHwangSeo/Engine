@@ -11,6 +11,7 @@ public:
 public:
 	void Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, Microsoft::WRL::ComPtr<ID3D11DeviceContext> context) override;
 	void AddSampler(Hash_Code hash_code, Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler) override;
+	void Release() override;
 
 public:
 	VertexShader* GetVertexShader(std::string shaderName) override;

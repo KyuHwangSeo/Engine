@@ -43,8 +43,8 @@ public:
 	TextureBuffer* CreateTextureBuffer(std::string path) override;
 
 public:
-	IShaderManager* GetShaderManager();
-	IGraphicResourceManager* GetResourceManager();
+	IShaderManager* GetShaderManager() override;
+	IGraphicResourceManager* GetResourceManager() override;
 
 private:
 	void CreateDepthStencilState();
@@ -55,7 +55,8 @@ private:
 	void CreateDepthStencilView(int width, int height);
 	void CreateViewPort(int width, int height);
 
-	void CreateScreenBuffer();
+	void CreateQuadBuffer();
+	void CreateSSAOQuadBuffer();
 private:
 	Microsoft::WRL::ComPtr<ID3D11Device> m_Device;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_Context;

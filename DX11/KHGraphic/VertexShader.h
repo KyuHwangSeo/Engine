@@ -15,6 +15,7 @@ public:
 public:
 	void LoadShader(std::string fileName) override;
 	void Update() override;
+	void Release() override;
 
 	// VertexShader ConstantBuffer Resource Update..
 	template<typename T>
@@ -31,19 +32,19 @@ private:
 	std::vector<Microsoft::WRL::ComPtr<ID3D11Buffer>> m_ConstantBuffers;
 
 	// VertexShader ConstantBuffer List..
-	std::unordered_map<Hash_Code, ConstantBuffer> m_ConstantBufferList;
+	std::unordered_map<Hash_Code, ConstantBuffer*> m_ConstantBufferList;
 };
 
 template<typename T>
 inline void VertexShader::SetConstantBuffer(T cBuffer)
 {
 	// 해당 Value 찾기..
-	std::unordered_map<Hash_Code, ConstantBuffer>::iterator it = m_ConstantBufferList.find(typeid(T).hash_code());
+	std::unordered_map<Hash_Code, ConstantBuffer*>::iterator it = m_ConstantBufferList.find(typeid(T).hash_code());
 
 	// 해당 Key에 대한 Value가 없다면..
 	if (it == m_ConstantBufferList.end()) return;
 
 	// Resource 복제..
-	g_DeviceContext->UpdateSubresource(it->second.cbuffer.Get(), 0, nullptr, &cBuffer, 0, 0);
+	g_DeviceContext->UpdateSubresource(it->second->cBuffer.Get(), 0, nullptr, &cBuffer, 0, 0);
 }
 

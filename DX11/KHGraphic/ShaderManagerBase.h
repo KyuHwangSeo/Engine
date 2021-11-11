@@ -21,6 +21,7 @@ interface IShaderManager
 public:
 	virtual void Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, Microsoft::WRL::ComPtr<ID3D11DeviceContext> context) abstract;
 	virtual void AddSampler(Hash_Code hash_code, Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler) abstract;
+	virtual void Release() abstract;
 
 private:
 	virtual VertexShader* GetVertexShader(std::string shaderName) abstract;

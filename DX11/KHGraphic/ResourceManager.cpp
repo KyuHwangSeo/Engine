@@ -123,6 +123,11 @@ void GraphicResourceManager::OnResize(int width, int height)
 	RESET_COM(tex2D);
 }
 
+void GraphicResourceManager::Release()
+{
+
+}
+
 RenderTarget* GraphicResourceManager::GetMainRenderTarget()
 {
 	return m_BackBuffer;
@@ -158,21 +163,7 @@ D3D11_VIEWPORT* GraphicResourceManager::GetViewPort(eViewPort state)
 	return m_ViewPortList[(int)state]->GetViewPort();
 }
 
-// AddResource
-template<>
-inline void GraphicResourceManager::AddResource(ViewPort* resource) { m_ViewPortList.push_back(resource); }
-
-template<>
-inline void GraphicResourceManager::AddResource(RenderTarget* resource) { m_RenderTargetList.push_back(resource); }
-
-template<>
-inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11DepthStencilState> resource) { m_DepthStencilStateList.push_back(resource); }
-
-template<>
-inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11RasterizerState> resource) { m_RasterizerStateList.push_back(resource); }
-
-template<>
-inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11BlendState> resource) { m_BlendStateList.push_back(resource); }
-
-template<>
-inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11SamplerState> resource) { m_SamplerStateList.push_back(resource); }
+BufferData* GraphicResourceManager::GetBuffer(eBuffer state)
+{
+	return m_BufferList[(int)state];
+}
