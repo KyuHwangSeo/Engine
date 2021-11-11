@@ -46,7 +46,7 @@ void LightPass::Initialize(int width, int height)
 	m_BlendState = g_Resource->GetBlendState(eBlendState::BLEND_ONE);
 
 	// ViewPort 설정..
-	m_ScreenViewport = g_Resource->GetViewPort(eViewPort::SCREEN);
+	m_ScreenViewport = g_Resource->GetViewPort(eViewPort::DEFALT);
 
 	// BackBuffer 생성..
 	m_BackBuffer = g_Factory->CreateMainRenderTarget(width, height);
@@ -71,11 +71,6 @@ void LightPass::OnResize(int width, int height)
 	m_ScreenPS->SetShaderResourceView<PositionSRV>(&m_PositionSRV);
 	m_ScreenPS->SetShaderResourceView<NormalSRV>(&m_ShadowSRV);
 	m_ScreenPS->SetShaderResourceView<SsaoSRV>(&m_SSAOSRV);
-}
-
-void LightPass::Release()
-{
-
 }
 
 void LightPass::BeginRender()

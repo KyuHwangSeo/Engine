@@ -8,7 +8,6 @@
 #include "ComputeRenderTarget.h"
 #include "ResourceManager.h"
 #include "EnumDefine.h"
-#include "VertexDefine.h"
 
 GraphicResourceManager::GraphicResourceManager()
 	:m_Device(nullptr), m_SwapChain(nullptr),m_BackBuffer(nullptr)
@@ -126,59 +125,7 @@ void GraphicResourceManager::OnResize(int width, int height)
 
 void GraphicResourceManager::Release()
 {
-	RESET_COM(m_Device);
-	RESET_COM(m_SwapChain);
 
-	SAFE_DELETE(m_BackBuffer);
-
-	for (RenderTarget* rt : m_RenderTargetList)
-	{
-		SAFE_DELETE(rt);
-	}
-
-	for (DepthStencilView* dsv : m_DepthStencilViewList)
-	{
-		SAFE_DELETE(dsv);
-	}
-
-	for (ViewPort* viewport : m_ViewPortList)
-	{
-		SAFE_DELETE(viewport);
-	}
-
-	for (ComPtr<ID3D11DepthStencilState> dss : m_DepthStencilStateList)
-	{
-		RESET_COM(dss);
-	}
-
-	for (ComPtr<ID3D11RasterizerState> rs : m_RasterizerStateList)
-	{
-		RESET_COM(rs);
-	}
-
-	for (ComPtr<ID3D11BlendState> bs : m_BlendStateList)
-	{
-		RESET_COM(bs);
-	}
-
-	for (ComPtr<ID3D11SamplerState> ss : m_SamplerStateList)
-	{
-		RESET_COM(ss);
-	}
-
-	for (BufferData* buffer : m_BufferList)
-	{
-		SAFE_DELETE(buffer);
-	}
-	
-	m_RenderTargetList.clear();
-	m_DepthStencilViewList.clear();
-	m_ViewPortList.clear();
-	m_DepthStencilStateList.clear();
-	m_RasterizerStateList.clear();
-	m_BlendStateList.clear();
-	m_SamplerStateList.clear();
-	m_BufferList.clear();
 }
 
 RenderTarget* GraphicResourceManager::GetMainRenderTarget()

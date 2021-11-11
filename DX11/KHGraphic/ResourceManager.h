@@ -66,6 +66,7 @@ private:
 template<typename T>
 inline void GraphicResourceManager::AddResource(T resource) {}
 
+// AddResource
 template<>
 inline void GraphicResourceManager::AddResource(ViewPort* resource) { m_ViewPortList.push_back(resource); }
 

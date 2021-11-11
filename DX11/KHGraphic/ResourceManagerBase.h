@@ -34,7 +34,4 @@ public:
 
 	virtual D3D11_VIEWPORT* GetViewPort(eViewPort state) abstract;
 	virtual BufferData* GetBuffer(eBuffer state) abstract;
-
-	template<typename T>
-	void AddResource(T resource) {}
 };

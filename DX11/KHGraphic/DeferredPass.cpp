@@ -43,7 +43,7 @@ void DeferredPass::Initialize(int width, int height)
 	m_BlendState = g_Resource->GetBlendState(eBlendState::BLEND_ONE);
 
 	// ViewPort ¼³Á¤..
-	m_ScreenViewport = g_Resource->GetViewPort(eViewPort::SCREEN);
+	m_ScreenViewport = g_Resource->GetViewPort(eViewPort::DEFALT);
 
 	///////////////////////////////////////////////////////////////////////////
 	// Texture 2D
@@ -165,11 +165,6 @@ void DeferredPass::OnResize(int width, int height)
 	m_RTVList[2] = m_PositionRT->GetRTV();
 	m_RTVList[3] = m_ShadowRT->GetRTV();
 	m_RTVList[4] = m_NormalDepthRT->GetRTV();
-}
-
-void DeferredPass::Release()
-{
-
 }
 
 void DeferredPass::BeginRender()

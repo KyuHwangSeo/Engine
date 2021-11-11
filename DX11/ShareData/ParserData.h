@@ -136,6 +136,9 @@ namespace ParserData
 		DirectX::SimpleMath::Matrix m_WorldTM;		// Mesh WorldTM
 		DirectX::SimpleMath::Matrix m_LocalTM;		// Mesh LocalTM
 
+		Mesh* m_Parent;								// Mesh Parent
+		std::vector<Mesh*> m_ChildList;				// Mesh Child List
+
 		/// Material Data
 		CMaterial*					m_MaterialData;		// Mesh Material Data
 
@@ -202,8 +205,6 @@ namespace ParserData
 		int	m_Mesh_SumTVertex;						
 		std::vector<TVertex*> m_Mesh_TVertex;
 
-		Mesh* m_Parent;
-		
 		std::vector<Bone*> m_BoneList;
 	};
 }
