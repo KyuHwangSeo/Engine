@@ -28,6 +28,10 @@ RenderManager::RenderManager(D3D11Graphic* graphic, IGraphicResourceFactory* fac
 	m_Deferred = new DeferredPass();
 	m_Light = new LightPass();
 	m_Shadow = new ShadowPass();
+
+	m_RenderPassList.push_back(m_Deferred);
+	m_RenderPassList.push_back(m_Light);
+	m_RenderPassList.push_back(m_Shadow);
 }
 
 RenderManager::~RenderManager()
@@ -37,7 +41,20 @@ RenderManager::~RenderManager()
 
 void RenderManager::Initialize(int width, int height)
 {
+	for (RenderPassBase* renderPass : m_RenderPassList)
+	{
+		renderPass->Initialize(width, height);
+	}
+}
 
+void RenderManager::Release()
+{
+	for (RenderPassBase* renderPass : m_RenderPassList)
+	{
+		RELEASE_COM(renderPass);
+	}
+
+	m_RenderPassList.clear();
 }
 
 void RenderManager::Render(std::queue<MeshData*>* meshList, GlobalData* global)
@@ -111,9 +128,8 @@ void RenderManager::OnResize(int width, int height)
 {
 	RenderPassBase::g_Resource->OnResize(width, height);
 
-}
-
-void RenderManager::Release()
-{
-
+	for (RenderPassBase* renderPass : m_RenderPassList)
+	{
+		renderPass->OnResize(width, height);
+	}
 }

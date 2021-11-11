@@ -4,12 +4,16 @@
 class BufferData
 {
 public:
-	Microsoft::WRL::ComPtr<ID3D11Buffer> VB;		// 버텍스버퍼
-	Microsoft::WRL::ComPtr<ID3D11Buffer> IB;		// 인덱스버퍼
+	BufferData() : VB(nullptr), IB(nullptr), IndexCount(0), Stride(0), Offset(0) {}
+	~BufferData() { RESET_COM(VB); RESET_COM(IB); }
 
-	UINT IndexCount = 0;			// 버텍스 개수
-	UINT Stride = 0;				// 구조체 사이즈
-	UINT Offset = 0;			// Offset
+public:
+	Microsoft::WRL::ComPtr<ID3D11Buffer> VB;		// Vertex Buffer
+	Microsoft::WRL::ComPtr<ID3D11Buffer> IB;		// Index Buffer
+
+	UINT IndexCount;		// Index Count
+	UINT Stride;			// Vertex Struct Size
+	UINT Offset;			// Offset
 };
 
 struct PosTexVertex
@@ -25,13 +29,25 @@ struct PosNormalTexVertex
 	DirectX::SimpleMath::Vector2 Tex;
 };
 
-struct NormalMapVertex
+struct MeshVertex
 {
 	DirectX::SimpleMath::Vector3 Pos;
 	DirectX::SimpleMath::Vector3 Normal;
 	DirectX::SimpleMath::Vector2 Tex;
 	DirectX::SimpleMath::Vector3 Tangent;
 };
+
+struct SkinVertex
+{
+	DirectX::SimpleMath::Vector3 Pos;
+	DirectX::SimpleMath::Vector3 Normal;
+	DirectX::SimpleMath::Vector2 Tex;
+	DirectX::SimpleMath::Vector3 Tangent;
+
+	UINT BoneIndex[4];
+	float BoneWeight[4];
+};
+
 
 struct TerrainVertex
 {

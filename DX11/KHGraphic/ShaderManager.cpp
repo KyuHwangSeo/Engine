@@ -197,6 +197,8 @@ void ShaderManager::SetSampler()
 		case eShaderType::PIXEL:
 		{
 			PixelShader* pShader = reinterpret_cast<PixelShader*>(shader.second);
+
+			// 해당 Shader에 바인딩된 Sampler 설정..
 			for (std::pair<Hash_Code, ComPtr<ID3D11SamplerState>> sampler : m_SamplerList)
 			{
 				pShader->SetSamplerState(sampler.first, sampler.second.GetAddressOf());
@@ -206,6 +208,8 @@ void ShaderManager::SetSampler()
 		case eShaderType::COMPUTE:
 		{
 			ComputeShader* cShader = reinterpret_cast<ComputeShader*>(shader.second);
+			
+			// 해당 Shader에 바인딩된 Sampler 설정..
 			for (std::pair<Hash_Code, ComPtr<ID3D11SamplerState>> sampler : m_SamplerList)
 			{
 				cShader->SetSamplerState(sampler.first, sampler.second.GetAddressOf());

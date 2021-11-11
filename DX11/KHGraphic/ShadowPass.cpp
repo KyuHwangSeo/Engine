@@ -81,6 +81,11 @@ void ShadowPass::OnResize(int width, int height)
 	m_ShadowSRV = m_ShadowRT->GetSRV();
 }
 
+void ShadowPass::Release()
+{
+
+}
+
 void ShadowPass::BeginRender()
 {
 	g_Context->OMSetBlendState(0, 0, 0xffffffff);

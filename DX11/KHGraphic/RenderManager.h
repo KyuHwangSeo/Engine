@@ -1,6 +1,7 @@
 #pragma once
 #include "RenderManagerBase.h"
 
+class RenderPassBase;
 class ShadowPass;
 class DeferredPass;
 class LightPass;
@@ -12,6 +13,7 @@ public:
 
 public:
 	void Initialize(int width, int height) override;
+	void Release() override;
 
 	void Render(std::queue<MeshData*>* meshList, GlobalData* global) override;
 	void ShadowRender(std::queue<MeshData*>* meshList, GlobalData* global) override; 
@@ -19,26 +21,13 @@ public:
 	void UIRender(std::queue<MeshData*>* meshList, GlobalData* global) override;
 
 	void OnResize(int width, int height) override;
-	void Release() override;
 
 private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain> m_SwapChain;
+
+	std::vector<RenderPassBase*> m_RenderPassList;
 
 	ShadowPass* m_Shadow;
 	DeferredPass* m_Deferred;
 	LightPass* m_Light;
 };
-
-//struct RenderData
-//{
-//	DirectX::XMMATRIX view;
-//	DirectX::XMMATRIX proj;
-//	DirectX::XMMATRIX world;
-//
-//	ID3D11Buffer* vb;
-//	ID3D11Buffer* ib;
-//
-//	const UINT size;
-//	const UINT offset;
-//	UINT indexCount;
-//};

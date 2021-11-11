@@ -267,6 +267,21 @@ ComputeRenderTarget* GraphicResourceFactory::CreateComputeRenderTarget(ID3D11Tex
 	return computeRenderTarget;
 }
 
+Vertexbuffer* GraphicResourceFactory::CreateVertexBuffer(ParserData::Mesh* mesh)
+{
+	if (mesh->m_IsSkinningObject)
+	{
+		return CreateMeshVertexBuffer<SkinVertex>(mesh);
+	}
+	else
+	{
+		return CreateMeshVertexBuffer<MeshVertex>(mesh);
+
+		// Terrain Type
+		return CreateMeshVertexBuffer<TerrainVertex>(mesh);
+	}
+}
+
 Indexbuffer* GraphicResourceFactory::CreateIndexBuffer(ParserData::Mesh* mesh)
 {
 	// 货肺款 IndexBufferData 积己..
@@ -301,48 +316,6 @@ Indexbuffer* GraphicResourceFactory::CreateIndexBuffer(ParserData::Mesh* mesh)
 	iBuffer->IndexBufferPointer = IB;
 	
 	return iBuffer;
-}
-
-Vertexbuffer* GraphicResourceFactory::CreateVertexBuffer(ParserData::Mesh* mesh)
-{
-	// 货肺款 VertexBufferData 积己..
-	Vertexbuffer* vBuffer = new Vertexbuffer();
-
-	ID3D11Buffer* VB = nullptr;
-
-	// Vertex Count..
-	UINT vCount = (UINT)mesh->m_VertexList.size();
-
-	std::vector<NormalMapVertex> vertices(vCount);
-	for (UINT i = 0; i < vCount; i++)
-	{
-		vertices[i].Pos = mesh->m_VertexList[i]->m_Pos;
-
-		vertices[i].Normal = mesh->m_VertexList[i]->m_Normal;
-
-		vertices[i].Tex.x = mesh->m_VertexList[i]->m_U;
-		vertices[i].Tex.y = mesh->m_VertexList[i]->m_V;
-
-		vertices[i].Tangent = mesh->m_VertexList[i]->m_Tanget;
-	}
-
-	// 货肺款 VertexBuffer 积己..
-	D3D11_BUFFER_DESC ibd;
-	ibd.Usage = D3D11_USAGE_IMMUTABLE;
-	ibd.ByteWidth = sizeof(UINT) * vCount;
-	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	ibd.CPUAccessFlags = 0;
-	ibd.MiscFlags = 0;
-	D3D11_SUBRESOURCE_DATA iinitData;
-	iinitData.pSysMem = &vertices[0];
-	HR(m_Device->CreateBuffer(&ibd, &iinitData, &VB));
-
-	// 逞败拎具且 VertexBufferData 火涝..
-	vBuffer->Count = vCount;
-	vBuffer->VertexbufferPointer = VB;
-	vBuffer->VertexDataSize = sizeof(NormalMapVertex);
-
-	return vBuffer;
 }
 
 TextureBuffer* GraphicResourceFactory::CreateTextureBuffer(std::string path)
@@ -382,6 +355,150 @@ IShaderManager* GraphicResourceFactory::GetShaderManager()
 IGraphicResourceManager* GraphicResourceFactory::GetResourceManager()
 {
 	return m_ResourceManager;
+}
+
+template<>
+Vertexbuffer* GraphicResourceFactory::CreateMeshVertexBuffer<MeshVertex>(ParserData::Mesh* mesh)
+{
+	// 货肺款 VertexBufferData 积己..
+	Vertexbuffer* vBuffer = new Vertexbuffer();
+
+	ID3D11Buffer* VB = nullptr;
+
+	// Vertex Count..
+	UINT vCount = (UINT)mesh->m_VertexList.size();
+
+	std::vector<MeshVertex> vertices(vCount);
+	for (UINT i = 0; i < vCount; i++)
+	{
+		vertices[i].Pos = mesh->m_VertexList[i]->m_Pos;
+
+		vertices[i].Normal = mesh->m_VertexList[i]->m_Normal;
+
+		vertices[i].Tex.x = mesh->m_VertexList[i]->m_U;
+		vertices[i].Tex.y = mesh->m_VertexList[i]->m_V;
+
+		vertices[i].Tangent = mesh->m_VertexList[i]->m_Tanget;
+	}
+
+	// 货肺款 VertexBuffer 积己..
+	D3D11_BUFFER_DESC ibd;
+	ibd.Usage = D3D11_USAGE_IMMUTABLE;
+	ibd.ByteWidth = sizeof(UINT) * vCount;
+	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	ibd.CPUAccessFlags = 0;
+	ibd.MiscFlags = 0;
+	D3D11_SUBRESOURCE_DATA iinitData;
+	iinitData.pSysMem = &vertices[0];
+	HR(m_Device->CreateBuffer(&ibd, &iinitData, &VB));
+
+	// 逞败拎具且 VertexBufferData 火涝..
+	vBuffer->Count = vCount;
+	vBuffer->VertexbufferPointer = VB;
+	vBuffer->VertexDataSize = sizeof(MeshVertex);
+
+	return vBuffer;
+}
+
+template<>
+Vertexbuffer* GraphicResourceFactory::CreateMeshVertexBuffer<SkinVertex>(ParserData::Mesh* mesh)
+{
+	// 货肺款 VertexBufferData 积己..
+	Vertexbuffer* vBuffer = new Vertexbuffer();
+
+	ID3D11Buffer* VB = nullptr;
+
+	// Vertex Count..
+	UINT vCount = (UINT)mesh->m_VertexList.size();
+	UINT bCount = 0;
+	std::vector<SkinVertex> vertices(vCount);
+	for (UINT i = 0; i < vCount; i++)
+	{
+		vertices[i].Pos = mesh->m_VertexList[i]->m_Pos;
+
+		vertices[i].Normal = mesh->m_VertexList[i]->m_Normal;
+
+		vertices[i].Tex.x = mesh->m_VertexList[i]->m_U;
+		vertices[i].Tex.y = mesh->m_VertexList[i]->m_V;
+
+		vertices[i].Tangent = mesh->m_VertexList[i]->m_Tanget;
+
+		// Bone Weights, Bone Index..
+		bCount = (UINT)mesh->m_VertexList[i]->m_BoneIndices.size();
+		for (UINT j = 0; j < bCount; j++)
+		{
+			if (j < 4)
+			{
+				vertices[i].BoneIndex[j] = mesh->m_VertexList[i]->m_BoneIndices[j];
+				vertices[i].BoneWeight[j] = mesh->m_VertexList[i]->m_BoneWeights[j];
+			}
+		}
+	}
+
+	// 货肺款 VertexBuffer 积己..
+	D3D11_BUFFER_DESC ibd;
+	ibd.Usage = D3D11_USAGE_IMMUTABLE;
+	ibd.ByteWidth = sizeof(UINT) * vCount;
+	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	ibd.CPUAccessFlags = 0;
+	ibd.MiscFlags = 0;
+	D3D11_SUBRESOURCE_DATA iinitData;
+	iinitData.pSysMem = &vertices[0];
+	HR(m_Device->CreateBuffer(&ibd, &iinitData, &VB));
+
+	// 逞败拎具且 VertexBufferData 火涝..
+	vBuffer->Count = vCount;
+	vBuffer->VertexbufferPointer = VB;
+	vBuffer->VertexDataSize = sizeof(SkinVertex);
+
+	return vBuffer;
+}
+
+template<>
+Vertexbuffer* GraphicResourceFactory::CreateMeshVertexBuffer<TerrainVertex>(ParserData::Mesh* mesh)
+{
+	// 货肺款 VertexBufferData 积己..
+	Vertexbuffer* vBuffer = new Vertexbuffer();
+
+	ID3D11Buffer* VB = nullptr;
+
+	// Vertex Count..
+	UINT vCount = (UINT)mesh->m_VertexList.size();
+
+	std::vector<TerrainVertex> vertices(vCount);
+	for (UINT i = 0; i < vCount; i++)
+	{
+		vertices[i].Pos = mesh->m_VertexList[i]->m_Pos;
+
+		vertices[i].Normal = mesh->m_VertexList[i]->m_Normal;
+
+		vertices[i].Tex.x = mesh->m_VertexList[i]->m_U;
+		vertices[i].Tex.y = mesh->m_VertexList[i]->m_V;
+
+		vertices[i].Tangent = mesh->m_VertexList[i]->m_Tanget;
+
+		// 秦寸 Pixel Mask Color..
+		vertices[i].Mask1;
+		vertices[i].Mask2;
+	}
+
+	// 货肺款 VertexBuffer 积己..
+	D3D11_BUFFER_DESC ibd;
+	ibd.Usage = D3D11_USAGE_IMMUTABLE;
+	ibd.ByteWidth = sizeof(UINT) * vCount;
+	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	ibd.CPUAccessFlags = 0;
+	ibd.MiscFlags = 0;
+	D3D11_SUBRESOURCE_DATA iinitData;
+	iinitData.pSysMem = &vertices[0];
+	HR(m_Device->CreateBuffer(&ibd, &iinitData, &VB));
+
+	// 逞败拎具且 VertexBufferData 火涝..
+	vBuffer->Count = vCount;
+	vBuffer->VertexbufferPointer = VB;
+	vBuffer->VertexDataSize = sizeof(TerrainVertex);
+
+	return vBuffer;
 }
 
 void GraphicResourceFactory::CreateDepthStencilState()
