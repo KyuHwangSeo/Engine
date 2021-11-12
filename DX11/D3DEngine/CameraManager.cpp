@@ -74,10 +74,10 @@ void CameraManager::CameraUpdate(GameObject* cam, float dTime)
 		else
 			camera->m_Speed = 1;
 
-		if (m_Input->IsKeyDownKeep(VK_R))
-		{
-			camera->RotateZ(10.0f * dTime);
-		}
+		//if (m_Input->IsKeyDownKeep(VK_R))
+		//{
+		//	camera->RotateZ(10.0f * dTime);
+		//}
 
 		if (m_Input->IsKeyDownKeep(VK_UP))
 		{

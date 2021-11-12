@@ -9,7 +9,12 @@
 #include "ComputeRenderTarget.h"
 #include "ResourceManager.h"
 #include "ShaderBase.h"
+#include "ShaderResourceBase.h"
+#include "VertexShader.h"
+#include "PixelShader.h"
+#include "ComputeShader.h"
 #include "ShaderManager.h"
+#include "ShaderTypes.h"
 #include "ResourceFactory.h"
 
 #include "VertexDefine.h"

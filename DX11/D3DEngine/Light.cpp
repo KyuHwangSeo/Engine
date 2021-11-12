@@ -86,8 +86,8 @@ void Light::Start()
 	//m_PointLight.Diffuse = DXVector4(0.7f, 0.7f, 0.7f, 1.0f);
 	m_PointLight.Specular = DXVector4(0.7f, 0.7f, 0.7f, 1.0f);
 	m_PointLight.Position = m_GameObject->GetTransform()->GetPosition();
-	m_PointLight.Att = DXVector3(0.0f, 0.2f, 0.0f);
-	m_PointLight.Range = 50.0f;
+	m_PointLight.Att = DXVector3(0.0f, 0.5f, 0.0f);
+	m_PointLight.Range = 2000.0f;
 	m_PointLight.Pad = 1.0f;
 
 	// SpotLight Initial Data

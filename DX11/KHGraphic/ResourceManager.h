@@ -8,13 +8,16 @@ public:
 	~GraphicResourceManager();
 
 public:
+	friend class OriginalRenderTarget;
+
+public:
 	void Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain) override;
 	void OnResize(int width, int height) override;
 	void Release() override;
 
 public:
-	RenderTarget* GetMainRenderTarget() override;
-	RenderTarget* GetRenderTarget(eRenderTarget state) override;
+	BasicRenderTarget* GetMainRenderTarget() override;
+	OriginalRenderTarget GetRenderTarget(eRenderTarget state) override;
 
 	DepthStencilView* GetDepthStencilView(eDepthStencilView state) override;
 
@@ -24,6 +27,10 @@ public:
 
 	D3D11_VIEWPORT* GetViewPort(eViewPort state) override;
 	BufferData* GetBuffer(eBuffer state) override;
+
+private:
+	BasicRenderTarget* GetBasicRenderTarget(eRenderTarget state);
+	ComputeRenderTarget* GetComputeRenderTarget(eRenderTarget state);
 
 public:
 	template<typename T>
@@ -62,6 +69,7 @@ private:
 	/////////////////////////////////////////////////////////////////////////////////////////
 	std::vector<BufferData*> m_BufferList;
 };
+
 
 template<typename T>
 inline void GraphicResourceManager::AddResource(T resource) {}

@@ -6,6 +6,7 @@
 #include "PixelShader.h"
 #include "ComputeShader.h"
 #include "ShaderManager.h"
+#include "ShaderTypes.h"
 #include "ResourceBufferHashTable.h"
 
 using namespace Microsoft::WRL;
@@ -150,7 +151,7 @@ void ShaderManager::CreateShader()
 	SetSampler();
 }
 
-void ShaderManager::LoadShader(eShaderType shaderType, std::string shaderName)
+IShader* ShaderManager::LoadShader(eShaderType shaderType, std::string shaderName)
 {
 	// Shader Type에 맞는 Shader 생성..
 	IShader* newShader = nullptr;
@@ -167,13 +168,14 @@ void ShaderManager::LoadShader(eShaderType shaderType, std::string shaderName)
 		newShader = new ComputeShader(shaderName.c_str());
 		break;
 	default:
-		return throw std::exception("ERROR: None Shader Type.\n"); 
-		break;
+		throw std::exception("ERROR: None Shader Type.\n");
+		return nullptr; 
 	}
 
 	// 파일을 제대로 읽지 못하여 생성하지 못한경우 nullptr..
 	if (newShader == nullptr)
-		return throw std::exception("ERROR: Can not Create Shader.\n");
+		throw std::exception("ERROR: Can not Create Shader.\n");
+		return nullptr;
 
 	std::string shaderKey(shaderName);
 	size_t pointPosition = shaderName.rfind(".");
@@ -184,6 +186,13 @@ void ShaderManager::LoadShader(eShaderType shaderType, std::string shaderName)
 
 	// 새로 생성한 Shader 삽입..
 	m_ShaderList.insert(std::make_pair(shaderKey, newShader));
+
+	return newShader;
+}
+
+OriginalShader ShaderManager::GetShader(std::string shaderName)
+{
+	return OriginalShader{ this, shaderName };
 }
 
 void ShaderManager::SetSampler()

@@ -1,5 +1,6 @@
 #pragma once
 #include "EnumDefine.h"
+#include "RenderTargetTypes.h"
 
 ///
 /// 2021/11/07 23:02
@@ -10,8 +11,6 @@
 /// - 葛电 GraphicResource甫 包府窍绰 Class
 /// - GraphicResourceFactory俊辑 积己等 Resource 包府
 
-class ViewPort;
-class RenderTarget;
 class DepthStencilView;
 class BufferData;
 
@@ -23,8 +22,8 @@ public:
 	virtual void Release() abstract;
 
 public:
-	virtual RenderTarget* GetRenderTarget(eRenderTarget state) abstract;
-	virtual RenderTarget* GetMainRenderTarget() abstract;
+	virtual BasicRenderTarget* GetMainRenderTarget() abstract;
+	virtual OriginalRenderTarget GetRenderTarget(eRenderTarget state) abstract;
 
 	virtual DepthStencilView* GetDepthStencilView(eDepthStencilView state) abstract;
 
@@ -34,7 +33,4 @@ public:
 
 	virtual D3D11_VIEWPORT* GetViewPort(eViewPort state) abstract;
 	virtual BufferData* GetBuffer(eBuffer state) abstract;
-
-	template<typename T>
-	void AddResource(T resource) {}
 };

@@ -10,6 +10,14 @@ MaterialManager::MaterialManager()
 	:m_CountID(0)
 {
 	m_Shader = D3DEngine::GetInstance()->GetResourceManager()->GetShader("LightShader");
+
+	MaterialData mat;
+	mat.Ambient = DXVector4(1.0f, 1.0f, 1.0f, 1.0f);
+	mat.Diffuse = DXVector4(0.8f, 0.8f, 0.8f, 1.0f);
+	mat.Specular = DXVector4(0.4f, 0.4f, 0.4f, 16.0f);
+	mat.Reflect = DXVector4(0.4f, 0.4f, 0.4f, 1.0f);
+
+	m_MatData.gMaterials[m_CountID++] = mat;
 }
 
 MaterialManager::~MaterialManager()

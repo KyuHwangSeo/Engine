@@ -10,5 +10,11 @@ public:
 	void SceneUpdate(float dTime);
 
 	Transform* m_Transform;
+	GameObject* m_Player;
+	Material* m_Mat;
+	ID3D11ShaderResourceView* diffuese;
+	ID3D11ShaderResourceView* gray;
+
+	bool IsTex = true;
 };
 

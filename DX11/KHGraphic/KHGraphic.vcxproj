@@ -195,6 +195,7 @@ copy /Y "$(ProjectDir)GraphicDLL.h" "$(SolutionDir)Library\inc"</Command>
     <ClInclude Include="LightPass.h" />
     <ClInclude Include="BasicRenderTarget.h" />
     <ClInclude Include="MathDefine.h" />
+    <ClInclude Include="RenderTargetTypes.h" />
     <ClInclude Include="ResourceFactoryBase.h" />
     <ClInclude Include="RenderManagerBase.h" />
     <ClInclude Include="ResourceManagerBase.h" />
@@ -217,6 +218,7 @@ copy /Y "$(ProjectDir)GraphicDLL.h" "$(SolutionDir)Library\inc"</Command>
     <ClInclude Include="ShaderResourceBase.h" />
     <ClInclude Include="ResourceBufferHashTable.h" />
     <ClInclude Include="ShaderResourceViewDefine.h" />
+    <ClInclude Include="ShaderTypes.h" />
     <ClInclude Include="ShadowPass.h" />
     <ClInclude Include="Texture2D.h" />
     <ClInclude Include="ToolKitDefine.h" />
@@ -239,12 +241,13 @@ copy /Y "$(ProjectDir)GraphicDLL.h" "$(SolutionDir)Library\inc"</Command>
     <ClCompile Include="RenderPassBase.cpp" />
     <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="RenderTargetBase.cpp" />
+    <ClCompile Include="RenderTargetTypes.cpp" />
     <ClCompile Include="ResourceFactory.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="ShaderBase.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="ResourceBufferHashTable.cpp" />
-    <ClCompile Include="ShaderManagerBase.cpp" />
+    <ClCompile Include="ShaderTypes.cpp" />
     <ClCompile Include="ShadowPass.cpp" />
     <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="ViewPort.cpp" />

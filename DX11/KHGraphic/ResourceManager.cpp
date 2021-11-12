@@ -181,16 +181,49 @@ void GraphicResourceManager::Release()
 	m_BufferList.clear();
 }
 
-RenderTarget* GraphicResourceManager::GetMainRenderTarget()
+BasicRenderTarget* GraphicResourceManager::GetMainRenderTarget()
 {
-	return m_BackBuffer;
+	return reinterpret_cast<BasicRenderTarget*>(m_BackBuffer);
 }
 
-RenderTarget* GraphicResourceManager::GetRenderTarget(eRenderTarget state)
+OriginalRenderTarget GraphicResourceManager::GetRenderTarget(eRenderTarget state)
 {
-	return m_RenderTargetList[(int)state];
+	return OriginalRenderTarget{ this, state };
 }
 
+BasicRenderTarget* GraphicResourceManager::GetBasicRenderTarget(eRenderTarget state)
+{
+	int index = (int)state;
+
+	if (index >= m_RenderTargetList.size()) return nullptr;
+
+	RenderTarget* renderTarget = m_RenderTargetList[index];
+
+	switch (renderTarget->GetType())
+	{
+	case eRenderTargetType::BASIC:
+		return reinterpret_cast<BasicRenderTarget*>(renderTarget);
+	default:
+		return nullptr;
+	}
+}
+
+ComputeRenderTarget* GraphicResourceManager::GetComputeRenderTarget(eRenderTarget state)
+{
+	int index = (int)state;
+
+	if (index >= m_RenderTargetList.size()) return nullptr;
+
+	RenderTarget* renderTarget = m_RenderTargetList[index];
+
+	switch (renderTarget->GetType())
+	{
+	case eRenderTargetType::COMPUTE:
+		return reinterpret_cast<ComputeRenderTarget*>(renderTarget);
+	default:
+		return nullptr;
+	}
+}
 DepthStencilView* GraphicResourceManager::GetDepthStencilView(eDepthStencilView state)
 {
 	return m_DepthStencilViewList[(int)state];

@@ -91,8 +91,8 @@ float4 main(VertexIn pin) : SV_TARGET
 				A, D, S);
 
             ambient += ambientAccess * A;
-            diffuse += shadows * D;
-            spec += shadows * S;
+            diffuse += D;
+            spec += S;
         }
 
 

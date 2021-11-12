@@ -121,6 +121,12 @@
     <Filter Include="소스 파일\Shader\HLSL">
       <UniqueIdentifier>{49208fd3-d4b8-4bb3-8fe8-5a692a5b46d8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Resource\RenderTarget\Types">
+      <UniqueIdentifier>{804d6fde-689c-439b-954b-77a331296f1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Shader\ShaderClass\Types">
+      <UniqueIdentifier>{5ec6dbe9-eb48-4f91-9453-e021ca4fb1f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -246,6 +252,12 @@
     <ClInclude Include="MathDefine.h">
       <Filter>소스 파일\Define</Filter>
     </ClInclude>
+    <ClInclude Include="RenderTargetTypes.h">
+      <Filter>소스 파일\Resource\RenderTarget\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderTypes.h">
+      <Filter>소스 파일\Shader\ShaderClass\Types</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="D3D11Graphic.cpp">
@@ -311,8 +323,11 @@
     <ClCompile Include="DepthStencilView.cpp">
       <Filter>소스 파일\Resource\DepthStencilView</Filter>
     </ClCompile>
-    <ClCompile Include="ShaderManagerBase.cpp">
-      <Filter>소스 파일\Manager\Shader</Filter>
+    <ClCompile Include="RenderTargetTypes.cpp">
+      <Filter>소스 파일\Resource\RenderTarget\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderTypes.cpp">
+      <Filter>소스 파일\Shader\ShaderClass\Types</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
