@@ -23,11 +23,11 @@
 CONSTANT_BUFFER(cbPerObject)
 {
 	DirectX::SimpleMath::Matrix gWorld;
-	DirectX::SimpleMath::Matrix gWorldInvTranspose;
-	DirectX::SimpleMath::Matrix gWorldViewProj;
+	//DirectX::SimpleMath::Matrix gWorldInvTranspose;
+	//DirectX::SimpleMath::Matrix gWorldViewProj;
 	DirectX::SimpleMath::Matrix gTexTransform;
-	DirectX::SimpleMath::Matrix gWorldView;
-	DirectX::SimpleMath::Matrix gWorldInvTransposeView;
+	//DirectX::SimpleMath::Matrix gWorldView;
+	//DirectX::SimpleMath::Matrix gWorldInvTransposeView;
 };
 
 CONSTANT_BUFFER(cbLights)

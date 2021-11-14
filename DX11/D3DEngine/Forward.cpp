@@ -38,7 +38,7 @@ void Forward::OnResize(int width, int height)
 	m_Width = width;
 	m_Height = height;
 
-	m_ForwardRT->Reset();
+	//m_ForwardRT->Reset();
 
 	// Swap Chain, Render Target View Resize 및 재생성..
 	HR(m_SwapChain->ResizeBuffers(1, (UINT)width, (UINT)height, DXGI_FORMAT_R8G8B8A8_UNORM, 0));

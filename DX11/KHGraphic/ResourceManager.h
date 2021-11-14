@@ -81,6 +81,9 @@ template<>
 inline void GraphicResourceManager::AddResource(RenderTarget* resource) { m_RenderTargetList.push_back(resource); }
 
 template<>
+inline void GraphicResourceManager::AddResource(DepthStencilView* resource) { m_DepthStencilViewList.push_back(resource); }
+
+template<>
 inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11DepthStencilState> resource) { m_DepthStencilStateList.push_back(resource); }
 
 template<>

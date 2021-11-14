@@ -42,6 +42,9 @@ GraphicResourceFactory::~GraphicResourceFactory()
 
 void GraphicResourceFactory::Initialize(int width, int height)
 {
+	// Back Buffer 积己..
+	CreateMainRenderTarget(width, height);
+
 	/// Global Resource 积己..
 	CreateDepthStencilState();
 	CreateRasterizerState();
@@ -389,7 +392,7 @@ Vertexbuffer* GraphicResourceFactory::CreateMeshVertexBuffer<MeshVertex>(ParserD
 	// 货肺款 VertexBuffer 积己..
 	D3D11_BUFFER_DESC ibd;
 	ibd.Usage = D3D11_USAGE_IMMUTABLE;
-	ibd.ByteWidth = sizeof(UINT) * vCount;
+	ibd.ByteWidth = sizeof(MeshVertex) * vCount;
 	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	ibd.CPUAccessFlags = 0;
 	ibd.MiscFlags = 0;
@@ -443,7 +446,7 @@ Vertexbuffer* GraphicResourceFactory::CreateMeshVertexBuffer<SkinVertex>(ParserD
 	// 货肺款 VertexBuffer 积己..
 	D3D11_BUFFER_DESC ibd;
 	ibd.Usage = D3D11_USAGE_IMMUTABLE;
-	ibd.ByteWidth = sizeof(UINT) * vCount;
+	ibd.ByteWidth = sizeof(SkinVertex) * vCount;
 	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	ibd.CPUAccessFlags = 0;
 	ibd.MiscFlags = 0;
@@ -490,7 +493,7 @@ Vertexbuffer* GraphicResourceFactory::CreateMeshVertexBuffer<TerrainVertex>(Pars
 	// 货肺款 VertexBuffer 积己..
 	D3D11_BUFFER_DESC ibd;
 	ibd.Usage = D3D11_USAGE_IMMUTABLE;
-	ibd.ByteWidth = sizeof(UINT) * vCount;
+	ibd.ByteWidth = sizeof(TerrainVertex) * vCount;
 	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	ibd.CPUAccessFlags = 0;
 	ibd.MiscFlags = 0;
@@ -739,6 +742,8 @@ void GraphicResourceFactory::CreateDepthStencilView(int width, int height)
 
 	D3D11_TEXTURE2D_DESC texDesc;
 	ZeroMemory(&texDesc, sizeof(texDesc));
+	texDesc.Width = width;
+	texDesc.Height = height;
 	texDesc.MipLevels = 1;
 	texDesc.ArraySize = 1;
 	//texDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
@@ -778,6 +783,8 @@ void GraphicResourceFactory::CreateDepthStencilView(int width, int height)
 
 	// Shadow DepthStencilView 积己..
 	CreateDSV(tex2D.Get(), &dsvDesc, nullptr);
+
+	RESET_COM(tex2D);
 }
 
 void GraphicResourceFactory::CreateViewPort(int width, int height)
@@ -899,5 +906,4 @@ void GraphicResourceFactory::CreateSSAOQuadBuffer()
 
 	// Resource 殿废..
 	m_ResourceManager->AddResource(newBuf);
-
 }

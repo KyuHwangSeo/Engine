@@ -14,6 +14,12 @@ ComputeRenderTarget::~ComputeRenderTarget()
 	RESET_COM(m_UAV);
 }
 
+void ComputeRenderTarget::Reset()
+{
+	RESET_COM(m_RTV);
+	RESET_COM(m_UAV);
+}
+
 ID3D11Texture2D* ComputeRenderTarget::GetTexture2D()
 {
 	ID3D11Resource* resource = nullptr;

@@ -23,6 +23,9 @@ void VertexShader::LoadShader(std::string fileName)
 {
 	ID3D11ShaderReflection* pReflector = nullptr;
 
+	size_t cbuffer_register_slot = 0;	// ConstantBuffer Max Register Slot
+	size_t hash_key = 0;				// Resource Hash Code
+
 	// Vertex HLSL Load..
 	std::ifstream fin(fileName, std::ios::binary);
 
@@ -87,6 +90,7 @@ void VertexShader::LoadShader(std::string fileName)
 		inputLayoutDesc.push_back(elementDesc);
 	}
 
+	// Shader InputLayout 생성..
 	HR(g_Device->CreateInputLayout(&inputLayoutDesc[0], (UINT)inputLayoutDesc.size(), &vS[0], size, &m_InputLayout));
 
 	/// ConstantBuffer Reflection
@@ -98,30 +102,35 @@ void VertexShader::LoadShader(std::string fileName)
 
 		if (SUCCEEDED(cBuffer->GetDesc(&bufferDesc)))
 		{
-			ComPtr<ID3D11Buffer> constantBuffer = nullptr;
+			ID3D11Buffer* cBuffer = nullptr;
 			CD3D11_BUFFER_DESC cBufferDesc(bufferDesc.Size, D3D11_BIND_CONSTANT_BUFFER);
 
 			// 현재 읽은 ConstantBuffer Register Slot Check..
-			int register_slot = -1;
 
 			D3D11_SHADER_INPUT_BIND_DESC bindDesc;
 			pReflector->GetResourceBindingDescByName(bufferDesc.Name, &bindDesc);
 
-			// 바인딩된 리소스 중 같은 이름이 있다면 해당 리소스의 Register Slot 설정..
-			register_slot = bindDesc.BindPoint;
-
-			if (FAILED(register_slot))	break;
-
 			// 해당 Constant Buffer 생성..
-			HR(g_Device->CreateBuffer(&cBufferDesc, nullptr, constantBuffer.GetAddressOf()));
+			HR(g_Device->CreateBuffer(&cBufferDesc, nullptr, &cBuffer));
 
 			// Constant Buffer Hash Code..
-			size_t hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::BufferType::CBUFFER, bufferDesc.Name);
+			hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::BufferType::CBUFFER, bufferDesc.Name);
+
+			// Constant Buffer Register Slot Number..
+			cbuffer_register_slot = bindDesc.BindPoint;
 
 			// Key (Constant Buffer HashCode) && Value (Register Slot, Constant Buffer)
-			m_ConstantBuffers.push_back(constantBuffer);
-			m_ConstantBufferList.insert(std::make_pair(hash_key, new ConstantBuffer(bindDesc.Name, register_slot, constantBuffer)));
+			m_ConstantBufferList.insert(std::make_pair(hash_key, new ConstantBuffer(bindDesc.Name, cbuffer_register_slot, &cBuffer)));
 		}
+	}
+
+	// 마지막으로 Binding 된 Resource Register Index 기준으로 사이즈 설정..
+	m_ConstantBuffers.resize(++cbuffer_register_slot);
+
+	// Constant Buffer List 최초 설정..
+	for (auto& cBuffer : m_ConstantBufferList)
+	{
+		m_ConstantBuffers[cBuffer.second->register_number] = cBuffer.second->cBuffer;
 	}
 
 	pReflector->Release();
@@ -133,7 +142,8 @@ void VertexShader::Update()
 	g_DeviceContext->VSSetShader(m_VS.Get(), nullptr, 0);
 
 	// Vertex Shader ConstantBuffer 설정..
-	g_DeviceContext->VSSetConstantBuffers(0, (UINT)m_ConstantBuffers.size(), m_ConstantBuffers[0].GetAddressOf());
+	if (!m_ConstantBuffers.empty())
+		g_DeviceContext->VSSetConstantBuffers(0, (UINT)m_ConstantBuffers.size(), m_ConstantBuffers[0].GetAddressOf());
 
 	// Shader InputLayout 설정.. 
 	g_DeviceContext->IASetInputLayout(m_InputLayout.Get());

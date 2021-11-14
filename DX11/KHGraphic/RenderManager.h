@@ -2,6 +2,7 @@
 #include "RenderManagerBase.h"
 
 class RenderPassBase;
+class ForwardPass;
 class ShadowPass;
 class DeferredPass;
 class LightPass;
@@ -27,6 +28,7 @@ private:
 
 	std::vector<RenderPassBase*> m_RenderPassList;
 
+	ForwardPass* m_Farward;
 	ShadowPass* m_Shadow;
 	DeferredPass* m_Deferred;
 	LightPass* m_Light;

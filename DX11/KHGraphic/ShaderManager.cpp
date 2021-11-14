@@ -25,7 +25,7 @@ void ShaderManager::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, Micr
 {
 	// Shader Global Initialize..
 	IShader::Initialize(device, context);
-	IShader::SetShaderRoute("../Resource/Shader/SKH/");
+	IShader::SetShaderRoute("../Resources/Shader/SKH/");
 
 	// Shader Hash Table Initialize..
 	ShaderResourceHashTable::Initialize();
@@ -104,49 +104,53 @@ ComputeShader* ShaderManager::GetComputeShader(std::string shaderName)
 
 void ShaderManager::CreateShader()
 {
-	// Global Forward Shader
-	LoadShader(eShaderType::VERTEX, "FinalVS.cso");
-	LoadShader(eShaderType::PIXEL, "FinalPS.cso");
-
-	// Global Deferred Shader
-	LoadShader(eShaderType::VERTEX, "FullScreenVS.cso");
-	LoadShader(eShaderType::PIXEL, "LightPS.cso");
-
-	LoadShader(eShaderType::VERTEX, "ColorVS.cso");
-	LoadShader(eShaderType::PIXEL, "ColorPS.cso");
-
-	LoadShader(eShaderType::VERTEX, "SkyCubeVS.cso");
-	LoadShader(eShaderType::PIXEL, "SkyCubePS.cso");
-
-	LoadShader(eShaderType::VERTEX, "NormalShadowVS.cso");
-	LoadShader(eShaderType::VERTEX, "SkinShadowVS.cso");
-
-	LoadShader(eShaderType::VERTEX, "TextureVS.cso");
+	LoadShader(eShaderType::VERTEX, "MeshVS.cso");
 	LoadShader(eShaderType::VERTEX, "SkinVS.cso");
-	LoadShader(eShaderType::PIXEL, "TextureDeferredPS.cso");
+	LoadShader(eShaderType::PIXEL, "ForwardPS.cso");
 
-	LoadShader(eShaderType::VERTEX, "NormalTextureVS.cso");
-	LoadShader(eShaderType::PIXEL, "NormalTextureDeferredPS.cso");
-
-	LoadShader(eShaderType::VERTEX, "NormalSkinVS.cso");
-	LoadShader(eShaderType::PIXEL, "NormalTextureDeferredPS.cso");
-
-	// SSAO Shader
-	LoadShader(eShaderType::VERTEX, "SSAOVS.cso");
-	LoadShader(eShaderType::PIXEL, "SSAOPS.cso");
-
-	LoadShader(eShaderType::VERTEX, "SSAOBlurVS.cso");
-	LoadShader(eShaderType::PIXEL, "SSAOHorizonBlurPS.cso");
-	LoadShader(eShaderType::PIXEL, "SSAOVerticalBlurPS.cso");
-
-	// Terrain Shader
-	LoadShader(eShaderType::VERTEX, "TerrainVS.cso");
-	LoadShader(eShaderType::PIXEL, "TerrainPS.cso");
-
-	// Screen Blur Shader
-	LoadShader(eShaderType::COMPUTE, "HorizonBlurCS.cso");
-	LoadShader(eShaderType::COMPUTE, "VerticalBlurCS.cso");
-
+	//// Global Forward Shader
+	//LoadShader(eShaderType::VERTEX, "FinalVS.cso");
+	//LoadShader(eShaderType::PIXEL, "FinalPS.cso");
+	//
+	// Global Deferred Shader
+	//LoadShader(eShaderType::VERTEX, "FullScreenVS.cso");
+	//LoadShader(eShaderType::PIXEL, "LightPS.cso");
+	//
+	//LoadShader(eShaderType::VERTEX, "ColorVS.cso");
+	//LoadShader(eShaderType::PIXEL, "ColorPS.cso");
+	//
+	//LoadShader(eShaderType::VERTEX, "SkyCubeVS.cso");
+	//LoadShader(eShaderType::PIXEL, "SkyCubePS.cso");
+	//
+	//LoadShader(eShaderType::VERTEX, "NormalShadowVS.cso");
+	//LoadShader(eShaderType::VERTEX, "SkinShadowVS.cso");
+	//
+	//LoadShader(eShaderType::VERTEX, "TextureVS.cso");
+	//LoadShader(eShaderType::VERTEX, "SkinVS.cso");
+	//LoadShader(eShaderType::PIXEL, "TextureDeferredPS.cso");
+	//
+	//LoadShader(eShaderType::VERTEX, "NormalTextureVS.cso");
+	//LoadShader(eShaderType::PIXEL, "NormalTextureDeferredPS.cso");
+	//
+	//LoadShader(eShaderType::VERTEX, "NormalSkinVS.cso");
+	//LoadShader(eShaderType::PIXEL, "NormalTextureDeferredPS.cso");
+	//
+	//// SSAO Shader
+	//LoadShader(eShaderType::VERTEX, "SSAOVS.cso");
+	//LoadShader(eShaderType::PIXEL, "SSAOPS.cso");
+	//
+	//LoadShader(eShaderType::VERTEX, "SSAOBlurVS.cso");
+	//LoadShader(eShaderType::PIXEL, "SSAOHorizonBlurPS.cso");
+	//LoadShader(eShaderType::PIXEL, "SSAOVerticalBlurPS.cso");
+	//
+	//// Terrain Shader
+	//LoadShader(eShaderType::VERTEX, "TerrainVS.cso");
+	//LoadShader(eShaderType::PIXEL, "TerrainPS.cso");
+	//
+	//// Screen Blur Shader
+	//LoadShader(eShaderType::COMPUTE, "HorizonBlurCS.cso");
+	//LoadShader(eShaderType::COMPUTE, "VerticalBlurCS.cso");
+	
 	// Shader Sampler 설정..
 	SetSampler();
 }
@@ -174,7 +178,6 @@ IShader* ShaderManager::LoadShader(eShaderType shaderType, std::string shaderNam
 
 	// 파일을 제대로 읽지 못하여 생성하지 못한경우 nullptr..
 	if (newShader == nullptr)
-		throw std::exception("ERROR: Can not Create Shader.\n");
 		return nullptr;
 
 	std::string shaderKey(shaderName);
@@ -182,7 +185,7 @@ IShader* ShaderManager::LoadShader(eShaderType shaderType, std::string shaderNam
 
 	// Shader File Name 기준 Key 설정..
 	if (pointPosition != std::string::npos)
-		shaderKey = shaderName.substr(0, pointPosition - 1);
+		shaderKey = shaderName.substr(0, pointPosition);
 
 	// 새로 생성한 Shader 삽입..
 	m_ShaderList.insert(std::make_pair(shaderKey, newShader));

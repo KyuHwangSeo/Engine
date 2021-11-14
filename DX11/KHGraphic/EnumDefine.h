@@ -44,3 +44,10 @@ enum class eBuffer
 	SCREEN,
 	SSAO
 };
+
+enum class eRenderType
+{
+	MESH,
+	SKIN,
+	TERRAIN
+};

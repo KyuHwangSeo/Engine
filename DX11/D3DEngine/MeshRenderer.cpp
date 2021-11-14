@@ -55,7 +55,7 @@ void MeshRenderer::Render(DXMatrix4X4 view, DXMatrix4X4 proj)
 	DXMatrix4X4 prevWorld = m_GameObject->GetPrevWorld();
 	DXMatrix4X4 worldViewProj = world * view * proj;
 	DXMatrix4X4 worldInvTranspose = MathHelper::InverseTranspose(world);
-
+	DXMatrix4X4 w = world.Inverse();
 	m_ObjectData.gWorld = world;
 	m_ObjectData.gWorldInvTranspose = worldInvTranspose;
 	m_ObjectData.gWorldViewProj = worldViewProj;

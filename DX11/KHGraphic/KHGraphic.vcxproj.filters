@@ -127,6 +127,9 @@
     <Filter Include="소스 파일\Shader\ShaderClass\Types">
       <UniqueIdentifier>{5ec6dbe9-eb48-4f91-9453-e021ca4fb1f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\RendererPass\Forward">
+      <UniqueIdentifier>{b44bbdc2-e6b9-4bff-a63c-29fd6013064c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -258,6 +261,9 @@
     <ClInclude Include="ShaderTypes.h">
       <Filter>소스 파일\Shader\ShaderClass\Types</Filter>
     </ClInclude>
+    <ClInclude Include="ForwardPass.h">
+      <Filter>소스 파일\RendererPass\Forward</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="D3D11Graphic.cpp">
@@ -329,12 +335,18 @@
     <ClCompile Include="ShaderTypes.cpp">
       <Filter>소스 파일\Shader\ShaderClass\Types</Filter>
     </ClCompile>
+    <ClCompile Include="ForwardPass.cpp">
+      <Filter>소스 파일\RendererPass\Forward</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="MeshVS.hlsl">
+    <FxCompile Include="..\Resources\Shader\SKH\ForwardPS.hlsl">
       <Filter>소스 파일\Shader\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="ForwardPS.hlsl">
+    <FxCompile Include="..\Resources\Shader\SKH\MeshVS.hlsl">
+      <Filter>소스 파일\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Shader\SKH\SkinVS.hlsl">
       <Filter>소스 파일\Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>

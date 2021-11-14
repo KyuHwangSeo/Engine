@@ -13,6 +13,7 @@
 #include "ComputeShader.h"
 
 #include "MathDefine.h"
+#include "ForwardPass.h"
 #include "ShadowPass.h"
 #include "DeferredPass.h"
 #include "LightPass.h"
@@ -25,13 +26,15 @@ RenderManager::RenderManager(D3D11Graphic* graphic, IGraphicResourceFactory* fac
 
 	m_SwapChain = graphic->GetSwapChain();
 
-	m_Deferred = new DeferredPass();
-	m_Light = new LightPass();
-	m_Shadow = new ShadowPass();
+	m_Farward = new ForwardPass();
+	//m_Deferred = new DeferredPass();
+	//m_Light = new LightPass();
+	//m_Shadow = new ShadowPass();
 
-	m_RenderPassList.push_back(m_Deferred);
-	m_RenderPassList.push_back(m_Light);
-	m_RenderPassList.push_back(m_Shadow);
+	m_RenderPassList.push_back(m_Farward);
+	//m_RenderPassList.push_back(m_Deferred);
+	//m_RenderPassList.push_back(m_Light);
+	//m_RenderPassList.push_back(m_Shadow);
 }
 
 RenderManager::~RenderManager()
@@ -59,51 +62,23 @@ void RenderManager::Release()
 
 void RenderManager::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 {
-	DirectX::XMMATRIX view = *global->mViewMX;
-	DirectX::XMMATRIX proj = *global->mProj;
-
-	ID3D11Buffer* iBuffer = nullptr;
-	ID3D11Buffer* vBuffer = nullptr;
-	UINT indexCount = 0;
-	UINT size = 0;
-	UINT offset = 0;
-
-	DirectX::XMMATRIX world;
-
-	m_Deferred->BeginRender();
+	m_Farward->BeginRender();
 
 	while (meshList->size() != 0)
 	{
 		MeshData* mesh = meshList->front();
 
-		// Camera 제외..
-		if (mesh->ObjType == OBJECT_TYPE::Camera)
+		switch (mesh->ObjType)
 		{
-			meshList->pop();
-			continue;
+		case OBJECT_TYPE::Base:
+		case OBJECT_TYPE::Skinning:
+			m_Farward->Update(mesh, global);
+			m_Farward->Render(mesh);
+			break;
 		}
 
-		// Buffer가 없는 Mesh 제외..
-		if (mesh->IB == nullptr && mesh->VB == nullptr)
-		{
-			meshList->pop();
-			continue;
-		}
-
-		// 현재 Mesh World Matrix 삽입..
-		world = mesh->mWorld;
-
-		iBuffer = reinterpret_cast<ID3D11Buffer*>(mesh->IB->IndexBufferPointer);
-		vBuffer = reinterpret_cast<ID3D11Buffer*>(mesh->VB->VertexbufferPointer);
-
-		indexCount = mesh->IB->Count;
-		size = mesh->VB->VertexDataSize;
-
-		m_Deferred->Render(view, proj, world, vBuffer, iBuffer, size, offset, indexCount);
+		meshList->pop();
 	}
-
-	// LightPass..
-	m_Light->Render();
 
 	// 최종 출력..
 	m_SwapChain->Present(0, 0);

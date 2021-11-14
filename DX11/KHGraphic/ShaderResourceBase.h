@@ -20,7 +20,7 @@ public:
 class ConstantBuffer : public ShaderResourceBase
 {
 public:
-	ConstantBuffer(std::string name, unsigned int rNum, Microsoft::WRL::ComPtr<ID3D11Buffer> cbuf) : ShaderResourceBase(name, rNum), cBuffer(cbuf) {}
+	ConstantBuffer(std::string name, unsigned int rNum, ID3D11Buffer** cbuf) : ShaderResourceBase(name, rNum), cBuffer(*cbuf) {}
 
 public:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> cBuffer;

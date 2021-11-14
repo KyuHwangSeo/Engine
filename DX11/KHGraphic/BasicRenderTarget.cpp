@@ -14,6 +14,12 @@ BasicRenderTarget::~BasicRenderTarget()
 	RESET_COM(m_SRV);
 }
 
+void BasicRenderTarget::Reset()
+{
+	RESET_COM(m_RTV);
+	RESET_COM(m_SRV);
+}
+
 ID3D11Texture2D* BasicRenderTarget::GetTexture2D()
 {
 	ID3D11Resource* resource = nullptr;

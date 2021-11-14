@@ -13,6 +13,11 @@ DepthStencilView::~DepthStencilView()
 	RESET_COM(m_DSV);
 }
 
+void DepthStencilView::Reset()
+{
+	RESET_COM(m_DSV);
+}
+
 ID3D11Texture2D* DepthStencilView::GetTexture2D()
 {
 	ID3D11Resource* resource = nullptr;

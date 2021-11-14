@@ -34,7 +34,7 @@ void ShaderResourceHashTable::Initialize()
 	ADD_CONSTANT_BUFFER(cbAlpha)
 
 	// Sampler State Hash Table Create..
-	ADD_SAMPLER_STATE(gShadowSam)
+	//ADD_SAMPLER_STATE(gShadowSam)
 	ADD_SAMPLER_STATE(samWrapMinLinear)
 	ADD_SAMPLER_STATE(samWrapAnisotropic)
 	ADD_SAMPLER_STATE(samClampMinLinear)

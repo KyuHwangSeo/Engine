@@ -15,7 +15,7 @@ struct PixelOut
 
 TextureCube gCubeMap	: register(t0);
 
-SamplerState samWrapMinLinear : register(s3);
+SamplerState samWrapMinLinear : register(s0);
 
 PixelOut main(SkyCubeVertexIn pin)
 {

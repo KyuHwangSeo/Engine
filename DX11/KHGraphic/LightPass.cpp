@@ -49,7 +49,7 @@ void LightPass::Initialize(int width, int height)
 	m_ScreenViewport = g_Resource->GetViewPort(eViewPort::SCREEN);
 
 	// BackBuffer »ý¼º..
-	m_BackBuffer = g_Factory->CreateMainRenderTarget(width, height);
+	m_BackBuffer = g_Resource->GetMainRenderTarget();
 	m_BackBufferRTV = m_BackBuffer->GetRTV();
 	m_BackBufferSRV = m_BackBuffer->GetSRV();
 }
