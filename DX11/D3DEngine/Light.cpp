@@ -82,7 +82,7 @@ void Light::Start()
 	m_DirLights[2].Direction = DXVector3(-0.7f, 0.0f, 0.7f);
 
 	// PointLight Initial Data
-	m_PointLight.Ambient = DXVector4(0.3f, 0.3f, 0.3f, 1.0f);
+	m_PointLight.Ambient = DXVector4(0.9f, 0.3f, 0.3f, 1.0f);
 	//m_PointLight.Diffuse = DXVector4(0.7f, 0.7f, 0.7f, 1.0f);
 	m_PointLight.Specular = DXVector4(0.7f, 0.7f, 0.7f, 1.0f);
 	m_PointLight.Position = m_GameObject->GetTransform()->GetPosition();

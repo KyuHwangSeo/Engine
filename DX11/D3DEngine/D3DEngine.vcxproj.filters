@@ -659,9 +659,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\Resource\FX\fx\Standard.fx">
-      <Filter>소스 파일\Shader\FX</Filter>
-    </FxCompile>
     <FxCompile Include="..\Resource\FX\fx\Blur.fx">
       <Filter>소스 파일\Shader\FX</Filter>
     </FxCompile>
@@ -787,6 +784,9 @@
     </FxCompile>
     <FxCompile Include="..\Resource\Shader\LightHelper.fx">
       <Filter>소스 파일\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resource\Shader\fx\Standard.fx">
+      <Filter>소스 파일\Shader\FX</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
