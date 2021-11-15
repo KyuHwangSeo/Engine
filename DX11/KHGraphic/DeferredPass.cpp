@@ -1,7 +1,6 @@
 #include "DirectDefine.h"
 #include "RenderPassBase.h"
 #include "ShaderBase.h"
-#include "ShaderResourceBase.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
 #include "Texture2D.h"

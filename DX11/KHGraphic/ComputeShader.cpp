@@ -1,6 +1,5 @@
 #include "DirectDefine.h"
 #include "ShaderBase.h"
-#include "ShaderResourceBase.h"
 #include "ComputeShader.h"
 
 #include "ResourceBufferHashTable.h"
@@ -9,7 +8,7 @@
 #include <fstream>
 
 ComputeShader::ComputeShader(const char* fileName)
-	:IShader(eShaderType::COMPUTE)
+	:ShaderBase(eShaderType::COMPUTE)
 {
 	LoadShader(g_ShaderRoute + fileName);
 }
@@ -108,7 +107,7 @@ void ComputeShader::LoadShader(std::string fileName)
 			sampler_register_slot = bindDesc.BindPoint;
 
 			// Sampler Ãß°¡..
-			m_SamplerList.insert(std::make_pair(hash_key, new SamplerState(bindDesc.Name, sampler_register_slot)));
+			m_SamplerList.insert(std::make_pair(hash_key, new SamplerBuffer(bindDesc.Name, sampler_register_slot)));
 		}
 		break;
 		case D3D_SIT_UAV_RWTYPED:
@@ -167,41 +166,13 @@ void ComputeShader::Update()
 
 void ComputeShader::Release()
 {
+	ShaderBase::Release();
+
 	RESET_COM(m_CS);
-
-	for (Microsoft::WRL::ComPtr<ID3D11Buffer> cBuffer : m_ConstantBuffers)
-	{
-		RESET_COM(cBuffer);
-	}
-
-	for (Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler : m_SamplerStates)
-	{
-		RESET_COM(sampler);
-	}
-
-	for (Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv : m_ShaderResourceViews)
-	{
-		RESET_COM(srv);
-	}
 
 	for (Microsoft::WRL::ComPtr<ID3D11UnorderedAccessView> uav : m_UnorderedAccessViews)
 	{
 		RESET_COM(uav);
-	}
-
-	for (std::pair<Hash_Code, ConstantBuffer*> cBuffer : m_ConstantBufferList)
-	{
-		SAFE_DELETE(cBuffer.second);
-	}
-
-	for (std::pair<Hash_Code, SamplerState*> sampler : m_SamplerList)
-	{
-		SAFE_DELETE(sampler.second);
-	}
-
-	for (std::pair<Hash_Code, ShaderResourceBuffer*> srv : m_SRVList)
-	{
-		SAFE_DELETE(srv.second);
 	}
 
 	for (std::pair<Hash_Code, UnorderedAccessBuffer*> uav : m_UAVList)
@@ -209,12 +180,6 @@ void ComputeShader::Release()
 		SAFE_DELETE(uav.second);
 	}
 
-	m_ConstantBuffers.clear();
-	m_SamplerStates.clear();
-	m_ShaderResourceViews.clear();
 	m_UnorderedAccessViews.clear();
-	m_SamplerList.clear();
-	m_ConstantBufferList.clear();
-	m_SRVList.clear();
 	m_UAVList.clear();
 }

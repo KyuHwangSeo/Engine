@@ -20,6 +20,7 @@ void ShaderResourceHashTable::Initialize()
 	// Constant Buffer Hash Table Create..
 	ADD_CONSTANT_BUFFER(cbPerObject)
 	ADD_CONSTANT_BUFFER(cbLights)
+	ADD_CONSTANT_BUFFER(cbMaterial)
 	ADD_CONSTANT_BUFFER(cbCamera)
 	ADD_CONSTANT_BUFFER(cbShadow)
 	ADD_CONSTANT_BUFFER(cbSkinned)

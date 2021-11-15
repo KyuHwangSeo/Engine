@@ -32,9 +32,17 @@ CONSTANT_BUFFER(cbPerObject)
 
 CONSTANT_BUFFER(cbLights)
 {
-	DirectionalLight gDirLights[3];
-	PointLight gPointLights[4];
-	SpotLight gSpotLights[4];
+	DirectionalLightData gDirLights[3];
+	PointLightData gPointLights[5];
+	SpotLightData gSpotLights[5];
+
+	UINT gPointLightCount;
+	UINT gSpotLightCount;
+};
+
+CONSTANT_BUFFER(cbMaterial)
+{
+	MaterialData gMaterials[5];
 };
 
 CONSTANT_BUFFER(cbCamera)
@@ -63,9 +71,9 @@ CONSTANT_BUFFER(cbID)
 
 CONSTANT_BUFFER(cbLightList)
 {
-	DirectionalLight gDirLights[3];
-	PointLight gPointLights[16];
-	SpotLight gSpotLights[16];
+	DirectionalLightData gDirLights[3];
+	PointLightData gPointLights[16];
+	SpotLightData gSpotLights[16];
 
 	UINT gPointLightCount;
 	UINT gSpotLightCount;

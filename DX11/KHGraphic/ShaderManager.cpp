@@ -1,7 +1,6 @@
 #include "DirectDefine.h"
 #include "ShaderManagerBase.h"
 #include "ShaderBase.h"
-#include "ShaderResourceBase.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
 #include "ComputeShader.h"
@@ -37,16 +36,11 @@ void ShaderManager::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, Micr
 	ShaderResourceHashTable::Reset();
 }
 
-void ShaderManager::AddSampler(Hash_Code hash_code, Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler)
-{
-	m_SamplerList.insert(std::make_pair(hash_code, sampler));
-}
-
 void ShaderManager::Release()
 {
 	IShader::Reset();
 
-	for (std::pair<std::string, IShader*> shader : m_ShaderList)
+	for (std::pair<std::string, ShaderBase*> shader : m_ShaderList)
 	{
 		RELEASE_COM(shader.second);
 	}
@@ -56,7 +50,7 @@ void ShaderManager::Release()
 
 VertexShader* ShaderManager::GetVertexShader(std::string shaderName)
 {
-	std::unordered_map<std::string, IShader*>::iterator shader = m_ShaderList.find(shaderName);
+	std::unordered_map<std::string, ShaderBase*>::iterator shader = m_ShaderList.find(shaderName);
 
 	// 해당 Shader가 없을 경우..
 	if (shader == m_ShaderList.end()) return nullptr;
@@ -72,7 +66,7 @@ VertexShader* ShaderManager::GetVertexShader(std::string shaderName)
 
 PixelShader* ShaderManager::GetPixelShader(std::string shaderName)
 {
-	std::unordered_map<std::string, IShader*>::iterator shader = m_ShaderList.find(shaderName);
+	std::unordered_map<std::string, ShaderBase*>::iterator shader = m_ShaderList.find(shaderName);
 
 	// 해당 Shader가 없을 경우..
 	if (shader == m_ShaderList.end()) return nullptr;
@@ -88,7 +82,7 @@ PixelShader* ShaderManager::GetPixelShader(std::string shaderName)
 
 ComputeShader* ShaderManager::GetComputeShader(std::string shaderName)
 {
-	std::unordered_map<std::string, IShader*>::iterator shader = m_ShaderList.find(shaderName);
+	std::unordered_map<std::string, ShaderBase*>::iterator shader = m_ShaderList.find(shaderName);
 
 	// 해당 Shader가 없을 경우..
 	if (shader == m_ShaderList.end()) return nullptr;
@@ -150,15 +144,12 @@ void ShaderManager::CreateShader()
 	//// Screen Blur Shader
 	//LoadShader(eShaderType::COMPUTE, "HorizonBlurCS.cso");
 	//LoadShader(eShaderType::COMPUTE, "VerticalBlurCS.cso");
-	
-	// Shader Sampler 설정..
-	SetSampler();
 }
 
-IShader* ShaderManager::LoadShader(eShaderType shaderType, std::string shaderName)
+ShaderBase* ShaderManager::LoadShader(eShaderType shaderType, std::string shaderName)
 {
 	// Shader Type에 맞는 Shader 생성..
-	IShader* newShader = nullptr;
+	ShaderBase* newShader = nullptr;
 
 	switch (shaderType)
 	{
@@ -173,7 +164,7 @@ IShader* ShaderManager::LoadShader(eShaderType shaderType, std::string shaderNam
 		break;
 	default:
 		throw std::exception("ERROR: None Shader Type.\n");
-		return nullptr; 
+		return nullptr;
 	}
 
 	// 파일을 제대로 읽지 못하여 생성하지 못한경우 nullptr..
@@ -196,48 +187,4 @@ IShader* ShaderManager::LoadShader(eShaderType shaderType, std::string shaderNam
 OriginalShader ShaderManager::GetShader(std::string shaderName)
 {
 	return OriginalShader{ this, shaderName };
-}
-
-void ShaderManager::SetSampler()
-{
-	// Pixel & Compute Shader Sampler 설정..
-	for (std::pair<std::string, IShader*> shader : m_ShaderList)
-	{
-		// Shader Type에 따른 형은 보장이 되므로 강제 형변환 실행 후 Sampler 설정..
-		switch (shader.second->GetType())
-		{
-		case eShaderType::PIXEL:
-		{
-			PixelShader* pShader = reinterpret_cast<PixelShader*>(shader.second);
-
-			// 해당 Shader에 바인딩된 Sampler 설정..
-			for (std::pair<Hash_Code, ComPtr<ID3D11SamplerState>> sampler : m_SamplerList)
-			{
-				pShader->SetSamplerState(sampler.first, sampler.second.GetAddressOf());
-			}
-		}
-		break;
-		case eShaderType::COMPUTE:
-		{
-			ComputeShader* cShader = reinterpret_cast<ComputeShader*>(shader.second);
-			
-			// 해당 Shader에 바인딩된 Sampler 설정..
-			for (std::pair<Hash_Code, ComPtr<ID3D11SamplerState>> sampler : m_SamplerList)
-			{
-				cShader->SetSamplerState(sampler.first, sampler.second.GetAddressOf());
-			}
-		}
-		break;
-		default:
-			break;
-		}
-	}
-
-	// Sampler 설정 후 SamplerList 초기화..
-	for (std::pair<Hash_Code, ComPtr<ID3D11SamplerState>> sampler : m_SamplerList)
-	{
-		RESET_COM(sampler.second);
-	}
-
-	m_SamplerList.clear();
 }

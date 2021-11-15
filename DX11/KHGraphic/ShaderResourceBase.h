@@ -1,5 +1,6 @@
 #pragma once
-typedef unsigned int register_slot;
+typedef size_t	register_slot;
+typedef size_t	Hash_Code;
 
 // 모든 Shader Resource들의 Base Class..
 // 해당 Resource Buffer Name & Binding Register Index 보유..
@@ -20,29 +21,29 @@ public:
 class ConstantBuffer : public ShaderResourceBase
 {
 public:
-	ConstantBuffer(std::string name, unsigned int rNum, ID3D11Buffer** cbuf) : ShaderResourceBase(name, rNum), cBuffer(*cbuf) {}
+	ConstantBuffer(std::string name, register_slot rNum, ID3D11Buffer** cbuf) : ShaderResourceBase(name, rNum), cBuffer(*cbuf) {}
 
 public:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> cBuffer;
 };
 
 // SamplerState Resource Data Class
-class SamplerState : public ShaderResourceBase
+class SamplerBuffer : public ShaderResourceBase
 {
 public:
-	SamplerState(std::string name, unsigned int rNum) : ShaderResourceBase(name, rNum) {}
+	SamplerBuffer(std::string name, register_slot rNum) : ShaderResourceBase(name, rNum) {}
 };
 
 // ShaderResourceView Resource Data Class
 class ShaderResourceBuffer : public ShaderResourceBase
 {
 public:
-	ShaderResourceBuffer(std::string name, unsigned int rNum) : ShaderResourceBase(name, rNum) {}
+	ShaderResourceBuffer(std::string name, register_slot rNum) : ShaderResourceBase(name, rNum) {}
 };
 
 // UnorderedAccessView Resource Data Class
 class UnorderedAccessBuffer : public ShaderResourceBase
 {
 public:
-	UnorderedAccessBuffer(std::string name, unsigned int rNum) : ShaderResourceBase(name, rNum) {}
+	UnorderedAccessBuffer(std::string name, register_slot rNum) : ShaderResourceBase(name, rNum) {}
 };

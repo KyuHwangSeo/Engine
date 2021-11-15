@@ -9,7 +9,6 @@
 #include "ComputeRenderTarget.h"
 #include "ResourceManager.h"
 #include "ShaderBase.h"
-#include "ShaderResourceBase.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
 #include "ComputeShader.h"
@@ -42,6 +41,12 @@ GraphicResourceFactory::~GraphicResourceFactory()
 
 void GraphicResourceFactory::Initialize(int width, int height)
 {
+	// Shader Manager 檬扁拳..
+	m_ShaderManager->Initialize(m_Device, m_Context);
+
+	// Graphic Resource Manager 檬扁拳..
+	m_ResourceManager->Initialize(m_Device, m_SwapChain);
+
 	// Back Buffer 积己..
 	CreateMainRenderTarget(width, height);
 
@@ -57,10 +62,6 @@ void GraphicResourceFactory::Initialize(int width, int height)
 	// FullScreen Buffer..
 	CreateQuadBuffer();
 	CreateSSAOQuadBuffer();
-
-	// Graphic Resource & Shader Manager 檬扁拳..
-	m_ResourceManager->Initialize(m_Device, m_SwapChain);
-	m_ShaderManager->Initialize(m_Device, m_Context);
 }
 
 void GraphicResourceFactory::Release()
@@ -286,7 +287,7 @@ Vertexbuffer* GraphicResourceFactory::CreateVertexBuffer(ParserData::Mesh* mesh)
 		return CreateMeshVertexBuffer<MeshVertex>(mesh);
 
 		// Terrain Type
-		return CreateMeshVertexBuffer<TerrainVertex>(mesh);
+		//return CreateMeshVertexBuffer<TerrainVertex>(mesh);
 	}
 }
 
@@ -350,7 +351,9 @@ TextureBuffer* GraphicResourceFactory::CreateTextureBuffer(std::string path)
 
 	// 逞败拎具且 TextureBufferData 火涝..
 	tBuffer->TextureBufferPointer = newTex;
-	texResource->Release();
+
+	if (texResource != nullptr)
+		texResource->Release();
 
 	return tBuffer;
 }
@@ -437,8 +440,13 @@ Vertexbuffer* GraphicResourceFactory::CreateMeshVertexBuffer<SkinVertex>(ParserD
 		{
 			if (j < 4)
 			{
-				vertices[i].BoneIndex[j] = mesh->m_VertexList[i]->m_BoneIndices[j];
-				vertices[i].BoneWeight[j] = mesh->m_VertexList[i]->m_BoneWeights[j];
+				vertices[i].BoneIndex1[j] = mesh->m_VertexList[i]->m_BoneIndices[j];
+				vertices[i].BoneWeight1[j] = mesh->m_VertexList[i]->m_BoneWeights[j];
+			}
+			else if (j < 8)
+			{
+				vertices[i].BoneIndex2[j - 4] = mesh->m_VertexList[i]->m_BoneIndices[j];
+				vertices[i].BoneWeight2[j - 4] = mesh->m_VertexList[i]->m_BoneWeights[j];
 			}
 		}
 	}
@@ -629,7 +637,7 @@ void GraphicResourceFactory::CreateSamplerState()
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	// samClampMinLinear SamplerState 积己..
-	m_ShaderManager->AddSampler(samClampMinLinear::GetHashCode(), CreateSS(&samplerDesc));
+	m_ShaderManager->AddSampler<samClampMinLinear>(CreateSS(&samplerDesc));
 
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
@@ -641,7 +649,7 @@ void GraphicResourceFactory::CreateSamplerState()
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	// samWrapAnisotropic SamplerState 积己..
-	m_ShaderManager->AddSampler(samWrapAnisotropic::GetHashCode(), CreateSS(&samplerDesc));
+	m_ShaderManager->AddSampler<samWrapAnisotropic>(CreateSS(&samplerDesc));
 
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -654,7 +662,7 @@ void GraphicResourceFactory::CreateSamplerState()
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	// samWrapMinLinear SamplerState 积己..
-	m_ShaderManager->AddSampler(samWrapMinLinear::GetHashCode(), CreateSS(&samplerDesc));
+	m_ShaderManager->AddSampler<samWrapMinLinear>(CreateSS(&samplerDesc));
 
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -666,7 +674,7 @@ void GraphicResourceFactory::CreateSamplerState()
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	// samMirrorMinLinear SamplerState 积己..
-	m_ShaderManager->AddSampler(samMirrorMinLinear::GetHashCode(), CreateSS(&samplerDesc));
+	m_ShaderManager->AddSampler<samMirrorMinLinear>(CreateSS(&samplerDesc));
 
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
@@ -678,7 +686,7 @@ void GraphicResourceFactory::CreateSamplerState()
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	// samClampMinLinearPoint SamplerState 积己..
-	m_ShaderManager->AddSampler(samClampMinLinearPoint::GetHashCode(), CreateSS(&samplerDesc));
+	m_ShaderManager->AddSampler<samClampMinLinearPoint>(CreateSS(&samplerDesc));
 	
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
@@ -691,7 +699,7 @@ void GraphicResourceFactory::CreateSamplerState()
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	// samBorderLinerPoint SamplerState 积己..
-	m_ShaderManager->AddSampler(samBorderLinerPoint::GetHashCode(), CreateSS(&samplerDesc));
+	m_ShaderManager->AddSampler<samBorderLinerPoint>(CreateSS(&samplerDesc));
 
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
@@ -702,7 +710,7 @@ void GraphicResourceFactory::CreateSamplerState()
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	// samWrapLinerPoint SamplerState 积己..
-	m_ShaderManager->AddSampler(samWrapLinerPoint::GetHashCode(), CreateSS(&samplerDesc));
+	m_ShaderManager->AddSampler<samWrapLinerPoint>(CreateSS(&samplerDesc));
 
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT;
@@ -714,7 +722,7 @@ void GraphicResourceFactory::CreateSamplerState()
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	// gShadowSam SamplerState 积己..
-	m_ShaderManager->AddSampler(gShadowSam::GetHashCode(), CreateSS(&samplerDesc));
+	m_ShaderManager->AddSampler<gShadowSam>(CreateSS(&samplerDesc));
 }
 
 void GraphicResourceFactory::CreateBlendState()

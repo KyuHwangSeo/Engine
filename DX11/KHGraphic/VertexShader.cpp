@@ -1,6 +1,5 @@
 #include "DirectDefine.h"
 #include "ShaderBase.h"
-#include "ShaderResourceBase.h"
 #include "VertexShader.h"
 
 #include "ResourceBufferHashTable.h"
@@ -9,7 +8,7 @@
 #include <fstream>
 
 VertexShader::VertexShader(const char* fileName)
-	:IShader(eShaderType::VERTEX)
+	:ShaderBase(eShaderType::VERTEX)
 {
 	LoadShader(g_ShaderRoute + fileName);
 }
@@ -24,6 +23,8 @@ void VertexShader::LoadShader(std::string fileName)
 	ID3D11ShaderReflection* pReflector = nullptr;
 
 	size_t cbuffer_register_slot = 0;	// ConstantBuffer Max Register Slot
+	size_t sampler_register_slot = 0;	// Sampler Max Register Slot
+	size_t srv_register_slot = 0;		// ShaderResourceView Max Register Slot
 	size_t hash_key = 0;				// Resource Hash Code
 
 	// Vertex HLSL Load..
@@ -124,8 +125,50 @@ void VertexShader::LoadShader(std::string fileName)
 		}
 	}
 
+
+	/// Shader Resource Reflection
+	// Shader Resource..
+	for (unsigned int rsindex = 0; rsindex < shaderDesc.BoundResources; rsindex++)
+	{
+		D3D11_SHADER_INPUT_BIND_DESC bindDesc;
+		pReflector->GetResourceBindingDesc(rsindex, &bindDesc);
+
+		// Resource Type에 맞는 해당 List에 삽입..
+		switch (bindDesc.Type)
+		{
+		case D3D_SIT_TEXTURE:
+		{
+			// SRV Hash Code..
+			hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::BufferType::SRV, bindDesc.Name);
+
+			// SRV Register Slot Number..
+			srv_register_slot = bindDesc.BindPoint;
+
+			// SRV 추가..
+			m_SRVList.insert(std::make_pair(hash_key, new ShaderResourceBuffer(bindDesc.Name, srv_register_slot)));
+		}
+		break;
+		case D3D_SIT_SAMPLER:
+		{
+			// Sampler Hash Code..
+			hash_key = ShaderResourceHashTable::FindHashCode(ShaderResourceHashTable::BufferType::SAMPLER, bindDesc.Name);
+
+			// Sampler Register Slot Number..
+			sampler_register_slot = bindDesc.BindPoint;
+
+			// Sampler 추가..
+			m_SamplerList.insert(std::make_pair(hash_key, new SamplerBuffer(bindDesc.Name, sampler_register_slot)));
+		}
+		break;
+		default:
+			break;
+		}
+	}
+
 	// 마지막으로 Binding 된 Resource Register Index 기준으로 사이즈 설정..
 	m_ConstantBuffers.resize(++cbuffer_register_slot);
+	m_SamplerStates.resize(++sampler_register_slot);
+	m_ShaderResourceViews.resize(++srv_register_slot);
 
 	// Constant Buffer List 최초 설정..
 	for (auto& cBuffer : m_ConstantBufferList)
@@ -141,9 +184,17 @@ void VertexShader::Update()
 	// Vertex Shader 설정..
 	g_DeviceContext->VSSetShader(m_VS.Get(), nullptr, 0);
 
+	// Vertex Shader SamplerState 설정..
+	if (!m_SamplerStates.empty())
+		g_DeviceContext->VSSetSamplers(0, (UINT)m_SamplerStates.size(), m_SamplerStates[0].GetAddressOf());
+
 	// Vertex Shader ConstantBuffer 설정..
 	if (!m_ConstantBuffers.empty())
 		g_DeviceContext->VSSetConstantBuffers(0, (UINT)m_ConstantBuffers.size(), m_ConstantBuffers[0].GetAddressOf());
+	
+	// Vertex Shader ShaderResourceView 설정..
+	if (!m_ShaderResourceViews.empty())
+		g_DeviceContext->VSSetShaderResources(0, (UINT)m_ShaderResourceViews.size(), m_ShaderResourceViews[0].GetAddressOf());
 
 	// Shader InputLayout 설정.. 
 	g_DeviceContext->IASetInputLayout(m_InputLayout.Get());
@@ -151,19 +202,8 @@ void VertexShader::Update()
 
 void VertexShader::Release()
 {
+	ShaderBase::Release();
+
 	RESET_COM(m_VS);
 	RESET_COM(m_InputLayout);
-
-	for (Microsoft::WRL::ComPtr<ID3D11Buffer> cBuffer : m_ConstantBuffers)
-	{
-		RESET_COM(cBuffer);
-	}
-
-	for (std::pair<Hash_Code, ConstantBuffer*> cBuffer : m_ConstantBufferList)
-	{
-		SAFE_DELETE(cBuffer.second);
-	}
-
-	m_ConstantBuffers.clear();
-	m_ConstantBufferList.clear();
 }

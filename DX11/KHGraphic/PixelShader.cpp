@@ -1,6 +1,5 @@
 #include "DirectDefine.h"
 #include "ShaderBase.h"
-#include "ShaderResourceBase.h"
 #include "PixelShader.h"
 
 #include "ResourceBufferHashTable.h"
@@ -9,7 +8,7 @@
 #include <fstream>
 
 PixelShader::PixelShader(const char* fileName)
-	:IShader(eShaderType::PIXEL)
+	:ShaderBase(eShaderType::PIXEL)
 {
 	LoadShader(g_ShaderRoute + fileName);
 }
@@ -57,8 +56,6 @@ void PixelShader::LoadShader(std::string fileName)
 			ID3D11Buffer* cBuffer = nullptr;
 			CD3D11_BUFFER_DESC cBufferDesc(bufferDesc.Size, D3D11_BIND_CONSTANT_BUFFER);
 
-			// 현재 읽은 ConstantBuffer Register Slot Check..
-
 			D3D11_SHADER_INPUT_BIND_DESC bindDesc;
 			pReflector->GetResourceBindingDescByName(bufferDesc.Name, &bindDesc);
 
@@ -93,7 +90,7 @@ void PixelShader::LoadShader(std::string fileName)
 
 			// SRV Register Slot Number..
 			srv_register_slot = bindDesc.BindPoint;
-
+			
 			// SRV 추가..
 			m_SRVList.insert(std::make_pair(hash_key, new ShaderResourceBuffer(bindDesc.Name, srv_register_slot)));
 		}
@@ -107,7 +104,7 @@ void PixelShader::LoadShader(std::string fileName)
 			sampler_register_slot = bindDesc.BindPoint;
 
 			// Sampler 추가..
-			m_SamplerList.insert(std::make_pair(hash_key, new SamplerState(bindDesc.Name, sampler_register_slot)));
+			m_SamplerList.insert(std::make_pair(hash_key, new SamplerBuffer(bindDesc.Name, sampler_register_slot)));
 		}
 			break;
 		default:
@@ -149,42 +146,7 @@ void PixelShader::Update()
 
 void PixelShader::Release()
 {
+	ShaderBase::Release();
+
 	RESET_COM(m_PS);
-
-	for (Microsoft::WRL::ComPtr<ID3D11Buffer> cBuffer : m_ConstantBuffers)
-	{
-		RESET_COM(cBuffer);
-	}
-
-	for (Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler : m_SamplerStates)
-	{
-		RESET_COM(sampler);
-	}
-
-	for (Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv : m_ShaderResourceViews)
-	{
-		RESET_COM(srv);
-	}
-
-	for (std::pair<Hash_Code, ConstantBuffer*> cBuffer : m_ConstantBufferList)
-	{
-		SAFE_DELETE(cBuffer.second);
-	}
-
-	for (std::pair<Hash_Code, SamplerState*> sampler : m_SamplerList)
-	{
-		SAFE_DELETE(sampler.second);
-	}
-
-	for (std::pair<Hash_Code, ShaderResourceBuffer*> srv : m_SRVList)
-	{
-		SAFE_DELETE(srv.second);
-	}
-
-	m_ConstantBuffers.clear();
-	m_SamplerStates.clear();
-	m_ShaderResourceViews.clear();
-	m_SamplerList.clear();
-	m_ConstantBufferList.clear();
-	m_SRVList.clear();
 }
