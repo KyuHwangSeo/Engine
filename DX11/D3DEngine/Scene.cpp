@@ -121,6 +121,11 @@ void Scene::Release()
 	m_UiMG->Release();
 }
 
+ENGINE_DLL ResourceManager* Scene::GetRM()
+{
+	return m_RsMG;
+}
+
 void Scene::ShadowRender()
 {
 	// 전체 오브젝트 그리기..

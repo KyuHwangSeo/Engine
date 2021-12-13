@@ -69,7 +69,7 @@ void CameraManager::CameraUpdate(GameObject* cam, float dTime)
 	{
 	case eCameraType::NormalCam:
 	{
-		if (m_Input->IsKeyDownKeep(VK_RSHIFT))
+		if (m_Input->IsKeyDownKeep(VK_LSHIFT))
 			camera->m_Speed += dTime;
 		else
 			camera->m_Speed = 1;
@@ -79,22 +79,22 @@ void CameraManager::CameraUpdate(GameObject* cam, float dTime)
 		//	camera->RotateZ(10.0f * dTime);
 		//}
 
-		if (m_Input->IsKeyDownKeep(VK_UP))
+		if (m_Input->IsKeyDownKeep(VK_W))
 		{
 			camera->Walk(10.0f * dTime * Camera::g_MainCamera->m_Speed);
 		}
 
-		if (m_Input->IsKeyDownKeep(VK_DOWN))
+		if (m_Input->IsKeyDownKeep(VK_S))
 		{
 			camera->Walk(-10.0f * dTime * Camera::g_MainCamera->m_Speed);
 		}
 
-		if (m_Input->IsKeyDownKeep(VK_LEFT))
+		if (m_Input->IsKeyDownKeep(VK_A))
 		{
 			camera->Strafe(-10.0f * dTime * Camera::g_MainCamera->m_Speed);
 		}
 
-		if (m_Input->IsKeyDownKeep(VK_RIGHT))
+		if (m_Input->IsKeyDownKeep(VK_D))
 		{
 			camera->Strafe(10.0f * dTime * Camera::g_MainCamera->m_Speed);
 		}

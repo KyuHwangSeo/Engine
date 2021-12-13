@@ -39,11 +39,11 @@ struct VertexIn
 
 struct PixelOut
 {
-    float4 Albedo       : SV_Target0;
-    float4 Normal       : SV_Target1;
-    float4 Position     : SV_Target2;
-    float4 Shadow       : SV_Target3;
-    float4 NormalDepth  : SV_Target4;
+    float4 Albedo : SV_Target0;
+    float4 Normal : SV_Target1;
+    float4 Position : SV_Target2;
+    float4 Shadow : SV_Target3;
+    float4 NormalDepth : SV_Target4;
 };
 
 PixelOut main(VertexIn pin)
@@ -53,37 +53,38 @@ PixelOut main(VertexIn pin)
     float3 normalColor = float3(0.0f, 0.0f, 0.0f);
     float3 normalMapSample = float3(0.0f, 0.0f, 0.0f);
     
-    float4 mask1 = pin.MaskColor1;
-    float4 tex1 = float4(0.0f, 0.0f, 0.0f, 0.0f);
-    if (mask1.r > 0.0f)
+    float4 mask = float4(pin.MaskColor1.rgb, pin.MaskColor2.r);
+    float length = mask.r + mask.g + mask.b + mask.a;
+    mask /= length;
+    
+    
+    float4 albedo = float4(0.0f, 0.0f, 0.0f, 1.0f);
+    
+    if (mask.r > 0.0f)
     {
-        tex1.rgb += gColor1.Sample(samWrapMinLinear, pin.Tex).rgb * mask1.r;
+        albedo.rgb += gColor1.Sample(samWrapMinLinear, pin.Tex).rgb * mask.r;
         normalColor = gNormal1.Sample(samWrapMinLinear, pin.Tex).rgb;
-        normalMapSample += (2.0f * normalColor - 1.0f) * mask1.r;
+        normalMapSample += (2.0f * normalColor - 1.0f) * mask.r;
     }
-    if (mask1.g > 0.0f)
+    if (mask.g > 0.0f)
     {
-        tex1.rgb += gColor2.Sample(samWrapMinLinear, pin.Tex).rgb * mask1.g;
+        albedo.rgb += gColor2.Sample(samWrapMinLinear, pin.Tex).rgb * mask.g;
         normalColor = gNormal2.Sample(samWrapMinLinear, pin.Tex).rgb;
-        normalMapSample += (2.0f * normalColor - 1.0f) * mask1.g;
+        normalMapSample += (2.0f * normalColor - 1.0f) * mask.g;
     }
-    if (mask1.b > 0.0f)
+    if (mask.b > 0.0f)
     {
-        tex1.rgb += gColor3.Sample(samWrapMinLinear, pin.Tex).rgb * mask1.b;
-        normalColor = gNormal2.Sample(samWrapMinLinear, pin.Tex).rgb;
-        normalMapSample += (2.0f * normalColor - 1.0f) * mask1.b;
+        albedo.rgb += gColor3.Sample(samWrapMinLinear, pin.Tex).rgb * mask.b;
+        normalColor = gNormal3.Sample(samWrapMinLinear, pin.Tex).rgb;
+        normalMapSample += (2.0f * normalColor - 1.0f) * mask.b;
     }
-    
-    float4 mask2 = pin.MaskColor2;
-    float4 tex2 = float4(0.0f, 0.0f, 0.0f, 0.0f);
-    if (mask2.r > 0.0f)
+    if (mask.a > 0.0f)
     {
-        tex2.rgb += gColor4.Sample(samWrapMinLinear, pin.Tex).rgb * mask2.r;
+        albedo.rgb += gColor4.Sample(samWrapMinLinear, pin.Tex).rgb * mask.a;
         normalColor = gNormal4.Sample(samWrapMinLinear, pin.Tex).rgb;
-        normalMapSample += (2.0f * normalColor - 1.0f) * mask2.r;
+        normalMapSample += (2.0f * normalColor - 1.0f) * mask.a;
     }
     
-    float4 albedo = float4(float3(tex1.rgb + tex2.rgb), 1.0f);
     float3 bumpedNormalW = mul(normalMapSample, pin.TBN);
 
     vout.Albedo = albedo;

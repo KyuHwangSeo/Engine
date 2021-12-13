@@ -51,6 +51,7 @@ void ResourceManager::Initialize()
 	// Deferred Shader ·Îµå..
 	LoadShader("LightShader", "FullScreenVS.cso", "LightPS.cso", "");
 	LoadShader("BasicDeferredShader", "BasicVS.cso", "BasicDeferredPS.cso", "");
+	LoadShader("BasicSkinDeferredShader", "SkinVS.cso", "BasicDeferredPS.cso", "");
 	LoadShader("NormalDeferredShader", "NormalTextureVS.cso", "NormalTextureDeferredPS.cso", "");
 	LoadShader("TextureDeferredShader", "TextureVS.cso", "TextureDeferredPS.cso", "");
 	LoadShader("NormalSkinDeferredShader", "NormalSkinVS.cso", "NormalTextureDeferredPS.cso", "");

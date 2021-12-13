@@ -156,7 +156,7 @@ void Animation::AddAnimationData(GameObject* aniMesh, ParserData::OneAnimation* 
 	m_ResetData.insert(make_pair(aniMesh->GetTransform(), nodeTM));
 
 	// 해당 오브젝트 Transform과 연동..
-	SetTransform(aniMesh->GetTransform(), nodeTM);
+	//SetTransform(aniMesh->GetTransform(), nodeTM);
 
 	ParserData::OneAnimation* newData = new ParserData::OneAnimation(*aniData);
 

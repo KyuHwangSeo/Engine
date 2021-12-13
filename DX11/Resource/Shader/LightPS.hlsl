@@ -139,5 +139,6 @@ float4 main(VertexIn pin) : SV_TARGET
     if (normal.w < 1.0f)
         litColor.rgb = pow(litColor.rgb, 1.0f / 2.2f);
 
-	return litColor;
+    return litColor;
+  //return float4(normal.xyz, 1.0f);
 }

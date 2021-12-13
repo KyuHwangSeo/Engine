@@ -24,7 +24,7 @@ Material::Material()
 	// 기본 Material Data 설정..
 	m_MaterialData.Ambient = DXVector4(1.0f, 1.0f, 1.0f, 1.0f);
 	m_MaterialData.Diffuse = DXVector4(0.8f, 0.8f, 0.8f, 1.0f);
-	m_MaterialData.Specular = DXVector4(0.4f, 0.4f, 0.4f, 16.0f);
+	m_MaterialData.Specular = DXVector4(0.4f, 0.4f, 0.4f, 1.0f);
 	m_MaterialData.Reflect = DXVector4(0.4f, 0.4f, 0.4f, 1.0f);
 
 	m_TextureSpace =  DXMatrix4X4 (

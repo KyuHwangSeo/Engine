@@ -26,6 +26,7 @@ public:
 	GameObject* FindObject(const char* objName, eObjectType objType);
 
 	void Release();
+	ENGINE_DLL ResourceManager* GetRM();
 
 private:
 	void ShadowRender();

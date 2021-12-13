@@ -65,7 +65,7 @@ public:
 	MaterialData GetMaterial(std::string key);
 	std::string GetMeshName(std::string objectName, int count = 0);
 	std::string GetMeshKey(std::string objectName, int count = 0);
-	Shader* GetShader(std::string name);
+	ENGINE_DLL Shader* GetShader(std::string name);
 	unordered_map<std::string, Shader*> GetShaderList();
 
 

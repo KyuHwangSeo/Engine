@@ -144,7 +144,7 @@ void FBXParser::SceneSetting(std::string fileName, bool scaling, bool onlyAni)
 
 	// Scene 내에서 삼각형화 할 수 있는 모든 노드를 삼각형화 시킨다..
 	// 3D Max 안에서 Editable poly 상태라면 이 작업을 안해야 한다..
-	pConverter->Triangulate(pScene, true);
+	pConverter->Triangulate(pScene, true, true);
 }
 
 void FBXParser::CreateModel()

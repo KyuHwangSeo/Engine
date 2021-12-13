@@ -31,7 +31,7 @@ float4 main(VertexIn pin) : SV_Target
 
     float gWeights[11] =
     {
-        0.05f, 0.05f, 0.1f, 0.1f, 0.1f, 0.2f, 0.1f, 0.1f, 0.1f, 0.05f, 0.05f
+        0.025f, 0.05f, 0.075f, 0.1f, 0.15f, 0.2f, 0.15f, 0.1f, 0.075f, 0.05f, 0.025f
     };
 
     int gBlurRadius = 5;
@@ -58,8 +58,8 @@ float4 main(VertexIn pin) : SV_Target
 		// We discard such samples from the blur.
 		//
 
-		if (dot(neighborNormalDepth.xyz, centerNormalDepth.xyz) >= 0.8f &&
-			abs(neighborNormalDepth.a - centerNormalDepth.a) <= 0.2f)
+		if (dot(neighborNormalDepth.xyz, centerNormalDepth.xyz) >= 0.5f &&
+			abs(neighborNormalDepth.a - centerNormalDepth.a) <= 0.01f)
 		{
 			float weight = gWeights[i + gBlurRadius];
 

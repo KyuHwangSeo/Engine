@@ -367,6 +367,10 @@ void Factory::SetRenderer(GameObject* obj, std::string meshKey, ParserData::Mesh
 				sRenderer->m_Material->SetShader(m_RsMG->GetShader("NormalSkinDeferredShader"));
 			}
 		}
+		else
+		{
+			sRenderer->m_Material->SetShader(m_RsMG->GetShader("BasicSkinDeferredShader"));
+		}
 
 		m_MatMG->AddMaterial(sRenderer->m_Material);
 		obj->AddComponent(sRenderer);

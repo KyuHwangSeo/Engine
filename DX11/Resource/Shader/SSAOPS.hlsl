@@ -5,11 +5,17 @@ cbuffer cbSsaoFrame : register(b0)
 	float4   gFrustumCorners[4];
 
 	// Coordinates given in view space.
-	float    gOcclusionRadius = 0.5f;
-	float    gOcclusionFadeStart = 0.2f;
-	float    gOcclusionFadeEnd = 2.0f;
-	float    gSurfaceEpsilon = 0.05f;
+	float    ggOcclusionRadius = 0.5f;
+	float    ggOcclusionFadeStart = 0.2f;
+	float    ggOcclusionFadeEnd = 2.0f;
+	float    ggSurfaceEpsilon = 0.05f;
 };
+
+// Coordinates given in view space.
+static float gOcclusionRadius = 0.1f;
+static float gOcclusionFadeStart = 0.01f;
+static float gOcclusionFadeEnd = 1.0f;
+static float gSurfaceEpsilon = 0.1f;
 
 Texture2D gNormalDepthMap	: register(t0);
 

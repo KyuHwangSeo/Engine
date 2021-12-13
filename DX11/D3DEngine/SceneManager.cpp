@@ -98,7 +98,7 @@ void SceneManager::CreateHelper()
 	cam2->GetComponent<Camera>()->SetType(eCameraType::FollowCam_3);
 
 	// Main Camera 설정..
-	Camera::g_MainCamera = cam2->GetComponent<Camera>();
+	Camera::g_MainCamera = cam1->GetComponent<Camera>();
 
 	// HerlperObject 생성 및 초기화..
 #ifdef _DEBUG

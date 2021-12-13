@@ -15,8 +15,8 @@ GameManager::~GameManager()
 bool GameManager::Initialize()
 {
 	// 화면 비율 설정..
-	m_screenWidth = 1600;
-	m_screenHeight = 900;
+	m_screenWidth = 1920;
+	m_screenHeight = 1080;
 
 	// Windows Api 초기화..
 	InitializeWindows(m_screenWidth, m_screenHeight);
@@ -51,12 +51,16 @@ void GameManager::Render()
 
 void GameManager::LoadData()
 {
-	//KH_UTILITY::LoadData(eLoadType::FBX, "CHARACTER_idle", "Character/CHARACTER_idle.fbx", false);
+	KH_UTILITY::LoadData(eLoadType::FBX, "CHARACTER_idle", "Character/CHARACTER_idle.fbx", true);
+	//KH_UTILITY::LoadData(eLoadType::FBX, "Player_Idle", "Character/Player_Idle.fbx", false);
 	KH_UTILITY::LoadData(eLoadType::Terrain, "Map_Origin", "Map/Map_Origin.fbx", true);
 	KH_UTILITY::LoadData(eLoadType::FBX, "join_droid", "Character/join_droid.fbx", false);
+	KH_UTILITY::LoadData(eLoadType::FBX, "Field", "Map/Field.fbx", true);
+	KH_UTILITY::LoadData(eLoadType::FBX, "Dome_v03", "Map/Dome_v03.fbx", true);
+	//KH_UTILITY::LoadData(eLoadType::FBX, "Table", "Character/Table.fbx", true);
 
 	KH_UTILITY::LoadData(eLoadType::Texture, "Gray", "Gray.png");
-	
+
 	KH_UTILITY::LoadData(eLoadType::Texture, "Red", "Red.png");
 	KH_UTILITY::LoadData(eLoadType::Texture, "Green", "Green.png");
 	KH_UTILITY::LoadData(eLoadType::Texture, "Blue", "Blue.png");
@@ -65,15 +69,15 @@ void GameManager::LoadData()
 	KH_UTILITY::LoadData(eLoadType::Texture, "Dead_Leaves_Mask", "Dead_Leaves_Mask.png");
 	KH_UTILITY::LoadData(eLoadType::Texture, "Dead_Leaves_Diffuse", "Dead_Leaves_Diffuse.png");
 	KH_UTILITY::LoadData(eLoadType::Texture, "Dead_Leaves_Normal", "Dead_Leaves_Normal.png");
-	
+
 	KH_UTILITY::LoadData(eLoadType::Texture, "Dry_Ground_Mask", "Dry_Ground_Mask.png");
 	KH_UTILITY::LoadData(eLoadType::Texture, "Dry_Ground_Diffuse", "Dry_Ground_Diffuse.png");
 	KH_UTILITY::LoadData(eLoadType::Texture, "Dry_Ground_Normal", "Dry_Ground_Normal.png");
-	
+
 	KH_UTILITY::LoadData(eLoadType::Texture, "Grass_Ivy_Mask", "Grass_Ivy_Mask.png");
 	KH_UTILITY::LoadData(eLoadType::Texture, "Grass_Ivy_Diffuse", "Grass_Ivy_Diffuse.png");
 	KH_UTILITY::LoadData(eLoadType::Texture, "Grass_Ivy_Normal", "Grass_Ivy_Normal.png");
-	
+
 	KH_UTILITY::LoadData(eLoadType::Texture, "Rock_Mask", "Rock_Mask.png");
 	KH_UTILITY::LoadData(eLoadType::Texture, "Rock_Diffuse", "Rock_Diffuse.png");
 	KH_UTILITY::LoadData(eLoadType::Texture, "Rock_Normal", "Rock_Normal.png");
@@ -135,7 +139,7 @@ LRESULT CALLBACK GameManager::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam
 		{
 			int width = LOWORD(lparam);
 			int height = HIWORD(lparam);
-		
+
 			// 화면을 최소화할 경우 재설정을 할 필요가 없으므로 리턴..
 			if (width > 0 && height > 0)
 			{
@@ -232,8 +236,8 @@ void GameManager::InitializeWindows(int& screenWidth, int& screenHeight)
 	}
 	else
 	{
-		screenWidth = 1600;
-		screenHeight = 900;
+		screenWidth = 1920;
+		screenHeight = 1080;
 
 		posX = (GetSystemMetrics(SM_CXSCREEN) - screenWidth) / 2;
 		posY = (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2;
