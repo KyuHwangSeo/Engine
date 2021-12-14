@@ -21,14 +21,14 @@ void Sample_Scene::Create()
 	//player->GetTransform()->MoveWorld(DXVector3(10.0f, 0.0f, 0.0f));
 	//player->GetTransform()->RotateLocal(DXVector3(0.0f, 0.0f, 0.0f));
 
-	GameObject* ground = KH_UTILITY::CreateObject("Map_Origin", eModelType::TerrainMesh, DXVector3(1.0f, 1.0f, 1.0f));
+	GameObject* ground = KH_UTILITY::CreateObject("Terrain", eModelType::TerrainMesh, DXVector3(1.0f, 1.0f, 1.0f));
 	ground->GetTransform()->RotateLocal(DXVector3(90.0f, 0.0f, 0.0f));
 
 	//GameObject* field = KH_UTILITY::CreateObject("Field", eModelType::Model, DXVector3(1.0f, 1.0f, 1.0f));
 
-	//GameObject* dome = KH_UTILITY::CreateObject("Dome_v03", eModelType::Model, DXVector3(0.1f, 0.1f, 0.1f));
+	GameObject* dome = KH_UTILITY::CreateObject("Dome_v03", eModelType::Model, DXVector3(1.0f, 1.0f, 1.0f));
 	//dome->GetTransform()->MoveWorld(DXVector3(-10.0f, 0.0f, 0.0f));
-	//dome->GetTransform()->RotateLocal(DXVector3(90.0f, 0.0f, 0.0f));
+	dome->GetTransform()->RotateLocal(DXVector3(90.0f, 0.0f, 0.0f));
 	//m_Player = KH_UTILITY::CreateObject("join_droid", eModelType::Model, DXVector3(0.01f, 0.01f, 0.01f));
 	//m_Mat = m_Player->GetComponent<MeshRenderer>()->GetMaterial();
 

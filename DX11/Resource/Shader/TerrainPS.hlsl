@@ -53,10 +53,10 @@ PixelOut main(VertexIn pin)
     float3 normalColor = float3(0.0f, 0.0f, 0.0f);
     float3 normalMapSample = float3(0.0f, 0.0f, 0.0f);
     
-    float4 mask = float4(pin.MaskColor1.rgb, pin.MaskColor2.r);
-    float length = mask.r + mask.g + mask.b + mask.a;
-    mask /= length;
+    float4 mask = float4(pin.MaskColor1.rgb, 1.0f);
+    float length = mask.r + mask.g;
     
+    mask.rg /= length;
     
     float4 albedo = float4(0.0f, 0.0f, 0.0f, 1.0f);
     
@@ -72,23 +72,23 @@ PixelOut main(VertexIn pin)
         normalColor = gNormal2.Sample(samWrapMinLinear, pin.Tex).rgb;
         normalMapSample += (2.0f * normalColor - 1.0f) * mask.g;
     }
-    if (mask.b > 0.0f)
-    {
-        albedo.rgb += gColor3.Sample(samWrapMinLinear, pin.Tex).rgb * mask.b;
-        normalColor = gNormal3.Sample(samWrapMinLinear, pin.Tex).rgb;
-        normalMapSample += (2.0f * normalColor - 1.0f) * mask.b;
-    }
-    if (mask.a > 0.0f)
-    {
-        albedo.rgb += gColor4.Sample(samWrapMinLinear, pin.Tex).rgb * mask.a;
-        normalColor = gNormal4.Sample(samWrapMinLinear, pin.Tex).rgb;
-        normalMapSample += (2.0f * normalColor - 1.0f) * mask.a;
-    }
+    //if (mask.b > 0.0f)
+    //{
+    //    albedo.rgb += gColor3.Sample(samWrapMinLinear, pin.Tex).rgb * mask.b;
+    //    normalColor = gNormal3.Sample(samWrapMinLinear, pin.Tex).rgb;
+    //    normalMapSample += (2.0f * normalColor - 1.0f) * mask.b;
+    //}
+    //if (mask.a > 0.0f)
+    //{
+    //    albedo.rgb += gColor4.Sample(samWrapMinLinear, pin.Tex).rgb * mask.a;
+    //    normalColor = gNormal4.Sample(samWrapMinLinear, pin.Tex).rgb;
+    //    normalMapSample += (2.0f * normalColor - 1.0f) * mask.a;
+    //}
     
     float3 bumpedNormalW = mul(normalMapSample, pin.TBN);
 
     vout.Albedo = albedo;
-    vout.Normal = float4(bumpedNormalW, 1.0f);
+    vout.Normal = float4(bumpedNormalW, 0.0f);
     vout.Position = float4(pin.PosW, gMatID);
     vout.Shadow = float4(pin.ShadowPosH.xyz / pin.ShadowPosH.w, 0.0f);
     vout.NormalDepth = float4(pin.NormalV.xyz, pin.PosV.z);

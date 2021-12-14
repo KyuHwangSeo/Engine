@@ -51,30 +51,35 @@ void GameManager::Render()
 
 void GameManager::LoadData()
 {
-	KH_UTILITY::LoadData(eLoadType::FBX, "CHARACTER_idle", "Character/CHARACTER_idle.fbx", true);
+	//KH_UTILITY::LoadData(eLoadType::FBX, "CHARACTER_idle", "Character/CHARACTER_idle.fbx", true);
 	//KH_UTILITY::LoadData(eLoadType::FBX, "Player_Idle", "Character/Player_Idle.fbx", false);
-	KH_UTILITY::LoadData(eLoadType::Terrain, "Map_Origin", "Map/Map_Origin.fbx", true);
-	KH_UTILITY::LoadData(eLoadType::FBX, "join_droid", "Character/join_droid.fbx", false);
-	KH_UTILITY::LoadData(eLoadType::FBX, "Field", "Map/Field.fbx", true);
+	//KH_UTILITY::LoadData(eLoadType::FBX, "join_droid", "Character/join_droid.fbx", false);
+	//KH_UTILITY::LoadData(eLoadType::FBX, "Field", "Map/Field.fbx", true);
 	KH_UTILITY::LoadData(eLoadType::FBX, "Dome_v03", "Map/Dome_v03.fbx", true);
 	//KH_UTILITY::LoadData(eLoadType::FBX, "Table", "Character/Table.fbx", true);
 
+	//KH_UTILITY::LoadData(eLoadType::Terrain, "Map_Origin", "Map/Map_Origin.fbx", true);
+	KH_UTILITY::LoadData(eLoadType::Terrain, "Terrain", "Map/Terrain.fbx", true);
+	KH_UTILITY::LoadData(eLoadType::Texture, "Terrain_RGB", "Terrain_RGB.png");
+	KH_UTILITY::LoadData(eLoadType::Texture, "ground01_Albedo", "ground01_Albedo.png");
+	KH_UTILITY::LoadData(eLoadType::Texture, "ground02_Albedo", "ground02_Albedo.png");
+	KH_UTILITY::LoadData(eLoadType::Texture, "ground01__Normal", "ground01__Normal.png");
+	KH_UTILITY::LoadData(eLoadType::Texture, "ground02__Normal", "ground02__Normal.png");
 	KH_UTILITY::LoadData(eLoadType::Texture, "Gray", "Gray.png");
 
 	KH_UTILITY::LoadData(eLoadType::Texture, "Red", "Red.png");
 	KH_UTILITY::LoadData(eLoadType::Texture, "Green", "Green.png");
 	KH_UTILITY::LoadData(eLoadType::Texture, "Blue", "Blue.png");
 	KH_UTILITY::LoadData(eLoadType::Texture, "Gray", "Gray.png");
+
 	KH_UTILITY::LoadData(eLoadType::Texture, "mask", "mask.png");
-	KH_UTILITY::LoadData(eLoadType::Texture, "Dead_Leaves_Mask", "Dead_Leaves_Mask.png");
+	KH_UTILITY::LoadData(eLoadType::Texture, "Rock_Mask", "Rock_Mask.png");
 	KH_UTILITY::LoadData(eLoadType::Texture, "Dead_Leaves_Diffuse", "Dead_Leaves_Diffuse.png");
 	KH_UTILITY::LoadData(eLoadType::Texture, "Dead_Leaves_Normal", "Dead_Leaves_Normal.png");
 
-	KH_UTILITY::LoadData(eLoadType::Texture, "Dry_Ground_Mask", "Dry_Ground_Mask.png");
 	KH_UTILITY::LoadData(eLoadType::Texture, "Dry_Ground_Diffuse", "Dry_Ground_Diffuse.png");
 	KH_UTILITY::LoadData(eLoadType::Texture, "Dry_Ground_Normal", "Dry_Ground_Normal.png");
 
-	KH_UTILITY::LoadData(eLoadType::Texture, "Grass_Ivy_Mask", "Grass_Ivy_Mask.png");
 	KH_UTILITY::LoadData(eLoadType::Texture, "Grass_Ivy_Diffuse", "Grass_Ivy_Diffuse.png");
 	KH_UTILITY::LoadData(eLoadType::Texture, "Grass_Ivy_Normal", "Grass_Ivy_Normal.png");
 

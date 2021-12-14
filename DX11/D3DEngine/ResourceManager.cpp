@@ -369,8 +369,9 @@ void ResourceManager::LoadData_TerrainMesh(std::string objectName, std::string k
 	vcount = (UINT)meshData->m_VertexList.size();
 
 	// Terrain Mask Data
-	ParserData::ImageData mask1 = m_ImgParser->LoadImagePixel("mask.png", 4);
-	ParserData::ImageData mask2 = m_ImgParser->LoadImagePixel("Rock_Mask.png", 4);
+	//ParserData::ImageData mask1 = m_ImgParser->LoadImagePixel("mask.png", 4);
+	ParserData::ImageData mask1 = m_ImgParser->LoadImagePixel("Terrain_RGB.png", 4);
+	//ParserData::ImageData mask2 = m_ImgParser->LoadImagePixel("Rock_Mask.png", 4);
 
 	std::vector<TerrainVertex> vertices(vcount);
 
@@ -380,8 +381,17 @@ void ResourceManager::LoadData_TerrainMesh(std::string objectName, std::string k
 
 		vertices[i].Normal = meshData->m_VertexList[i]->m_Normal;
 
-		vertices[i].Tex.x = meshData->m_VertexList[i]->m_U;
-		vertices[i].Tex.y = meshData->m_VertexList[i]->m_V;
+		//vertices[i].Tex.x = meshData->m_VertexList[i]->m_U;
+		//vertices[i].Tex.y = meshData->m_VertexList[i]->m_V;
+
+		//int x = (int)vertices[i].Pos.x % 94;
+		//int z = (int)vertices[i].Pos.z % 94;
+
+		if (i != 0)
+		{
+			vertices[i].Tex.x = vertices[i].Pos.x / 31.0f;
+			vertices[i].Tex.y = vertices[i].Pos.z / 31.0f;
+		}
 
 		vertices[i].Tangent = meshData->m_VertexList[i]->m_Tanget;
 
@@ -393,7 +403,7 @@ void ResourceManager::LoadData_TerrainMesh(std::string objectName, std::string k
 		newBuf->m_VertexPos.push_back(vertices[i].Pos);
 
 		vertices[i].Mask1 = m_ImgParser->GetPixelColor(mask1, vertices[i].Pos.x, abs(vertices[i].Pos.z));
-		vertices[i].Mask2 = m_ImgParser->GetPixelColor(mask2, vertices[i].Pos.x, abs(vertices[i].Pos.z));
+		//vertices[i].Mask2 = m_ImgParser->GetPixelColor(mask2, vertices[i].Pos.x, abs(vertices[i].Pos.z));
 	}
 
 	newBuf->m_MeshBox.Center = (vMin + vMax) * 0.5f;
@@ -1669,7 +1679,7 @@ void ResourceManager::LoadData_Texture(std::string objectName, std::string fileN
 		HR(CreateWICTextureFromFile(m_Device.Get(), m_DeviceContext.Get(), file_path, &texResource, newTex.GetAddressOf()));
 		//HR(CreateWICTextureFromFileEx(m_Device.Get(), m_DeviceContext.Get(), file_path, 0, D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, 0, WIC_LOADER_IGNORE_SRGB, &texResource, newTex.GetAddressOf()));
 	}
-	
+
 	// Material ¼³Á¤..
 	if (materialmap == nullptr)
 	{
@@ -1765,7 +1775,7 @@ ParserData::Mesh* ResourceManager::GetMesh(std::string key)
 ParserData::Mesh* ResourceManager::GetMesh(std::string objectName, int count)
 {
 	unordered_map<std::string, ParserData::Model*>::iterator model = m_ModelList.find(objectName);
-	
+
 	if (model != m_ModelList.end())
 	{
 		return model->second->m_MeshList[count];
@@ -1792,7 +1802,7 @@ MaterialData ResourceManager::GetMaterial(std::string key)
 std::string ResourceManager::GetMeshName(std::string objectName, int count)
 {
 	unordered_map<std::string, ParserData::Model*>::iterator model = m_ModelList.find(objectName);
-	
+
 	if (model != m_ModelList.end())
 	{
 		return model->second->m_MeshList[count]->m_NodeName;
