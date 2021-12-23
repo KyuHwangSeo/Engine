@@ -19,4 +19,4 @@ Git Commit 방법
 
 명령어
 $ git log --oneline (로그를 한줄로 보여줌)
-$ exit (Git Bash 종료)
+$ exit (Git Bash 종료).
